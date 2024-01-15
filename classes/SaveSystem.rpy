@@ -64,6 +64,12 @@ init 1 python in SSSSS:
                 renpy.loadsave.clear_cache()
                 renpy.store.persistent.SSSSS_lastActivePlaythrough = self.playthrough.name
 
+            def deleteFiles(self):
+                import shutil
+
+                for location in self.location.locations:
+                    shutil.rmtree(location.directory)
+
         def createPlaythroughSaveInstance(self, playthrough):
             self._playthroughSaves[playthrough.name] = SaveSystemClass.PlaythroughSaveClass(playthrough)
             
@@ -77,6 +83,17 @@ init 1 python in SSSSS:
 
             if(autoActivate):
                 instance.activate()
+
+        def removeFilesForPlaythrough(self, playthroughName):
+            instance = self.getPlaythroughSaveInstance(playthroughName)
+
+            if(instance == None):
+                return False
+
+            instance.deleteFiles()
+
+            return True
+
 
         
             
