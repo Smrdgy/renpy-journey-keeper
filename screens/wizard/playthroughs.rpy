@@ -1,4 +1,6 @@
 screen SSSSS_PlaythroughMenu(save):
+    default newPlaythrough = SSSSS.Playthroughs.PlaythroughClass()
+
     python:
         playthrough = SSSSS.Playthroughs.activePlaythrough
 
@@ -19,11 +21,11 @@ screen SSSSS_PlaythroughMenu(save):
                         use sssss_iconButton('\ue7a2', tt="Open native save menu", action=[SSSSS.Playthroughs.ActivateNative(), Show("SSSSS_NativeSaveMenu", save=save)])
                         use sssss_iconButton('\ueb73', tt="Open list of playthroughs", action=Show("SSSSS_PlaythroughsPicker"))
                         use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesList"))
-                        use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough"))
+                        use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=newPlaythrough))
 
                     hbox at right:
                         if(playthrough != None):
-                            use sssss_iconButton('\ue4f9', toggled=playthrough.get("autosaveOnChoices"), toggledIcon='\ue167', tt="Autosave on choices", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive())
+                            use sssss_iconButton('\ue4f9', toggled=playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive())
 
             if(playthrough != None):
                 # The playthrough name, the playthrough can be edited by clicking on this button.
@@ -32,12 +34,12 @@ screen SSSSS_PlaythroughMenu(save):
 
                     xalign 0.5
 
-                    action Show("SSSSS_EditPlaythrough", directory=playthrough.get("directory"), name=playthrough.get("name"), thumbnail=playthrough.get("thumbnail"), storeChoices=playthrough.get("storeChoices"), layout=playthrough.get("layout"), autosaveOnChoices=playthrough.get("autosaveOnChoices"), selectedPage=playthrough.get("selectedPage"))#MODIFY HERE
+                    action Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True)
 
                     vbox:
                         style "page_label_text"
 
-                        label playthrough.get("name")
+                        label playthrough.name
 
             if(playthrough != None):
                 use SSSSS_PlaythroughFileGrid()
@@ -49,7 +51,7 @@ screen SSSSS_PlaythroughMenu(save):
                     textbutton "Click here to setup playthrough":
                         xalign 0.5
 
-                        action Show("SSSSS_EditPlaythrough")
+                        action Show("SSSSS_EditPlaythrough", playthrough=newPlaythrough)
                     
                     button:
                         xalign 0.5
@@ -133,21 +135,20 @@ screen SSSSS_PlaythroughsPicker():
     frame:
         use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker")
 
-screen SSSSS_EditPlaythrough(directory=None, name='', thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1):#MODIFY HERE
-    default nameValue = name
-    default storeChoicesValue = storeChoices
-    default originalName = name
-    python:
-        print(name, "expects", autosaveOnChoices)
-    default autosaveOnChoicesValue = autosaveOnChoices
+screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
+    default name = playthrough.name or ''
+    default originalname = name
+    default storeChoices = playthrough.storeChoices
+    default autosaveOnChoices = playthrough.autosaveOnChoices
     #MODIFY HERE
+
     default inputs = x52URM.InputGroup(
         [
-            ('name', x52URM.Input(text=nameValue, updateScreenVariable="nameValue")),
+            ('name', x52URM.Input(text=name, updateScreenVariable="name")),
         ],
         focusFirst=True,
         onSubmit=[
-            SSSSS.Playthroughs.AddOrEdit(directory, x52URM.GetScreenInput('name', 'inputs'), originalName, thumbnail, URMGetScreenVariable('storeChoicesValue'), layout, URMGetScreenVariable('autosaveOnChoicesValue'), selectedPage),#MODIFY HERE
+            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=x52URM.GetScreenInput('name', 'inputs'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices')),#MODIFY HERE
             Hide('SSSSS_EditPlaythrough')
         ]
     )
@@ -184,21 +185,24 @@ screen SSSSS_EditPlaythrough(directory=None, name='', thumbnail=None, storeChoic
                         action inputs.name.Enable()
                         input value inputs.name
 
+                    if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
+                        text "This name already exists!" color '#f00'
+
                     python:
-                        computedDirectory = directory or SSSSS.Playthroughs.name_to_directory_name(nameValue)
+                        computedDirectory = playthrough.directory or SSSSS.Playthroughs.name_to_directory_name(name)
 
                     text "Directory:"
                     text "saves/[computedDirectory]"
 
-                    use x52URM_checkbox(checked=storeChoicesValue, text="Store choices", action=ToggleScreenVariable('storeChoicesValue', True, False))
-                    use x52URM_checkbox(checked=autosaveOnChoicesValue, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoicesValue', True, False))
+                    use x52URM_checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False))
+                    use x52URM_checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
 
             hbox:
-                if(originalName):
+                if(isEdit):
                     button:
                         key_events True
                         xalign 0.5
-                        action Show("SSSSS_RemovePlaythroughConfirm", playthroughName=originalName)
+                        action Show("SSSSS_RemovePlaythroughConfirm", playthroughName=playthrough.name)
 
                         text "Remove"
 
@@ -244,14 +248,17 @@ screen SSSSS_RemovePlaythroughConfirm(playthroughName):
 
 screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None):
     vbox:
-        for (playthroughName, playthrough) in SSSSS.Playthroughs.playthroughs.items():
+        for playthrough in SSSSS.Playthroughs.playthroughs:
             python:
-                name = playthrough.get("name")
+                name = playthrough.name
 
             button:
-                action [itemAction(name), Hide(hideTarget)]
+                if(hideTarget):
+                    action [itemAction(name), Hide(hideTarget)]
+                else:
+                    action itemAction(name)
 
                 hbox:
-                    add SSSSS.Playthroughs.getThumbnailFromName(playthroughName)
+                    add playthrough.getThumbnail()
 
                     label "[name]"

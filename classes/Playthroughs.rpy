@@ -1,11 +1,11 @@
 init 1 python in SSSSS:
     _constant = True
 
-    from collections import OrderedDict
     import json
+    import time
 
     class PlaythroughsClass():
-        _playthroughs = OrderedDict()
+        _playthroughs = []
         _activePlaythrough = None
 
         def __init__(self):
@@ -14,7 +14,7 @@ init 1 python in SSSSS:
                 arr = json.loads(renpy.store.persistent.SSSSS_playthroughs)
 
                 for playthrough in arr:
-                    self._playthroughs[playthrough["name"]] = playthrough
+                    self._playthroughs.append(self.PlaythroughClass.fromSerialization(playthrough))
 
         @property
         def playthroughs(self):
@@ -24,31 +24,100 @@ init 1 python in SSSSS:
         def activePlaythrough(self):
             return self._activePlaythrough
 
-        def add(self, directory, name, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1):#MODIFY HERE
-            self._playthroughs[name] = self.constructPlaythroughData(directory, name, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage)#MODIFY HERE
+        class PlaythroughClass():
+            def __init__(self, id=None, directory=None, name=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1):#MODIFY HERE
+                self.id = id or int(time.time())#TBD
+                self.directory = directory or (Playthroughs.name_to_directory_name(name) if name else None)
+                self.name = name
+                self.thumbnail = thumbnail
+                self.storeChoices = storeChoices
+                self.layout = layout
+                self.autosaveOnChoices = autosaveOnChoices
+                self.selectedPage = selectedPage
+                #MODIFY HERE
+
+            def copy(self):
+                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage)#MODIFY HERE
+
+            def edit(self, name=None, thumbnail=None, storeChoices=None, layout=None, autosaveOnChoices=None, selectedPage=None):#MODIFY HERE
+                if name != None: self.name = name
+                if thumbnail != None: self.thumbnail = thumbnail
+                if storeChoices != None: self.storeChoices = storeChoices
+                if layout != None: self.layout = layout
+                if autosaveOnChoices != None: self.autosaveOnChoices = autosaveOnChoices
+                if selectedPage != None: self.selectedPage = selectedPage
+                #MODIFY HERE
+
+                return self
+
+            def editFromPlaythrough(self, playthrough):
+                self.name = playthrough.name
+                self.thumbnail = playthrough.thumbnail
+                self.storeChoices = playthrough.storeChoices
+                self.layout = playthrough.layout
+                self.autosaveOnChoices = playthrough.autosaveOnChoices
+                self.selectedPage = playthrough.selectedPage
+
+                return self
+
+            def fromSerialization(data):
+                return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"))#MODIFY HERE
+
+            def serializable(self):
+                return {
+                    'id': self.id,
+                    'directory': self.directory,
+                    'name': self.name,
+                    'thumbnail': self.thumbnail,
+                    'storeChoices': self.storeChoices,
+                    'layout': self.layout,
+                    'autosaveOnChoices': self.autosaveOnChoices,
+                    'selectedPage': self.selectedPage,
+                    #MODIFY HERE
+                }
+
+            def getThumbnail(self):
+                import io
+
+                # TODO: Fix and uncomment
+                # sio = io.BytesIO(self.thumbnail)
+                # rv = renpy.display.pgrender.load_image(sio, "image.png")
+                # return rv
+
+
+        def add(self, playthrough):
+            self._playthroughs.append(playthrough)
             self.activateByName(name)
 
             self.saveToPersistent()
             renpy.restart_interaction()
 
-            return self.playthroughs.get(name)
+            return playthrough
 
-        def get(self, name, substitueIfNotFound=False):
-            if(name in self.playthroughs):
-                playthrough = self.playthroughs.get(name)
+        def get(self, name):
+            for playthrough in self.playthroughs:
+                if(playthrough.name == name):
+                    return playthrough
 
-                return self.constructPlaythroughData(playthrough.get("directory"), playthrough.get("name"), playthrough.get("thumbnail"), playthrough.get("storeChoices"), playthrough.get("layout"), playthrough.get("autosaveOnChoices"), playthrough.get("selectedPage"))#MODIFY HERE
+            return None
+
+        def getByID(self, id):
+            for playthrough in self.playthroughs:
+                if(playthrough.id == id):
+                    return playthrough
 
             return None
 
         def getOrAdd(self, name):
-            return self.get(name) or self.add(None, name)
+            return self.get(name) or self.add(self.PlaythroughClass(name=name))
 
         def remove(self, name, removeSaveFiles=False, keepActive=False):
             if(name in self.playthroughs):
-                del self.playthroughs[name]
-
                 #TODO: Delete save files if removeSaveFiles is true
+
+                for playthrough in self.playthroughs:
+                    if(playthrough.name == name):
+                        self.playthroughs.remove(playthrough)
 
                 if(keepActive == False):
                     self.activateFirstOrNone()
@@ -57,41 +126,37 @@ init 1 python in SSSSS:
 
             return False
 
-        def edit(self, directory, name, originalName, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage):
-            if(originalName == name and name in self.playthroughs):
-                self.playthroughs[name] = self.constructPlaythroughData(directory, name, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage)#MODIFY HERE
-            else:
-                self._activePlaythrough = self.add(directory, name, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage)#MODIFY HERE
-                self.remove(originalName, keepActive=True)
-
-                renpy.store.persistent.SSSSS_lastActivePlaythrough = name
+        def edit(self, playthrough, originalPlaythrough):
+            originalPlaythrough.editFromPlaythrough(playthrough)
                 
             self.saveToPersistent()
             renpy.restart_interaction()
 
-            return self.playthroughs.get(name)
+            return originalPlaythrough
 
-        def addOrEdit(self, directory, name, originalName, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage):#MODIFY HERE
-            print("{name} ({originalname}) save", autosaveOnChoices)#TODO: Remove
-            if(originalName and self.get(originalName)):
-                return self.edit(directory, name, originalName, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage)#MODIFY HERE
+        def addOrEdit(self, playthrough):
+            originalPlaythrough = self.getByID(playthrough.id)
+            if(originalPlaythrough != None):
+                return self.edit(playthrough, originalPlaythrough)
 
-            return self.add(None, name, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage)#MODIFY HERE
+            return self.add(playthrough)
 
         def toggleAutosaveOnChoicesOnActive(self):
-            self.activePlaythrough["autosaveOnChoices"] = not self.activePlaythrough["autosaveOnChoices"]
+            self.activePlaythrough.edit(autosaveOnChoices=not self.activePlaythrough.autosaveOnChoices)
 
             self.saveToPersistent()
             renpy.restart_interaction()
 
         def activateByName(self, playthroughName):
-            if(playthroughName in self.playthroughs):
-                self.activateByInstance(self.playthroughs.get(playthroughName))
+            self.activateByInstance(self.get(playthroughName))
 
         def activateByInstance(self, playthrough):
+            if(playthrough == None):
+                return
+
             SaveSystem.getOrCreatePlaythroughSaveInstance(playthrough, autoActivate=True)
 
-            renpy.store.persistent.SSSSS_lastActivePlaythrough = playthrough.get("name")
+            renpy.store.persistent.SSSSS_lastActivePlaythrough = playthrough.name
             self._activePlaythrough = playthrough
 
             self.saveToPersistent()
@@ -109,26 +174,13 @@ init 1 python in SSSSS:
 
         def activateFirstOrNone(self):
             if(len(self.playthroughs) > 0):
-                self.activateByName(next(iter(self.playthroughs)))
+                self.activateByInstance(self.playthroughs[0])
             else:
                 renpy.store.persistent.SSSSS_lastActivePlaythrough = None
                 self._activePlaythrough = None
 
                 self.saveToPersistent()
                 renpy.restart_interaction()
-
-        def constructPlaythroughData(self, directory, name, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1):#MODIFY HERE
-            print("const", autosaveOnChoices)#TODO: Remove
-            return {
-                'directory': directory or self.name_to_directory_name(name),
-                'name': name,
-                'thumbnail': thumbnail,
-                'storeChoices': storeChoices,
-                'layout': layout, # "normal" -> Grid of thumbnails, "choices" -> list of choices in order
-                'autosaveOnChoices': autosaveOnChoices,
-                'selectedPage': selectedPage,
-                #MODIFY HERE
-            }
 
         def name_to_directory_name(self, title):
             import re
@@ -151,25 +203,27 @@ init 1 python in SSSSS:
 
         def saveToPersistent(self):
             arr = []
-            for (_, playthrough) in self._playthroughs.items():
-                arr.append(playthrough)
+            for playthrough in self.playthroughs:
+                arr.append(playthrough.serializable())
 
-            renpy.store.persistent.SSSSS_playthroughs = json.dumps(arr)
+            renpy.store.persistent.SSSSS_playthroughs = json.dumps(arr)#TODO: Test
 
             renpy.save_persistent()
 
         def getThumbnailFromName(self, playthroughName):
             playthrough = self.get(playthroughName)
         
-            if(playthrough != None and playthrough.get("thumbnail") != None):
-                import io
-
-                # TODO: Fix and uncomment
-                # sio = io.BytesIO(playthrough.get("thumbnail"))
-                # rv = renpy.display.pgrender.load_image(sio, "image.png")
-                # return rv
+            if(playthrough != None and playthrough.thumbnail != None):
+                return playthrough.getThumbnail()
 
             return None
+
+        def isValidName(self, name):
+            for playthrough in self.playthroughs:
+                if(playthrough.name == name):
+                    return False
+
+            return True
 
         class ActivateNative(renpy.ui.Action):
             def __call__(self):
@@ -178,35 +232,29 @@ init 1 python in SSSSS:
         class SetThumbnailForActive(renpy.ui.Action):
             def __call__(self):
                 playthrough = Playthroughs.activePlaythrough
-                playthrough["thumbnail"] = renpy.game.interface.get_screenshot() #TODO: Test, hopefully it won't create a screenshot of the save UI... Also verify the size/speed for let's say 50 or 100 playthroughs
+                playthrough.thumbnail = renpy.game.interface.get_screenshot() #TODO: Test, hopefully it won't create a screenshot of the save UI... Also verify the size/speed for let's say 50 or 100 playthroughs
 
                 Playthroughs.saveToPersistent()
                 renpy.restart_interaction()
 
         class AddOrEdit(renpy.ui.Action):
-            def __init__(self, directory, name, originalName, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage):#MODIFY HERE
-                self.directory = directory
+            def __init__(self, playthrough, name, storeChoices, autosaveOnChoices):#MODIFY HERE
+                self.playthrough = playthrough
                 self.name = name
-                self.originalName = originalName
-                self.thumbnail = thumbnail
                 self.storeChoices = storeChoices
-                self.layout = layout
                 self.autosaveOnChoices = autosaveOnChoices
-                self.selectedPage = selectedPage
                 #MODIFY HERE
 
             def __call__(self):
-                directory = self.directory if not callable(self.directory) else self.directory()
+                playthrough = self.playthrough if not callable(self.playthrough) else self.playthrough()
                 name = self.name if not callable(self.name) else self.name()
-                originalName = self.originalName if not callable(self.originalName) else self.originalName()
-                thumbnail = self.thumbnail if not callable(self.thumbnail) else self.thumbnail()
                 storeChoices = self.storeChoices if not callable(self.storeChoices) else self.storeChoices()
-                layout = self.layout if not callable(self.layout) else self.layout()
                 autosaveOnChoices = self.autosaveOnChoices if not callable(self.autosaveOnChoices) else self.autosaveOnChoices()
-                selectedPage = self.selectedPage if not callable(self.selectedPage) else self.selectedPage()
                 #MODIFY HERE
 
-                Playthroughs.addOrEdit(directory, name, originalName, thumbnail, storeChoices, layout, autosaveOnChoices, selectedPage)#MODIFY HERE
+                playthrough = playthrough.copy().edit(name=name, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices)#MODIFY HERE
+
+                Playthroughs.addOrEdit(playthrough)
                 renpy.restart_interaction()
 
         class ActivatePlaythrough(renpy.ui.Action):

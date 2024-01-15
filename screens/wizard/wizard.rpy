@@ -8,7 +8,7 @@ screen SSSSS_NativeSaveMenu(save):
             yoffset 10
 
             hbox at right:
-                use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough"))
+                use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=SSSSS.Playthroughs.PlaythroughClass()))
 
 
 screen SSSSS_Wizard(save=False):

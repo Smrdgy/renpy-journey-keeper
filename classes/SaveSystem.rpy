@@ -18,9 +18,9 @@ init 1 python in SSSSS:
             return self._defaultLocation
 
         def setupLocations(self):
-            playthroughs = Playthroughs.playthroughs.items()
+            playthroughs = Playthroughs.playthroughs
 
-            for (_, playthrough) in playthroughs:
+            for playthrough in playthroughs:
                 self.createPlaythroughSaveInstance(playthrough)
 
         def useDefault(self):
@@ -36,16 +36,16 @@ init 1 python in SSSSS:
                 location = renpy.savelocation.MultiLocation()
 
                 # 1. User savedir.
-                location.add(renpy.savelocation.FileLocation(os.path.join(renpy.config.savedir, playthrough.get("directory"))))
+                location.add(renpy.savelocation.FileLocation(os.path.join(renpy.config.savedir, playthrough.directory)))
 
                 # 2. Game-local savedir.
                 if (not renpy.mobile) and (not renpy.macapp):
-                    path = os.path.join(renpy.config.gamedir, "saves", playthrough.get("directory"))
+                    path = os.path.join(renpy.config.gamedir, "saves", playthrough.directory)
                     location.add(renpy.savelocation.FileLocation(path))
 
                 # 3. Extra savedirs.
                 for extra_savedir in renpy.config.extra_savedirs:
-                    location.add(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.get("directory"))))
+                    location.add(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.directory)))
 
                 # Scan the location once.
                 location.scan()
@@ -62,15 +62,15 @@ init 1 python in SSSSS:
             def activate(self):
                 renpy.loadsave.location = self.location
                 renpy.loadsave.clear_cache()
-                renpy.store.persistent.SSSSS_lastActivePlaythrough = self.playthrough.get("name")
+                renpy.store.persistent.SSSSS_lastActivePlaythrough = self.playthrough.name
 
         def createPlaythroughSaveInstance(self, playthrough):
-            self._playthroughSaves[playthrough.get("name")] = SaveSystemClass.PlaythroughSaveClass(playthrough)
+            self._playthroughSaves[playthrough.name] = SaveSystemClass.PlaythroughSaveClass(playthrough)
             
-            return self._playthroughSaves.get(playthrough.get("name"))
+            return self._playthroughSaves.get(playthrough.name)
 
         def getOrCreatePlaythroughSaveInstance(self, playthrough, autoActivate=True):
-            instance = self.getPlaythroughSaveInstance(playthrough.get("name"))
+            instance = self.getPlaythroughSaveInstance(playthrough.name)
 
             if(instance == None):
                 instance = self.createPlaythroughSaveInstance(playthrough)
