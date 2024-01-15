@@ -10,7 +10,6 @@ init 1 python in SSSSS:
 
         def __init__(self):
             if(renpy.store.persistent.SSSSS_playthroughs != None):
-                print(renpy.store.persistent.SSSSS_playthroughs)
                 arr = json.loads(renpy.store.persistent.SSSSS_playthroughs)
 
                 for playthrough in arr:
@@ -86,12 +85,22 @@ init 1 python in SSSSS:
                 }
 
             def getThumbnail(self):
-                import io
+                # TODO: Complete
+                # if(self.thumbnail == None):
+                #     return renpy.display.pgrender.surface((2, 2), True)
 
-                # TODO: Fix and uncomment
-                # sio = io.BytesIO(self.thumbnail)
-                # rv = renpy.display.pgrender.load_image(sio, "image.png")
-                # return rv
+                # import io
+
+                # try:
+                #     # TODO: Fix and uncomment
+                #     sio = io.BytesIO(bytes.fromhex(self.thumbnail))
+                #     rv = renpy.display.pgrender.load_image(sio, "image.png")
+                #     return rv
+                # except Exception:
+                #     return renpy.display.pgrender.surface((2, 2), True)
+
+            def makeThumbnail(self):
+                self.thumbnail = renpy.game.interface.get_screenshot().hex() #TODO: Test, hopefully it won't create a screenshot of the save UI... Also verify the size/speed for let's say 50 or 100 playthroughs
 
 
         def add(self, playthrough):
@@ -122,7 +131,6 @@ init 1 python in SSSSS:
 
         def remove(self, name, deleteSaveFiles=False, keepActive=False):
             if(deleteSaveFiles):
-                print("Remove files")
                 SaveSystem.removeFilesForPlaythrough(name)
 
             for playthrough in self.playthroughs:
@@ -241,7 +249,7 @@ init 1 python in SSSSS:
         class SetThumbnailForActive(renpy.ui.Action):
             def __call__(self):
                 playthrough = Playthroughs.activePlaythrough
-                playthrough.thumbnail = renpy.game.interface.get_screenshot() #TODO: Test, hopefully it won't create a screenshot of the save UI... Also verify the size/speed for let's say 50 or 100 playthroughs
+                playthrough.makeThumbnail()
 
                 Playthroughs.saveToPersistent()
                 renpy.restart_interaction()
