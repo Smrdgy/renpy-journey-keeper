@@ -3,3 +3,13 @@ init 51 python in SSSSS:
 
     Playthroughs = PlaythroughsClass()
     SaveSystem = SaveSystemClass()
+    Choices = ChoicesDetectorClass()
+    Autosaver = AutosaverClass()
+
+    def afterLoad():
+        renpy.show_screen('SSSSS_Overlay')
+
+init 999 python:
+    if not 'SSSSSoverlay' in config.layers: config.layers.append('SSSSSoverlay') 
+
+    renpy.config.after_load_callbacks.append(SSSSS.afterLoad)

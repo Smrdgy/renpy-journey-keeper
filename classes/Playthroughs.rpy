@@ -85,6 +85,7 @@ init 1 python in SSSSS:
                 }
 
             def getThumbnail(self):
+                return None
                 # TODO: Complete
                 # if(self.thumbnail == None):
                 #     return renpy.display.pgrender.surface((2, 2), True)
