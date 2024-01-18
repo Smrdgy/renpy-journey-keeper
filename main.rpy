@@ -5,6 +5,7 @@ init 51 python in SSSSS:
     SaveSystem = SaveSystemClass()
     Choices = ChoicesDetectorClass()
     Autosaver = AutosaverClass()
+    AutosaverCounter = renpy.store.autosaveCounter = AutosaveCounterClass()
 
     def afterLoad():
         renpy.show_screen('SSSSS_Overlay')
