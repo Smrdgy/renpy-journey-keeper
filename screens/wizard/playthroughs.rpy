@@ -91,7 +91,7 @@ screen SSSSS_PlaythroughFileGrid():
                 $ slot = i + 1
 
                 button:
-                    action FileAction(slot)
+                    action FileAction(slot)#TODO: Make my own
 
                     has vbox
 

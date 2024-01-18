@@ -6,4 +6,4 @@ screen SSSSS_Overlay():
         yfill True
 
         # key "mousedown_1" action SSSSS.Autosaver.HandlePress()
-        key "mousedown_1" action SSSSS.Autosaver.HandlePress(gui.file_slot_cols * gui.file_slot_rows)
+        key "mousedown_1" action SSSSS.Autosaver.HandlePress()
