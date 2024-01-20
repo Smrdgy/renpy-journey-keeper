@@ -11,4 +11,4 @@ init -99 python:
             return fn
         return new_funct
 
-    renpy.arguments.rmpersistent = my_partial(renpy.arguments.rmpersistent, "ARGUMENTS")
+    renpy.arguments.rmpersistent = my_partial(renpy.arguments.rmpersistent)

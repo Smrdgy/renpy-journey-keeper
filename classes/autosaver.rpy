@@ -1,14 +1,21 @@
 # Unfortunately this must be saved into the save game, so the system can properly recognize which slot to use next,
 # especially when a manual save is made somewhere in between and then a rollback occurs.
-default SSSSS_ActiveSlot = "1-1" 
+default SSSSS_ActiveSlot = "1-1"
 
 init -999 python in SSSSS:
     import time
+    from json import dumps as json_dumps
+    import io
+    import sys
+    from future.utils import reraise
 
     _constant = True
 
     class AutosaverClass():
         suppressAutosaveConfirm = False
+        pendingSave = None
+        prevActiveSlot = "1-1"
+        confirmDialogOpened = False
 
         @property
         def slotsPerPage(self):
@@ -18,6 +25,7 @@ init -999 python in SSSSS:
             self.suppressAutosaveConfirm = False
 
             renpy.store.SSSSS_ActiveSlot = slot
+            self.prevActiveSlot = slot
 
         def getNextSlot(self):
             page, slot = renpy.store.SSSSS_ActiveSlot.split('-')
@@ -34,47 +42,110 @@ init -999 python in SSSSS:
 
             return page, slot, slotString
 
-        def incrementActiveSlot(self):
-            _, _, slotString = self.getNextSlot()
-
-            renpy.store.SSSSS_ActiveSlot = slotString
-
         def handlePress(self):
-            if(Choices.isDisplayingChoice and Playthroughs.activePlaythrough.autosaveOnChoices):
-                #TODO: Don't take a screenshot if screenshots are disabled for the playthrough
-                renpy.take_screenshot() # Must take a screenshot before anything else happens just in case the yesno_screen appears or something that might screw up the shot
+            if(self.pendingSave != None):
+                self.pendingSave.takeAndSaveScreenshot()
+                self.pendingSave.makeReady()
 
-                page, slot, slotString = self.getNextSlot()
-                nextSlot = slotString
+        def trySavePendingSave(self):
+            if(renpy.store.SSSSS_ActiveSlot == Autosaver.prevActiveSlot):
+                Autosaver.pendingSave = None # Discard this save because the user has rolled back
 
+            if(self.pendingSave != None):
                 # If the save slot is not bigger than the very last one, do once a confirm whether to disable autosaving
-                if renpy.scan_saved_game(nextSlot) and not self.suppressAutosaveConfirm:
+                if renpy.scan_saved_game(renpy.store.SSSSS_ActiveSlot) and not self.suppressAutosaveConfirm:
+                    self.confirmDialogOpened = True
                     showConfirm(
                         title=("Are you sure you want to overwrite your save?"),
                         message=("By choosing \"No\", the autosave feature will disable itself until you re-enable it again."),
-                        yes=[
-                            Autosaver.Save(nextSlot),
-                            self.IncrementActiveSlot()
-                        ],
-                        no=[Playthroughs.ToggleAutosaveOnChoicesOnActive()]
+                        yes=[Autosaver.ConfirmDialogSave(), Autosaver.ConfirmDialogClose()],
+                        no=[Playthroughs.ToggleAutosaveOnChoicesOnActive(), Autosaver.ConfirmDialogClose()],
                     )
                     return
 
-                renpy.save(nextSlot) # If this becomes laggy, check the ren'py's autosave system and its threading
-
-                self.incrementActiveSlot()
-
-        class IncrementActiveSlot():
-            def __call__(self):
-                Autosaver.incrementActiveSlot()
+                self.pendingSave.save()
 
         class HandlePress(renpy.ui.Action):
             def __call__(self):
                 Autosaver.handlePress()
 
-        class Save():
-            def __init__(self, nextSlot):
-                self.nextSlot = nextSlot
-
+        class ConfirmDialogSave(renpy.ui.Action):
             def __call__(self):
-                renpy.save(self.nextSlot) # If this becomes laggy, check the ren'py's autosave system and its threading
+                Autosaver.suppressAutosaveConfirm = True
+
+                if(Autosaver.pendingSave != None):
+                    Autosaver.pendingSave.save()
+
+        class ConfirmDialogClose(renpy.ui.Action):
+            def __call__(self):
+                Autosaver.confirmDialogOpened = False
+
+        def registerChoices(self):
+            self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot
+
+            _, _, slotString = self.getNextSlot()
+            renpy.store.SSSSS_ActiveSlot = slotString
+
+            self.pendingSave = AutosaverClass.PendingSaveClass()
+
+        class PendingSaveClass():
+            isReady = False
+            choices = None
+            saveRecord = None
+
+            def __init__(self):
+                self.choices = Choices.currentChoices
+
+                self.createSaveSnapshot()
+
+            def createSaveSnapshot(self, extra_info=""):
+                roots = renpy.game.log.freeze(None)
+
+                if renpy.config.save_dump:
+                    renpy.loadsave.save_dump(roots, renpy.game.log)
+
+                logf = io.BytesIO()
+                try:
+                    renpy.loadsave.dump((roots, renpy.game.log), logf)
+                except Exception:
+                    t, e, tb = sys.exc_info()
+
+                    try:
+                        bad = renpy.loaadsave.find_bad_reduction(roots, renpy.game.log)
+                    except Exception:
+                        reraise(t, e, tb)
+
+                    if bad is None:
+                        reraise(t, e, tb)
+
+                    if e.args:
+                        e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
+
+                    reraise(t, e, tb)
+
+                json = { "_save_name" : extra_info, "_renpy_version" : list(renpy.version_tuple), "_version" : renpy.config.version }
+
+                for i in renpy.config.save_json_callbacks:
+                    i(json)
+
+                json = json_dumps(json)
+
+                self.saveRecord = renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
+
+            def takeAndSaveScreenshot(self):
+                renpy.take_screenshot()
+
+                self.saveRecord.screenshot = renpy.game.interface.get_screenshot()
+
+            def makeReady(self):
+                self.isReady = True
+
+            # If this becomes laggy, check the ren'py's autosave system and its threading
+            def save(self):
+                slotname = renpy.store.SSSSS_ActiveSlot
+
+                renpy.loadsave.location.save(slotname, self.saveRecord)
+                renpy.loadsave.location.scan()
+                renpy.loadsave.clear_slot(slotname)
+
+                Autosaver.pendingSave = None
