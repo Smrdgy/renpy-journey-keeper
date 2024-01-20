@@ -1,12 +1,14 @@
+# Font paths are combined with "SSSSS/" in main.rpy's renpy.config.search_prefixes.append("SSSSS/")
+
 style sssss_material_outlined_icon:
-    font 'sssss/fonts/MaterialIconsOutlined-Regular.otf'
+    font 'fonts/MaterialIconsOutlined-Regular.otf'
 
 style sssss_material_regular_icon:
-    font 'sssss/fonts/MaterialIcons-Regular.ttf'
+    font 'fonts/MaterialIcons-Regular.ttf'
 
 style sssss_icon is text:
-    font 'sssss/fonts/MaterialIconsOutlined-Regular.otf'
-    hover_font 'sssss/fonts/MaterialIcons-Regular.ttf'
+    font 'fonts/MaterialIconsOutlined-Regular.otf'
+    hover_font 'fonts/MaterialIcons-Regular.ttf'
 
 screen sssss_icon(icon):
     frame:

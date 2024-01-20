@@ -1,8 +1,3 @@
-style sssss_icon_button is button
-style sssss_icon_button_text is text:
-    font 'sssss/fonts/MaterialIconsOutlined-Regular.otf'
-    hover_font 'sssss/fonts/MaterialIcons-Regular.ttf'
-
 screen sssss_iconButton(icon, text=None, action=None, xsize=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=icon):
     fixed:
         fit_first True

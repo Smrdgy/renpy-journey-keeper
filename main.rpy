@@ -1,3 +1,6 @@
+init -9999 python:
+    renpy.config.search_prefixes.append("SSSSS/") # Provides discoverability for fonts that are used soley in SSSSS
+
 init 51 python in SSSSS:
     _constant = True
 

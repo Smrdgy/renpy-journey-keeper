@@ -1,1 +1,4 @@
 *.rpyc
+.temp
+.dist
+__pycache__
