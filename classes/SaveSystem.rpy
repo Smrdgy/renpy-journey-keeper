@@ -43,9 +43,10 @@ init 1 python in SSSSS:
                     path = os.path.join(renpy.config.gamedir, "saves", playthrough.directory)
                     location.add(renpy.savelocation.FileLocation(path))
 
-                # 3. Extra savedirs.
-                for extra_savedir in renpy.config.extra_savedirs:
-                    location.add(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.directory)))
+                if(hasattr(renpy.config, "extra_savedirs")):
+                    # 3. Extra savedirs.
+                    for extra_savedir in renpy.config.extra_savedirs:
+                        location.add(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.directory)))
 
                 # Scan the location once.
                 location.scan()

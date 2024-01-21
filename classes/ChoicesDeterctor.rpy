@@ -1,20 +1,7 @@
-init 2 python in SSSSS:
+init 1 python in SSSSS:
     _constant = True
 
-    class x52NonPicklable(python_object):
-        
-        def __setstate__(self, d):
-            pass
-        def __getstate__(self):
-            return {}
-        def __getnewargs__(self):
-            return ()
-        def __iter__(self):
-            return None
-        def itervalues(self):
-            return None
-
-    class ChoicesDetectorClass(x52NonPicklable):
+    class ChoicesDetectorClass():
         @property
         def isDisplayingChoice(self):
             try:
@@ -46,7 +33,7 @@ init 2 python in SSSSS:
                     count += 1
             return count
 
-    class URMChoice(x52NonPicklable):
+    class URMChoice():
         """
         The tuple exists of 3 items
         0: The text

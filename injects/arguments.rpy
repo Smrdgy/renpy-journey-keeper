@@ -5,7 +5,9 @@ init -99 python:
             
             mylocation = renpy.loadsave.location
             renpy.loadsave.location = SSSSS.SaveSystem.defaultLocation
-            fn = func(*args, *new_args, **kwargs)
+            
+            fn = func(*(args + new_args), **new_kwargs)
+            
             renpy.loadsave.location = mylocation
 
             return fn

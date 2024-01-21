@@ -6,7 +6,7 @@ init -99 python:
             if(new_args and new_args[0]):
                 SSSSS.Autosaver.setActiveSlot(new_args[0])
 
-            return func(*args, *new_args, **kwargs)
+            return func(*(args + new_args), **new_kwargs)
         return new_funct
 
 

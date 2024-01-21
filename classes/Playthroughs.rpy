@@ -13,7 +13,7 @@ init 1 python in SSSSS:
                 arr = json.loads(renpy.store.persistent.SSSSS_playthroughs)
 
                 for playthrough in arr:
-                    self._playthroughs.append(self.PlaythroughClass.fromSerialization(playthrough))
+                    self._playthroughs.append(self.createPlaythroughFromSerialization(playthrough))
 
         @property
         def playthroughs(self):
@@ -22,6 +22,9 @@ init 1 python in SSSSS:
         @property
         def activePlaythrough(self):
             return self._activePlaythrough
+
+        def createPlaythroughFromSerialization(self, data):
+            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"))#MODIFY HERE
 
         class PlaythroughClass():
             def __init__(self, id=None, directory=None, name=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1):#MODIFY HERE
@@ -67,9 +70,6 @@ init 1 python in SSSSS:
                 self.selectedPage = playthrough.selectedPage
 
                 return self
-
-            def fromSerialization(data):
-                return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"))#MODIFY HERE
 
             def serializable(self):
                 return {

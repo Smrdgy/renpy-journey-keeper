@@ -5,8 +5,8 @@ init -99 python:
             
             if renpy.config.autosave_on_choice:
                 SSSSS.Autosaver.registerChoices()
-            
-            return func(*args, *new_args, **kwargs)
+
+            return func(*(args + new_args), **new_kwargs)
         return new_funct
 
 

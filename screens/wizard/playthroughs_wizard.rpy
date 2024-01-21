@@ -67,6 +67,9 @@ screen SSSSS_PlaythroughMenu(save):
 screen SSSSS_PlaythroughFileGrid():
     python:
         import math
+        import sys
+
+        isPython2 = sys.version_info[0] == 2
 
         currentPage = persistent._file_page
         if(currentPage == "quick" or currentPage == "auto"):
@@ -117,18 +120,27 @@ screen SSSSS_PlaythroughFileGrid():
                 spacing gui.page_spacing
 
                 textbutton _("<<") action FilePage(max(currentPage - 10, 1))
-                textbutton _("<") action FilePagePrevious(max=1, auto=False, quick=False)
+                if(isPython2):
+                    textbutton _("<") action FilePagePrevious(max=1)
+                else:
+                    textbutton _("<") action FilePagePrevious(max=1, auto=False, quick=False)
 
             grid 10 1 at center:
                 spacing gui.page_spacing
 
-                for page in range(max(pageOffset * 10, 1), pageOffset * 10 + 10):
+                for page in range(max(int(pageOffset * 10), 1), int(pageOffset * 10 + 10)):
                     textbutton "[page]" action FilePage(page)
+
+                if(pageOffset == 0):
+                    text ""
 
             hbox at right:
                 spacing gui.page_spacing
 
-                textbutton _(">") action FilePageNext(auto=False, quick=False)
+                if(isPython2):
+                    textbutton _(">") action FilePageNext()
+                else:
+                    textbutton _(">") action FilePageNext(auto=False, quick=False)
                 textbutton _(">>") action FilePage(currentPage + 10)
 
 screen SSSSS_PlaythroughsPicker():

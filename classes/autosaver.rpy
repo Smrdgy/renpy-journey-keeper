@@ -7,7 +7,9 @@ init -999 python in SSSSS:
     from json import dumps as json_dumps
     import io
     import sys
-    from future.utils import reraise
+
+    if(sys.version_info[0] > 2):
+        from future.utils import reraise
 
     _constant = True
 
