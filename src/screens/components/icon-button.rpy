@@ -1,21 +1,23 @@
-screen sssss_iconButton(icon, text=None, action=None, xsize=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=icon):
+screen sssss_iconButton(icon, text=None, action=None, xsize=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=icon, disabled=False):
+    python:
+        text_color = ('#1f1f1f55' if disabled else '#ffffff')
+
     fixed:
         fit_first True
 
         button:
             xsize xsize
             sensitive sensitive
-            action action
             tooltip tt
 
-            if text: # It's a button with text?
-                hbox:
-                    use sssss_icon(toggledIcon if toggled else icon)
+            if(not disabled):
+                action action
 
-                    if text:
-                        text text style_suffix 'sssss_button_text' yalign .5
-            else: # Icon only button
-                use sssss_icon(toggledIcon if toggled else icon)
+            hbox:
+                use sssss_icon(toggledIcon if toggled else icon, color=text_color)
+
+                if text:
+                    text text yalign .5 color text_color
 
         # if(tt):
         #     $ tooltip = GetTooltip()

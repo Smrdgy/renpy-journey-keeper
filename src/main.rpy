@@ -12,7 +12,18 @@ init 51 python in SSSSS:
     def afterLoad():
         renpy.show_screen('SSSSS_Overlay')
 
+    def startInteractCallback():
+        if(not hasattr(renpy.config, "SSSSS_shows_sidepanel")):
+            renpy.show_screen('SSSSS_SidepanelHolder')
+
+            if(renpy.store.persistent.SSSSS_playthroughs != None and renpy.store.persistent.SSSSS_lastActivePlaythrough != None):
+                Playthroughs.activateByName(renpy.store.persistent.SSSSS_lastActivePlaythrough)
+
+            renpy.config.SSSSS_shows_sidepanel = True
+
 init 999 python:
-    if not 'SSSSSoverlay' in config.layers: config.layers.append('SSSSSoverlay') 
+    if not 'SSSSSsidepanel' in config.layers: config.layers.append('SSSSSsidepanel')
+    if not 'SSSSSoverlay' in config.layers: config.layers.append('SSSSSoverlay')
 
     renpy.config.after_load_callbacks.append(SSSSS.afterLoad)
+    renpy.config.start_interact_callbacks.append(SSSSS.startInteractCallback)

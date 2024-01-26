@@ -1,18 +1,24 @@
-screen x52URM_checkbox(checked, text, action=None, xsize=None, sensitive=None, checkedIcon='\ue834', uncheckedIcon='\ue835', indeterminateIcon='\ue909'):
-    style_prefix 'x52URM'
+screen SSSSS_Checkbox(checked, text, action=None, xsize=None, sensitive=None):
+    style_prefix 'SSSSS'
 
     button:
         xsize xsize
         sensitive sensitive
         action action
+
         hbox:
-            hbox xsize x52URM.scalePxInt(30) yalign .5: # We want this size fixed, to prevent resizing on icon change
-                if checked:
-                    use sssss_icon(checkedIcon)
-                elif checked == False:
-                    use sssss_icon(uncheckedIcon)
-                else:
-                    use sssss_icon(indeterminateIcon)
+            frame yalign .5:
+                style "SSSSS_checkbox_box"
+
+                frame:
+                    align (0.5, 0.5)
+
+                    if checked:
+                        style "SSSSS_checkbox_box_checked"
+                    elif checked == None:
+                        style "SSSSS_checkbox_box_indeterminate"
+                    else:
+                        style "SSSSS_checkbox_box_unchecked"
             
             if text:
-                text text style_suffix 'button_text' yalign .5
+                text text yalign .5

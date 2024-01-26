@@ -4,11 +4,18 @@ init 1 python in SSSSS:
     import json
     import time
 
+    #TODO: replace names with IDs (remove, active playthrough, activate playthrough by name, etc.)
+
     class PlaythroughsClass():
         _playthroughs = []
         _activePlaythrough = None
 
         def __init__(self):
+            # For some reason the __init__ is called twice in Ren'Py 7.0.0.196.
+            # When that happens the playthroughs are loaded twice which led to a buildup of playthroughs when saved. This if should mitigate that.
+            if hasattr(renpy.config, "SSSSS_playthroughs_initialized"): return
+            renpy.config.SSSSS_playthroughs_initialized = True
+
             if(renpy.store.persistent.SSSSS_playthroughs != None):
                 arr = json.loads(renpy.store.persistent.SSSSS_playthroughs)
 
@@ -191,10 +198,7 @@ init 1 python in SSSSS:
             if(len(self.playthroughs) > 0):
                 self.activateByInstance(self.playthroughs[0])
             else:
-                self.__setActivePlaythrough(None)
-
-                self.saveToPersistent()
-                renpy.restart_interaction()
+                self.activateNative()
 
         def name_to_directory_name(self, title):
             import re
@@ -220,7 +224,7 @@ init 1 python in SSSSS:
             for playthrough in self.playthroughs:
                 arr.append(playthrough.serializable())
 
-            renpy.store.persistent.SSSSS_playthroughs = json.dumps(arr)#TODO: Test
+            renpy.store.persistent.SSSSS_playthroughs = json.dumps(arr)
 
             renpy.save_persistent()
 
@@ -276,11 +280,11 @@ init 1 python in SSSSS:
                 renpy.restart_interaction()
 
         class ActivatePlaythrough(renpy.ui.Action):
-            def __init__(self, playthroughName):
-                self.playthroughName = playthroughName
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
 
             def __call__(self):
-                Playthroughs.activateByName(self.playthroughName)
+                Playthroughs.activateByName(self.playthrough.name)
                 renpy.restart_interaction()
 
         class Remove(renpy.ui.Action):

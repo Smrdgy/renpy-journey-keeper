@@ -1,151 +1,8 @@
-screen SSSSS_PlaythroughMenu(save):
-    default newPlaythrough = SSSSS.Playthroughs.PlaythroughClass()
-
-    python:
-        playthrough = SSSSS.Playthroughs.activePlaythrough
-
-    use game_menu(_("Save" if save else "Load")):
-        fixed:
-            # This ensures the input will get the enter event before any of the
-            # buttons do.
-            order_reverse True
-
-            vbox:
-                xfill True
-
-                #action buttons
-                hbox:
-                    xfill True
-
-                    hbox at left:
-                        use sssss_iconButton('\ue7a2', tt="Open native save menu", action=[SSSSS.Playthroughs.ActivateNative(), Show("SSSSS_NativeSaveMenu", save=save)])
-                        use sssss_iconButton('\ueb73', tt="Open list of playthroughs", action=Show("SSSSS_PlaythroughsPicker"))
-                        use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesList"))
-                        use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=newPlaythrough))
-
-                    hbox at right:
-                        if(playthrough != None):
-                            use sssss_iconButton('\ue4f9', toggled=playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive())
-
-            if(playthrough != None):
-                # The playthrough name, the playthrough can be edited by clicking on this button.
-                button:
-                    style "page_label"
-
-                    xalign 0.5
-
-                    action Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True)
-
-                    vbox:
-                        style "page_label_text"
-
-                        label playthrough.name
-
-            if(playthrough != None):
-                use SSSSS_PlaythroughFileGrid()
-            else:
-                vbox:
-                    yalign 0.5
-                    xalign 0.5
-
-                    textbutton "Click here to setup playthrough":
-                        xalign 0.5
-
-                        action Show("SSSSS_EditPlaythrough", playthrough=newPlaythrough)
-                    
-                    button:
-                        xalign 0.5
-
-                        action Show("SSSSS_NativeSaveMenu", save=save)
-
-                        vbox:
-                            text "Or here":
-                                xalign 0.5
-                            text "to use the vanilla system":
-                                xalign 0.5
-
-screen SSSSS_PlaythroughFileGrid():
-    python:
-        import math
-        import sys
-
-        isPython2 = sys.version_info[0] == 2
-
-        currentPage = persistent._file_page
-        if(currentPage == "quick" or currentPage == "auto"):
-            currentPage = 1
-        
-        currentPage = int(currentPage)
-
-        pageOffset = math.floor(currentPage / 10)
-
-    fixed:
-        ## The grid of file slots.
-        grid gui.file_slot_cols gui.file_slot_rows:
-            style_prefix "slot"
-
-            xalign 0.5
-            yalign 0.5
-
-            spacing gui.slot_spacing
-
-            for i in range(gui.file_slot_cols * gui.file_slot_rows):
-
-                $ slot = i + 1
-
-                button:
-                    action FileAction(slot)#TODO: Make my own
-
-                    has vbox
-
-                    add FileScreenshot(slot) xalign 0.5
-
-                    text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
-                        style "slot_time_text"
-
-                    text FileSaveName(slot):
-                        style "slot_name_text"
-
-                    key "save_delete" action FileDelete(slot)
-
-        ## Buttons to access other pages.
-        grid 3 1:
-            style_prefix "page"
-
-            xfill True
-            yalign 1.0
-            spacing gui.page_spacing
-
-            hbox at left:
-                spacing gui.page_spacing
-
-                textbutton _("<<") action FilePage(max(currentPage - 10, 1))
-                if(isPython2):
-                    textbutton _("<") action FilePagePrevious(max=1)
-                else:
-                    textbutton _("<") action FilePagePrevious(max=1, auto=False, quick=False)
-
-            grid 10 1 at center:
-                spacing gui.page_spacing
-
-                for page in range(max(int(pageOffset * 10), 1), int(pageOffset * 10 + 10)):
-                    textbutton "[page]" action FilePage(page)
-
-                if(pageOffset == 0):
-                    text ""
-
-            hbox at right:
-                spacing gui.page_spacing
-
-                if(isPython2):
-                    textbutton _(">") action FilePageNext()
-                else:
-                    textbutton _(">") action FilePageNext(auto=False, quick=False)
-                textbutton _(">>") action FilePage(currentPage + 10)
-
 screen SSSSS_PlaythroughsPicker():
-    frame:
-        use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker")
+    use SSSSS_Dialog(title="Select a playthrough", closeAction=Hide("SSSSS_PlaythroughsPicker"), background="assets/gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
+        style_prefix "SSSSS"
+
+        use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker", canEdit=True)
 
 screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     default name = playthrough.name or ''
@@ -168,109 +25,141 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     key 'K_TAB' action inputs.NextInput()
     key 'shift_K_TAB' action inputs.PreviousInput()
 
-    frame:
-        xfill True
-        yfill True
-        background '#000'
+    use SSSSS_Dialog(title=("Edit playthrough" if isEdit else "New playthrough"), closeAction=Hide("SSSSS_EditPlaythrough"), background="assets/gui/edit_playthrough_dialog_background.png", size=(x52URM.scalePxInt(1000), x52URM.scalePxInt(600))):
+        style_prefix "SSSSS"
 
         vbox:
-            hbox:
-                xfill True
+            yfill True
 
-                hbox spacing 4 yalign .5:
-                    label "Edit playthrough" yalign .5
+            vbox:
+                text "Name:"
+                frame:
+                    style "SSSSS_input_frame"
 
-                button at right:
-                    text 'x' size 24 yalign .5 color '#f00'
-                    action Hide("SSSSS_EditPlaythrough")
-
-            frame:
-                background None
-                yminimum x52URM.scalePxInt(450)
-                padding (4, 0)
-
-                vbox:
-                    text "Name:"
                     button:
-                        xminimum x52URM.scalePxInt(450)
+                        style_prefix "" # Have to override some other styles that are applying for some reson...
+
                         key_events True
                         action inputs.name.Enable()
-                        input value inputs.name
 
-                    if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
-                        text "This name already exists!" color '#f00'
+                        input value inputs.name:
+                            style "SSSSS_input_input"
 
-                    python:
-                        computedDirectory = playthrough.directory or SSSSS.Playthroughs.name_to_directory_name(name)
+                if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
+                    text "Are you sure? This name already exists." color '#ffb14c' offset (15, 2)
 
-                    text "Directory:"
-                    text "saves/[computedDirectory]"
-
-                    use x52URM_checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False))
-                    use x52URM_checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
-
-            hbox:
-                if(isEdit):
-                    button:
-                        key_events True
-                        xalign 0.5
-                        action Show("SSSSS_RemovePlaythroughConfirm", playthroughName=playthrough.name)
-
-                        text "Remove"
-
-                    button:
-                        key_events True
-                        xalign 0.5
-                        action SSSSS.Playthroughs.SetThumbnailForActive()
-
-                        text "Set current scene as thumbnail"
-
-                button:
-                    key_events True # We need this to still trigger key events defined inside of this button
-                    transclude
-                    xalign 0.5
-
-                    action inputs.onSubmit
-                    
-                    text "Save"
-
-screen SSSSS_RemovePlaythroughConfirm(playthroughName):
-    default deleteFiles = False
-
-    frame:
-        xfill True
-        yfill True
-        background '#000'
-
-        vbox:
-            text "Delete playthrough [playthroughName]?"
-
-            use x52URM_checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
-            text "If you chose to delete files, you won't be able to recover the playthrough."
-
-            hbox:
                 python:
-                    removeText = "Remove & delete files" if deleteFiles else "Remove"
+                    computedDirectory = playthrough.directory or SSSSS.Playthroughs.name_to_directory_name(name)
 
-                textbutton removeText:
-                    action [SSSSS.Playthroughs.Remove(playthroughName, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")]
-
-                textbutton "Close":
-                    action Hide("SSSSS_RemovePlaythroughConfirm")
-
-screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None):
-    vbox:
-        for playthrough in SSSSS.Playthroughs.playthroughs:
-            python:
-                name = playthrough.name
-
-            button:
-                if(hideTarget):
-                    action [itemAction(name), Hide(hideTarget)]
-                else:
-                    action itemAction(name)
+                text "Directory:"
 
                 hbox:
-                    add playthrough.getThumbnail()
+                    offset (15, 0)
 
-                    label "[name]"
+                    text "saves/" color '#e5e5e5'
+                    text "[computedDirectory]" color '#a2ebff'
+
+                use SSSSS_Checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False))
+                use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
+
+        hbox:
+            xfill True
+            offset (0, -50)
+
+            if(isEdit):
+                button:
+                    style "SSSSS_textbutton_medium_red"
+                    key_events True
+                    xalign 0.5
+                    action Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough)
+
+                    text "Remove" yalign .5 xalign 0.5 size 28
+
+            button:
+                style "SSSSS_textbutton_medium_green"
+                key_events True # We need this to still trigger key events defined inside of this button
+                xalign 0.5
+
+                action inputs.onSubmit
+                
+                text "Save" yalign .5 xalign 0.5 size 28
+
+screen SSSSS_RemovePlaythroughConfirm(playthrough):
+    default deleteFiles = False
+
+    use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm"), background="assets/gui/dialog/confirm_dialog_background.png", size=(x52URM.scalePxInt(922), x52URM.scalePxInt(400))):
+        style_prefix "SSSSS"
+
+        text "Are you sure you want to remove \"[playthrough.name]\"?" xalign .5
+
+        frame:
+            background None
+            xalign 0.5
+            padding (0, 10, 0, 0)
+
+            use SSSSS_Checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
+
+        frame:
+            background None
+            padding (0, 0, 10, 0)
+            xalign 0.5
+
+            hbox:
+                use sssss_icon('\ue88e')
+                hbox xsize 10
+                text "If you choose to delete the files, you won't be able to recover the playthrough." yalign .5
+
+        hbox:
+            xfill True
+
+            python:
+                removeText = "Remove & delete files" if deleteFiles else "Remove"
+
+            button:
+                style "SSSSS_textbutton_medium_red"
+                action [SSSSS.Playthroughs.Remove(playthrough.name, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")]
+                key_events True # We need this to still trigger key events defined inside of this button
+                xalign 0.5
+
+                text "[removeText]" yalign .5 xalign 0.5 size (20 if deleteFiles else 28)
+
+            button:
+                style "SSSSS_textbutton_medium_gray"
+                action Hide("SSSSS_RemovePlaythroughConfirm")
+                key_events True # We need this to still trigger key events defined inside of this button
+                xalign 0.5
+                
+                text "Close" yalign .5 xalign 0.5 size 28
+
+screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False):
+    viewport:
+        mousewheel True
+        draggable
+        scrollbars "vertical"
+        pagekeys True
+
+        vbox:
+            xfill True
+
+            for playthrough in SSSSS.Playthroughs.playthroughs:
+                button:
+                    xfill True
+
+                    if(hideTarget):
+                        action [itemAction(playthrough), Hide(hideTarget)]
+                    else:
+                        action itemAction(playthrough)
+
+                    hbox:
+                        xfill True
+
+                        add playthrough.getThumbnail()
+
+                        label "[playthrough.name]" xfill True
+
+                        if(canEdit):
+                            hbox:
+                                offset (-100, 0)
+
+                                use sssss_iconButton('\ue872', tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough))
+                                use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True))
