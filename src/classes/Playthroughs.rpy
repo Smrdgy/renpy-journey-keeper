@@ -4,8 +4,6 @@ init 1 python in SSSSS:
     import json
     import time
 
-    #TODO: replace names with IDs (remove, active playthrough, activate playthrough by name, etc.)
-
     class PlaythroughsClass():
         _playthroughs = []
         _activePlaythrough = None

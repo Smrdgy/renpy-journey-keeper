@@ -2,7 +2,7 @@ screen SSSSS_PlaythroughsPicker():
     use SSSSS_Dialog(title="Select a playthrough", closeAction=Hide("SSSSS_PlaythroughsPicker"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
         style_prefix "SSSSS"
 
-        use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker", canEdit=True)
+        use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker", canEdit=True, highlightActive=True)
 
 screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     default name = playthrough.name or ''
@@ -131,7 +131,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
                 
                 text "Close" yalign .5 xalign 0.5 size 28
 
-screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False):
+screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, highlightActive=False):
     viewport:
         mousewheel True
         draggable
@@ -155,7 +155,12 @@ screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False):
 
                         add playthrough.getThumbnail()
 
-                        label "[playthrough.name]" xfill True
+                        hbox:
+                            xfill True
+
+                            text "[playthrough.name]":
+                                if(highlightActive and SSSSS.Playthroughs.activePlaythrough == playthrough):
+                                    color '#abe9ff'
 
                         if(canEdit):
                             hbox:
