@@ -5,11 +5,18 @@ screen SSSSS_Sidepanel():
         newPlaythrough = SSSSS.Playthroughs.PlaythroughClass()
         playthrough = SSSSS.Playthroughs.activePlaythrough
         noPlaythrough = playthrough == None
+        sidepanelPos = store.persistent.SSSSS_sidepanelAlign or (renpy.config.screen_width - panelSize[0] - 15, renpy.config.screen_height / 2 - panelSize[1] / 2)
+
+        def sidepanel_dragged(drags, drop):
+            renpy.store.persistent.SSSSS_sidepanelAlign = (drags[0].x, drags[0].y)
 
     drag:
         draggable True
         drag_handle (0, -20, 1.0, panelSize[1])
-        align (.99999999,.5) # For some reason (1, .5) aligns it to the left...
+        xpos sidepanelPos[0]
+        ypos sidepanelPos[1]
+        droppable False
+        dragged sidepanel_dragged
 
         frame:
             xysize panelSize
