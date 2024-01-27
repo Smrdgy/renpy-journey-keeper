@@ -35,7 +35,7 @@ init 1 python in SSSSS:
 
         class PlaythroughClass():
             def __init__(self, id=None, directory=None, name=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1):#MODIFY HERE
-                self.id = id or int(time.time())#TBD
+                self.id = id or int(time.time())
                 self.directory = directory or (Playthroughs.name_to_directory_name(name) if name else None)
                 self.name = name
                 self.thumbnail = thumbnail
@@ -137,12 +137,12 @@ init 1 python in SSSSS:
         def getOrAdd(self, name):
             return self.get(name) or self.add(self.PlaythroughClass(name=name))
 
-        def remove(self, name, deleteSaveFiles=False, keepActive=False):
-            if(deleteSaveFiles):
-                SaveSystem.removeFilesForPlaythrough(name)
-
+        def remove(self, playthroughID, deleteSaveFiles=False, keepActive=False):
             for playthrough in self.playthroughs:
-                if(playthrough.name == name):
+                if(playthrough.id == playthroughID):
+                    if(deleteSaveFiles):
+                        SaveSystem.removeFilesForPlaythrough(playthrough)
+
                     self.playthroughs.remove(playthrough)
 
             if(keepActive == False):
@@ -173,6 +173,9 @@ init 1 python in SSSSS:
 
         def activateByName(self, playthroughName):
             self.activateByInstance(self.get(playthroughName))
+
+        def activateByID(self, playthroughID):
+            self.activateByInstance(self.getByID(playthroughID))
 
         def activateByInstance(self, playthrough):
             if(playthrough == None):
@@ -244,7 +247,7 @@ init 1 python in SSSSS:
             return True
 
         def __setActivePlaythrough(self, playthrough=None):
-            renpy.store.persistent.SSSSS_lastActivePlaythrough = playthrough.name if playthrough != None else None
+            renpy.store.persistent.SSSSS_lastActivePlaythrough = playthrough.id if playthrough != None else None
             self._activePlaythrough = playthrough
 
         class ActivateNative(renpy.ui.Action):
@@ -284,19 +287,19 @@ init 1 python in SSSSS:
                 self.playthrough = playthrough
 
             def __call__(self):
-                Playthroughs.activateByName(self.playthrough.name)
+                Playthroughs.activateByID(self.playthrough.id)
                 renpy.restart_interaction()
 
         class Remove(renpy.ui.Action):
-            def __init__(self, playthroughName, deleteSaves):
-                self.playthroughName = playthroughName
+            def __init__(self, playthroughID, deleteSaves):
+                self.playthroughID = playthroughID
                 self.deleteSaves = deleteSaves
 
             def __call__(self):
-                playthroughName = self.playthroughName if not callable(self.playthroughName) else self.playthroughName()
+                playthroughID = self.playthroughID if not callable(self.playthroughID) else self.playthroughID()
                 deleteSaves = self.deleteSaves if not callable(self.deleteSaves) else self.deleteSaves()
 
-                Playthroughs.remove(name=playthroughName, deleteSaveFiles=deleteSaves)
+                Playthroughs.remove(playthroughID=playthroughID, deleteSaveFiles=deleteSaves)
                 renpy.restart_interaction()
 
         class ToggleAutosaveOnChoicesOnActive(renpy.ui.Action):

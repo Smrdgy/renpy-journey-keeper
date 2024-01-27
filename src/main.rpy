@@ -17,7 +17,7 @@ init 51 python in SSSSS:
             renpy.show_screen('SSSSS_SidepanelHolder')
 
             if(renpy.store.persistent.SSSSS_playthroughs != None and renpy.store.persistent.SSSSS_lastActivePlaythrough != None):
-                Playthroughs.activateByName(renpy.store.persistent.SSSSS_lastActivePlaythrough)
+                Playthroughs.activateByID(renpy.store.persistent.SSSSS_lastActivePlaythrough)
 
             renpy.config.SSSSS_shows_sidepanel = True
 

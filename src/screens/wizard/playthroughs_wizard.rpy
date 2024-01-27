@@ -117,7 +117,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
 
             button:
                 style "SSSSS_textbutton_medium_red"
-                action [SSSSS.Playthroughs.Remove(playthrough.name, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")]
+                action [SSSSS.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")]
                 key_events True # We need this to still trigger key events defined inside of this button
                 xalign 0.5
 

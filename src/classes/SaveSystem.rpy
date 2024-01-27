@@ -26,8 +26,8 @@ init 1 python in SSSSS:
         def useDefault(self):
             renpy.loadsave.location = self._defaultLocation
 
-        def getPlaythroughSaveInstance(self, playthroughName):
-            return self._playthroughSaves.get(playthroughName)
+        def getPlaythroughSaveInstance(self, playthroughID):
+            return self._playthroughSaves.get(playthroughID)
 
         class PlaythroughSaveClass():
             def __init__(self, playthrough):
@@ -63,7 +63,7 @@ init 1 python in SSSSS:
             def activate(self):
                 renpy.loadsave.location = self.location
                 renpy.loadsave.clear_cache()
-                renpy.store.persistent.SSSSS_lastActivePlaythrough = self.playthrough.name
+                renpy.store.persistent.SSSSS_lastActivePlaythrough = self.playthrough.id
 
             def deleteFiles(self):
                 import shutil
@@ -72,12 +72,12 @@ init 1 python in SSSSS:
                     shutil.rmtree(location.directory)
 
         def createPlaythroughSaveInstance(self, playthrough):
-            self._playthroughSaves[playthrough.name] = SaveSystemClass.PlaythroughSaveClass(playthrough)
+            self._playthroughSaves[playthrough.id] = SaveSystemClass.PlaythroughSaveClass(playthrough)
             
-            return self._playthroughSaves.get(playthrough.name)
+            return self._playthroughSaves.get(playthrough.id)
 
         def getOrCreatePlaythroughSaveInstance(self, playthrough, autoActivate=True):
-            instance = self.getPlaythroughSaveInstance(playthrough.name)
+            instance = self.getPlaythroughSaveInstance(playthrough.id)
 
             if(instance == None):
                 instance = self.createPlaythroughSaveInstance(playthrough)
@@ -85,8 +85,8 @@ init 1 python in SSSSS:
             if(autoActivate):
                 instance.activate()
 
-        def removeFilesForPlaythrough(self, playthroughName):
-            instance = self.getPlaythroughSaveInstance(playthroughName)
+        def removeFilesForPlaythrough(self, playthrough):
+            instance = self.getPlaythroughSaveInstance(playthrough.id)
 
             if(instance == None):
                 return False
