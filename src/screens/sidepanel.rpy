@@ -16,7 +16,7 @@ screen SSSSS_Sidepanel():
             background None
 
             frame:
-                background "assets/gui/sidepanel.png"
+                background "gui/sidepanel.png"
                 xfill True
                 yfill True
                 offset (-15, -20)

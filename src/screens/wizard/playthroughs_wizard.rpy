@@ -1,5 +1,5 @@
 screen SSSSS_PlaythroughsPicker():
-    use SSSSS_Dialog(title="Select a playthrough", closeAction=Hide("SSSSS_PlaythroughsPicker"), background="assets/gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
+    use SSSSS_Dialog(title="Select a playthrough", closeAction=Hide("SSSSS_PlaythroughsPicker"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
         style_prefix "SSSSS"
 
         use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker", canEdit=True)
@@ -25,7 +25,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     key 'K_TAB' action inputs.NextInput()
     key 'shift_K_TAB' action inputs.PreviousInput()
 
-    use SSSSS_Dialog(title=("Edit playthrough" if isEdit else "New playthrough"), closeAction=Hide("SSSSS_EditPlaythrough"), background="assets/gui/edit_playthrough_dialog_background.png", size=(x52URM.scalePxInt(1000), x52URM.scalePxInt(600))):
+    use SSSSS_Dialog(title=("Edit playthrough" if isEdit else "New playthrough"), closeAction=Hide("SSSSS_EditPlaythrough"), background="gui/edit_playthrough_dialog_background.png", size=(x52URM.scalePxInt(1000), x52URM.scalePxInt(600))):
         style_prefix "SSSSS"
 
         vbox:
@@ -87,7 +87,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 screen SSSSS_RemovePlaythroughConfirm(playthrough):
     default deleteFiles = False
 
-    use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm"), background="assets/gui/dialog/confirm_dialog_background.png", size=(x52URM.scalePxInt(922), x52URM.scalePxInt(400))):
+    use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm"), background="gui/dialog/confirm_dialog_background.png", size=(x52URM.scalePxInt(922), x52URM.scalePxInt(400))):
         style_prefix "SSSSS"
 
         text "Are you sure you want to remove \"[playthrough.name]\"?" xalign .5

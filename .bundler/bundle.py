@@ -12,7 +12,7 @@ if __name__ == "__main__":
     # Add the collected .rpyc files to the archive
     for root, dirs, files in os.walk(current_directory):
         for file in files:
-            if file.endswith(".rpyc") or file.endswith(".ttf") or file.endswith(".otf"):
+            if file.endswith(".rpyc") or "assets" in root:
                 file_path = os.path.join(root, file)
 
                 # Get the relative path by using os.path.relpath()

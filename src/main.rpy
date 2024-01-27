@@ -1,5 +1,5 @@
 init -9999 python:
-    renpy.config.search_prefixes.append("SSSSS/src/") # Provides discoverability for fonts that are used soley in SSSSS
+    renpy.config.search_prefixes.append("SSSSS/src/assets/") # Provides discoverability for assets that are used in SSSSS
 
 init 51 python in SSSSS:
     _constant = True

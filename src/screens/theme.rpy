@@ -27,7 +27,7 @@ style SSSSS_label_text is SSSSS_text:
 
 style SSSSS_input_frame:
     xysize (928, 55)
-    background "assets/gui/input_long.png"
+    background "gui/input_long.png"
 
 style SSSSS_input_input is SSSSS_text:
     size 35
@@ -38,8 +38,8 @@ style SSSSS_vscrollbar:
     base_bar "#00000072"
     thumb '#fff'
     hover_thumb '#7084e6'
-#     base_bar "/assets/gui/scrollbar/base.png"
-#     thumb "/assets/gui/scrollbar/thumb.png"
+#     base_bar "/gui/scrollbar/base.png"
+#     thumb "/gui/scrollbar/thumb.png"
 
 ##################
 #     DIALOG     #
@@ -66,13 +66,13 @@ style SSSSS_dialog_close_frame:
     offset (-60, -60)
 
 style SSSSS_dialog_close_button:
-    background "assets/gui/dialog/dialog_close_background.png"
+    background "gui/dialog/dialog_close_background.png"
     xysize (128, 128)
     align (0.5, 0.5)
 
 style SSSSS_dialog_close_inner:
-    background "assets/gui/dialog/dialog_close_foreground.png"
-    hover_background "assets/gui/dialog/dialog_close_foreground_hover.png"
+    background "gui/dialog/dialog_close_foreground.png"
+    hover_background "gui/dialog/dialog_close_foreground_hover.png"
     xysize (64, 64)
     hover_xysize (80, 80)
     align (0.5, 0.5)
@@ -85,11 +85,11 @@ style SSSSS_dialog_content:
 ##################
 
 style SSSSS_checkbox_box:
-    background "assets/gui/checkbox.png"
+    background "gui/checkbox.png"
     xysize (47, 47)
 
 style SSSSS_checkbox_box_checked:
-    background "assets/gui/checkbox_checked.png"
+    background "gui/checkbox_checked.png"
     xysize (47, 47)
 
 style SSSSS_checkbox_box_unchecked:
@@ -105,11 +105,11 @@ style SSSSS_textbutton_medium:
     xysize (237, 80)
 
 style SSSSS_textbutton_medium_green is SSSSS_textbutton_medium:
-    background "assets/gui/button/button_green.png"
+    background "gui/button/button_green.png"
 
 style SSSSS_textbutton_medium_red is SSSSS_textbutton_medium:
-    background "assets/gui/button/button_red.png"
+    background "gui/button/button_red.png"
 
 style SSSSS_textbutton_medium_gray is SSSSS_textbutton_medium:
-    background "assets/gui/button/button_gray.png"
+    background "gui/button/button_gray.png"
     
