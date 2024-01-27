@@ -1,4 +1,6 @@
 screen SSSSS_Pagination():
+    default paginationSize = (1000, 80)
+
     python:
         import math
         import sys
@@ -13,38 +15,40 @@ screen SSSSS_Pagination():
 
         pageOffset = math.floor(currentPage / 10)
 
-    fixed:
-        ## Buttons to access other pages.
-        grid 3 1:
-            style_prefix "page"
+    drag:
+        draggable True
+        drag_handle (-10, -10, paginationSize[0] + 20, paginationSize[1] + 20)
+        align (.5, .999999) # For some reason (.5, 1) aligns it to the top...
 
-            xfill True
-            yalign 1.0
-            spacing gui.page_spacing
+        frame:
+            background '#000000ee'
+            xysize paginationSize
 
-            hbox at left:
+            ## Buttons to access other pages.
+            grid 3 1:
+                xfill True
+                yalign 1.0
                 spacing gui.page_spacing
 
-                textbutton _("<<") action FilePage(max(currentPage - 10, 1))
-                if(isPython2):
-                    textbutton _("<") action FilePagePrevious(max=1)
-                else:
-                    textbutton _("<") action FilePagePrevious(max=1, auto=False, quick=False)
+                hbox at left:
+                    spacing gui.page_spacing
 
-            grid 10 1 at center:
-                spacing gui.page_spacing
+                    textbutton _("⇇") action FilePage(max(currentPage - 10, 1))
+                    hbox xsize 5
+                    textbutton _("←") action FilePagePrevious()
 
-                for page in range(max(int(pageOffset * 10), 1), int(pageOffset * 10 + 10)):
-                    textbutton "[page]" action FilePage(page)
+                grid 10 1 at center:
+                    spacing gui.page_spacing
 
-                if(pageOffset == 0):
-                    text ""
+                    for page in range(max(int(pageOffset * 10), 1), int(pageOffset * 10 + 10)):
+                        textbutton "[page]" action FilePage(page)
 
-            hbox at right:
-                spacing gui.page_spacing
+                    if(pageOffset == 0):
+                        text ""
 
-                if(isPython2):
-                    textbutton _(">") action FilePageNext()
-                else:
-                    textbutton _(">") action FilePageNext(auto=False, quick=False)
-                textbutton _(">>") action FilePage(currentPage + 10)
+                hbox at right:
+                    spacing gui.page_spacing
+
+                    textbutton _("→") action FilePageNext()
+                    hbox xsize 5
+                    textbutton _("⇉") action FilePage(currentPage + 10)
