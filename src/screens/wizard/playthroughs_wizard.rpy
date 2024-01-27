@@ -48,18 +48,19 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
                     text "Are you sure? This name already exists." color '#ffb14c' offset (15, 2)
 
-                python:
-                    computedDirectory = playthrough.directory or SSSSS.Playthroughs.name_to_directory_name(name)
+                if(playthrough.id != 1):
+                    python:
+                        computedDirectory = playthrough.directory if (playthrough.directory != None) else (SSSSS.PlaythroughsClass.name_to_directory_name(name) if name else None)
 
-                text "Directory:"
+                    text "Directory:"
 
-                hbox:
-                    offset (15, 0)
+                    hbox:
+                        offset (15, 0)
 
-                    text "saves/" color '#e5e5e5'
-                    text "[computedDirectory]" color '#a2ebff'
+                        text "saves/" color '#e5e5e5'
+                        text "[computedDirectory]" color '#a2ebff'
 
-                use SSSSS_Checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False))
+                # use SSSSS_Checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False)) #TODO: Implement
                 use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
 
         hbox:
@@ -159,12 +160,13 @@ screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, h
                             xfill True
 
                             text "[playthrough.name]":
-                                if(highlightActive and SSSSS.Playthroughs.activePlaythrough == playthrough):
+                                if(highlightActive and (SSSSS.Playthroughs.activePlaythrough == playthrough or (playthrough.id == 1 and SSSSS.Playthroughs.activePlaythrough == None))):
                                     color '#abe9ff'
 
                         if(canEdit):
                             hbox:
                                 offset (-100, 0)
 
-                                use sssss_iconButton('\ue872', tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough))
+                                use sssss_iconButton('\ue872', tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), disabled=playthrough.id == 1)
+
                                 use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True))

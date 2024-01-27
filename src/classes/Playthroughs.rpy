@@ -14,11 +14,18 @@ init 1 python in SSSSS:
             if hasattr(renpy.config, "SSSSS_playthroughs_initialized"): return
             renpy.config.SSSSS_playthroughs_initialized = True
 
+            hasNative = False
             if(renpy.store.persistent.SSSSS_playthroughs != None):
                 arr = json.loads(renpy.store.persistent.SSSSS_playthroughs)
 
                 for playthrough in arr:
+                    if(playthrough.get("id") == 1):
+                        hasNative = True
+
                     self._playthroughs.append(self.createPlaythroughFromSerialization(playthrough))
+
+            if(not hasNative):
+                self._playthroughs.insert(0, self.PlaythroughClass(id=1, directory="", name="Native", autosaveOnChoices=False))#MODIFY HERE
 
         @property
         def playthroughs(self):
@@ -34,7 +41,7 @@ init 1 python in SSSSS:
         class PlaythroughClass():
             def __init__(self, id=None, directory=None, name=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1):#MODIFY HERE
                 self.id = id or int(time.time())
-                self.directory = directory or (Playthroughs.name_to_directory_name(name) if name else None)
+                self.directory = directory if (directory != None) else (PlaythroughsClass.name_to_directory_name(name) if name else None)
                 self.name = name
                 self.thumbnail = thumbnail
                 self.storeChoices = storeChoices
@@ -51,7 +58,7 @@ init 1 python in SSSSS:
                     self.name = name
 
                     if(self.directory == None):
-                        self.directory = Playthroughs.name_to_directory_name(name)
+                        self.directory = PlaythroughsClass.name_to_directory_name(name)
 
                 if thumbnail != None: self.thumbnail = thumbnail
                 if storeChoices != None: self.storeChoices = storeChoices
@@ -66,7 +73,7 @@ init 1 python in SSSSS:
                 self.name = playthrough.name
 
                 if(self.directory == None):
-                    self.directory = Playthroughs.name_to_directory_name(playthrough.name)
+                    self.directory = PlaythroughsClass.name_to_directory_name(playthrough.name)
 
                 self.thumbnail = playthrough.thumbnail
                 self.storeChoices = playthrough.storeChoices
@@ -201,7 +208,8 @@ init 1 python in SSSSS:
             else:
                 self.activateNative()
 
-        def name_to_directory_name(self, title):
+        @staticmethod
+        def name_to_directory_name(title):
             import re
 
             # Replace spaces and special characters with underscores
