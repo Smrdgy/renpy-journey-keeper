@@ -9,21 +9,26 @@ init 51 python in SSSSS:
     Choices = ChoicesDetectorClass()
     Autosaver = AutosaverClass()
 
-    def afterLoad():
-        renpy.show_screen('SSSSS_Overlay')
-
     def startInteractCallback():
-        if(not hasattr(renpy.config, "SSSSS_shows_sidepanel")):
+        if(not renpy.get_screen('SSSSS_SidepanelHolder')):
             renpy.show_screen('SSSSS_SidepanelHolder')
 
             if(renpy.store.persistent.SSSSS_playthroughs != None and renpy.store.persistent.SSSSS_lastActivePlaythrough != None):
                 Playthroughs.activateByID(renpy.store.persistent.SSSSS_lastActivePlaythrough)
 
-            renpy.config.SSSSS_shows_sidepanel = True
+        if(not renpy.get_screen('SSSSS_Overlay')):
+            renpy.show_screen('SSSSS_Overlay')
+
+    class ToggleSidepanel(renpy.ui.Action):
+        def __call__(self):
+            if(not hasattr(renpy.config, "SSSSS_show_sidepanel")):
+                renpy.config.SSSSS_show_sidepanel = False
+
+            renpy.config.SSSSS_show_sidepanel = not renpy.config.SSSSS_show_sidepanel
+            renpy.restart_interaction()
 
 init 999 python:
     if not 'SSSSSsidepanel' in config.layers: config.layers.append('SSSSSsidepanel')
     if not 'SSSSSoverlay' in config.layers: config.layers.append('SSSSSoverlay')
 
-    renpy.config.after_load_callbacks.append(SSSSS.afterLoad)
     renpy.config.start_interact_callbacks.append(SSSSS.startInteractCallback)

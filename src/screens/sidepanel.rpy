@@ -40,9 +40,10 @@ screen SSSSS_Sidepanel():
 screen SSSSS_SidepanelHolder():
     layer "SSSSSsidepanel"
 
+    key "K_SCROLLOCK" action SSSSS.ToggleSidepanel()
+
     python:
-        print(renpy.current_screen().screen_name[0])
-        isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None
+        isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None or (hasattr(renpy.config, "SSSSS_show_sidepanel") and renpy.config.SSSSS_show_sidepanel)
 
     # if is in save/load menu
     if(isSaveLoadScreen):
