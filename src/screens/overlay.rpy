@@ -1,7 +1,5 @@
 screen SSSSS_Overlay():
     layer "SSSSSoverlay"
-    
-    text "Overlay"
 
     if SSSSS.Playthroughs.activePlaythrough != None and SSSSS.Playthroughs.activePlaythrough.autosaveOnChoices:
         if(not SSSSS.Choices.isDisplayingChoice):
