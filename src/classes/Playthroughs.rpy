@@ -311,3 +311,13 @@ init 1 python in SSSSS:
         class ToggleAutosaveOnChoicesOnActive(renpy.ui.Action):
             def __call__(self):
                 Playthroughs.toggleAutosaveOnChoicesOnActive()
+
+        class QuickSave(renpy.ui.Action):
+            def __call__(self):
+                _, _, slotString = Autosaver.getNextSlot()
+
+                renpy.take_screenshot()
+                renpy.save(slotString)
+                renpy.store.SSSSS_ActiveSlot = slotString
+
+                renpy.notify("Quicksave created at {}".format(slotString))
