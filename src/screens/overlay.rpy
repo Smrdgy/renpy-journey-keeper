@@ -1,5 +1,7 @@
 screen SSSSS_Overlay():
-    layer "SSSSSoverlay"
+    layer "screens"
+
+    text "." offset(1910, -20) color '#f00'
 
     key "K_F5" action SSSSS.Playthroughs.QuickSave()
 
@@ -13,3 +15,5 @@ screen SSSSS_Overlay():
                 yfill True
 
                 key "mousedown_1" action SSSSS.Autosaver.HandlePress()
+
+                text "." offset(1910, -20) color '#f0f'
