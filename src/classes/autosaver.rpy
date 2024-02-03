@@ -58,7 +58,7 @@ init -999 python in SSSSS:
                 if renpy.scan_saved_game(renpy.store.SSSSS_ActiveSlot) and not self.suppressAutosaveConfirm:
                     self.confirmDialogOpened = True
                     showConfirm(
-                        title=("Are you sure you want to overwrite your save?"),
+                        title=("Are you sure you want to overwrite your save at {}?".format(renpy.store.SSSSS_ActiveSlot)),
                         message=("By choosing \"No\", the autosave feature will disable itself until you re-enable it again."),
                         yes=[Autosaver.ConfirmDialogSave(), Autosaver.ConfirmDialogClose()],
                         no=[Playthroughs.ToggleAutosaveOnChoicesOnActive(), Autosaver.ConfirmDialogClose()],
@@ -107,23 +107,42 @@ init -999 python in SSSSS:
                     renpy.loadsave.save_dump(roots, renpy.game.log)
 
                 logf = io.BytesIO()
-                try:
-                    renpy.loadsave.dump((roots, renpy.game.log), logf)
-                except Exception:
-                    t, e, tb = sys.exc_info()
 
+                if(sys.version_info[0] == 2):
                     try:
-                        bad = renpy.loaadsave.find_bad_reduction(roots, renpy.game.log)
+                        renpy.loadsave.dump((roots, renpy.game.log), logf)
+                    except:
+
+                        t, e, tb = sys.exc_info()
+
+                        try:
+                            bad = renpy.loadsave.find_bad_reduction(roots, renpy.game.log)
+                        except:
+                            raise t, e, tb
+
+                        if bad is None:
+                            raise t, e, tb
+
+                        e.args = ( e.args[0] + ' (perhaps {})'.format(bad), ) + e.args[1:]
+                        raise t, e, tb
+                else:
+                    try:
+                        renpy.loadsave.dump((roots, renpy.game.log), logf)
                     except Exception:
+                        t, e, tb = sys.exc_info()
+
+                        try:
+                            bad = renpy.loaadsave.find_bad_reduction(roots, renpy.game.log)
+                        except Exception:
+                            reraise(t, e, tb)
+
+                        if bad is None:
+                            reraise(t, e, tb)
+
+                        if e.args:
+                            e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
+
                         reraise(t, e, tb)
-
-                    if bad is None:
-                        reraise(t, e, tb)
-
-                    if e.args:
-                        e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
-
-                    reraise(t, e, tb)
 
                 json = { "_save_name" : extra_info, "_renpy_version" : list(renpy.version_tuple), "_version" : renpy.config.version }
 
@@ -151,3 +170,8 @@ init -999 python in SSSSS:
                 renpy.loadsave.clear_slot(slotname)
 
                 Autosaver.pendingSave = None
+
+                page, slot = renpy.store.SSSSS_ActiveSlot.split('-')
+                page = int(page)
+
+                renpy.store.persistent._file_page = page

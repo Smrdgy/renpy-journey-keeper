@@ -2,6 +2,8 @@ screen SSSSS_Sidepanel():
     default panelSize = (60, 366)
 
     python:
+        _constant = True
+
         newPlaythrough = SSSSS.Playthroughs.PlaythroughClass()
         playthrough = SSSSS.Playthroughs.activePlaythrough
         noPlaythrough = playthrough == None
