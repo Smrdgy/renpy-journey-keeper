@@ -173,6 +173,8 @@ init 1 python in SSSSS:
         def toggleAutosaveOnChoicesOnActive(self):
             self.activePlaythrough.edit(autosaveOnChoices=not self.activePlaythrough.autosaveOnChoices)
 
+            Autosaver.pendingSave = None
+
             self.saveToPersistent()
             renpy.restart_interaction()
 
