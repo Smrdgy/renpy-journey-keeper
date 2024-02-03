@@ -9,6 +9,9 @@ init 51 python in SSSSS:
     Choices = ChoicesDetectorClass()
     Autosaver = AutosaverClass()
 
+    def afterLoadCallback():
+        Autosaver.afterLoadSavePositionPending = True
+
     def startInteractCallback():
         if(not renpy.get_screen('SSSSS_SidepanelHolder')):
             renpy.show_screen('SSSSS_SidepanelHolder')
@@ -29,6 +32,6 @@ init 51 python in SSSSS:
 
 init 999 python:
     if not 'SSSSSsidepanel' in config.layers: config.layers.append('SSSSSsidepanel')
-    if not 'SSSSSoverlay' in config.layers: config.layers.append('SSSSSoverlay')
 
+    renpy.config.after_load_callbacks.append(SSSSS.afterLoadCallback)
     renpy.config.start_interact_callbacks.append(SSSSS.startInteractCallback)
