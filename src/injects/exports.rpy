@@ -3,7 +3,7 @@ init -99 python:
         def new_funct(*new_args, **new_kwargs):
             new_kwargs.update(kwargs.copy())
             
-            if renpy.config.autosave_on_choice:
+            if SSSSS.Playthroughs.activePlaythrough != None and SSSSS.Playthroughs.activePlaythrough.autosaveOnChoices:
                 SSSSS.Autosaver.registerChoices()
 
             return func(*(args + new_args), **new_kwargs)
