@@ -44,6 +44,10 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, xsize=None, moda
                     key_events True # We need this to still trigger key events defined inside of this button
                     action NullAction() # Prevent clicking through
                     has vbox
+
+                    if(message):
+                        text message style "SSSSS_text" xalign 0.5
+
                     transclude
 
 screen SSSSS_DialogCloseButton(action=None):

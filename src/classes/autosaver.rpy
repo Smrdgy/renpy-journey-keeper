@@ -44,6 +44,14 @@ init -999 python in SSSSS:
 
             return page, slot, slotString
 
+        def getCurrentSlot(self):
+            slotString = renpy.store.SSSSS_ActiveSlot
+            page, slot = slotString.split('-')
+            page = int(page)
+            slot = int(slot)
+
+            return page, slot, slotString
+
         def handlePress(self):
             if(self.pendingSave != None):
                 self.pendingSave.takeAndSaveScreenshot()
@@ -57,12 +65,7 @@ init -999 python in SSSSS:
                 # If the save slot is not bigger than the very last one, do once a confirm whether to disable autosaving
                 if renpy.scan_saved_game(renpy.store.SSSSS_ActiveSlot) and not self.suppressAutosaveConfirm:
                     self.confirmDialogOpened = True
-                    showConfirm(
-                        title=("Are you sure you want to overwrite your save at {}?".format(renpy.store.SSSSS_ActiveSlot)),
-                        message=("By choosing \"No\", the autosave feature will disable itself until you re-enable it again."),
-                        yes=[Autosaver.ConfirmDialogSave(), Autosaver.ConfirmDialogClose()],
-                        no=[Playthroughs.ToggleAutosaveOnChoicesOnActive(), Autosaver.ConfirmDialogClose()],
-                    )
+                    renpy.show_screen("SSSSS_AutosaveOverwriteConfirm")
                     return
 
                 self.pendingSave.save()
@@ -81,6 +84,16 @@ init -999 python in SSSSS:
         class ConfirmDialogClose(renpy.ui.Action):
             def __call__(self):
                 Autosaver.confirmDialogOpened = False
+
+        class MoveOneSlotOver(renpy.ui.Action):
+            def __call__(self):
+                _, _, slotName = Autosaver.getNextSlot()
+
+                renpy.store.SSSSS_ActiveSlot = slotName
+
+        class TrySavePendingSave(renpy.ui.Action):
+            def __call__(self):
+                Autosaver.trySavePendingSave()
 
         def registerChoices(self):
             self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot
