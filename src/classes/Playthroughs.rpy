@@ -3,6 +3,7 @@ init 1 python in SSSSS:
 
     import json
     import time
+    import base64
 
     class PlaythroughsClass():
         _playthroughs = []
@@ -96,24 +97,25 @@ init 1 python in SSSSS:
                     #MODIFY HERE
                 }
 
-            def getThumbnail(self):
-                return None
-                # TODO: Complete
-                # if(self.thumbnail == None):
-                #     return renpy.display.pgrender.surface((2, 2), True)
+            def getThumbnail(self, width=None, height=None, maxWidth=None, maxHeight=None):
+                defWidth = 150
+                defHeight = 150
 
-                # import io
+                if(self.thumbnail == None):
+                    return ImagePlaceholder(width or defWidth, height or defHeight)
 
-                # try:
-                #     # TODO: Fix and uncomment
-                #     sio = io.BytesIO(bytes.fromhex(self.thumbnail))
-                #     rv = renpy.display.pgrender.load_image(sio, "image.png")
-                #     return rv
-                # except Exception:
-                #     return renpy.display.pgrender.surface((2, 2), True)
+                import io
+
+                try:
+                    sio = io.BytesIO(base64.b64decode(self.thumbnail))
+                    rv = renpy.display.pgrender.load_image(sio, "image.png")
+
+                    return Image(rv, width=width or maxWidth or defWidth, height=height or maxHeight or defHeight, fitAfterResize=maxWidth or maxHeight)
+                except Exception:
+                    return ImagePlaceholder(width or defWidth, height or defHeight)
 
             def makeThumbnail(self):
-                self.thumbnail = renpy.game.interface.get_screenshot().hex() #TODO: Test, hopefully it won't create a screenshot of the save UI... Also verify the size/speed for let's say 50 or 100 playthroughs
+                self.thumbnail = base64.b64encode(renpy.game.interface.get_screenshot()) #TODO: verify the size/speed for let's say 50 or 100 playthroughs
 
 
         def add(self, playthrough):
@@ -238,14 +240,6 @@ init 1 python in SSSSS:
             renpy.store.persistent.SSSSS_playthroughs = json.dumps(arr)
 
             renpy.save_persistent()
-
-        def getThumbnailFromName(self, playthroughName):
-            playthrough = self.get(playthroughName)
-        
-            if(playthrough != None and playthrough.thumbnail != None):
-                return playthrough.getThumbnail()
-
-            return None
 
         def isValidName(self, name):
             for playthrough in self.playthroughs:

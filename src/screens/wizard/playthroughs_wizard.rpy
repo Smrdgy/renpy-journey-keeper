@@ -60,8 +60,25 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                         text "saves/" color '#e5e5e5'
                         text "[computedDirectory]" color '#a2ebff'
 
-                # use SSSSS_Checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False)) #TODO: Implement
-                use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
+                hbox ysize 10
+
+                hbox:
+                    xfill True
+
+                    vbox:
+                        # use SSSSS_Checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False)) #TODO: Implement
+                        use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
+
+                    hbox:
+                        hbox xsize 160:
+                            add playthrough.getThumbnail(width=150, maxHeight=150)
+
+                        button:
+                            style "SSSSS_textbutton_medium_gray"
+                            key_events True
+                            action [SSSSS.Playthroughs.SetThumbnailForActive()]
+
+                            text "Set current scene as thumbnail" yalign .5 xalign 0.5 size 24
 
         hbox:
             xfill True
@@ -106,7 +123,9 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             xalign 0.5
 
             hbox:
-                use sssss_icon('\ue88e')
+                button:
+                    action None
+                    use sssss_icon('\ue88e')
                 hbox xsize 10
                 text "If you choose to delete the files, you won't be able to recover the playthrough." yalign .5
 
@@ -154,7 +173,9 @@ screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, h
                     hbox:
                         xfill True
 
-                        add playthrough.getThumbnail()
+                        add playthrough.getThumbnail(60, 60)
+
+                        hbox xsize 10
 
                         hbox:
                             xfill True
