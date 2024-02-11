@@ -117,6 +117,30 @@ init 1 python in SSSSS:
             def makeThumbnail(self):
                 self.thumbnail = base64.b64encode(renpy.game.interface.get_screenshot()) #TODO: verify the size/speed for let's say 50 or 100 playthroughs
 
+            def cycleSaves(self):
+                current_page = 1
+                current_slot = 1
+                slots_per_page = renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
+
+                instance = SaveSystem.getPlaythroughSaveInstance(self.id)
+                instance.location.scan()
+
+                regexp = r'\d+' + '-' + r'\d+'
+                slots = renpy.list_slots(regexp=regexp)
+                slots.sort()
+
+                for slot in slots:
+                    if(renpy.loadsave.can_load(slot)):
+                        newSlot = str(current_page) + '-' + str(current_slot)
+
+                        if(slot != newSlot):
+                            renpy.loadsave.rename_save(slot, newSlot)
+
+                        current_slot += 1
+
+                        if(current_slot > slots_per_page):
+                            current_slot = 1
+                            current_page += 1
 
         def add(self, playthrough):
             self._playthroughs.append(playthrough)
@@ -317,3 +341,20 @@ init 1 python in SSSSS:
                 renpy.store.SSSSS_ActiveSlot = slotString
 
                 renpy.notify("Quicksave created at {}".format(slotString))
+
+        class TryCycleSaves(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
+            def __call__(self):
+                playthrough = self.playthrough if not callable(self.playthrough) else self.playthrough()
+
+                showConfirm(title="Cycle playthroughs", message="Cycle playthroughs will rename all your saves so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?", yes=Playthroughs.CycleSaves(playthrough), yesText="Yes", noText="No")
+
+        class CycleSaves(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
+            def __call__(self):
+                self.playthrough.cycleSaves()
+                

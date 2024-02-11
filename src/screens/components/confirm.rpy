@@ -1,36 +1,34 @@
-screen SSSSS_Confirm(title="", message="", yes=None, no=None, yesText="Yes", noText="No"):
+screen SSSSS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="Yes", noText="No"):
     modal True
 
     zorder 199
 
-    frame:
-        xfill True
-        yfill True
-        background '#000'
-
+    use SSSSS_Dialog(title=title, message=message, closeAction=[no, Hide("SSSSS_Confirm")], background="gui/dialog/confirm_dialog_background.png", size=(922, 378)):
         vbox:
+            yfill True
+
+        hbox:
+            offset (0, -70)
             xalign 0.5
-            yalign 0.5
 
-            text title xalign 0.5
-
-            null height 10
-
-            text message xalign 0.5
-
-            null height 20
-
-            hbox:
+            button:
+                style "SSSSS_textbutton_medium_green"
+                action [yes, Hide("SSSSS_Confirm")]
+                key_events True
                 xalign 0.5
 
-                textbutton yesText:
-                    action [yes, Hide("SSSSS_Confirm")]
+                text "[yesText]" yalign .5 xalign 0.5 size 28 text_align 0.5
 
-                null width 100
+            null width 100
 
-                textbutton noText:
-                    action [no, Hide("SSSSS_Confirm")]
+            button:
+                style "SSSSS_textbutton_medium_red"
+                action [no, Hide("SSSSS_Confirm")]
+                key_events True
+                xalign 0.5
+
+                text "[noText]" yalign .5 xalign 0.5 size 28 text_align 0.5
 
 init python in SSSSS:
-    def showConfirm(title="", message="", yes=None, no=None, yesText="Yes", noText="No"):
+    def showConfirm(title="", message=None, yes=None, no=None, yesText="Yes", noText="No"):
         renpy.run(renpy.store.Show("SSSSS_Confirm", title=title, message=message, yes=yes, no=no, yesText=yesText, noText=noText))

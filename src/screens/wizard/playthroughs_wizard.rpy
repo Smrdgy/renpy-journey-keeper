@@ -191,3 +191,18 @@ screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, h
                                 use sssss_iconButton('\ue872', tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), disabled=playthrough.id == 1)
 
                                 use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True))
+
+screen SSSSS_PlaythroughActions(playthrough):
+    use SSSSS_Dialog(title="Playtrhough actions", closeAction=Hide("SSSSS_PlaythroughActions"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
+        style_prefix "SSSSS"
+
+        vbox:
+            yfill True
+
+            button:
+                style "SSSSS_textbutton_medium_gray"
+                action [SSSSS.Playthroughs.TryCycleSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
+                key_events True
+                xalign 0.5
+                
+                text "Cycle saves" yalign .5 xalign 0.5 size 28

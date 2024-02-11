@@ -34,7 +34,7 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, xsize=None, moda
                                 use sssss_icon(icon)
 
                             if title:
-                                text title yalign .5 size 40
+                                text title yalign .5 size 40 text_align 0.5
 
                     use SSSSS_DialogCloseButton(action=closeAction)
 
@@ -46,7 +46,7 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, xsize=None, moda
                     has vbox
 
                     if(message):
-                        text message style "SSSSS_text" xalign 0.5
+                        text message style "SSSSS_text" xalign 0.5 text_align 0.5
 
                     transclude
 
