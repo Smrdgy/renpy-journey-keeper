@@ -113,3 +113,17 @@ style SSSSS_textbutton_medium_red is SSSSS_textbutton_medium:
 style SSSSS_textbutton_medium_gray is SSSSS_textbutton_medium:
     background "gui/button/button_gray.png"
     
+style SSSSS_pagination_textbutton:
+    background None
+    offset (0, -5)
+
+style SSSSS_pagination_textbutton_text is SSSSS_text:
+    color '#cdcdcd'
+    hover_color '#ffffff'
+    size 40
+    text_align 0.5
+
+style SSSSS_pagination_textbutton_active is SSSSS_pagination_textbutton
+
+style SSSSS_pagination_textbutton_active_text is SSSSS_pagination_textbutton_text:
+    color '#abe9ff'

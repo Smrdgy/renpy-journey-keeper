@@ -8,6 +8,7 @@ init 51 python in SSSSS:
     SaveSystem = SaveSystemClass()
     Choices = ChoicesDetectorClass()
     Autosaver = AutosaverClass()
+    Pagination = PaginationClass()
 
     def afterLoadCallback():
         Autosaver.afterLoadSavePositionPending = True

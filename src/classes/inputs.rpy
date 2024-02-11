@@ -3,14 +3,15 @@ init -999 python in x52URM:
     _constant = True
 
     class Input(renpy.store.InputValue):
-        def __init__(self, text='', autoFocus=False, mask=None, onEnter=None, editable=True, updateScreenVariable=None):
+        def __init__(self, text='', autoFocus=False, mask=None, onEnter=None, editable=True, updateScreenVariable=None, onInput=None):
             self._m1_inputs__text = text
             self._m1_inputs__unmaskedText = text
             self.default = autoFocus
             self.mask = mask
             self.onEnter = onEnter
             self.editable = editable
-            self.updateScreenVariable = updateScreenVariable 
+            self.updateScreenVariable = updateScreenVariable
+            self.onInput = onInput
         
         @property
         def autoFocus(self):
@@ -37,6 +38,9 @@ init -999 python in x52URM:
                 self._m1_inputs__text = newText
             else:
                 self._m1_inputs__text = newText
+
+            if self.onInput:
+                self.onInput(str(self))
             
             if self.updateScreenVariable:
                 renpy.store.SetScreenVariable(self.updateScreenVariable, str(self))()

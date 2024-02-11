@@ -42,7 +42,7 @@ screen SSSSS_Sidepanel():
 
                 use SSSSS_Divider(sizeX=panelSize[0] - 10)
 
-                use sssss_iconButton('\ue5d3', tt="Custom pagination", action=Show("SSSSS_Pagination"))
+                use sssss_iconButton('\ue5d3', tt="Custom pagination", action=SSSSS.Pagination.TogglePagination())
                 use sssss_iconButton('\ue8b8', tt="Settings", action=Show("SSSSS_Settings"), disabled=True)
 
 
@@ -57,3 +57,6 @@ screen SSSSS_SidepanelHolder():
     # if is in save/load menu
     if(isSaveLoadScreen):
         use SSSSS_Sidepanel()
+
+    if(isSaveLoadScreen and SSSSS.Pagination.isShowingPagination):
+        use SSSSS_Pagination()

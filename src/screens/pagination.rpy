@@ -1,5 +1,6 @@
 screen SSSSS_Pagination():
     default paginationSize = (1000, 80)
+    default showGoTo = False
 
     python:
         import math
@@ -15,40 +16,55 @@ screen SSSSS_Pagination():
 
         pageOffset = math.floor(currentPage / 10)
 
+        paginationPos = store.persistent.SSSSS_PaginationPos or (renpy.config.screen_width / 2 - paginationSize[0] / 2, renpy.config.screen_height - paginationSize[1] - 15)
+
+        def pagination_dragged(drags, drop):
+            renpy.store.persistent.SSSSS_PaginationPos = (drags[0].x, drags[0].y)
+
     drag:
         draggable True
         drag_handle (-10, -10, paginationSize[0] + 20, paginationSize[1] + 20)
-        align (.5, .999999) # For some reason (.5, 1) aligns it to the top...
+        xpos paginationPos[0]
+        ypos paginationPos[1]
+        droppable False
+        dragged pagination_dragged
 
         frame:
-            background '#000000ee'
+            style_prefix "SSSSS"
+            background None
             xysize paginationSize
+
+            frame:
+                background "gui/pagination.png"
+                offset (-20, -1)
 
             ## Buttons to access other pages.
             grid 3 1:
                 xfill True
                 yalign 1.0
-                spacing gui.page_spacing
+                spacing 10
 
                 hbox at left:
-                    spacing gui.page_spacing
+                    spacing 10
 
-                    textbutton _("⇇") action FilePage(max(currentPage - 10, 1))
-                    hbox xsize 5
-                    textbutton _("←") action FilePagePrevious()
+                    use sssss_iconButton('\uf045', tt="Go to page", action=SetLocalVariable("showGoTo", not showGoTo))
+                    if showGoTo:
+                        use SSSSS_GoToPage()
+
+                    textbutton _("<<") action FilePage(max(currentPage - 10, 1)) style "SSSSS_pagination_textbutton"
+                    textbutton _("<") action FilePagePrevious() style "SSSSS_pagination_textbutton"
 
                 grid 10 1 at center:
-                    spacing gui.page_spacing
+                    spacing 10
 
                     for page in range(max(int(pageOffset * 10), 1), int(pageOffset * 10 + 10)):
-                        textbutton "[page]" action FilePage(page)
+                        textbutton "[page]" action FilePage(page) style ("SSSSS_pagination_textbutton_active" if page == int(renpy.store.persistent._file_page) else "SSSSS_pagination_textbutton")
 
                     if(pageOffset == 0):
                         text ""
 
                 hbox at right:
-                    spacing gui.page_spacing
+                    spacing 10
 
-                    textbutton _("→") action FilePageNext()
-                    hbox xsize 5
-                    textbutton _("⇉") action FilePage(currentPage + 10)
+                    textbutton _(">") action FilePageNext() style "SSSSS_pagination_textbutton"
+                    textbutton _(">>") action FilePage(currentPage + 10) style "SSSSS_pagination_textbutton"
