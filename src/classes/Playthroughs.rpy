@@ -364,7 +364,7 @@ init 1 python in SSSSS:
             def __call__(self):
                 playthrough = self.playthrough if not callable(self.playthrough) else self.playthrough()
 
-                showConfirm(title="Cycle playthroughs", message="Cycle playthroughs will rename all your saves so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?", yes=Playthroughs.CycleSaves(playthrough), yesText="Yes", noText="No")
+                showConfirm(title=_("Cycle playthroughs"), message=_("Cycle playthroughs will rename all your saves so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?"), yes=Playthroughs.CycleSaves(playthrough))
 
         class CycleSaves(renpy.ui.Action):
             def __init__(self, playthrough):

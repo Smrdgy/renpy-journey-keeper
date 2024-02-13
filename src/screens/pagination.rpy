@@ -47,7 +47,7 @@ screen SSSSS_Pagination():
                 hbox at left:
                     spacing 10
 
-                    use sssss_iconButton('\uf045', tt="Go to page", action=SetLocalVariable("showGoTo", not showGoTo))
+                    use sssss_iconButton('\uf045', tt=_("Go to page"), action=SetLocalVariable("showGoTo", not showGoTo))
                     if showGoTo:
                         use SSSSS_GoToPage()
 

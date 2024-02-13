@@ -1,5 +1,5 @@
 screen SSSSS_PlaythroughsPicker():
-    use SSSSS_Dialog(title="Select a playthrough", closeAction=Hide("SSSSS_PlaythroughsPicker"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
+    use SSSSS_Dialog(title=_("Select a playthrough"), closeAction=Hide("SSSSS_PlaythroughsPicker"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
         style_prefix "SSSSS"
 
         use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker", canEdit=True, highlightActive=True)
@@ -25,14 +25,14 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     key 'K_TAB' action inputs.NextInput()
     key 'shift_K_TAB' action inputs.PreviousInput()
 
-    use SSSSS_Dialog(title=("Edit playthrough" if isEdit else "New playthrough"), closeAction=Hide("SSSSS_EditPlaythrough"), background="gui/edit_playthrough_dialog_background.png", size=(x52URM.scalePxInt(1000), x52URM.scalePxInt(600))):
+    use SSSSS_Dialog(title=(_("Edit playthrough") if isEdit else _("New playthrough")), closeAction=Hide("SSSSS_EditPlaythrough"), background="gui/edit_playthrough_dialog_background.png", size=(x52URM.scalePxInt(1000), x52URM.scalePxInt(600))):
         style_prefix "SSSSS"
 
         vbox:
             yfill True
 
             vbox:
-                text "Name:"
+                text _("Name:")
                 frame:
                     style "SSSSS_input_frame"
 
@@ -46,13 +46,13 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                             style "SSSSS_input_input"
 
                 if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
-                    text "Are you sure? This name already exists." color '#ffb14c' offset (15, 2)
+                    text _("Are you sure? This name already exists.") color '#ffb14c' offset (15, 2)
 
                 if(playthrough.id != 1):
                     python:
                         computedDirectory = playthrough.directory if (playthrough.directory != None) else (SSSSS.PlaythroughsClass.name_to_directory_name(name) if name else None)
 
-                    text "Directory:"
+                    text _("Directory:")
 
                     hbox:
                         offset (15, 0)
@@ -67,7 +67,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                     vbox:
                         # use SSSSS_Checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False)) #TODO: Implement
-                        use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
+                        use SSSSS_Checkbox(checked=autosaveOnChoices, text=_("Autosave on choice"), action=ToggleScreenVariable('autosaveOnChoices', True, False))
 
                     hbox:
                         hbox xsize 160:
@@ -78,7 +78,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                             key_events True
                             action [SSSSS.Playthroughs.SetThumbnailForActive()]
 
-                            text "Set current scene as thumbnail" yalign .5 xalign 0.5 size 24
+                            text _("Set current scene as thumbnail") yalign .5 xalign 0.5 size 24
 
         hbox:
             xfill True
@@ -91,7 +91,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     xalign 0.5
                     action Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough)
 
-                    text "Remove" yalign .5 xalign 0.5 size 28
+                    text _("Remove") yalign .5 xalign 0.5 size 28
 
             button:
                 style "SSSSS_textbutton_medium_green"
@@ -100,22 +100,22 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                 action inputs.onSubmit
                 
-                text "Save" yalign .5 xalign 0.5 size 28
+                text _("Save") yalign .5 xalign 0.5 size 28
 
 screen SSSSS_RemovePlaythroughConfirm(playthrough):
     default deleteFiles = False
 
-    use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm"), background="gui/dialog/confirm_dialog_background.png", size=(x52URM.scalePxInt(922), x52URM.scalePxInt(400))):
+    use SSSSS_Dialog(title=_("Delete playthrough"), closeAction=Hide("SSSSS_RemovePlaythroughConfirm"), background="gui/dialog/confirm_dialog_background.png", size=(x52URM.scalePxInt(922), x52URM.scalePxInt(400))):
         style_prefix "SSSSS"
 
-        text "Are you sure you want to remove \"[playthrough.name]\"?" xalign .5
+        text _("Are you sure you want to remove \"[playthrough.name]\"?") xalign .5
 
         frame:
             background None
             xalign 0.5
             padding (0, 10, 0, 0)
 
-            use SSSSS_Checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
+            use SSSSS_Checkbox(checked=deleteFiles, text=_("Delete files"), action=ToggleScreenVariable('deleteFiles', True, False))
 
         frame:
             background None
@@ -127,13 +127,13 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
                     action None
                     use sssss_icon('\ue88e')
                 hbox xsize 10
-                text "If you choose to delete the files, you won't be able to recover the playthrough." yalign .5
+                text _("If you choose to delete the files, you won't be able to recover the playthrough.") yalign .5
 
         hbox:
             xfill True
 
             python:
-                removeText = "Remove & delete files" if deleteFiles else "Remove"
+                removeText = _("Remove & delete files") if deleteFiles else _("Remove")
 
             button:
                 style "SSSSS_textbutton_medium_red"
@@ -149,7 +149,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
                 key_events True # We need this to still trigger key events defined inside of this button
                 xalign 0.5
                 
-                text "Close" yalign .5 xalign 0.5 size 28
+                text _("Close") yalign .5 xalign 0.5 size 28
 
 screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, highlightActive=False):
     viewport:
@@ -188,12 +188,12 @@ screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, h
                             hbox:
                                 offset (-100, 0)
 
-                                use sssss_iconButton('\ue872', tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), disabled=playthrough.id == 1)
+                                use sssss_iconButton('\ue872', tt=_("Remove playthrough"), action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), disabled=playthrough.id == 1)
 
-                                use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True))
+                                use sssss_iconButton('\ue3c9', tt=_("Edit playthrough"), action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True))
 
 screen SSSSS_PlaythroughActions(playthrough):
-    use SSSSS_Dialog(title="Playtrhough actions", closeAction=Hide("SSSSS_PlaythroughActions"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
+    use SSSSS_Dialog(title=_("Playtrhough actions"), closeAction=Hide("SSSSS_PlaythroughActions"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
         style_prefix "SSSSS"
 
         vbox:
@@ -205,4 +205,4 @@ screen SSSSS_PlaythroughActions(playthrough):
                 key_events True
                 xalign 0.5
                 
-                text "Cycle saves" yalign .5 xalign 0.5 size 28
+                text _("Cycle saves") yalign .5 xalign 0.5 size 28
