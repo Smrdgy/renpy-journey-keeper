@@ -33,13 +33,13 @@ style SSSSS_input_input is SSSSS_text:
     size 35
     offset (10, -5)
 
-# TODO
 style SSSSS_vscrollbar:
     base_bar "#00000072"
     thumb '#fff'
     hover_thumb '#7084e6'
-#     base_bar "/gui/scrollbar/base.png"
-#     thumb "/gui/scrollbar/thumb.png"
+    xsize 18
+    # base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", Borders(6, 10, 6, 10), tile=False)
+    # thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", Borders(6, 10, 6, 10), tile=False)
 
 ##################
 #     DIALOG     #
