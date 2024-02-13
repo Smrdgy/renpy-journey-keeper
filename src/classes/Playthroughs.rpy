@@ -37,10 +37,10 @@ init 1 python in SSSSS:
             return self._activePlaythrough
 
         def createPlaythroughFromSerialization(self, data):
-            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"))#MODIFY HERE
+            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"))#MODIFY HERE
 
         class PlaythroughClass():
-            def __init__(self, id=None, directory=None, name=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1):#MODIFY HERE
+            def __init__(self, id=None, directory=None, name=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1, filePageName={}):#MODIFY HERE
                 self.id = id or int(time.time())
                 self.directory = directory if (directory != None) else (PlaythroughsClass.name_to_directory_name(name) if name else None)
                 self.name = name
@@ -49,12 +49,13 @@ init 1 python in SSSSS:
                 self.layout = layout
                 self.autosaveOnChoices = autosaveOnChoices
                 self.selectedPage = selectedPage
+                self.filePageName = filePageName
                 #MODIFY HERE
 
             def copy(self):
-                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage)#MODIFY HERE
+                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage, self.filePageName)#MODIFY HERE
 
-            def edit(self, name=None, thumbnail=None, storeChoices=None, layout=None, autosaveOnChoices=None, selectedPage=None):#MODIFY HERE
+            def edit(self, name=None, thumbnail=None, storeChoices=None, layout=None, autosaveOnChoices=None, selectedPage=None, filePageName=None):#MODIFY HERE
                 if name != None:
                     self.name = name
 
@@ -66,6 +67,7 @@ init 1 python in SSSSS:
                 if layout != None: self.layout = layout
                 if autosaveOnChoices != None: self.autosaveOnChoices = autosaveOnChoices
                 if selectedPage != None: self.selectedPage = selectedPage
+                if filePageName != None: self.filePageName = filePageName
                 #MODIFY HERE
 
                 return self
@@ -94,6 +96,7 @@ init 1 python in SSSSS:
                     'layout': self.layout,
                     'autosaveOnChoices': self.autosaveOnChoices,
                     'selectedPage': self.selectedPage,
+                    'filePageName': self.filePageName
                     #MODIFY HERE
                 }
 
@@ -141,6 +144,12 @@ init 1 python in SSSSS:
                         if(current_slot > slots_per_page):
                             current_slot = 1
                             current_page += 1
+
+            def beforeDeactivation(self):
+                self.selectedPage = renpy.store.persistent._file_page
+                self.filePageName = renpy.store.persistent._file_page_name
+
+                Playthroughs.saveToPersistent()
 
         def add(self, playthrough):
             self._playthroughs.append(playthrough)
@@ -273,8 +282,14 @@ init 1 python in SSSSS:
             return True
 
         def __setActivePlaythrough(self, playthrough=None):
+            if(self.activePlaythrough != None):
+                self.activePlaythrough.beforeDeactivation()
+
             renpy.store.persistent.SSSSS_lastActivePlaythrough = playthrough.id if playthrough != None else None
             self._activePlaythrough = playthrough
+
+            renpy.store.persistent._file_page = playthrough.selectedPage
+            renpy.store.persistent._file_page_name = playthrough.filePageName
 
         class ActivateNative(renpy.ui.Action):
             def __call__(self):
