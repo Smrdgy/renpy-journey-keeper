@@ -41,6 +41,9 @@ style SSSSS_vscrollbar:
     # base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", Borders(6, 10, 6, 10), tile=False)
     # thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", Borders(6, 10, 6, 10), tile=False)
 
+style SSSSS_frame:
+    padding (15, 15)
+
 ##################
 #     DIALOG     #
 ##################

@@ -1,6 +1,7 @@
 screen SSSSS_Pagination():
+    style_prefix 'SSSSS'
+
     default paginationSize = (1000, 80)
-    default showGoTo = False
 
     python:
         import math
@@ -36,7 +37,7 @@ screen SSSSS_Pagination():
 
             frame:
                 background "gui/pagination.png"
-                offset (-20, -1)
+                offset (-20, -21)
 
             ## Buttons to access other pages.
             grid 3 1:
@@ -47,8 +48,8 @@ screen SSSSS_Pagination():
                 hbox at left:
                     spacing 10
 
-                    use sssss_iconButton('\uf045', tt=_("Go to page"), action=SetLocalVariable("showGoTo", not showGoTo))
-                    if showGoTo:
+                    use sssss_iconButton('\uf045', tt=_("Go to page"), action=SSSSS.Pagination.ToggleGoToPage())
+                    if SSSSS.Pagination.showGoTo:
                         use SSSSS_GoToPage()
 
                     textbutton _("<<") action FilePage(max(currentPage - 10, 1)) style "SSSSS_pagination_textbutton"

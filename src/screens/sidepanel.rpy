@@ -1,4 +1,5 @@
 screen SSSSS_Sidepanel():
+    style_prefix 'SSSSS'
     default panelSize = (60, 366)
 
     python:
@@ -58,6 +59,8 @@ screen SSSSS_SidepanelHolder():
     # if is in save/load menu
     if(isSaveLoadScreen):
         use SSSSS_Sidepanel()
+    else:
+        $ SSSSS.Pagination.showGoTo = False
 
     if(isSaveLoadScreen and SSSSS.Pagination.isShowingPagination):
         use SSSSS_Pagination()

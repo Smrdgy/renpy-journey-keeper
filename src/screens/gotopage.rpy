@@ -1,4 +1,6 @@
 screen SSSSS_GoToPage():
+    style_prefix 'SSSSS'
+
     python:
         def setPage(page):
             if(page.isdigit() or page == ""):
@@ -21,9 +23,10 @@ screen SSSSS_GoToPage():
         background None
 
         frame:
+            style "SSSSS_frame"
             xysize (70, 40)
             xalign 0.5 yalign 1
-            offset (-20, -40)
+            offset (-40, -60)
             background None
 
             frame:

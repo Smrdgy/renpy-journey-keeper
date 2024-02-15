@@ -1,4 +1,6 @@
 screen sssss_tooltip(text, side="top"):
+    style_prefix 'SSSSS'
+
     viewport:
         frame:
             if(side == "top"):

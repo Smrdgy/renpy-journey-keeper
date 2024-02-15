@@ -1,10 +1,12 @@
 screen SSSSS_PlaythroughsPicker():
+    style_prefix 'SSSSS'
     use SSSSS_Dialog(title=_("Select a playthrough"), closeAction=Hide("SSSSS_PlaythroughsPicker"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
         style_prefix "SSSSS"
 
         use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker", canEdit=True, highlightActive=True)
 
 screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
+    style_prefix 'SSSSS'
     default name = playthrough.name or ''
     default originalname = name
     default storeChoices = playthrough.storeChoices
@@ -103,6 +105,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 text _("Save") yalign .5 xalign 0.5 size 28
 
 screen SSSSS_RemovePlaythroughConfirm(playthrough):
+    style_prefix 'SSSSS'
     default deleteFiles = False
 
     use SSSSS_Dialog(title=_("Delete playthrough"), closeAction=Hide("SSSSS_RemovePlaythroughConfirm"), background="gui/dialog/confirm_dialog_background.png", size=(x52URM.scalePxInt(922), x52URM.scalePxInt(400))):
@@ -111,6 +114,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
         text _("Are you sure you want to remove \"[playthrough.name]\"?") xalign .5
 
         frame:
+            style "SSSSS_frame"
             background None
             xalign 0.5
             padding (0, 10, 0, 0)
@@ -118,6 +122,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             use SSSSS_Checkbox(checked=deleteFiles, text=_("Delete files"), action=ToggleScreenVariable('deleteFiles', True, False))
 
         frame:
+            style "SSSSS_frame"
             background None
             padding (0, 0, 10, 0)
             xalign 0.5
@@ -152,6 +157,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
                 text _("Close") yalign .5 xalign 0.5 size 28
 
 screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, highlightActive=False):
+    style_prefix 'SSSSS'
     viewport:
         mousewheel True
         draggable
@@ -193,6 +199,7 @@ screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, h
                                 use sssss_iconButton('\ue3c9', tt=_("Edit playthrough"), action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True))
 
 screen SSSSS_PlaythroughActions(playthrough):
+    style_prefix 'SSSSS'
     use SSSSS_Dialog(title=_("Playtrhough actions"), closeAction=Hide("SSSSS_PlaythroughActions"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
         style_prefix "SSSSS"
 

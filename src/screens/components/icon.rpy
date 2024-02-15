@@ -11,6 +11,8 @@ style sssss_icon is text:
     hover_font 'fonts/MaterialIcons-Regular.ttf'
 
 screen sssss_icon(icon, color='#ffffff'):
+    style_prefix 'SSSSS'
+
     frame:
         background None
         padding (0, 0)

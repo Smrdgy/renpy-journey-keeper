@@ -289,7 +289,7 @@ init 1 python in SSSSS:
             self._activePlaythrough = playthrough
 
             renpy.store.persistent._file_page = playthrough.selectedPage
-            renpy.store.persistent._file_page_name = playthrough.filePageName
+            renpy.store.persistent._file_page_name = playthrough.filePageName or {}
 
         class ActivateNative(renpy.ui.Action):
             def __call__(self):
