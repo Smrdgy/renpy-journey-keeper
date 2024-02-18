@@ -48,12 +48,12 @@ screen SSSSS_Pagination():
                 hbox at left:
                     spacing 10
 
-                    use sssss_iconButton('\uf045', tt=_("Go to page"), action=SSSSS.Pagination.ToggleGoToPage())
+                    use sssss_iconButton('\uf045', tt="Go to page", action=SSSSS.Pagination.ToggleGoToPage())
                     if SSSSS.Pagination.showGoTo:
                         use SSSSS_GoToPage()
 
-                    textbutton _("<<") action FilePage(max(currentPage - 10, 1)) style "SSSSS_pagination_textbutton"
-                    textbutton _("<") action FilePagePrevious() style "SSSSS_pagination_textbutton"
+                    textbutton "<<" action FilePage(max(currentPage - 10, 1)) style "SSSSS_pagination_textbutton"
+                    textbutton "<" action FilePagePrevious() style "SSSSS_pagination_textbutton"
 
                 grid 10 1 at center:
                     spacing 10
@@ -67,5 +67,5 @@ screen SSSSS_Pagination():
                 hbox at right:
                     spacing 10
 
-                    textbutton _(">") action FilePageNext() style "SSSSS_pagination_textbutton"
-                    textbutton _(">>") action FilePage(currentPage + 10) style "SSSSS_pagination_textbutton"
+                    textbutton ">" action FilePageNext() style "SSSSS_pagination_textbutton"
+                    textbutton ">>" action FilePage(currentPage + 10) style "SSSSS_pagination_textbutton"

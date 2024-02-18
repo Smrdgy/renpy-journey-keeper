@@ -1,4 +1,4 @@
-screen SSSSS_Confirm(title=_("Confirm"), message=None, yes=None, no=None, yesText=_("Yes"), noText=_("No")):
+screen SSSSS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="Yes", noText="No"):
     modal True
 
     zorder 199
