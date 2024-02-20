@@ -53,11 +53,6 @@ init -999 python in SSSSS:
 
             return page, slot, slotString
 
-        def handlePress(self):
-            if(self.pendingSave != None):
-                self.pendingSave.takeAndSaveScreenshot()
-                self.pendingSave.makeReady()
-
         def trySavePendingSave(self):
             if(renpy.store.SSSSS_ActiveSlot == Autosaver.prevActiveSlot):
                 Autosaver.pendingSave = None # Discard this save because the user has rolled back
@@ -71,6 +66,11 @@ init -999 python in SSSSS:
 
                 self.pendingSave.save()
 
+        def handleChoiceSelection(self, choice):
+            self.createPendingSave(choice)
+            self.pendingSave.takeAndSaveScreenshot()
+            self.trySavePendingSave()
+
         # The SSSSS_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
         # However when a manual save is loaded it might not be a choice screen.
         # If so, the save slot needs to move further as to not override the manual slot with the next autosave.
@@ -80,10 +80,6 @@ init -999 python in SSSSS:
                 renpy.store.SSSSS_ActiveSlot = slotString
 
             self.afterLoadSavePositionPending = False
-
-        class HandlePress(renpy.ui.Action):
-            def __call__(self):
-                Autosaver.handlePress()
 
         class ConfirmDialogSave(renpy.ui.Action):
             def __call__(self):
@@ -107,26 +103,30 @@ init -999 python in SSSSS:
                 Autosaver.trySavePendingSave()
                 renpy.restart_interaction()
 
-        def registerChoices(self):
+        def createPendingSave(self, choice):
             self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot
 
             _, _, slotString = self.getNextSlot()
             renpy.store.SSSSS_ActiveSlot = slotString
 
-            self.pendingSave = AutosaverClass.PendingSaveClass()
+            self.pendingSave = AutosaverClass.PendingSaveClass(choice)
 
         class PendingSaveClass():
-            isReady = False
-            choices = None
             saveRecord = None
+            choice = None
 
-            def __init__(self):
-                self.choices = Choices.currentChoices
+            def __init__(self, choice):
+                self.choice = choice
 
                 self.createSaveSnapshot()
 
-            def createSaveSnapshot(self, extra_info=""):
+            def createSaveSnapshot(self, extra_info=None):
                 roots = renpy.game.log.freeze(None)
+
+                if(Playthroughs.activePlaythrough.useChoiceLabelAsSaveName):
+                    extra_info = extra_info or self.choice.label
+
+                extra_info = extra_info or ""
 
                 if renpy.config.save_dump:
                     renpy.loadsave.save_dump(roots, renpy.game.log)
@@ -182,9 +182,6 @@ init -999 python in SSSSS:
                 renpy.take_screenshot()
 
                 self.saveRecord.screenshot = renpy.game.interface.get_screenshot()
-
-            def makeReady(self):
-                self.isReady = True
 
             # If this becomes laggy, check the ren'py's autosave system and its threading
             def save(self):
