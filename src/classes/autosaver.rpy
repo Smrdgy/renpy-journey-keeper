@@ -105,6 +105,7 @@ init -999 python in SSSSS:
         class TrySavePendingSave(renpy.ui.Action):
             def __call__(self):
                 Autosaver.trySavePendingSave()
+                renpy.restart_interaction()
 
         def registerChoices(self):
             self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot

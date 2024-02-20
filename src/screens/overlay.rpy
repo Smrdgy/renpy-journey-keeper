@@ -10,13 +10,11 @@ screen SSSSS_Overlay():
             $ SSSSS.Autosaver.processSlotAfterLoad()
 
         if(not SSSSS.Choices.isDisplayingChoice):
+            text "." offset(1910, -20) color '#00ff00'
+
             if(SSSSS.Autosaver.pendingSave != None and SSSSS.Autosaver.pendingSave.isReady and not SSSSS.Autosaver.confirmDialogOpened):
-                $ SSSSS.Autosaver.trySavePendingSave()
+                $ SSSSS.Autosaver.TrySavePendingSave()()
         else:
-            button:
-                xfill True
-                yfill True
+            key "mousedown_1" action SSSSS.Autosaver.HandlePress()
 
-                key "mousedown_1" action SSSSS.Autosaver.HandlePress()
-
-                text "." offset(1910, -20) color '#f0f'
+            text "." offset(1910, -20) color '#f0f'
