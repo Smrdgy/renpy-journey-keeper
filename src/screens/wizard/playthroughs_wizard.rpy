@@ -11,6 +11,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     default originalname = name
     default storeChoices = playthrough.storeChoices
     default autosaveOnChoices = playthrough.autosaveOnChoices
+    default useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
     #MODIFY HERE
 
     default inputs = x52URM.InputGroup(
@@ -19,7 +20,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
         ],
         focusFirst=True,
         onSubmit=[
-            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=x52URM.GetScreenInput('name', 'inputs'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices')),#MODIFY HERE
+            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=x52URM.GetScreenInput('name', 'inputs'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=URMGetScreenVariable('useChoiceLabelAsSaveName')),#MODIFY HERE
             Hide('SSSSS_EditPlaythrough')
         ]
     )
@@ -70,6 +71,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     vbox:
                         # use SSSSS_Checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False)) #TODO: Implement
                         use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
+                        use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False))
 
                     hbox:
                         hbox xsize 160:
