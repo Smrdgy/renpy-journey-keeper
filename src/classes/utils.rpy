@@ -65,3 +65,24 @@ init -1000 python in SSSSS:
             new_height = original_height * scaling_factor
 
             return int(new_width), int(new_height)
+
+    class Utils():
+        @staticmethod
+        def splitSavename(save_name):
+            page, slot = save_name.split('-')
+
+            return page, slot
+
+        @staticmethod
+        def getSortedSaves():
+            regexp = r'\d+' + '-' + r'\d+'
+            return Utils.sortSaves(renpy.list_slots(regexp=regexp))
+
+        @staticmethod
+        def sortSaves(saves_list):
+            return sorted(saves_list, key=Utils.__custom_saves_sort)
+        
+        @staticmethod
+        def __custom_saves_sort(save_name):
+            page, slot = Utils.splitSavename(save_name)
+            return int(page), int(slot)

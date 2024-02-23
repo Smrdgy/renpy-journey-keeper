@@ -134,9 +134,7 @@ init 1 python in SSSSS:
                 instance = SaveSystem.getPlaythroughSaveInstance(self.id)
                 instance.location.scan()
 
-                regexp = r'\d+' + '-' + r'\d+'
-                slots = renpy.list_slots(regexp=regexp)
-                slots.sort()
+                slots = Utils.getSortedSaves()
 
                 for slot in slots:
                     if(renpy.loadsave.can_load(slot)):
@@ -156,6 +154,35 @@ init 1 python in SSSSS:
                 self.filePageName = renpy.store.persistent._file_page_name
 
                 Playthroughs.saveToPersistent()
+
+            def constructTimeline(self):
+                timeline = []
+                instance = SaveSystem.getPlaythroughSaveInstance(self.id)
+                instance.location.scan()
+
+                slots = Utils.getSortedSaves()
+
+                import zipfile
+                import os
+                
+                for slot in slots:
+                    filename = instance.location.locations[1].filename(slot) # File inside game folder
+
+                    if(not os.path.isfile(filename)):
+                        filename = instance.location.locations[0].filename(slot) # File inside %appData%'s Ren'Py folder
+
+                    zf = zipfile.ZipFile(filename, 'r', zipfile.ZIP_DEFLATED)
+
+                    try:
+                        choice = zf.read("choice")
+                        timeline.append((slot, choice.decode("UTF-8")))
+                    except Exception:
+                        timeline.append((slot, "N/A"))
+
+                    zf.close()
+
+                return timeline
+                        
 
         def add(self, playthrough):
             self._playthroughs.append(playthrough)
@@ -381,3 +408,11 @@ init 1 python in SSSSS:
             def __call__(self):
                 self.playthrough.cycleSaves()
                 
+        class ConstructTimeline(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
+            def __call__(self):
+                timeline = self.playthrough.constructTimeline()
+
+                renpy.show_screen("SSSSS_ChoicesTimeline", timeline)

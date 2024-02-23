@@ -16,7 +16,7 @@ screen SSSSS_Checkbox(checked, text, action=None, xsize=None, sensitive=None):
                     if checked:
                         style "SSSSS_checkbox_box_checked"
                     elif checked == None:
-                        style "SSSSS_checkbox_box_indeterminate"
+                        style "SSSSS_checkbox_box_unchecked" #"SSSSS_checkbox_box_indeterminate"
                     else:
                         style "SSSSS_checkbox_box_unchecked"
             

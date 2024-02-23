@@ -215,3 +215,11 @@ screen SSSSS_PlaythroughActions(playthrough):
                 xalign 0.5
                 
                 text "Cycle saves" yalign .5 xalign 0.5 size 28
+
+            button:
+                style "SSSSS_textbutton_medium_gray"
+                action [SSSSS.Playthroughs.ConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")]
+                key_events True
+                xalign 0.5
+                
+                text "Show choice timeline" yalign .5 xalign 0.5 size 28

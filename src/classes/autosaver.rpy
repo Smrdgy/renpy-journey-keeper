@@ -67,6 +67,7 @@ init -999 python in SSSSS:
                 self.pendingSave.save()
 
         def handleChoiceSelection(self, choice):
+            Autosaver.lastChoice = choice.label
             self.createPendingSave(choice)
             self.pendingSave.takeAndSaveScreenshot()
             self.trySavePendingSave()
@@ -177,6 +178,7 @@ init -999 python in SSSSS:
                 json = json_dumps(json)
 
                 self.saveRecord = renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
+                self.saveRecord.choice = self.choice.label
 
             def takeAndSaveScreenshot(self):
                 renpy.take_screenshot()
