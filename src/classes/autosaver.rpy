@@ -1,6 +1,6 @@
 # Unfortunately this must be saved into the save game, so the system can properly recognize which slot to use next,
 # especially when a manual save is made somewhere in between and then a rollback occurs.
-default SSSSS_ActiveSlot = "1-1"
+default SSSSS_ActiveSlot = "1-0"
 
 init -999 python in SSSSS:
     import time
@@ -16,7 +16,7 @@ init -999 python in SSSSS:
     class AutosaverClass():
         suppressAutosaveConfirm = False
         pendingSave = None
-        prevActiveSlot = "1-1"
+        prevActiveSlot = "N/A"
         confirmDialogOpened = False
         afterLoadSavePositionPending = False
 
