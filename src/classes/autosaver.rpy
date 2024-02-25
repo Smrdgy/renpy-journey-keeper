@@ -3,6 +3,8 @@
 default SSSSS_ActiveSlot = "1-0"
 
 init -999 python in SSSSS:
+    _constant = True
+
     import time
     from json import dumps as json_dumps
     import io
@@ -10,8 +12,6 @@ init -999 python in SSSSS:
 
     if(sys.version_info[0] > 2):
         from future.utils import reraise
-
-    _constant = True
 
     class AutosaverClass():
         suppressAutosaveConfirm = False
@@ -68,9 +68,11 @@ init -999 python in SSSSS:
 
         def handleChoiceSelection(self, choice):
             Autosaver.lastChoice = choice.label
-            self.createPendingSave(choice)
-            self.pendingSave.takeAndSaveScreenshot()
-            self.trySavePendingSave()
+
+            if(Playthroughs.activePlaythrough.autosaveOnChoices):
+                self.createPendingSave(choice)
+                self.pendingSave.takeAndSaveScreenshot()
+                self.trySavePendingSave()
 
         # The SSSSS_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
         # However when a manual save is loaded it might not be a choice screen.

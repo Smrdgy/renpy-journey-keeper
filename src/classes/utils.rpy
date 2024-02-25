@@ -1,4 +1,6 @@
 init -1000 python in SSSSS:
+    _constant = True
+
     class ImagePlaceholder(renpy.display.core.Displayable):
         def __init__(self, width=0, height=0, **properties):
             super(ImagePlaceholder, self).__init__(**properties)

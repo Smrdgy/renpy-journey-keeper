@@ -1,4 +1,6 @@
 init 1 python in SSSSS:
+    _constant = True
+
     class PaginationClass():
         showGoTo = False
 
