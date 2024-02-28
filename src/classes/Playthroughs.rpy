@@ -34,7 +34,10 @@ init 1 python in SSSSS:
 
         @property
         def activePlaythrough(self):
-            return self._activePlaythrough
+            if(self._activePlaythrough != None):
+                return self._activePlaythrough
+
+            return self._playthroughs[0]
 
         def createPlaythroughFromSerialization(self, data):
             return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"))#MODIFY HERE
@@ -264,19 +267,10 @@ init 1 python in SSSSS:
             renpy.restart_interaction()
 
         def activateNative(self):
-            renpy.loadsave.location = SaveSystem.defaultLocation
-            renpy.loadsave.clear_cache()
-
-            self.__setActivePlaythrough(None)
-
-            self.saveToPersistent()
-            renpy.restart_interaction()
+            self.activateByInstance(self.playthroughs[0])
 
         def activateFirstOrNone(self):
-            if(len(self.playthroughs) > 0):
-                self.activateByInstance(self.playthroughs[0])
-            else:
-                self.activateNative()
+            self.activateNative()
 
         @staticmethod
         def name_to_directory_name(title):

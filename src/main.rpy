@@ -10,6 +10,8 @@ init 51 python in SSSSS:
     Autosaver = AutosaverClass()
     Pagination = PaginationClass()
 
+    SaveSystem.setupLocations()
+
     def afterLoadCallback():
         Autosaver.afterLoadSavePositionPending = True
 

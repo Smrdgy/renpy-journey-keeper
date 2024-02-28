@@ -4,66 +4,92 @@ init 1 python in SSSSS:
     import os
     from collections import OrderedDict
 
-    class SaveSystemClass():
-        _playthroughSaves = OrderedDict()
+    class MultiLocation(renpy.savelocation.MultiLocation):
+        def __init__(self):
+            super(MultiLocation, self).__init__()
 
-        # Default location for the game
-        _defaultLocation = renpy.loadsave.location
+            self.nativeLocations = renpy.loadsave.location.locations
+
+        def add(self, location):
+            self.locations.append(location)
+
+        def activateLocations(self):
+            for location in self.locations:
+                location.active = True
+
+        def deactivateLocations(self):
+            for location in self.locations:
+                location.active = False
+
+        def load_persistent(self):
+            rv = []
+
+            for l in self.nativeLocations:
+                rv.extend(l.load_persistent())
+
+            return rv
+
+        def save_persistent(self, data):
+            for l in self.nativeLocations:
+                l.save_persistent(data)
+
+    class SaveSystemClass():
+        multilocation = MultiLocation()
+
+        _playthroughSaves = OrderedDict()
+        _activePlaythroughSave = None
 
         def __init__(self):
-            self.setupLocations()
-
-        @property
-        def defaultLocation(self):
-            return self._defaultLocation
+            renpy.loadsave.location = self.multilocation
 
         def setupLocations(self):
             playthroughs = Playthroughs.playthroughs
 
             for playthrough in playthroughs:
-                self.createPlaythroughSaveInstance(playthrough)
+                self.createPlaythroughSaveInstance(playthrough, noScan=True)
 
-        def useDefault(self):
-            renpy.loadsave.location = self._defaultLocation
+            SaveSystem.multilocation.scan()
 
         def getPlaythroughSaveInstance(self, playthroughID):
             return self._playthroughSaves.get(playthroughID)
 
         class PlaythroughSaveClass():
-            def __init__(self, playthrough):
+            def __init__(self, playthrough, noScan=False):
+                self.locations = []
                 self.playthrough = playthrough
 
-                location = renpy.savelocation.MultiLocation()
-
                 # 1. User savedir.
-                location.add(renpy.savelocation.FileLocation(os.path.join(renpy.config.savedir, playthrough.directory)))
+                self._addLocation(renpy.savelocation.FileLocation(os.path.join(renpy.config.savedir, playthrough.directory)))
 
                 # 2. Game-local savedir.
                 if (not renpy.mobile) and (not renpy.macapp):
                     path = os.path.join(renpy.config.gamedir, "saves", playthrough.directory)
-                    location.add(renpy.savelocation.FileLocation(path))
+                    self._addLocation(renpy.savelocation.FileLocation(path))
 
                 if(hasattr(renpy.config, "extra_savedirs")):
                     # 3. Extra savedirs.
                     for extra_savedir in renpy.config.extra_savedirs:
-                        location.add(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.directory)))
+                        self._addLocation(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.directory)))
 
-                # Scan the location once.
-                location.scan()
+                if not noScan:
+                    # Scan the location.
+                    SaveSystem.multilocation.scan()
 
-                self.location = location
-
-            def save(self, slotname, record):
-                self.location.save(slotname, record)
-            
-            def load(self):
-                self.location.save(slotname)
-
-            # Makes this playthrough location active for load/save
+            # Makes this playthrough locations active for load/save
             def activate(self):
-                renpy.loadsave.location = self.location
+                SaveSystem.multilocation.deactivateLocations()
+
+                for location in self.locations:
+                    location.active = True
+
                 renpy.loadsave.clear_cache()
+                SaveSystem.multilocation.scan()
                 renpy.store.persistent.SSSSS_lastActivePlaythrough = self.playthrough.id
+                SaveSystem._activePlaythroughSave = self
+
+            def deactivate(self):
+                for location in self.locations:
+                    location.active = False
 
             def deleteFiles(self):
                 import shutil
@@ -71,8 +97,13 @@ init 1 python in SSSSS:
                 for location in self.location.locations:
                     shutil.rmtree(location.directory)
 
-        def createPlaythroughSaveInstance(self, playthrough):
-            self._playthroughSaves[playthrough.id] = SaveSystemClass.PlaythroughSaveClass(playthrough)
+            def _addLocation(self, fileLocation):
+                fileLocation.active = False
+                SaveSystem.multilocation.add(fileLocation)
+                self.locations.append(fileLocation)
+
+        def createPlaythroughSaveInstance(self, playthrough, noScan=False):
+            self._playthroughSaves[playthrough.id] = SaveSystemClass.PlaythroughSaveClass(playthrough, noScan)
             
             return self._playthroughSaves.get(playthrough.id)
 
@@ -94,8 +125,3 @@ init 1 python in SSSSS:
             instance.deleteFiles()
 
             return True
-
-
-        
-            
-            
