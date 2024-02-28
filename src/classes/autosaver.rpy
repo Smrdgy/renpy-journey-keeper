@@ -115,10 +115,8 @@ init -999 python in SSSSS:
             self.pendingSave = AutosaverClass.PendingSaveClass(choice)
 
         class PendingSaveClass():
-            saveRecord = None
-            choice = None
-
             def __init__(self, choice):
+                self.saveRecord = None
                 self.choice = choice
 
                 self.createSaveSnapshot()
