@@ -45,7 +45,7 @@ init 1 python in SSSSS:
         class PlaythroughClass():
             def __init__(self, id=None, directory=None, name=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False):#MODIFY HERE
                 self.id = id or int(time.time())
-                self.directory = directory if (directory != None) else (PlaythroughsClass.name_to_directory_name(name) if name else None)
+                self.directory = directory if (directory != None) else (Utils.name_to_directory_name(name) if name else None)
                 self.name = name
                 self.thumbnail = thumbnail
                 self.storeChoices = storeChoices
@@ -64,7 +64,7 @@ init 1 python in SSSSS:
                     self.name = name
 
                     if(self.directory == None):
-                        self.directory = PlaythroughsClass.name_to_directory_name(name)
+                        self.directory = Utils.name_to_directory_name(name)
 
                 if thumbnail != None: self.thumbnail = thumbnail
                 if storeChoices != None: self.storeChoices = storeChoices
@@ -81,7 +81,7 @@ init 1 python in SSSSS:
                 self.name = playthrough.name
 
                 if(self.directory == None):
-                    self.directory = PlaythroughsClass.name_to_directory_name(playthrough.name)
+                    self.directory = Utils.name_to_directory_name(playthrough.name)
 
                 self.thumbnail = playthrough.thumbnail
                 self.storeChoices = playthrough.storeChoices
@@ -271,26 +271,6 @@ init 1 python in SSSSS:
 
         def activateFirstOrNone(self):
             self.activateNative()
-
-        @staticmethod
-        def name_to_directory_name(title):
-            import re
-
-            # Replace spaces and special characters with underscores
-            #  Windows does not allow certain characters <>:"/\\|?* in directory names
-            directory_name = re.sub(r'[\s<>:"/\\\|\?\*]+', '_', title)
-            directory_name = re.sub(r'[^\w.-]', '', directory_name)
-
-            # Make it lowercase
-            directory_name = directory_name.lower()
-
-            # Limit the length of the directory name
-            max_length = 255  # Maximum file name length for most file systems
-            directory_name = directory_name[:max_length]
-
-            # Additional platform-specific adjustments can be added here
-
-            return directory_name
 
         def saveToPersistent(self):
             arr = []

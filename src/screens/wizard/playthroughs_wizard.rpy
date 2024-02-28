@@ -53,7 +53,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                 if(playthrough.id != 1):
                     python:
-                        computedDirectory = playthrough.directory if (playthrough.directory != None) else (SSSSS.PlaythroughsClass.name_to_directory_name(name) if name else None)
+                        computedDirectory = playthrough.directory if (playthrough.directory != None) else (SSSSS.Utils.name_to_directory_name(name) if name else None)
 
                     text "Directory:"
 

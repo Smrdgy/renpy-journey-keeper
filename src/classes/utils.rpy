@@ -88,3 +88,23 @@ init -1000 python in SSSSS:
         def __custom_saves_sort(save_name):
             page, slot = Utils.splitSavename(save_name)
             return int(page), int(slot)
+
+        @staticmethod
+        def name_to_directory_name(title):
+            import re
+
+            # Replace spaces and special characters with underscores
+            #  Windows does not allow certain characters <>:"/\\|?* in directory names
+            directory_name = re.sub(r'[\s<>:"/\\\|\?\*]+', '_', title)
+            directory_name = re.sub(r'[^\w.-]', '', directory_name)
+
+            # Make it lowercase
+            directory_name = directory_name.lower()
+
+            # Limit the length of the directory name
+            max_length = 255  # Maximum file name length for most file systems
+            directory_name = directory_name[:max_length]
+
+            # Additional platform-specific adjustments can be added here
+
+            return directory_name
