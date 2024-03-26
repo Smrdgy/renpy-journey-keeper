@@ -55,7 +55,7 @@ init 1 python in SSSSS:
 
         class PlaythroughSaveClass():
             def __init__(self, playthrough, noScan=False):
-                self.locations = []
+                self.location = MultiLocation()
                 self.playthrough = playthrough
 
                 # 1. User savedir.
@@ -79,7 +79,7 @@ init 1 python in SSSSS:
             def activate(self):
                 SaveSystem.multilocation.deactivateLocations()
 
-                for location in self.locations:
+                for location in self.location.locations:
                     location.active = True
 
                 renpy.loadsave.clear_cache()
@@ -88,7 +88,7 @@ init 1 python in SSSSS:
                 SaveSystem._activePlaythroughSave = self
 
             def deactivate(self):
-                for location in self.locations:
+                for location in self.location.locations:
                     location.active = False
 
             def deleteFiles(self):
@@ -100,7 +100,7 @@ init 1 python in SSSSS:
             def _addLocation(self, fileLocation):
                 fileLocation.active = False
                 SaveSystem.multilocation.add(fileLocation)
-                self.locations.append(fileLocation)
+                self.location.add(fileLocation)
 
         def createPlaythroughSaveInstance(self, playthrough, noScan=False):
             self._playthroughSaves[playthrough.id] = SaveSystemClass.PlaythroughSaveClass(playthrough, noScan)
