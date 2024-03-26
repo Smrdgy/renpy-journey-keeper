@@ -80,7 +80,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                         button:
                             style "SSSSS_textbutton_medium_gray"
                             key_events True
-                            action [SSSSS.Playthroughs.SetThumbnailForActive()]
+                            action [SSSSS.Playthroughs.SetThumbnail(playthrough=playthrough)]
 
                             text "Set current scene as thumbnail" yalign .5 xalign 0.5 size 24
 

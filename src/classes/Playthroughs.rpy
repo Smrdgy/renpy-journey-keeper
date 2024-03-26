@@ -302,10 +302,12 @@ init 1 python in SSSSS:
             def __call__(self):
                 Playthroughs.activateNative()
 
-        class SetThumbnailForActive(renpy.ui.Action):
+        class SetThumbnail(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
             def __call__(self):
-                playthrough = Playthroughs.activePlaythrough
-                playthrough.makeThumbnail()
+                self.playthrough.makeThumbnail()
 
                 Playthroughs.saveToPersistent()
                 renpy.restart_interaction()
