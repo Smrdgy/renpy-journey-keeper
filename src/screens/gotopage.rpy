@@ -40,6 +40,3 @@ screen SSSSS_GoToPage():
                 action inputs.page.Enable()
 
                 input value inputs.page color '#fff'
-
-                if(str(inputs.page) == ""):
-                    text "[page]" color '#707070'

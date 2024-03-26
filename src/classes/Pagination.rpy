@@ -21,3 +21,5 @@ init 1 python in SSSSS:
         class ToggleGoToPage(renpy.ui.Action):
             def __call__(self):
                 Pagination.showGoTo = not Pagination.showGoTo
+
+                renpy.restart_interaction()
