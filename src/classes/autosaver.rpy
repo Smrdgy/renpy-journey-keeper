@@ -10,9 +10,6 @@ init -999 python in SSSSS:
     import io
     import sys
 
-    if(sys.version_info[0] > 2):
-        from future.utils import reraise
-
     class AutosaverClass():
         suppressAutosaveConfirm = False
         pendingSave = None
@@ -134,41 +131,29 @@ init -999 python in SSSSS:
 
                 logf = io.BytesIO()
 
-                if(sys.version_info[0] == 2):
+                try:
+                    renpy.loadsave.dump((roots, renpy.game.log), logf)
+                except:
+                    t, e, tb = sys.exc_info()
+
                     try:
-                        renpy.loadsave.dump((roots, renpy.game.log), logf)
+                        bad = renpy.loadsave.find_bad_reduction(roots, renpy.game.log)
                     except:
+                        print("Autosave failure: ", t, e, tb)
+                        renpy.notify("Autosave failed. Check log.txt for more info.")
+                        return
 
-                        t, e, tb = sys.exc_info()
+                    if bad is None:
+                        print("Autosave failure: ", t, e, tb)
+                        renpy.notify("Autosave failed. Check log.txt for more info.")
+                        return
 
-                        try:
-                            bad = renpy.loadsave.find_bad_reduction(roots, renpy.game.log)
-                        except:
-                            raise t, e, tb
+                    if e.args:
+                        e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
 
-                        if bad is None:
-                            raise t, e, tb
-
-                        e.args = ( e.args[0] + ' (perhaps {})'.format(bad), ) + e.args[1:]
-                        raise t, e, tb
-                else:
-                    try:
-                        renpy.loadsave.dump((roots, renpy.game.log), logf)
-                    except Exception:
-                        t, e, tb = sys.exc_info()
-
-                        try:
-                            bad = renpy.loaadsave.find_bad_reduction(roots, renpy.game.log)
-                        except Exception:
-                            reraise(t, e, tb)
-
-                        if bad is None:
-                            reraise(t, e, tb)
-
-                        if e.args:
-                            e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
-
-                        reraise(t, e, tb)
+                    print("Autosave failure: ", t, e, tb)
+                    renpy.notify("Autosave failed. Check log.txt for more info.")
+                    return
 
                 json = { "_save_name" : extra_info, "_renpy_version" : list(renpy.version_tuple), "_version" : renpy.config.version }
 
