@@ -1,4 +1,4 @@
-screen SSSSS_Dialog(title=None, message=None, closeAction=None, xsize=None, modal=True, icon=None, background, size):
+screen SSSSS_Dialog(title=None, message=None, closeAction=None, xsize=None, modal=True, icon=None, background=None, size=(100, 100)):
     style_prefix 'SSSSS'
 
     if closeAction:
