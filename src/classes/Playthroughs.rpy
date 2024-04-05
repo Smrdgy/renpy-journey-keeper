@@ -39,6 +39,13 @@ init 1 python in SSSSS:
 
             return self._playthroughs[0]
 
+        @property
+        def activePlaythroughOrNone(self):
+            if(self._activePlaythrough != None):
+                return self._activePlaythrough
+
+            return None
+
         def createPlaythroughFromSerialization(self, data):
             return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"))#MODIFY HERE
 
@@ -55,6 +62,9 @@ init 1 python in SSSSS:
                 self.filePageName = filePageName
                 self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
                 #MODIFY HERE
+
+            def __getstate__(self):
+                return None
 
             def copy(self):
                 return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName)#MODIFY HERE

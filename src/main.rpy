@@ -12,6 +12,10 @@ init 51 python in SSSSS:
 
     SaveSystem.setupLocations()
 
+    print(Playthroughs.activePlaythroughOrNone)
+    if Playthroughs.activePlaythroughOrNone == None:
+        Playthroughs.activateNative()
+
     def afterLoadCallback():
         Autosaver.afterLoadSavePositionPending = True
 

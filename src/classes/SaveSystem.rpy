@@ -34,12 +34,11 @@ init 1 python in SSSSS:
                 l.save_persistent(data)
 
     class SaveSystemClass():
-        multilocation = MultiLocation()
-
-        _playthroughSaves = OrderedDict()
-        _activePlaythroughSave = None
-
         def __init__(self):
+            self._playthroughSaves = OrderedDict()
+            self._activePlaythroughSave = None
+            self.multilocation = MultiLocation()
+
             renpy.loadsave.location = self.multilocation
 
         def setupLocations(self):
