@@ -4,7 +4,7 @@ screen SSSSS_ChoicesTimeline(timeline):
 
         viewport:
             mousewheel True
-            draggable
+            draggable True
             scrollbars "vertical"
             pagekeys True
 

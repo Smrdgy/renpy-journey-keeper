@@ -162,7 +162,7 @@ screen SSSSS_PlaythroughsList(itemAction=None, hideTarget=None, canEdit=False, h
     style_prefix 'SSSSS'
     viewport:
         mousewheel True
-        draggable
+        draggable True
         scrollbars "vertical"
         pagekeys True
 
