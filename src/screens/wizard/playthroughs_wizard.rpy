@@ -7,6 +7,9 @@ screen SSSSS_PlaythroughsPicker():
 
 screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     style_prefix 'SSSSS'
+
+    $ playthrough = playthrough or SSSSS.Playthroughs.PlaythroughClass()
+
     default name = playthrough.name or ''
     default originalname = name
     default storeChoices = playthrough.storeChoices

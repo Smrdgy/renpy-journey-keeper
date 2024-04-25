@@ -5,7 +5,6 @@ screen SSSSS_Sidepanel():
     python:
         _constant = True
 
-        newPlaythrough = SSSSS.Playthroughs.PlaythroughClass()
         playthrough = SSSSS.Playthroughs.activePlaythrough
         noPlaythrough = playthrough == None
         sidepanelPos = store.persistent.SSSSS_sidepanelAlign or (renpy.config.screen_width - panelSize[0] - 15, renpy.config.screen_height / 2 - panelSize[1] / 2)
@@ -33,7 +32,7 @@ screen SSSSS_Sidepanel():
 
             vbox:
                 use sssss_iconButton('\ueb73', tt="Open list of playthroughs", action=Show("SSSSS_PlaythroughsPicker"))
-                use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=newPlaythrough))
+                use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=None))
                 use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesList"), disabled=True)
 
                 use SSSSS_Divider(sizeX=panelSize[0] - 10)
