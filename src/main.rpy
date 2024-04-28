@@ -20,6 +20,8 @@ init 51 python in SSSSS:
         Autosaver.afterLoadSavePositionPending = True
 
     def startInteractCallback():
+        SaveSystem.overrideNativeLocation()
+
         if(not renpy.get_screen('SSSSS_SidepanelHolder')):
             renpy.show_screen('SSSSS_SidepanelHolder')
 

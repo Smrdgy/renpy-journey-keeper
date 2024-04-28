@@ -52,6 +52,9 @@ init 1 python in SSSSS:
         def getPlaythroughSaveInstance(self, playthroughID):
             return self._playthroughSaves.get(playthroughID)
 
+        def overrideNativeLocation(self):
+            renpy.loadsave.location = self.multilocation
+
         class PlaythroughSaveClass():
             def __init__(self, playthrough, noScan=False):
                 self.location = MultiLocation()
@@ -76,10 +79,12 @@ init 1 python in SSSSS:
 
             # Makes this playthrough locations active for load/save
             def activate(self):
+                # For some reason Exciting Games running on RenPy v7.7.1.24030407 retains native location.
+                # This will fix the location every time a playthrough is activated, just in case...
+                SaveSystem.overrideNativeLocation()
                 SaveSystem.multilocation.deactivateLocations()
 
-                for location in self.location.locations:
-                    location.active = True
+                self.location.activateLocations()
 
                 renpy.loadsave.clear_cache()
                 SaveSystem.multilocation.scan()
@@ -87,8 +92,7 @@ init 1 python in SSSSS:
                 SaveSystem._activePlaythroughSave = self
 
             def deactivate(self):
-                for location in self.location.locations:
-                    location.active = False
+                self.location.deactivateLocations()
 
             def deleteFiles(self):
                 import shutil
