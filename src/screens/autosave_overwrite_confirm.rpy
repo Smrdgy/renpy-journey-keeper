@@ -1,8 +1,11 @@
-screen SSSSS_AutosaveOverwriteConfirm():
+screen SSSSS_AutosaveOverwriteConfirm():    
     default title = "Are you sure you want to overwrite your save?"
     default message = "By choosing \"No\", the autosave feature will disable itself until you re-enable it again."
 
-    use SSSSS_Dialog(title=title, message=message, closeAction=[SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")], background="gui/edit_playthrough_dialog_background.png", size=(x52URM.scalePxInt(1000), x52URM.scalePxInt(600))):
+    layer "SSSSSoverlay"
+    style_prefix "SSSSS"
+
+    use SSSSS_Dialog(title=title, message=message, closeAction=[SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")]):
         vbox:
             yfill True
             xfill True
@@ -22,7 +25,6 @@ screen SSSSS_AutosaveOverwriteConfirm():
             offset (0, -50)
 
             button:
-                style "SSSSS_textbutton_medium_red"
                 key_events True
                 xalign 0.5
                 action [SSSSS.Autosaver.ConfirmDialogSave(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")]
@@ -30,7 +32,6 @@ screen SSSSS_AutosaveOverwriteConfirm():
                 text "Overwrite" yalign .5 xalign 0.5 size 28
 
             button:
-                style "SSSSS_textbutton_medium_gray"
                 key_events True
                 xalign 0.5
 
@@ -39,7 +40,6 @@ screen SSSSS_AutosaveOverwriteConfirm():
                 text "Save one over" yalign .5 xalign 0.5 size 28
 
             button:
-                style "SSSSS_textbutton_medium_gray"
                 key_events True
                 xalign 0.5
 

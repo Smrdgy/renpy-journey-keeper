@@ -1,4 +1,4 @@
-screen SSSSS_Divider(sizeX=3, sizeY=3, left_padding=3, top_padding=3, right_padding=3, bottom_padding=3):
+screen SSSSS_Divider(sizeX=2, sizeY=2, left_padding=3, top_padding=3, right_padding=3, bottom_padding=3):
     style_prefix 'SSSSS'
 
     frame:

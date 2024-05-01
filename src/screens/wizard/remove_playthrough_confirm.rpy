@@ -1,14 +1,12 @@
 screen SSSSS_RemovePlaythroughConfirm(playthrough):
+    layer "SSSSSoverlay"
     style_prefix 'SSSSS'
     default deleteFiles = False
 
-    use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm"), background="gui/dialog/confirm_dialog_background.png", size=(x52URM.scalePxInt(922), x52URM.scalePxInt(400))):
-        style_prefix "SSSSS"
-
+    use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm")):
         text "Are you sure you want to remove \"[playthrough.name]\"?" xalign .5
 
         frame:
-            style "SSSSS_frame"
             background None
             xalign 0.5
             padding (0, 10, 0, 0)
@@ -16,7 +14,6 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             use SSSSS_Checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
 
         frame:
-            style "SSSSS_frame"
             background None
             padding (0, 0, 10, 0)
             xalign 0.5
@@ -24,28 +21,24 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             hbox:
                 button:
                     action None
-                    use sssss_icon('\ue88e')
+                    use sssss_icon('\ue88e', color = "#8cb8ed")
                 hbox xsize 10
-                text "If you choose to delete the files, you won't be able to recover the playthrough." yalign .5
+                text "If you choose to delete the files, you won't be able to recover the playthrough." yalign .5 color "#8cb8ed"
+
+        python:
+            removeText = "Remove & delete files" if deleteFiles else "Remove"
 
         hbox:
             xfill True
+            yfill True
 
-            python:
-                removeText = "Remove & delete files" if deleteFiles else "Remove"
+            vbox at right:
+                yalign 1.0
 
-            button:
-                style "SSSSS_textbutton_medium_red"
-                action [SSSSS.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")]
-                key_events True # We need this to still trigger key events defined inside of this button
-                xalign 0.5
+                # Remove
+                hbox at right:
+                    use sssss_iconButton(icon="\ue92b", text=removeText, action=[SSSSS.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")], textColor="#ff0000")
 
-                text "[removeText]" yalign .5 xalign 0.5 size (20 if deleteFiles else 28)
-
-            button:
-                style "SSSSS_textbutton_medium_gray"
-                action Hide("SSSSS_RemovePlaythroughConfirm")
-                key_events True # We need this to still trigger key events defined inside of this button
-                xalign 0.5
-                
-                text "Close" yalign .5 xalign 0.5 size 28
+                # Close
+                hbox at right:
+                    use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_RemovePlaythroughConfirm"))

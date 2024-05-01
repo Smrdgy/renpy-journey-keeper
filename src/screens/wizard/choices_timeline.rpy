@@ -1,7 +1,8 @@
 screen SSSSS_ChoicesTimeline(timeline):
-    use SSSSS_Dialog(title="Choices timeline", closeAction=Hide("SSSSS_ChoicesTimeline"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
-        style_prefix "SSSSS"
+    layer "SSSSSoverlay"
+    style_prefix "SSSSS"
 
+    use SSSSS_Dialog(title="Choices timeline", closeAction=Hide("SSSSS_ChoicesTimeline")):
         viewport:
             mousewheel True
             draggable True

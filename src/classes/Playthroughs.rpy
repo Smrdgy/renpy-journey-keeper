@@ -136,8 +136,14 @@ init 1 python in SSSSS:
                 except Exception:
                     return ImagePlaceholder(width or defWidth, height or defHeight)
 
+            def hasThumbnail(self):
+                return self.thumbnail != None
+
             def makeThumbnail(self):
                 self.thumbnail = base64.b64encode(renpy.game.interface.get_screenshot()) #TODO: verify the size/speed for let's say 50 or 100 playthroughs
+
+            def removeThumbnail(self):
+                self.thumbnail = None
 
             def cycleSaves(self):
                 current_page = 1
@@ -385,7 +391,13 @@ init 1 python in SSSSS:
             def __call__(self):
                 playthrough = self.playthrough if not callable(self.playthrough) else self.playthrough()
 
-                showConfirm(title="Cycle playthroughs", message="Cycle playthroughs will rename all your saves so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?", yes=Playthroughs.CycleSaves(playthrough))
+                showConfirm(
+                    title="Cycle playthroughs",
+                    message="Cycle playthroughs will rename all your saves so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    yes=Playthroughs.CycleSaves(playthrough),
+                    yesIcon="\ue089",
+                    yesColor="#ff623a"
+                )
 
         class CycleSaves(renpy.ui.Action):
             def __init__(self, playthrough):
@@ -402,3 +414,11 @@ init 1 python in SSSSS:
                 timeline = self.playthrough.constructTimeline()
 
                 renpy.show_screen("SSSSS_ChoicesTimeline", timeline)
+        
+        class RemoveThumbnail(renpy.ui.Action):
+                def __init__(self, playthrough):
+                    self.playthrough = playthrough
+
+                def __call__(self):
+                    self.playthrough.removeThumbnail()
+                    renpy.restart_interaction()

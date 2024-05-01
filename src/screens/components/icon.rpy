@@ -18,4 +18,7 @@ screen sssss_icon(icon, color='#ffffff'):
         padding (0, 0)
 
         hbox xsize 5 yalign .5: # We want this size fixed, to prevent resizing on icon change
-            text icon style_suffix 'sssss_icon' color color
+            if icon:
+                text icon style_suffix 'sssss_icon' color color
+            else:
+                transclude

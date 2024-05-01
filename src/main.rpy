@@ -40,7 +40,14 @@ init 51 python in SSSSS:
             renpy.restart_interaction()
 
 init 999 python:
-    if not 'SSSSSsidepanel' in config.layers: config.layers.append('SSSSSsidepanel')
+    if not 'w_s_e_s_w' in renpy.config.gestures:
+        renpy.config.gestures['w_s_e_s_w'] = 'K_SCROLLOCK'
+
+    if not 'SSSSSsidepanel' in config.layers:
+        config.layers.insert(config.layers.index("overlay"), 'SSSSSsidepanel')
+    
+    if not 'SSSSSoverlay' in config.layers:
+        config.layers.insert(config.layers.index("overlay"), 'SSSSSoverlay')
 
     renpy.config.after_load_callbacks.append(SSSSS.afterLoadCallback)
     renpy.config.start_interact_callbacks.append(SSSSS.startInteractCallback)

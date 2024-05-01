@@ -7,18 +7,12 @@ screen SSSSS_Checkbox(checked, text, action=None, xsize=None, sensitive=None):
         action action
 
         hbox:
-            frame yalign .5:
-                style "SSSSS_checkbox_box"
-
-                frame:
-                    align (0.5, 0.5)
-
-                    if checked:
-                        style "SSSSS_checkbox_box_checked"
-                    elif checked == None:
-                        style "SSSSS_checkbox_box_unchecked" #"SSSSS_checkbox_box_indeterminate"
-                    else:
-                        style "SSSSS_checkbox_box_unchecked"
+            if checked:
+                use sssss_icon("\ue834")
+            # elif checked == None:
+            #     use sssss_icon("\ue909") #Indetermined
+            else:
+                use sssss_icon("\ue835")
             
             if text:
                 text text yalign .5

@@ -1,47 +1,47 @@
 screen SSSSS_Sidepanel():
     style_prefix 'SSSSS'
-    default panelSize = (60, 366)
+    default estimatedPanelSize = (80, 350)
 
     python:
         _constant = True
 
         playthrough = SSSSS.Playthroughs.activePlaythrough
         noPlaythrough = playthrough == None
-        sidepanelPos = store.persistent.SSSSS_sidepanelAlign or (renpy.config.screen_width - panelSize[0] - 15, renpy.config.screen_height / 2 - panelSize[1] / 2)
+        sidepanelPos = store.persistent.SSSSS_sidepanelPos or (int(renpy.config.screen_width - estimatedPanelSize[0] - 15), int(renpy.config.screen_height / 2 - estimatedPanelSize[1] / 2))
 
         def sidepanel_dragged(drags, drop):
-            renpy.store.persistent.SSSSS_sidepanelAlign = (drags[0].x, drags[0].y)
+            renpy.store.persistent.SSSSS_sidepanelPos = (drags[0].x, drags[0].y)
+
+    if renpy.config.developer:
+        frame:
+            background "#ff0000cc"
+            xysize estimatedPanelSize
+            xpos sidepanelPos[0]
+            ypos sidepanelPos[1]
 
     drag:
         draggable True
-        drag_handle (0, -20, 1.0, panelSize[1])
+        drag_handle (0, 0, 1.0, 1.0)
         xpos sidepanelPos[0]
         ypos sidepanelPos[1]
         droppable False
         dragged sidepanel_dragged
 
         frame:
-            xysize panelSize
-            background None
-
-            frame:
-                background "gui/sidepanel.png"
-                xfill True
-                yfill True
-                offset (-15, -20)
+            background "#000000cc"
 
             vbox:
                 use sssss_iconButton('\ueb73', tt="Open list of playthroughs", action=Show("SSSSS_PlaythroughsPicker"))
                 use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=None))
                 use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesList"), disabled=True)
 
-                use SSSSS_Divider(sizeX=panelSize[0] - 10)
+                use SSSSS_Divider(sizeX=40)
 
                 use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True), disabled=noPlaythrough)
                 use sssss_iconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough)
                 use sssss_iconButton('\ue2e6', tt="Actions", action=Show("SSSSS_PlaythroughActions", playthrough=playthrough))
 
-                use SSSSS_Divider(sizeX=panelSize[0] - 10)
+                use SSSSS_Divider(sizeX=40)
 
                 use sssss_iconButton('\ue666', tt="Custom pagination", action=SSSSS.Pagination.TogglePagination())
                 # use sssss_iconButton('\ue8b8', tt="Settings", action=Show("SSSSS_Settings"), disabled=True)

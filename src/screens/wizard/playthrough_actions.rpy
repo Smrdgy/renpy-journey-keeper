@@ -1,23 +1,25 @@
 screen SSSSS_PlaythroughActions(playthrough):
+    layer "SSSSSoverlay"
     style_prefix 'SSSSS'
-    use SSSSS_Dialog(title="Playtrhough actions", closeAction=Hide("SSSSS_PlaythroughActions"), background="gui/select_playthrough_dialog_background.png", size=(x52URM.scalePxInt(581), x52URM.scalePxInt(623))):
+
+    use SSSSS_Dialog(title="Playtrhough actions", closeAction=Hide("SSSSS_PlaythroughActions")):
         style_prefix "SSSSS"
 
-        vbox:
+        hbox:
+            xfill True
             yfill True
 
-            button:
-                style "SSSSS_textbutton_medium_gray"
-                action [SSSSS.Playthroughs.TryCycleSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
-                key_events True
-                xalign 0.5
-                
-                text "Cycle saves" yalign .5 xalign 0.5 size 28
+            vbox at right:
+                yalign 1.0
 
-            button:
-                style "SSSSS_textbutton_medium_gray"
-                action [SSSSS.Playthroughs.ConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")]
-                key_events True
-                xalign 0.5
+                # Cycle saves
+                hbox at right:
+                    use sssss_iconButton(icon="\ue089", text="Cycle saves", action=[SSSSS.Playthroughs.TryCycleSaves(playthrough), Hide("SSSSS_PlaythroughActions")])
                 
-                text "Show choice timeline" yalign .5 xalign 0.5 size 28
+                # Show choices timeline
+                hbox at right:
+                    use sssss_iconButton(icon="\uf184", text="Show choice timeline", action=[SSSSS.Playthroughs.ConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")])
+                
+                # Close
+                hbox at right:
+                    use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_PlaythroughActions"))

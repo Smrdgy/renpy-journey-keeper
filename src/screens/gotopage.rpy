@@ -20,18 +20,15 @@ screen SSSSS_GoToPage():
 
     frame:
         xysize (0, 0)
+        padding (0, 0, 0, 0)
         background None
 
         frame:
             style "SSSSS_frame"
-            xysize (70, 40)
+            xysize (90, 60)
             xalign 0.5 yalign 1
             offset (-40, -60)
-            background None
-
-            frame:
-                background "gui/goto.png"
-                offset (-14, -7)
+            background "#000000cc"
 
             button:
                 style_prefix "" # Have to override some other styles that are applying for some reson...
