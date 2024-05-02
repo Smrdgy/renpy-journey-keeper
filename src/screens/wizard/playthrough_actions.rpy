@@ -14,7 +14,7 @@ screen SSSSS_PlaythroughActions(playthrough):
 
                 # List all saves
                 hbox at right:
-                    use sssss_iconButton(icon="\ue089", text="List saves", action=[SSSSS.Playthroughs.ListSaves(playthrough), Hide("SSSSS_PlaythroughActions")])
+                    use sssss_iconButton(icon="\ue617", text="List saves", action=[SSSSS.Playthroughs.ListSaves(playthrough), Hide("SSSSS_PlaythroughActions")])
 
                 # Cycle saves
                 hbox at right:
@@ -22,7 +22,7 @@ screen SSSSS_PlaythroughActions(playthrough):
                 
                 # Show choices timeline
                 hbox at right:
-                    use sssss_iconButton(icon="\uf184", text="Show choice timeline", action=[SSSSS.Playthroughs.ConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")])
+                    use sssss_iconButton(icon="\uf184", text="Show choice timeline", action=[SSSSS.Playthroughs.ConfirmConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")])
                 
                 # Delete all saves
                 hbox at right:

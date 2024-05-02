@@ -405,6 +405,19 @@ init 1 python in SSSSS:
 
             def __call__(self):
                 self.playthrough.cycleSaves()
+
+        class ConfirmConstructTimeline(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
+            def __call__(self):
+                timeline = self.playthrough.constructTimeline()
+
+                showConfirm(
+                    title="Construct timeline",
+                    message="This process may take some time based on the amount of saves and your device. Do you wish to proceed?",
+                    yes=Playthroughs.ConstructTimeline(self.playthrough),
+                )
                 
         class ConstructTimeline(renpy.ui.Action):
             def __init__(self, playthrough):
@@ -442,7 +455,7 @@ init 1 python in SSSSS:
                     title="Remove all saves",
                     message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Playthroughs.DeleteAllSaves(self.playthrough),
-                    yesIcon="\ue089",
+                    yesIcon="\ue92b",
                     yesColor="#ff623a"
                 )
 
