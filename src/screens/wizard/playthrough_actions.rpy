@@ -12,6 +12,10 @@ screen SSSSS_PlaythroughActions(playthrough):
             vbox at right:
                 yalign 1.0
 
+                # List all saves
+                hbox at right:
+                    use sssss_iconButton(icon="\ue089", text="List saves", action=[SSSSS.Playthroughs.ListSaves(playthrough), Hide("SSSSS_PlaythroughActions")])
+
                 # Cycle saves
                 hbox at right:
                     use sssss_iconButton(icon="\ue089", text="Cycle saves", action=[SSSSS.Playthroughs.TryCycleSaves(playthrough), Hide("SSSSS_PlaythroughActions")])

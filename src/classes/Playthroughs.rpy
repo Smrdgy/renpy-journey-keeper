@@ -445,3 +445,13 @@ init 1 python in SSSSS:
                     yesIcon="\ue089",
                     yesColor="#ff623a"
                 )
+
+        class ListSaves(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
+            def __call__(self):
+                SaveSystem.multilocation.scan()
+                saves = Utils.getSortedSaves()
+
+                renpy.show_screen("SSSSS_SavesList", saves)
