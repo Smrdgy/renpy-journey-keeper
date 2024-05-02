@@ -100,6 +100,17 @@ init 1 python in SSSSS:
                 for location in self.location.locations:
                     shutil.rmtree(location.directory)
 
+            def deleteSaveFiles(self):
+                for location in self.location.locations:
+                    for filename in os.listdir(location.directory):
+                        filepath = os.path.join(location.directory, filename)
+                        # Check if the file is a regular file and ends with ".save" extension
+                        if os.path.isfile(filepath) and filename.endswith('.save'):
+                            # Remove the file
+                            os.remove(filepath)
+
+                SaveSystem.multilocation.scan()
+
             def _addLocation(self, fileLocation):
                 fileLocation.active = False
                 SaveSystem.multilocation.add(fileLocation)
@@ -126,5 +137,15 @@ init 1 python in SSSSS:
                 return False
 
             instance.deleteFiles()
+
+            return True
+
+        def removeSaveFilesForPlaythrough(self, playthrough):
+            instance = self.getPlaythroughSaveInstance(playthrough.id)
+
+            if(instance == None):
+                return False
+
+            instance.deleteSaveFiles()
 
             return True

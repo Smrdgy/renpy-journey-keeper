@@ -416,9 +416,32 @@ init 1 python in SSSSS:
                 renpy.show_screen("SSSSS_ChoicesTimeline", timeline)
         
         class RemoveThumbnail(renpy.ui.Action):
-                def __init__(self, playthrough):
-                    self.playthrough = playthrough
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
 
-                def __call__(self):
-                    self.playthrough.removeThumbnail()
-                    renpy.restart_interaction()
+            def __call__(self):
+                self.playthrough.removeThumbnail()
+                renpy.restart_interaction()
+
+        class DeleteAllSaves(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
+            def __call__(self):
+                SaveSystem.removeSaveFilesForPlaythrough(self.playthrough)
+                renpy.restart_interaction()
+
+        class ConfirmDeleteAllSaves(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
+            def __call__(self):
+                name = self.playthrough.name
+
+                showConfirm(
+                    title="Remove all saves",
+                    message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    yes=Playthroughs.DeleteAllSaves(self.playthrough),
+                    yesIcon="\ue089",
+                    yesColor="#ff623a"
+                )
