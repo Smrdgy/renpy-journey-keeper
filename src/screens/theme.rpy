@@ -39,6 +39,9 @@ style SSSSS_vscrollbar:
 style SSSSS_frame is SSSSS_default:
     padding (15, 15)
 
+style SSSSS_vbox is SSSSS_default
+style SSSSS_hbox is SSSSS_default
+
 ##################
 #     DIALOG     #
 ##################
@@ -58,6 +61,9 @@ style SSSSS_dialog_content:
 ##################
 #     BUTTON     #
 ##################
+
+style SSSSS_button is SSSSS_default:
+    padding (5, 5)
    
 style SSSSS_pagination_textbutton:
     background None

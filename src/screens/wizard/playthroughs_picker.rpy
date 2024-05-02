@@ -3,7 +3,7 @@ screen SSSSS_PlaythroughsPicker():
     style_prefix 'SSSSS'
 
     default columns = 4
-    default thumbnailSize = ((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20, 200)
+    default thumbnailSize = (int((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20), 200)
     default activeColor = "#00ff15"
     default onActiveColor = "#333"
 
@@ -33,6 +33,8 @@ screen SSSSS_PlaythroughsPicker():
                     $ isActivePlaythrough = SSSSS.Playthroughs.activePlaythrough == playthrough or (playthrough.id == 1 and SSSSS.Playthroughs.activePlaythrough == None)
 
                     button:
+                        xmaximum renpy.config.screen_width
+                        ymaximum renpy.config.screen_height
                         background (activeColor if isActivePlaythrough else "#ffffff11")
                         action [SSSSS.Playthroughs.ActivatePlaythrough(playthrough), Hide("SSSSS_PlaythroughsPicker")]
 

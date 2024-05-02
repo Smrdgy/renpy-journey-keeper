@@ -1,4 +1,6 @@
 screen sssss_iconButton(icon, text=None, action=None, xsize=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=icon, disabled=False, textColor=None):
+    style_prefix "SSSSS"
+
     python:
         text_color = ('#1f1f1f55' if disabled else (textColor or '#ffffff'))
 
