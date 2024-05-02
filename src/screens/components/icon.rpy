@@ -10,15 +10,12 @@ style sssss_icon is text:
     font 'fonts/MaterialIconsOutlined-Regular.otf'
     hover_font 'fonts/MaterialIcons-Regular.ttf'
 
-screen sssss_icon(icon, color='#ffffff'):
+screen sssss_icon(icon, color='#ffffff', size=None):
     style_prefix 'SSSSS'
 
-    frame:
-        background None
-        padding (0, 0)
-
-        hbox xsize 5 yalign .5: # We want this size fixed, to prevent resizing on icon change
-            if icon:
-                text icon style_suffix 'sssss_icon' color color
-            else:
-                transclude
+    hbox xsize 5 yalign .5: # We want this size fixed, to prevent resizing on icon change
+        if icon:
+            text icon style_suffix 'sssss_icon' color color:
+                if size:
+                    size size
+        transclude
