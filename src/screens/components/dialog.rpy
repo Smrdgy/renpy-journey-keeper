@@ -4,6 +4,7 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
 
     if closeAction:
         key 'K_ESCAPE' action closeAction
+        key 'mouseup_3' action closeAction
 
     frame style "SSSSS_dialog_overlay":
         vbox:
