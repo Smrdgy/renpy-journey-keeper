@@ -16,9 +16,9 @@ screen SSSSS_PlaythroughActions(playthrough):
                 hbox at right:
                     use sssss_iconButton(icon="\ue617", text="List saves", action=[SSSSS.Playthroughs.ListSaves(playthrough), Hide("SSSSS_PlaythroughActions")])
 
-                # Cycle saves
+                # Sequentialize saves
                 hbox at right:
-                    use sssss_iconButton(icon="\ue089", text="Cycle saves", action=[SSSSS.Playthroughs.TryCycleSaves(playthrough), Hide("SSSSS_PlaythroughActions")])
+                    use sssss_iconButton(icon="\ue089", text="Sequentialize saves", action=[SSSSS.Playthroughs.TrySequentializeSaves(playthrough), Hide("SSSSS_PlaythroughActions")])
                 
                 # Show choices timeline
                 hbox at right:

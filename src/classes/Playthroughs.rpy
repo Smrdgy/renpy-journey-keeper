@@ -146,7 +146,7 @@ init 1 python in SSSSS:
             def removeThumbnail(self):
                 self.thumbnail = None
 
-            def cycleSaves(self):
+            def sequentializeSaves(self):
                 current_page = 1
                 current_slot = 1
                 slots_per_page = renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
@@ -385,7 +385,7 @@ init 1 python in SSSSS:
 
                 renpy.notify("Quicksave created at {}".format(slotString))
 
-        class TryCycleSaves(renpy.ui.Action):
+        class TrySequentializeSaves(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
@@ -393,19 +393,19 @@ init 1 python in SSSSS:
                 playthrough = self.playthrough if not callable(self.playthrough) else self.playthrough()
 
                 showConfirm(
-                    title="Cycle playthroughs",
-                    message="Cycle playthroughs will rename all your saves so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?",
-                    yes=Playthroughs.CycleSaves(playthrough),
+                    title="Sequentialize playthrough",
+                    message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    yes=Playthroughs.SequentializeSaves(playthrough),
                     yesIcon="\ue089",
                     yesColor="#ff623a"
                 )
 
-        class CycleSaves(renpy.ui.Action):
+        class SequentializeSaves(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
             def __call__(self):
-                self.playthrough.cycleSaves()
+                self.playthrough.sequentializeSaves()
 
         class ConfirmConstructTimeline(renpy.ui.Action):
             def __init__(self, playthrough):
