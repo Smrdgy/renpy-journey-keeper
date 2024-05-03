@@ -3,46 +3,34 @@ screen SSSSS_AutosaveOverwriteConfirm():
     default message = "By choosing \"No\", the autosave feature will disable itself until you re-enable it again."
 
     layer "SSSSSoverlay"
-    style_prefix "SSSSS"
+    style_prefix 'SSSSS'
 
     use SSSSS_Dialog(title=title, message=message, closeAction=[SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")]):
         vbox:
-            yfill True
             xfill True
 
-            vbox:
-                align (0.5, 0.5)
+            python:
+                page, slot, _ = SSSSS.Autosaver.getCurrentSlot()
 
-                python:
-                    page, slot, _ = SSSSS.Autosaver.getCurrentSlot()
+            add FileScreenshot(name=slot, page=page) xalign 0.5
 
-                add FileScreenshot(name=slot, page=page) xalign 0.5
-
-                text "[renpy.store.SSSSS_ActiveSlot]" style "SSSSS_text" xalign 0.5
-
+            text "[renpy.store.SSSSS_ActiveSlot]"  xalign 0.5 text_align 0.5
+        
         hbox:
             xfill True
-            offset (0, -50)
+            yfill True
 
-            button:
-                key_events True
-                xalign 0.5
-                action [SSSSS.Autosaver.ConfirmDialogSave(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")]
+            vbox at right:
+                yalign 1.0
 
-                text "Overwrite" yalign .5 xalign 0.5 size 28
+                # Overwrite
+                hbox at right:
+                    use sssss_iconButton(icon="\ue161", text="Overwrite", action=[SSSSS.Autosaver.ConfirmDialogSave(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")], textColor="#f00")
 
-            button:
-                key_events True
-                xalign 0.5
+                # Move one over
+                hbox at right:
+                    use sssss_iconButton(icon="\ue941", text="Save one over", action=[SSSSS.Autosaver.MoveOneSlotOver(), Hide("SSSSS_AutosaveOverwriteConfirm"), SSSSS.Autosaver.TrySavePendingSave()])
 
-                action [SSSSS.Autosaver.MoveOneSlotOver(), Hide("SSSSS_AutosaveOverwriteConfirm"), SSSSS.Autosaver.TrySavePendingSave()]
-                
-                text "Save one over" yalign .5 xalign 0.5 size 28
-
-            button:
-                key_events True
-                xalign 0.5
-
-                action [SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")]
-                
-                text "No" yalign .5 xalign 0.5 size 28
+                # No
+                hbox at right:
+                    use sssss_iconButton(icon="\ue5cd", text="No", action=[SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")])
