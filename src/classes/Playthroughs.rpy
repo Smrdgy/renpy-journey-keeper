@@ -4,6 +4,7 @@ init 1 python in SSSSS:
     import json
     import time
     import base64
+    import re
 
     class PlaythroughsClass():
         _playthroughs = []
@@ -426,7 +427,7 @@ init 1 python in SSSSS:
             def __call__(self):
                 timeline = self.playthrough.constructTimeline()
 
-                renpy.show_screen("SSSSS_ChoicesTimeline", timeline)
+                renpy.show_screen("SSSSS_ChoicesTimeline", timeline, self.playthrough)
         
         class RemoveThumbnail(renpy.ui.Action):
             def __init__(self, playthrough):
@@ -468,3 +469,26 @@ init 1 python in SSSSS:
                 saves = Utils.getSortedSaves()
 
                 renpy.show_screen("SSSSS_SavesList", saves)
+        
+        class ExportTimelineToFile(renpy.ui.Action):
+            def __init__(self, timeline, playthrough):
+                self.timeline = timeline
+                self.playthrough = playthrough
+
+            def __call__(self):
+                with open(self.playthrough.name + " timeline.txt", 'w') as f:
+                    i = 0
+
+                    for item in self.timeline:
+                        f.write( str(i) + ". " + "     (" + item[0] + ")     " + self.__replace_tags(item[1]) + "\n")
+
+                        i += 1
+                
+                renpy.notify("Timeline exported into the game files")
+            
+            def __replace_tags(self, text):
+                # Define the pattern to match tags like {tag}content{/tag}
+                pattern = r'\{(.*?)\}(.*?)\{\/(.*?)\}'
+                # Replace all occurrences of the pattern with just the content inside the tags
+                result = re.sub(pattern, r'\2', text)
+                return result

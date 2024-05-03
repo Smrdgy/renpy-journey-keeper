@@ -1,4 +1,4 @@
-screen SSSSS_ChoicesTimeline(timeline):
+screen SSSSS_ChoicesTimeline(timeline, playthrough):
     layer "SSSSSoverlay"
     style_prefix "SSSSS"
 
@@ -26,15 +26,22 @@ screen SSSSS_ChoicesTimeline(timeline):
 
                         text choicesText xalign 0.5 text_align 0.5
 
+                        hbox ysize 5
+
+                    hbox:
+                        xalign 0.5
+
+                        use sssss_iconButton('\uf0fb', text="Export to file", action=SSSSS.Playthroughs.ExportTimelineToFile(timeline, playthrough=playthrough))
+
                     hbox ysize 5
 
                     for entry in timeline:
                         hbox:
                             text "[i]." color "#bbe4ff"
 
-                            text entry[1]
+                            text entry[1].replace("[", "⟦").replace("]", "⟧")
 
-                            text "([entry[0]])" size 10 color "#4b4b4b"
+                            text "([entry[0]])" size 18 color "#4b4b4b"
 
                         $ i += 1
         else:

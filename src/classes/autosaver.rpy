@@ -9,6 +9,7 @@ init -999 python in SSSSS:
     from json import dumps as json_dumps
     import io
     import sys
+    import re
 
     class AutosaverClass():
         suppressAutosaveConfirm = False
@@ -64,10 +65,14 @@ init -999 python in SSSSS:
                 self.pendingSave.save()
 
         def handleChoiceSelection(self, choice):
-            Autosaver.lastChoice = choice.label
+            # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
+            textComponent = renpy.ui.text(choice.label)
+            choiceText = ' '.join(textComponent.text)# .replace("[", "⟦").replace("]", "⟧") #FFS: Prepared in case [] needs to be substitued. In built games it's not a problem, but if there ever is game with these and config.developer = True, it might be a problem
+
+            Autosaver.lastChoice = choiceText
 
             if(Playthroughs.activePlaythrough.autosaveOnChoices):
-                self.createPendingSave(choice)
+                self.createPendingSave(choiceText)
                 self.pendingSave.takeAndSaveScreenshot()
                 self.trySavePendingSave()
 
@@ -122,7 +127,7 @@ init -999 python in SSSSS:
                 roots = renpy.game.log.freeze(None)
 
                 if(Playthroughs.activePlaythrough.useChoiceLabelAsSaveName):
-                    extra_info = extra_info or self.choice.label
+                    extra_info = extra_info or self.choice
 
                 extra_info = extra_info or ""
 
@@ -163,7 +168,7 @@ init -999 python in SSSSS:
                 json = json_dumps(json)
 
                 self.saveRecord = renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
-                self.saveRecord.choice = self.choice.label
+                self.saveRecord.choice = self.choice
 
             def takeAndSaveScreenshot(self):
                 renpy.take_screenshot()
