@@ -12,8 +12,9 @@ init 51 python in SSSSS:
 
     SaveSystem.setupLocations()
 
-    print(Playthroughs.activePlaythroughOrNone)
-    if Playthroughs.activePlaythroughOrNone == None:
+    if Playthroughs.activePlaythroughOrNone == None and renpy.store.persistent.SSSSS_lastActivePlaythrough != None:
+        Playthroughs.activateByID(renpy.store.persistent.SSSSS_lastActivePlaythrough)
+    else:
         Playthroughs.activateNative()
 
     def afterLoadCallback():
