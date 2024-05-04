@@ -4,35 +4,6 @@ init 1 python in SSSSS:
     import os
     from collections import OrderedDict
 
-    class MultiLocation(renpy.savelocation.MultiLocation):
-        def __init__(self):
-            super(MultiLocation, self).__init__()
-
-            self.nativeLocations = renpy.loadsave.location.locations
-
-        def add(self, location):
-            self.locations.append(location)
-
-        def activateLocations(self):
-            for location in self.locations:
-                location.active = True
-
-        def deactivateLocations(self):
-            for location in self.locations:
-                location.active = False
-
-        def load_persistent(self):
-            rv = []
-
-            for l in self.nativeLocations:
-                rv.extend(l.load_persistent())
-
-            return rv
-
-        def save_persistent(self, data):
-            for l in self.nativeLocations:
-                l.save_persistent(data)
-
     class SaveSystemClass():
         def __init__(self):
             self._playthroughSaves = OrderedDict()

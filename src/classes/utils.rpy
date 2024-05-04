@@ -108,3 +108,76 @@ init -1000 python in SSSSS:
             # Additional platform-specific adjustments can be added here
 
             return directory_name
+
+        @staticmethod
+        def createSaveRecord(extra_info=None):
+            roots = renpy.game.log.freeze(None)
+
+            extra_info = extra_info or ""
+
+            if renpy.config.save_dump:
+                renpy.loadsave.save_dump(roots, renpy.game.log)
+
+            logf = io.BytesIO()
+
+            try:
+                renpy.loadsave.dump((roots, renpy.game.log), logf)
+            except:
+                t, e, tb = sys.exc_info()
+
+                try:
+                    bad = renpy.loadsave.find_bad_reduction(roots, renpy.game.log)
+                except:
+                    print("Autosave failure: ", t, e, tb)
+                    renpy.notify("Autosave failed. Check log.txt for more info.")
+                    return
+
+                if bad is None:
+                    print("Autosave failure: ", t, e, tb)
+                    renpy.notify("Autosave failed. Check log.txt for more info.")
+                    return
+
+                if e.args:
+                    e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
+
+                print("Autosave failure: ", t, e, tb)
+                renpy.notify("Autosave failed. Check log.txt for more info.")
+                return
+
+            json = { "_save_name" : extra_info, "_renpy_version" : list(renpy.version_tuple), "_version" : renpy.config.version }
+
+            for i in renpy.config.save_json_callbacks:
+                i(json)
+
+            json = json_dumps(json)
+
+            return renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
+
+    class MultiLocation(renpy.savelocation.MultiLocation):
+        def __init__(self):
+            super(MultiLocation, self).__init__()
+
+            self.nativeLocations = renpy.loadsave.location.locations
+
+        def add(self, location):
+            self.locations.append(location)
+
+        def activateLocations(self):
+            for location in self.locations:
+                location.active = True
+
+        def deactivateLocations(self):
+            for location in self.locations:
+                location.active = False
+
+        def load_persistent(self):
+            rv = []
+
+            for l in self.nativeLocations:
+                rv.extend(l.load_persistent())
+
+            return rv
+
+        def save_persistent(self, data):
+            for l in self.nativeLocations:
+                l.save_persistent(data)

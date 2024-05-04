@@ -124,50 +124,10 @@ init -999 python in SSSSS:
                 self.createSaveSnapshot()
 
             def createSaveSnapshot(self, extra_info=None):
-                roots = renpy.game.log.freeze(None)
-
                 if(Playthroughs.activePlaythrough.useChoiceLabelAsSaveName):
                     extra_info = extra_info or self.choice
 
-                extra_info = extra_info or ""
-
-                if renpy.config.save_dump:
-                    renpy.loadsave.save_dump(roots, renpy.game.log)
-
-                logf = io.BytesIO()
-
-                try:
-                    renpy.loadsave.dump((roots, renpy.game.log), logf)
-                except:
-                    t, e, tb = sys.exc_info()
-
-                    try:
-                        bad = renpy.loadsave.find_bad_reduction(roots, renpy.game.log)
-                    except:
-                        print("Autosave failure: ", t, e, tb)
-                        renpy.notify("Autosave failed. Check log.txt for more info.")
-                        return
-
-                    if bad is None:
-                        print("Autosave failure: ", t, e, tb)
-                        renpy.notify("Autosave failed. Check log.txt for more info.")
-                        return
-
-                    if e.args:
-                        e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
-
-                    print("Autosave failure: ", t, e, tb)
-                    renpy.notify("Autosave failed. Check log.txt for more info.")
-                    return
-
-                json = { "_save_name" : extra_info, "_renpy_version" : list(renpy.version_tuple), "_version" : renpy.config.version }
-
-                for i in renpy.config.save_json_callbacks:
-                    i(json)
-
-                json = json_dumps(json)
-
-                self.saveRecord = renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
+                self.saveRecord = Utils.createSaveRecord(extra_info)
                 self.saveRecord.choice = self.choice
 
             def takeAndSaveScreenshot(self):
