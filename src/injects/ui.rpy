@@ -5,8 +5,9 @@ init -99 python:
         def new_funct(*new_args, **new_kwargs):
             new_kwargs.update(kwargs.copy())
         
-        
-            SSSSS.Autosaver.handleChoiceSelection(new_args[0])
+            # Prevent making any autosave actions when viewing a memory or a replay
+            if not SSSSS.Memories.memoryInProgress and not renpy.store._in_replay:
+                SSSSS.Autosaver.handleChoiceSelection(new_args[0])
 
             fn = func(*(args + new_args), **new_kwargs)
 

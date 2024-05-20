@@ -17,17 +17,23 @@ init 1 python in SSSSS:
             renpy.config.SSSSS_playthroughs_initialized = True
 
             hasNative = False
+            hasMemories = False
             if(renpy.store.persistent.SSSSS_playthroughs != None):
                 arr = json.loads(renpy.store.persistent.SSSSS_playthroughs)
 
                 for playthrough in arr:
                     if(playthrough.get("id") == 1):
                         hasNative = True
+                    elif playthrough.get("id") == 2:
+                        hasMemories = True
 
                     self._playthroughs.append(self.createPlaythroughFromSerialization(playthrough))
 
             if(not hasNative):
                 self._playthroughs.insert(0, self.PlaythroughClass(id=1, directory="", name="Native", autosaveOnChoices=False, useChoiceLabelAsSaveName=False))#MODIFY HERE
+
+            if not hasMemories:
+                self._playthroughs.insert(1, self.PlaythroughClass(id=2, directory="_memories", name="Memories", autosaveOnChoices=False, useChoiceLabelAsSaveName=False))#MODIFY HERE
 
         @property
         def playthroughs(self):

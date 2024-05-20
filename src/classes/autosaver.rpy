@@ -18,6 +18,9 @@ init -999 python in SSSSS:
         confirmDialogOpened = False
         afterLoadSavePositionPending = False
 
+        def __init__(self):
+            self.lastChoice = None
+
         @property
         def slotsPerPage(self):
             return renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
@@ -65,6 +68,10 @@ init -999 python in SSSSS:
                 self.pendingSave.save()
 
         def handleChoiceSelection(self, choice):
+            # Prevent making any autosave actions when viewing a memory or a replay
+            if Memories.memoryInProgress or renpy.store._in_replay:
+                return
+
             # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
             textComponent = renpy.ui.text(choice.label)
             choiceText = ' '.join(textComponent.text)# .replace("[", "⟦").replace("]", "⟧") #FFS: Prepared in case [] needs to be substitued. In built games it's not a problem, but if there ever is game with these and config.developer = True, it might be a problem

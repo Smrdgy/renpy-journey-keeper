@@ -33,7 +33,7 @@ screen SSSSS_Sidepanel():
             vbox:
                 use sssss_iconButton('\ueb73', tt="Open list of playthroughs", action=Show("SSSSS_PlaythroughsPicker"))
                 use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=None))
-                use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesList"), disabled=True)
+                use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesLibrary"))
 
                 use SSSSS_Divider(sizeX=40)
 
@@ -56,7 +56,7 @@ screen SSSSS_SidepanelHolder():
         isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None or (hasattr(renpy.config, "SSSSS_show_sidepanel") and renpy.config.SSSSS_show_sidepanel)
 
     # if is in save/load menu
-    if(isSaveLoadScreen):
+    if(isSaveLoadScreen and not SSSSS.Memories.memoryInProgress):
         use SSSSS_Sidepanel()
     else:
         $ SSSSS.Pagination.showGoTo = False

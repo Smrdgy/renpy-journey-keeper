@@ -10,7 +10,6 @@ screen SSSSS_PlaythroughsPicker():
     use SSSSS_Dialog(title="Select a playthrough", closeAction=Hide("SSSSS_PlaythroughsPicker")):
         style_prefix "SSSSS"
 
-        # use SSSSS_PlaythroughsList(itemAction=SSSSS.Playthroughs.ActivatePlaythrough, hideTarget="SSSSS_PlaythroughsPicker", canEdit=True, highlightActive=True)
         viewport:
             mousewheel True
             draggable True
@@ -18,7 +17,7 @@ screen SSSSS_PlaythroughsPicker():
             pagekeys True
 
             python:
-                playthroughs = SSSSS.Playthroughs.playthroughs
+                playthroughs = SSSSS.Playthroughs.playthroughs#[p for p in SSSSS.Playthroughs.playthroughs if p.id != 2] # Get all playthroughs except memories
                 total_playthroughs = len(playthroughs)
                 rows = total_playthroughs // columns
                 if total_playthroughs % columns != 0:

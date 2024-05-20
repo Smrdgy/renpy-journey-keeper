@@ -9,6 +9,7 @@ init 51 python in SSSSS:
     Choices = ChoicesDetectorClass()
     Autosaver = AutosaverClass()
     Pagination = PaginationClass()
+    Memories = MemoriesClass()
 
     SaveSystem.setupLocations()
 
