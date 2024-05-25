@@ -60,7 +60,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     text "saves/" color '#e5e5e5'
                     text "[computedDirectory]" color '#a2ebff'
 
-                    if playthrough.id != None:
+                    if isEdit:
                         button:
                             action None
 

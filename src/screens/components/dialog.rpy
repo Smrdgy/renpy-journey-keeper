@@ -9,21 +9,21 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
     frame style "SSSSS_dialog_overlay":
         vbox:
             hbox:
-                style_prefix "SSSSS"
                 xfill True
 
-                hbox
+                frame:
+                    padding (20, 20, 20, 20)
+
+                    use sssss_iconButton(icon=None, action=None)
 
                 hbox at center:
-                    xalign .5
-
                     if icon:
                         use sssss_icon(icon)
 
                     if title:
                         text title yalign .5 size 40 text_align 0.5
 
-                frame at right style "SSSSS_frame":
+                frame at right:
                     padding (20, 20, 20, 20)
 
                     use sssss_iconButton(icon="\ue5cd", action=[closeAction, NullAction()])

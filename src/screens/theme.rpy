@@ -58,6 +58,14 @@ style SSSSS_dialog_title:
 style SSSSS_dialog_content:
     padding (40, 0, 40, 40)
    
+style SSSSS_dialog_vbox is SSSSS_vbox
+style SSSSS_dialog_hbox is SSSSS_hbox
+style SSSSS_dialog_frame is SSSSS_frame
+style SSSSS_dialog_text is SSSSS_text
+style SSSSS_dialog_label is SSSSS_label
+style SSSSS_dialog_label_text is SSSSS_label_text
+style SSSSS_dialog_button is SSSSS_button
+
 ##################
 #     BUTTON     #
 ##################
