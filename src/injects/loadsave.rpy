@@ -4,6 +4,7 @@ init -99 python:
     def bafore_load(slotname):
         SSSSS.Autosaver.lastChoice = None
         SSSSS.Autosaver.activeSlotPending = slotname
+        SSSSS.Autosaver.suppressAutosaveConfirm = False
     
     def bafore_save(slotname):
         SSSSS.Autosaver.lastChoice = None

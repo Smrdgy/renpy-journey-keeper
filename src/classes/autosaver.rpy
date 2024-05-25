@@ -26,8 +26,6 @@ init -999 python in SSSSS:
             return renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
 
         def setActiveSlot(self, slot):
-            self.suppressAutosaveConfirm = False
-
             self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot + "" # Copy the data, not just the pointer
             renpy.store.SSSSS_ActiveSlot = slot
 
