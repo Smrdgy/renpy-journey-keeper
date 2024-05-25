@@ -52,9 +52,11 @@ init 999 python:
 
     if not 'SSSSSsidepanel' in config.layers:
         config.layers.insert(config.layers.index("overlay"), 'SSSSSsidepanel')
+        config.context_clear_layers.append('SSSSSsidepanel')
     
     if not 'SSSSSoverlay' in config.layers:
         config.layers.insert(config.layers.index("overlay"), 'SSSSSoverlay')
+        config.context_clear_layers.append('SSSSSoverlay')
 
     renpy.config.after_load_callbacks.append(SSSSS.afterLoadCallback)
     renpy.config.start_interact_callbacks.append(SSSSS.startInteractCallback)

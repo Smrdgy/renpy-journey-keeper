@@ -28,7 +28,7 @@ init 1 python in SSSSS:
             self.saveInstance.location.activateLocations()
 
             # Backup current session
-            # TODO: Figure out session restoration
+            # TODO: Figure out session restoration #### UPDATE ##### -- maybe I've fixed it with context_clear_layers in main.rpy, but have to check this out later in the future...
 
             # renpy.game.log.complete()
 
