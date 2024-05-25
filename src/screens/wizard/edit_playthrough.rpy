@@ -61,9 +61,8 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 xfill True
 
                 vbox:
-                    # use SSSSS_Checkbox(checked=storeChoices, text="Store choices", action=ToggleScreenVariable('storeChoices', True, False)) #TODO: Implement
                     use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
-                    use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False))
+                    use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=13}(Works only if \"Autosave on choice\" is enabled and the autosave is performed){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False))
 
             if isEdit:
                 text "Thumbnail:"
