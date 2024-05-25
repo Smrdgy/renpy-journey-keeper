@@ -20,6 +20,7 @@ init 51 python in SSSSS:
 
     def afterLoadCallback():
         if(Autosaver.activeSlotPending != None):
+            Autosaver.suppressAutosaveConfirm = False
             Autosaver.setActiveSlot(Autosaver.activeSlotPending)
             Autosaver.activeSlotPending = None
 

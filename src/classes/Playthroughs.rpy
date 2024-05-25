@@ -387,7 +387,7 @@ init 1 python in SSSSS:
 
                 renpy.take_screenshot()
                 renpy.save(slotString)
-                renpy.store.SSSSS_ActiveSlot = slotString
+                Autosaver.setNextSlot()
 
                 renpy.notify("Quicksave created at {}".format(slotString))
 

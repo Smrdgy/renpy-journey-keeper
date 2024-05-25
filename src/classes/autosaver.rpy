@@ -1,6 +1,6 @@
 # Unfortunately this must be saved into the save game, so the system can properly recognize which slot to use next,
 # especially when a manual save is made somewhere in between and then a rollback occurs.
-default SSSSS_ActiveSlot = "1-0"
+default SSSSS_ActiveSlot = "1-1"
 
 init -999 python in SSSSS:
     _constant = True
@@ -12,14 +12,14 @@ init -999 python in SSSSS:
     import re
 
     class AutosaverClass():
-        suppressAutosaveConfirm = False
-        pendingSave = None
-        prevActiveSlot = "N/A"
-        confirmDialogOpened = False
-        afterLoadSavePositionPending = False
-
         def __init__(self):
+            self.suppressAutosaveConfirm = False
+            self.pendingSave = None
+            self.prevActiveSlot = "N/A"
+            self.confirmDialogOpened = False
+            self.afterLoadSavePositionPending = False
             self.lastChoice = None
+            self.activeSlotPending = None
 
         @property
         def slotsPerPage(self):
@@ -28,8 +28,8 @@ init -999 python in SSSSS:
         def setActiveSlot(self, slot):
             self.suppressAutosaveConfirm = False
 
+            self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot + "" # Copy the data, not just the pointer
             renpy.store.SSSSS_ActiveSlot = slot
-            self.prevActiveSlot = slot
 
         def getNextSlot(self):
             page, slot = renpy.store.SSSSS_ActiveSlot.split('-')
@@ -54,13 +54,33 @@ init -999 python in SSSSS:
 
             return page, slot, slotString
 
-        def trySavePendingSave(self):
-            if(renpy.store.SSSSS_ActiveSlot == Autosaver.prevActiveSlot):
-                Autosaver.pendingSave = None # Discard this save because the user has rolled back
+        def getPreviousSlot(self):
+            page, slot = renpy.store.SSSSS_ActiveSlot.split('-')
+            page = int(page)
+            slot = int(slot)
 
+            slot -= 1
+
+            if(slot < 1):
+                slot = 1
+                page -= 1
+
+            slotString = str(page) + "-" + str(slot)
+
+            return page, slot, slotString
+
+        def setNextSlot(self):
+            _, _, slotString = Autosaver.getNextSlot()
+            self.setActiveSlot(slotString)
+
+        def setPreviousSlot(self):
+            _, _, slotString = Autosaver.getPreviousSlot()
+            self.setActiveSlot(slotString)
+
+        def trySavePendingSave(self):
             if(self.pendingSave != None):
                 # If the save slot is not bigger than the very last one, do once a confirm whether to disable autosaving
-                if renpy.scan_saved_game(renpy.store.SSSSS_ActiveSlot) and not self.suppressAutosaveConfirm:
+                if renpy.scan_saved_game(renpy.store.SSSSS_ActiveSlot) and not self.suppressAutosaveConfirm and not renpy.store.SSSSS_ActiveSlot == self.prevActiveSlot:
                     self.confirmDialogOpened = True
                     renpy.show_screen("SSSSS_AutosaveOverwriteConfirm")
                     return
@@ -88,8 +108,7 @@ init -999 python in SSSSS:
         # If so, the save slot needs to move further as to not override the manual slot with the next autosave.
         def processSlotAfterLoad(self):
             if(not Choices.isDisplayingChoice):
-                _, _, slotString = self.getNextSlot()
-                renpy.store.SSSSS_ActiveSlot = slotString
+                self.setNextSlot()
 
             self.afterLoadSavePositionPending = False
 
@@ -106,9 +125,7 @@ init -999 python in SSSSS:
 
         class MoveOneSlotOver(renpy.ui.Action):
             def __call__(self):
-                _, _, slotName = Autosaver.getNextSlot()
-
-                renpy.store.SSSSS_ActiveSlot = slotName
+                Autosaver.setNextSlot()
 
         class TrySavePendingSave(renpy.ui.Action):
             def __call__(self):
@@ -116,11 +133,6 @@ init -999 python in SSSSS:
                 renpy.restart_interaction()
 
         def createPendingSave(self, choice):
-            self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot
-
-            _, _, slotString = self.getNextSlot()
-            renpy.store.SSSSS_ActiveSlot = slotString
-
             self.pendingSave = AutosaverClass.PendingSaveClass(choice)
 
         class PendingSaveClass():
@@ -152,7 +164,9 @@ init -999 python in SSSSS:
 
                 Autosaver.pendingSave = None
 
-                page, slot = renpy.store.SSSSS_ActiveSlot.split('-')
+                page, _, _ = Autosaver.getCurrentSlot()
                 page = int(page)
 
                 renpy.store.persistent._file_page = page
+
+                Autosaver.setNextSlot()

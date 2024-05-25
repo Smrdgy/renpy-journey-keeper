@@ -17,7 +17,7 @@ screen SSSSS_PlaythroughsPicker():
             pagekeys True
 
             python:
-                playthroughs = SSSSS.Playthroughs.playthroughs#[p for p in SSSSS.Playthroughs.playthroughs if p.id != 2] # Get all playthroughs except memories
+                playthroughs = [p for p in SSSSS.Playthroughs.playthroughs if p.id != 2] # Get all playthroughs except memories
                 total_playthroughs = len(playthroughs)
                 rows = total_playthroughs // columns
                 if total_playthroughs % columns != 0:
