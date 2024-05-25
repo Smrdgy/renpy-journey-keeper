@@ -2,7 +2,7 @@ screen SSSSS_ChoicesTimeline(timeline, playthrough):
     layer "SSSSSoverlay"
     style_prefix "SSSSS"
 
-    default choicesText = "Choices are saved into a save file only when this mod is active.\nIf you have created saves without this mod, the choices are not recorded and won't be displayed here.\nLikewise, manual saves are unable to store choices."
+    default choicesText = "Choices are saved into a save file {u}only{/u} when this mod is active and \"Autosave on choice\" is enabled in the playthrough settings.\n{color=#ff623a}Warning - Manual and quick saves are unable to store choices.{/c}"
 
     use SSSSS_Dialog(title="Choices timeline", closeAction=Hide("SSSSS_ChoicesTimeline")):
         python:

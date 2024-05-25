@@ -482,7 +482,9 @@ init 1 python in SSSSS:
                 self.playthrough = playthrough
 
             def __call__(self):
-                with open(self.playthrough.name + " timeline.txt", 'w') as f:
+                filename = self.playthrough.name + " timeline.txt"
+
+                with open(filename, 'w') as f:
                     i = 0
 
                     for item in self.timeline:
@@ -490,7 +492,15 @@ init 1 python in SSSSS:
 
                         i += 1
                 
-                renpy.notify("Timeline exported into the game files")
+                import os
+                showConfirm(
+                    title="Timeline exported into the game files",
+                    message="You can find the file in " + os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", filename)),
+                    yesText="",
+                    yesIcon=None,
+                    noText="OK",
+                    noIcon=None
+                )
             
             def __replace_tags(self, text):
                 # Define the pattern to match tags like {tag}content{/tag}
