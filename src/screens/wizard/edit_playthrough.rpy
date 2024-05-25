@@ -6,6 +6,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
     default name = playthrough.name or ''
     default originalname = name
+    default description = playthrough.description or ''
     default storeChoices = playthrough.storeChoices
     default autosaveOnChoices = playthrough.autosaveOnChoices
     default useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
@@ -14,12 +15,14 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     default inputs = x52URM.InputGroup(
         [
             ('name', x52URM.Input(text=name, updateScreenVariable="name")),
+            ('description', x52URM.Input(text=description, updateScreenVariable="description", multiline=True)),
         ],
         focusFirst=True,
         onSubmit=[
-            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=x52URM.GetScreenInput('name', 'inputs'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=URMGetScreenVariable('useChoiceLabelAsSaveName')),#MODIFY HERE
+            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=x52URM.GetScreenInput('name', 'inputs'), description=x52URM.GetScreenInput('description', 'inputs'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=URMGetScreenVariable('useChoiceLabelAsSaveName')),#MODIFY HERE
             Hide('SSSSS_EditPlaythrough')
-        ]
+        ],
+        submitOnEnter=False
     )
 
     key 'K_TAB' action inputs.NextInput()
@@ -37,8 +40,11 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     key_events True
                     action inputs.name.Enable()
 
-                    input value inputs.name:
-                        style "SSSSS_input_input"
+                    frame style "SSSSS_default":
+                        xfill True
+
+                        input value inputs.name:
+                            style "SSSSS_input_input"
 
             if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
                 text "Are you sure? This name already exists." color '#ffb14c' offset (15, 2)
@@ -54,6 +60,28 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     text "saves/" color '#e5e5e5'
                     text "[computedDirectory]" color '#a2ebff'
 
+                    if playthrough.id != None:
+                        button:
+                            action None
+
+                            use sssss_icon("\ue897", color="#a95858", size=20)
+
+            hbox ysize 10
+
+            text "Description:"
+            frame:
+                button:
+                    style_prefix "" # Have to override some other styles that are applying for some reson...
+
+                    key_events True
+                    action inputs.description.Enable()
+
+                    frame style "SSSSS_default":
+                        xfill True
+
+                        input value inputs.description:
+                            style "SSSSS_input_input"
+
             hbox ysize 10
 
             text "Options:"
@@ -63,6 +91,8 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 vbox:
                     use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False))
                     use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=13}(Works only if \"Autosave on choice\" is enabled and the autosave is performed){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False))
+
+            hbox ysize 10
 
             if isEdit:
                 text "Thumbnail:"

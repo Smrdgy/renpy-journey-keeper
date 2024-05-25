@@ -3,7 +3,7 @@ init -999 python in x52URM:
     _constant = True
 
     class Input(renpy.store.InputValue):
-        def __init__(self, text='', autoFocus=False, mask=None, onEnter=None, editable=True, updateScreenVariable=None, onInput=None):
+        def __init__(self, text='', autoFocus=False, mask=None, onEnter=None, editable=True, updateScreenVariable=None, onInput=None, multiline=False):
             self._m1_inputs__text = text
             self._m1_inputs__unmaskedText = text
             self.default = autoFocus
@@ -12,6 +12,7 @@ init -999 python in x52URM:
             self.editable = editable
             self.updateScreenVariable = updateScreenVariable
             self.onInput = onInput
+            self.multiline = multiline
         
         @property
         def autoFocus(self):
@@ -56,6 +57,9 @@ init -999 python in x52URM:
                 actions = self.onEnter if isinstance(self.onEnter, list) else [self.onEnter]
                 for action in actions:
                     action()
+
+            if self.multiline:
+                self.set_text(self.get_text() + '\n')
             
             raise renpy.IgnoreEvent()
         
@@ -67,14 +71,14 @@ init -999 python in x52URM:
 
 
     class InputGroup(x52NonPicklable):
-        def __init__(self, inputs=None, focusFirst=False, onSubmit=None):
+        def __init__(self, inputs=None, focusFirst=False, onSubmit=None, submitOnEnter=True):
             """ `input` tuple, example: [('usernameInput', x52Input(autoFocus=True)),('passwordInput', x52Input(mask='*))] """
             self._m1_inputs__inputs = inputs or []
             self._m1_inputs__selectedIndex = None
             self.onSubmit = onSubmit
             for i in range(len(self._m1_inputs__inputs)):
                 input = self._m1_inputs__inputs[i][1]
-                if not input.onEnter: input.onEnter = onSubmit 
+                if not input.onEnter and submitOnEnter: input.onEnter = onSubmit 
                 if focusFirst: 
                     if self._m1_inputs__selectedIndex == None and input.editable:
                         self._m1_inputs__selectedIndex = i

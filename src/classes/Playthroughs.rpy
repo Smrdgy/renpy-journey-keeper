@@ -54,13 +54,14 @@ init 1 python in SSSSS:
             return None
 
         def createPlaythroughFromSerialization(self, data):
-            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"))#MODIFY HERE
+            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"))#MODIFY HERE
 
         class PlaythroughClass():
-            def __init__(self, id=None, directory=None, name=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False):#MODIFY HERE
+            def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False):#MODIFY HERE
                 self.id = id or int(time.time())
                 self.directory = directory if (directory != None) else (Utils.name_to_directory_name(name) if name else None)
                 self.name = name
+                self.description = description
                 self.thumbnail = thumbnail
                 self.storeChoices = storeChoices
                 self.layout = layout
@@ -74,15 +75,16 @@ init 1 python in SSSSS:
                 return None
 
             def copy(self):
-                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName)#MODIFY HERE
+                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.description, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName)#MODIFY HERE
 
-            def edit(self, name=None, thumbnail=None, storeChoices=None, layout=None, autosaveOnChoices=None, selectedPage=None, filePageName=None, useChoiceLabelAsSaveName=None):#MODIFY HERE
+            def edit(self, name=None, description=None, thumbnail=None, storeChoices=None, layout=None, autosaveOnChoices=None, selectedPage=None, filePageName=None, useChoiceLabelAsSaveName=None):#MODIFY HERE
                 if name != None:
                     self.name = name
 
                     if(self.directory == None):
                         self.directory = Utils.name_to_directory_name(name)
 
+                if description != None: self.description = description
                 if thumbnail != None: self.thumbnail = thumbnail
                 if storeChoices != None: self.storeChoices = storeChoices
                 if layout != None: self.layout = layout
@@ -100,6 +102,7 @@ init 1 python in SSSSS:
                 if(self.directory == None):
                     self.directory = Utils.name_to_directory_name(playthrough.name)
 
+                self.description = playthrough.description
                 self.thumbnail = playthrough.thumbnail
                 self.storeChoices = playthrough.storeChoices
                 self.layout = playthrough.layout
@@ -116,6 +119,7 @@ init 1 python in SSSSS:
                     'id': self.id,
                     'directory': self.directory,
                     'name': self.name,
+                    'description': self.description,
                     'thumbnail': self.thumbnail,
                     'storeChoices': self.storeChoices,
                     'layout': self.layout,
@@ -335,9 +339,10 @@ init 1 python in SSSSS:
                 renpy.restart_interaction()
 
         class AddOrEdit(renpy.ui.Action):
-            def __init__(self, playthrough, name, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName):#MODIFY HERE
+            def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName):#MODIFY HERE
                 self.playthrough = playthrough
                 self.name = name
+                self.description = description
                 self.storeChoices = storeChoices
                 self.autosaveOnChoices = autosaveOnChoices
                 self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
@@ -346,12 +351,13 @@ init 1 python in SSSSS:
             def __call__(self):
                 playthrough = self.playthrough if not callable(self.playthrough) else self.playthrough()
                 name = self.name if not callable(self.name) else self.name()
+                description = self.description if not callable(self.description) else self.description()
                 storeChoices = self.storeChoices if not callable(self.storeChoices) else self.storeChoices()
                 autosaveOnChoices = self.autosaveOnChoices if not callable(self.autosaveOnChoices) else self.autosaveOnChoices()
                 useChoiceLabelAsSaveName = self.useChoiceLabelAsSaveName if not callable(self.useChoiceLabelAsSaveName) else self.useChoiceLabelAsSaveName()
                 #MODIFY HERE
 
-                playthrough = playthrough.copy().edit(name=name, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName)#MODIFY HERE
+                playthrough = playthrough.copy().edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName)#MODIFY HERE
 
                 Playthroughs.addOrEdit(playthrough)
                 renpy.restart_interaction()
