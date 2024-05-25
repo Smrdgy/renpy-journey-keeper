@@ -19,6 +19,10 @@ init 51 python in SSSSS:
         Playthroughs.activateNative()
 
     def afterLoadCallback():
+        if(Autosaver.activeSlotPending != None):
+            Autosaver.setActiveSlot(Autosaver.activeSlotPending)
+            Autosaver.activeSlotPending = None
+
         Autosaver.afterLoadSavePositionPending = True
 
     def startInteractCallback():
