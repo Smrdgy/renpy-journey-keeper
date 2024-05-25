@@ -30,7 +30,7 @@ init -999 python in SSSSS:
             renpy.store.SSSSS_ActiveSlot = slot
 
         def getNextSlot(self):
-            page, slot = renpy.store.SSSSS_ActiveSlot.split('-')
+            page, slot = Utils.splitSavename(renpy.store.SSSSS_ActiveSlot)
             page = int(page)
             slot = int(slot)
 
@@ -46,14 +46,14 @@ init -999 python in SSSSS:
 
         def getCurrentSlot(self):
             slotString = renpy.store.SSSSS_ActiveSlot
-            page, slot = slotString.split('-')
+            page, slot = Utils.splitSavename(slotString)
             page = int(page)
             slot = int(slot)
 
             return page, slot, slotString
 
         def getPreviousSlot(self):
-            page, slot = renpy.store.SSSSS_ActiveSlot.split('-')
+            page, slot = Utils.splitSavename(renpy.store.SSSSS_ActiveSlot)
             page = int(page)
             slot = int(slot)
 

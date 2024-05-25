@@ -1,6 +1,7 @@
 screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
     layer "overlay"
     style_prefix 'SSSSS_dialog'
+    modal True
 
     if closeAction:
         key 'K_ESCAPE' action closeAction

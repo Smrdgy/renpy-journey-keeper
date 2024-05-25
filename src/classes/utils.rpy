@@ -1,6 +1,18 @@
 init -1000 python in SSSSS:
     _constant = True
 
+    class x52NonPicklable(python_object):
+        def __setstate__(self, d):
+            pass
+        def __getstate__(self):
+            return {}
+        def __getnewargs__(self):
+            return ()
+        def __iter__(self):
+            return None
+        def itervalues(self):
+            return None
+
     class ImagePlaceholder(renpy.display.core.Displayable):
         def __init__(self, width=0, height=0, **properties):
             super(ImagePlaceholder, self).__init__(**properties)
@@ -68,12 +80,16 @@ init -1000 python in SSSSS:
 
             return int(new_width), int(new_height)
 
-    class Utils():
+    class Utils(x52NonPicklable):
         @staticmethod
         def splitSavename(save_name):
-            page, slot = save_name.split('-')
+            try:
+                page, slot = save_name.split('-')
 
-            return page, slot
+                return page, slot
+            except:
+                print("Can't resolve ", save_name)
+                return 1, 1
 
         @staticmethod
         def getSortedSaves():
@@ -204,15 +220,3 @@ init -1000 python in SSSSS:
         def save_persistent(self, data):
             for l in self.nativeLocations:
                 l.save_persistent(data)
-
-    class x52NonPicklable(python_object):
-        def __setstate__(self, d):
-            pass
-        def __getstate__(self):
-            return {}
-        def __getnewargs__(self):
-            return ()
-        def __iter__(self):
-            return None
-        def itervalues(self):
-            return None
