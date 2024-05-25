@@ -2,8 +2,11 @@ screen SSSSS_Overlay():
     layer "screens"
     style_prefix "SSSSS"
 
-    key "K_F5" action SSSSS.Playthroughs.QuickSave()
-    key "K_BACKQUOTE" action SSSSS.Memories.OpenSaveMemory()
+    if not SSSSS.Memories.memoryInProgress and not renpy.store._in_replay:
+        key "K_F5" action SSSSS.Playthroughs.QuickSave()
+
+    if not renpy.store._in_replay:
+        key "K_BACKQUOTE" action SSSSS.Memories.OpenSaveMemory()
 
     if SSSSS.Playthroughs.activePlaythrough.autosaveOnChoices:
         if SSSSS.Autosaver.afterLoadSavePositionPending:
