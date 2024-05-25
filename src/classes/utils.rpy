@@ -167,6 +167,15 @@ init -1000 python in SSSSS:
 
             return renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
 
+        @staticmethod
+        def isDisplayingChoices():
+            try:
+                current = renpy.game.context().current
+                script = renpy.game.script.lookup(current)
+                return isinstance(script, renpy.ast.Menu)
+            except:
+                return False
+
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):
             super(MultiLocation, self).__init__()

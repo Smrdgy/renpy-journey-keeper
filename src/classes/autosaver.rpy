@@ -105,7 +105,7 @@ init -999 python in SSSSS:
         # However when a manual save is loaded it might not be a choice screen.
         # If so, the save slot needs to move further as to not override the manual slot with the next autosave.
         def processSlotAfterLoad(self):
-            if(not Choices.isDisplayingChoice):
+            if(not Utils.isDisplayingChoices()):
                 self.setNextSlot()
 
             self.afterLoadSavePositionPending = False

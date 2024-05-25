@@ -6,7 +6,6 @@ init 51 python in SSSSS:
 
     Playthroughs = PlaythroughsClass()
     SaveSystem = SaveSystemClass()
-    Choices = ChoicesDetectorClass()
     Autosaver = AutosaverClass()
     Pagination = PaginationClass()
     Memories = MemoriesClass()
