@@ -93,13 +93,27 @@ init -1000 python in SSSSS:
         def name_to_directory_name(title):
             import re
 
-            # Replace spaces and special characters with underscores
-            #  Windows does not allow certain characters <>:"/\\|?* in directory names
-            directory_name = re.sub(r'[\s<>:"/\\\|\?\*]+', '_', title)
-            directory_name = re.sub(r'[^\w.-]', '', directory_name)
+            # Define invalid characters and their replacements
+            replacements = {
+                ':': '；',  # full-width semicolon
+                '/': '／',  # full-width solidus
+                '\\': '／',  # full-width solidus
+                '<': '‹',   # single left-pointing angle quotation mark
+                '>': '›',   # single right-pointing angle quotation mark
+                '*': '＊',  # full-width asterisk
+                '?': '？',  # full-width question mark
+                '"': '＂',  # full-width quotation mark
+                '|': 'ǀ'    # Latin letter dental click
+            }
 
-            # Make it lowercase
-            directory_name = directory_name.lower()
+            # Create a regex pattern to match any invalid character
+            pattern = re.compile('|'.join(re.escape(char) for char in replacements.keys()))
+            
+            # Function to replace invalid characters
+            def replace_invalid_char(match):
+                return replacements[match.group(0)]
+
+            directory_name = pattern.sub(replace_invalid_char, title)
 
             # Limit the length of the directory name
             max_length = 255  # Maximum file name length for most file systems
