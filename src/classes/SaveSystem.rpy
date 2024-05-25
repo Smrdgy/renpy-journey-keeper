@@ -4,7 +4,7 @@ init 1 python in SSSSS:
     import os
     from collections import OrderedDict
 
-    class SaveSystemClass():
+    class SaveSystemClass(x52NonPicklable):
         def __init__(self):
             self._playthroughSaves = OrderedDict()
             self._activePlaythroughSave = None
@@ -26,7 +26,7 @@ init 1 python in SSSSS:
         def overrideNativeLocation(self):
             renpy.loadsave.location = self.multilocation
 
-        class PlaythroughSaveClass():
+        class PlaythroughSaveClass(x52NonPicklable):
             def __init__(self, playthrough, noScan=False):
                 self.location = MultiLocation()
                 self.playthrough = playthrough

@@ -1,7 +1,7 @@
 init 1 python in SSSSS:
     _constant = True
 
-    class MemoriesClass():
+    class MemoriesClass(x52NonPicklable):
         def __init__(self):
             self.memoryInProgress = False
 

@@ -195,3 +195,15 @@ init -1000 python in SSSSS:
         def save_persistent(self, data):
             for l in self.nativeLocations:
                 l.save_persistent(data)
+
+    class x52NonPicklable(python_object):
+        def __setstate__(self, d):
+            pass
+        def __getstate__(self):
+            return {}
+        def __getnewargs__(self):
+            return ()
+        def __iter__(self):
+            return None
+        def itervalues(self):
+            return None

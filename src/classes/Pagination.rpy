@@ -1,7 +1,7 @@
 init 1 python in SSSSS:
     _constant = True
 
-    class PaginationClass():
+    class PaginationClass(x52NonPicklable):
         showGoTo = False
 
         @property

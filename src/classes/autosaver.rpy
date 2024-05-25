@@ -11,7 +11,7 @@ init -999 python in SSSSS:
     import sys
     import re
 
-    class AutosaverClass():
+    class AutosaverClass(x52NonPicklable):
         def __init__(self):
             self.suppressAutosaveConfirm = False
             self.pendingSave = None
@@ -133,7 +133,7 @@ init -999 python in SSSSS:
         def createPendingSave(self, choice):
             self.pendingSave = AutosaverClass.PendingSaveClass(choice)
 
-        class PendingSaveClass():
+        class PendingSaveClass(x52NonPicklable):
             def __init__(self, choice):
                 self.saveRecord = None
                 self.choice = choice

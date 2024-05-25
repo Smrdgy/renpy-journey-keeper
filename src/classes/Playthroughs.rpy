@@ -6,7 +6,7 @@ init 1 python in SSSSS:
     import base64
     import re
 
-    class PlaythroughsClass():
+    class PlaythroughsClass(x52NonPicklable):
         _playthroughs = []
         _activePlaythrough = None
 
@@ -56,7 +56,7 @@ init 1 python in SSSSS:
         def createPlaythroughFromSerialization(self, data):
             return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"))#MODIFY HERE
 
-        class PlaythroughClass():
+        class PlaythroughClass(x52NonPicklable):
             def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False):#MODIFY HERE
                 self.id = id or int(time.time())
                 self.directory = directory if (directory != None) else (Utils.name_to_directory_name(name) if name else None)

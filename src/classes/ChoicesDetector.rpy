@@ -1,7 +1,7 @@
 init 1 python in SSSSS:
     _constant = True
 
-    class ChoicesDetectorClass():
+    class ChoicesDetectorClass(x52NonPicklable):
         @property
         def isDisplayingChoice(self):
             try:
