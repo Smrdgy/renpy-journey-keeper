@@ -74,7 +74,7 @@ screen SSSSS_PlaythroughsPicker():
                                         use sssss_iconButton('\ue872', text="Remove", tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), disabled=playthrough.id == 1, textColor = "#ff0000")
 
                                     hbox at right:
-                                        use sssss_iconButton('\ue3c9', text="Edit", tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True), textColor=(onActiveColor if isActivePlaythrough else None))
+                                        use sssss_iconButton('\ue3c9', text="Edit", tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), textColor=(onActiveColor if isActivePlaythrough else None))
 
                 for _ in range(0, spotsToFill):
                     text ""

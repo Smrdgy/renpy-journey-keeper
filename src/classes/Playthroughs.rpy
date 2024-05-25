@@ -147,7 +147,7 @@ init 1 python in SSSSS:
                 return self.thumbnail != None
 
             def makeThumbnail(self):
-                self.thumbnail = base64.b64encode(renpy.game.interface.get_screenshot()) #TODO: verify the size/speed for let's say 50 or 100 playthroughs
+                self.thumbnail = base64.b64encode(renpy.game.interface.get_screenshot())
 
             def removeThumbnail(self):
                 self.thumbnail = None
@@ -332,7 +332,6 @@ init 1 python in SSSSS:
             def __call__(self):
                 self.playthrough.makeThumbnail()
 
-                Playthroughs.saveToPersistent()
                 renpy.restart_interaction()
 
         class AddOrEdit(renpy.ui.Action):

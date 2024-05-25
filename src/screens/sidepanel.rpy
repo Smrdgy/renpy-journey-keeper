@@ -37,7 +37,7 @@ screen SSSSS_Sidepanel():
 
                 use SSSSS_Divider(sizeX=40)
 
-                use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough, isEdit=True), disabled=noPlaythrough)
+                use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
                 use sssss_iconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough)
                 use sssss_iconButton('\ue2e6', tt="Actions", action=Show("SSSSS_PlaythroughActions", playthrough=playthrough))
 
