@@ -26,23 +26,45 @@ init 1 python in SSSSS:
         def overrideNativeLocation(self):
             renpy.loadsave.location = self.multilocation
 
+        def getAllNativeSaveLocations(self):
+            return self.multilocation.nativeLocations
+
+        def getAllNativeSaveLocationsForOptions(self):
+            options = []
+
+            # 1. User savedir.
+            options.append("USER")
+
+            # 2. Game-local savedir.
+            if (not renpy.mobile) and (not renpy.macapp):
+                options.append("GAME")
+
+            # 3. Extra savedirs.
+            if hasattr(renpy.config, "extra_savedirs"):
+                for fullPath in renpy.config.extra_savedirs:
+                    options.append(fullPath)
+
+            return options
+
         class PlaythroughSaveClass(x52NonPicklable):
             def __init__(self, playthrough, noScan=False):
                 self.location = MultiLocation()
                 self.playthrough = playthrough
 
                 # 1. User savedir.
-                self._addLocation(renpy.savelocation.FileLocation(os.path.join(renpy.config.savedir, playthrough.directory)))
+                if playthrough.enabledSaveLocations == None or "USER" in playthrough.enabledSaveLocations:
+                    self._addLocation(renpy.savelocation.FileLocation(os.path.join(renpy.config.savedir, playthrough.directory)))
 
                 # 2. Game-local savedir.
-                if (not renpy.mobile) and (not renpy.macapp):
+                if (not renpy.mobile) and (not renpy.macapp) and (playthrough.enabledSaveLocations == None or "GAME" in playthrough.enabledSaveLocations):
                     path = os.path.join(renpy.config.gamedir, "saves", playthrough.directory)
                     self._addLocation(renpy.savelocation.FileLocation(path))
 
                 if(hasattr(renpy.config, "extra_savedirs")):
                     # 3. Extra savedirs.
                     for extra_savedir in renpy.config.extra_savedirs:
-                        self._addLocation(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.directory)))
+                        if playthrough.enabledSaveLocations == None or extra_savedir in playthrough.enabledSaveLocations:
+                            self._addLocation(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.directory)))
 
                 if not noScan:
                     # Scan the location.
@@ -98,6 +120,9 @@ init 1 python in SSSSS:
             if(instance == None):
                 instance = self.createPlaythroughSaveInstance(playthrough)
 
+            if instance.playthrough.enabledSaveLocations != playthrough.enabledSaveLocations:
+                instance = self.createPlaythroughSaveInstance(playthrough)
+
             if(autoActivate):
                 instance.activate()
 
@@ -120,3 +145,10 @@ init 1 python in SSSSS:
             instance.deleteSaveFiles()
 
             return True
+
+        def regeneratePlaythroughSaveInstance(self, playthrough, noScan=False, autoActivate=True):
+            instance = self.createPlaythroughSaveInstance(playthrough, noScan)
+
+            if autoActivate:
+                instance.activate()
+            

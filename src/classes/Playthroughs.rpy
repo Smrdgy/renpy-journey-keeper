@@ -54,10 +54,10 @@ init 1 python in SSSSS:
             return None
 
         def createPlaythroughFromSerialization(self, data):
-            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"))#MODIFY HERE
+            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
 
         class PlaythroughClass(x52NonPicklable):
-            def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False):#MODIFY HERE
+            def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False, enabledSaveLocations=None):#MODIFY HERE
                 self.id = id or int(time.time())
                 self.directory = directory if (directory != None) else (Utils.name_to_directory_name(name) if name else None)
                 self.name = name
@@ -69,15 +69,16 @@ init 1 python in SSSSS:
                 self.selectedPage = selectedPage
                 self.filePageName = filePageName
                 self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
+                self.enabledSaveLocations = enabledSaveLocations # Possible values: USER, GAME, string (other full path locations, e.g. C:\\Users\User\Desktop\some saves directory)
                 #MODIFY HERE
 
             def __getstate__(self):
                 return None
 
             def copy(self):
-                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.description, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName)#MODIFY HERE
+                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.description, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName, self.enabledSaveLocations)#MODIFY HERE
 
-            def edit(self, name=None, description=None, thumbnail=None, storeChoices=None, layout=None, autosaveOnChoices=None, selectedPage=None, filePageName=None, useChoiceLabelAsSaveName=None):#MODIFY HERE
+            def edit(self, name=None, description=None, thumbnail=None, storeChoices=None, layout=None, autosaveOnChoices=None, selectedPage=None, filePageName=None, useChoiceLabelAsSaveName=None, enabledSaveLocations=None):#MODIFY HERE
                 if name != None:
                     self.name = name
 
@@ -92,6 +93,7 @@ init 1 python in SSSSS:
                 if selectedPage != None: self.selectedPage = selectedPage
                 if filePageName != None: self.filePageName = filePageName
                 if useChoiceLabelAsSaveName != None: self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
+                if enabledSaveLocations != None: self.enabledSaveLocations = enabledSaveLocations
                 #MODIFY HERE
 
                 return self
@@ -110,6 +112,7 @@ init 1 python in SSSSS:
                 self.selectedPage = playthrough.selectedPage
                 self.filePageName = playthrough.filePageName
                 self.useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
+                self.enabledSaveLocations = playthrough.enabledSaveLocations
                 #MODIFY HERE
 
                 return self
@@ -127,6 +130,7 @@ init 1 python in SSSSS:
                     'selectedPage': self.selectedPage,
                     'filePageName': self.filePageName,
                     'useChoiceLabelAsSaveName': self.useChoiceLabelAsSaveName,
+                    'enabledSaveLocations': self.enabledSaveLocations,
                     #MODIFY HERE
                 }
 
@@ -254,17 +258,22 @@ init 1 python in SSSSS:
             return True
 
         def edit(self, playthrough, originalPlaythrough):
-            originalPlaythrough.editFromPlaythrough(playthrough)
+            rv = originalPlaythrough.editFromPlaythrough(playthrough)
                 
             self.saveToPersistent()
             renpy.restart_interaction()
 
-            return originalPlaythrough
+            return rv
 
         def addOrEdit(self, playthrough):
             originalPlaythrough = self.getByID(playthrough.id)
             if(originalPlaythrough != None):
-                return self.edit(playthrough, originalPlaythrough)
+                rv = self.edit(playthrough, originalPlaythrough)
+
+                if self.activePlaythrough.id == rv.id:
+                    SaveSystem.regeneratePlaythroughSaveInstance(rv)
+
+                return rv
 
             return self.add(playthrough)
 
@@ -339,13 +348,14 @@ init 1 python in SSSSS:
                 renpy.restart_interaction()
 
         class AddOrEdit(renpy.ui.Action):
-            def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName):#MODIFY HERE
+            def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations):#MODIFY HERE
                 self.playthrough = playthrough
                 self.name = name
                 self.description = description
                 self.storeChoices = storeChoices
                 self.autosaveOnChoices = autosaveOnChoices
                 self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
+                self.enabledSaveLocations = enabledSaveLocations
                 #MODIFY HERE
 
             def __call__(self):
@@ -355,9 +365,10 @@ init 1 python in SSSSS:
                 storeChoices = self.storeChoices if not callable(self.storeChoices) else self.storeChoices()
                 autosaveOnChoices = self.autosaveOnChoices if not callable(self.autosaveOnChoices) else self.autosaveOnChoices()
                 useChoiceLabelAsSaveName = self.useChoiceLabelAsSaveName if not callable(self.useChoiceLabelAsSaveName) else self.useChoiceLabelAsSaveName()
+                enabledSaveLocations = self.enabledSaveLocations if not callable(self.enabledSaveLocations) else self.enabledSaveLocations()
                 #MODIFY HERE
 
-                playthrough = playthrough.copy().edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName)#MODIFY HERE
+                playthrough = playthrough.copy().edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName, enabledSaveLocations=enabledSaveLocations)#MODIFY HERE
 
                 Playthroughs.addOrEdit(playthrough)
                 renpy.restart_interaction()
