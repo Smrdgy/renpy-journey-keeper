@@ -39,7 +39,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
 
                 # Remove
                 hbox at right:
-                    use sssss_iconButton(icon="\ue92b", text=removeText, action=[SSSSS.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")], textColor="#ff0000")
+                    use sssss_iconButton(icon="\ue92b", text=removeText, action=[SSSSS.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")], color="#ff0000")
 
                 # Close
                 hbox at right:

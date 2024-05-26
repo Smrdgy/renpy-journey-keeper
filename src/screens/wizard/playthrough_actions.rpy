@@ -27,7 +27,7 @@ screen SSSSS_PlaythroughActions(playthrough):
                 
                 # Delete all saves
                 hbox at right:
-                    use sssss_iconButton(icon="\ue92b", text="Delete all saves", action=[SSSSS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("SSSSS_PlaythroughActions")], textColor="#f00")
+                    use sssss_iconButton(icon="\ue92b", text="Delete all saves", action=[SSSSS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("SSSSS_PlaythroughActions")], color="#f00")
                 
                 # Close
                 hbox at right:

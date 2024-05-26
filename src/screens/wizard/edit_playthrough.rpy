@@ -169,7 +169,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                             # Remove thumbnail
                             if playthrough.hasThumbnail():
-                                use sssss_iconButton(icon="\ue92b", text="Remove thumbnail", action=SSSSS.Playthroughs.RemoveThumbnail(playthrough=playthrough), textColor="#ff0000")
+                                use sssss_iconButton(icon="\ue92b", text="Remove thumbnail", action=SSSSS.Playthroughs.RemoveThumbnail(playthrough=playthrough), color="#ff0000")
 
         hbox:
             xfill True
@@ -181,7 +181,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 if(isEdit and playthrough.id != 1):
                     # Remove
                     hbox at right:
-                        use sssss_iconButton(icon="\ue92b", text="Remove", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), textColor="#ff0000")
+                        use sssss_iconButton(icon="\ue92b", text="Remove", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), color="#ff0000")
 
                 # Save
                 hbox at right:

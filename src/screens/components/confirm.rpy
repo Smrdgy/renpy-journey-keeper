@@ -14,8 +14,8 @@ screen SSSSS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="
             vbox at right:
                 yalign 1.0
 
-                use sssss_iconButton(icon=yesIcon, text=yesText, action=[yes, Hide("SSSSS_Confirm")], textColor=yesColor)
-                use sssss_iconButton(icon=noIcon, text=noText, action=[no, Hide("SSSSS_Confirm")], textColor=noColor)
+                use sssss_iconButton(icon=yesIcon, text=yesText, action=[yes, Hide("SSSSS_Confirm")], color=yesColor)
+                use sssss_iconButton(icon=noIcon, text=noText, action=[no, Hide("SSSSS_Confirm")], color=noColor)
 
 init python in SSSSS:
     def showConfirm(title="", message=None, yes=None, no=None, yesText="Yes", noText="No", yesIcon="\ue876", noIcon="\ue5cd", yesColor=None, noColor=None):
