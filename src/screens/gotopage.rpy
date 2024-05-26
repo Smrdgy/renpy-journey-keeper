@@ -1,5 +1,6 @@
 screen SSSSS_GoToPage():
     style_prefix 'SSSSS'
+    modal True
 
     python:
         def setPage(page):

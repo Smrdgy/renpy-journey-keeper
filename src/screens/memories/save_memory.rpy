@@ -1,6 +1,7 @@
 screen SSSSS_SaveMemory(screenshot):
     layer "SSSSSoverlay"
     style_prefix 'SSSSS'
+    modal True
 
     default name = ''
 

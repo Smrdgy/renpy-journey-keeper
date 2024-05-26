@@ -1,6 +1,7 @@
 screen SSSSS_PlaythroughsPicker():
     layer "SSSSSoverlay"
     style_prefix 'SSSSS'
+    modal True
 
     default columns = 4
     default thumbnailSize = (int((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20), 200)

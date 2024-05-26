@@ -1,6 +1,8 @@
 screen SSSSS_RemovePlaythroughConfirm(playthrough):
     layer "SSSSSoverlay"
     style_prefix 'SSSSS'
+    modal True
+
     default deleteFiles = False
 
     use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm")):

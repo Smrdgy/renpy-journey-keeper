@@ -1,6 +1,7 @@
 screen SSSSS_SavesList(saves=[]):
     layer "SSSSSoverlay"
     style_prefix "SSSSS"
+    modal True
 
     $ savesLen = len(saves)
 

@@ -1,6 +1,7 @@
 screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     layer "SSSSSoverlay"
     style_prefix 'SSSSS'
+    modal True
 
     $ playthrough = playthrough or SSSSS.Playthroughs.PlaythroughClass()
 

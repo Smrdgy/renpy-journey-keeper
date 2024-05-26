@@ -1,6 +1,7 @@
 screen SSSSS_PlaythroughActions(playthrough):
     layer "SSSSSoverlay"
     style_prefix 'SSSSS'
+    modal True
 
     use SSSSS_Dialog(title="Playtrhough actions", closeAction=Hide("SSSSS_PlaythroughActions")):
         style_prefix "SSSSS"

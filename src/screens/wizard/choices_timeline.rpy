@@ -1,6 +1,7 @@
 screen SSSSS_ChoicesTimeline(timeline, playthrough):
     layer "SSSSSoverlay"
     style_prefix "SSSSS"
+    modal True
 
     default choicesText = "Choices are saved into save files {u}only{/u} when this mod is active and \"Autosave on choice\" is enabled in the playthrough settings.\n{color=#ff623a}Warning - Manual and quick saves are unable to store choices.{/c}"
 

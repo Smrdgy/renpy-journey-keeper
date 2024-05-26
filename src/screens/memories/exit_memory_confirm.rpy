@@ -1,6 +1,7 @@
 screen SSSSS_ExitMemoryConfirm():
     layer "screens"
     style_prefix "SSSSS"
+    modal True
 
     use SSSSS_Dialog(title="Exit memory", closeAction=Return()):
         vbox:
