@@ -6,13 +6,16 @@ screen SSSSS_Pagination():
     python:
         import math
 
-        currentPage = persistent._file_page
-        if(currentPage == "quick" or currentPage == "auto"):
-            currentPage = 1
-        
-        currentPage = int(currentPage)
+        try:
+            currentPage = persistent._file_page
+            if(currentPage == "quick" or currentPage == "auto"):
+                currentPage = 1
 
-        pageOffset = math.floor(currentPage / 10)
+            currentPage = int(currentPage)
+            pageOffset = math.floor(currentPage / 10)
+        except:
+            currentPage = 1
+            pageOffset = 0
 
         paginationPos = store.persistent.SSSSS_PaginationPos or (int(renpy.config.screen_width / 2 - estimatedPaginationSize[0] / 2), int(renpy.config.screen_height - estimatedPaginationSize[1] - 15))
 
