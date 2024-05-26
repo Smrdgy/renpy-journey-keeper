@@ -59,7 +59,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                 if(playthrough.id != 1):
                     python:
-                        computedDirectory = playthrough.directory if (playthrough.directory != None) else (SSSSS.Utils.name_to_directory_name(name) if name else None)
+                        computedDirectory = playthrough.directory if (playthrough.directory != None) else (SSSSS.Utils.name_to_directory_name(name) if name else None) or ""
 
                     text "Directory:"
                     hbox:
@@ -67,6 +67,11 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                         text "saves/" color '#e5e5e5'
                         text "[computedDirectory]" color '#a2ebff'
+
+                        if isEdit:
+                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20)
+                        else:
+                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=renpy.config.savedir), size=20)
 
                         if isEdit:
                             button:
@@ -96,9 +101,16 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                                         locationType = "Game files"
                                         path = os.path.join(renpy.config.gamedir, "saves")
 
-                                use SSSSS_Checkbox(checked=location in enabledSaveLocations, text=locationType + " - {color=#818181}{size=-5}" + path + "{/size}{/c}", action=SSSSS.ToggleValueInArrayAction('enabledSaveLocations', location))
+                                    fullPath = os.path.join(path, computedDirectory)
 
-                            #TODO: Maybe even allow adding custom locations?
+                                hbox:
+                                    use SSSSS_Checkbox(checked=location in enabledSaveLocations, text=locationType + " - {color=#818181}{size=-5}" + fullPath + "{/size}{/c}", action=SSSSS.ToggleValueInArrayAction('enabledSaveLocations', location))
+
+                                    hbox at truecenter:
+                                        if isEdit:
+                                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=fullPath), size=15, color="#818181")
+                                        else:
+                                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=path), size=15, color="#818181")
 
                             if len(enabledSaveLocations) == 0:
                                 hbox ysize 10

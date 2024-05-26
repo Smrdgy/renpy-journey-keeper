@@ -264,3 +264,46 @@ init -1000 python in SSSSS:
             rv = cs.scope[self.name]
 
             return self.value in rv
+    
+    class OpenDirectoryAction(renpy.ui.Action):
+        def __init__(self, path, cwd=None):
+            self.path = path
+            self.cwd = cwd
+
+        def __call__(self):
+            import os
+            import platform
+            import subprocess
+
+            directory_path = os.path.join(self.cwd, self.path) if self.cwd else self.path
+
+            # Normalize the path
+            directory_path = os.path.normpath(directory_path)
+            
+            if not os.path.exists(directory_path):
+                print "Directory not found: {}".format(directory_path)
+                return
+
+            if not os.path.isdir(directory_path):
+                print "The path is not a directory: {}".format(directory_path)
+                return
+
+            system = platform.system()
+            
+            try:
+                if system == "Windows":
+                    # Use explorer to open the directory
+                    subprocess.Popen(["explorer", directory_path])
+                elif system == "Darwin":
+                    # Use Finder to open the directory
+                    subprocess.Popen(["open", directory_path])
+                elif system == "Linux":
+                    # Use xdg-open to open the directory
+                    subprocess.Popen(["xdg-open", directory_path])
+                elif system == "Android":
+                    # Use am start to open the directory (highlighting might not be supported)
+                    subprocess.Popen(["am", "start", "-a", "android.intent.action.VIEW", "-d", "file://{}".format(directory_path)])
+                else:
+                    print "Unsupported OS: {}".format(system)
+            except Exception as e:
+                print "An error occurred: {}".format(e)
