@@ -56,7 +56,7 @@ init 51 python in SSSSS:
 
 init 999 python:
     if not 'w_s_e_s_w' in renpy.config.gestures:
-        renpy.config.gestures['w_s_e_s_w'] = 'alt_K_P'
+        renpy.config.gestures['w_s_e_s_w'] = 'alt_K_p'
 
     if not 'SSSSSsidepanel' in config.layers:
         config.layers.insert(config.layers.index("overlay"), 'SSSSSsidepanel')
