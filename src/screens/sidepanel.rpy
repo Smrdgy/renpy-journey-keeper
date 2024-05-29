@@ -50,16 +50,19 @@ screen SSSSS_Sidepanel():
 screen SSSSS_SidepanelHolder():
     layer "SSSSSsidepanel"
 
-    key "K_SCROLLOCK" action SSSSS.ToggleSidepanel()
+    key "alt_K_P" action SSSSS.ToggleSidepanel()
 
     python:
-        isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None or (hasattr(renpy.config, "SSSSS_show_sidepanel") and renpy.config.SSSSS_show_sidepanel)
+        isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None
+        visibilityMode = renpy.config.SSSSS_sidepanelVisibilityMode if hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode") else isSaveLoadScreen
+        sidepanelShouldBeVisible = isSaveLoadScreen if visibilityMode == None else visibilityMode
+        preventSidepanel = SSSSS.Memories.memoryInProgress
+        showSidepanel = not preventSidepanel and sidepanelShouldBeVisible
 
-    # if is in save/load menu
-    if(isSaveLoadScreen and not SSSSS.Memories.memoryInProgress):
+    if(showSidepanel):
         use SSSSS_Sidepanel()
     else:
         $ SSSSS.Pagination.showGoTo = False
 
-    if(isSaveLoadScreen and SSSSS.Pagination.isShowingPagination):
+    if(showSidepanel and isSaveLoadScreen and SSSSS.Pagination.isShowingPagination):
         use SSSSS_Pagination()

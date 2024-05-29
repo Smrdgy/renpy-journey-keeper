@@ -39,15 +39,24 @@ init 51 python in SSSSS:
 
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):
-            if(not hasattr(renpy.config, "SSSSS_show_sidepanel")):
-                renpy.config.SSSSS_show_sidepanel = False
+            if(not hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode")):
+                renpy.config.SSSSS_sidepanelVisibilityMode = True
 
-            renpy.config.SSSSS_show_sidepanel = not renpy.config.SSSSS_show_sidepanel
+            if renpy.config.SSSSS_sidepanelVisibilityMode == True:
+                renpy.config.SSSSS_sidepanelVisibilityMode = False
+                renpy.notify("Sidepanel is now hidden at all times")
+            elif renpy.config.SSSSS_sidepanelVisibilityMode == False:
+                renpy.config.SSSSS_sidepanelVisibilityMode = None
+                renpy.notify("Sidepanel is now visible only in save/load screen")
+            else:
+                renpy.config.SSSSS_sidepanelVisibilityMode = True
+                renpy.notify("Sidepanel is now visible at all times")
+
             renpy.restart_interaction()
 
 init 999 python:
     if not 'w_s_e_s_w' in renpy.config.gestures:
-        renpy.config.gestures['w_s_e_s_w'] = 'K_SCROLLOCK'
+        renpy.config.gestures['w_s_e_s_w'] = 'alt_K_P'
 
     if not 'SSSSSsidepanel' in config.layers:
         config.layers.insert(config.layers.index("overlay"), 'SSSSSsidepanel')
