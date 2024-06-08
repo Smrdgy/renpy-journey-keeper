@@ -1,4 +1,4 @@
-init -99 python:
+init -99 python in SSSSS:
     _constant = True
 
     def my_partial(func, *args, **kwargs):
@@ -6,8 +6,8 @@ init -99 python:
             new_kwargs.update(kwargs.copy())
         
             # Prevent making any autosave actions when viewing a memory or a replay
-            if not SSSSS.Memories.memoryInProgress and not renpy.store._in_replay:
-                SSSSS.Autosaver.handleChoiceSelection(new_args[0])
+            if not Memories.memoryInProgress and not renpy.store._in_replay:
+                Autosaver.handleChoiceSelection(new_args[0])
 
             fn = func(*(args + new_args), **new_kwargs)
 

@@ -1,15 +1,15 @@
-init -99 python:
+init -99 python in SSSSS:
     _constant = True
     
     def before_load(slotname):
-        SSSSS.Autosaver.lastChoice = None
-        SSSSS.Autosaver.activeSlotPending = slotname
-        SSSSS.Autosaver.suppressAutosaveConfirm = False
+        Autosaver.lastChoice = None
+        Autosaver.activeSlotPending = slotname
+        Autosaver.suppressAutosaveConfirm = False
     
     def before_save(slotname):
-        SSSSS.Autosaver.lastChoice = None
-        SSSSS.Autosaver.setActiveSlot(slotname)
-        SSSSS.Autosaver.setNextSlot()
+        Autosaver.lastChoice = None
+        Autosaver.setActiveSlot(slotname)
+        Autosaver.setNextSlot()
 
     def load_partial(func, *args, **kwargs):
         def new_funct(*new_args, **new_kwargs):
@@ -18,7 +18,7 @@ init -99 python:
             if(new_args and new_args[0]):
                 before_load(new_args[0])
 
-            SSSSS.Memories.memoryInProgress = False
+            Memories.memoryInProgress = False
 
             return func(*(args + new_args), **new_kwargs)
         return new_funct
@@ -43,16 +43,16 @@ init -99 python:
 
             fn = func(*(args + new_args), **new_kwargs)
 
-            if(SSSSS.Autosaver.lastChoice != None):
+            if(Autosaver.lastChoice != None):
                 import zipfile
 
                 filename = new_args[1]
 
                 zf = zipfile.ZipFile(filename, "a", zipfile.ZIP_DEFLATED)
-                zf.writestr("choice", SSSSS.Autosaver.lastChoice.encode("utf-8"))
+                zf.writestr("choice", Autosaver.lastChoice.encode("utf-8"))
                 zf.close()
 
-                SSSSS.Autosaver.lastChoice = None
+                Autosaver.lastChoice = None
 
             return fn
         return new_funct
