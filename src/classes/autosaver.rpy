@@ -23,7 +23,10 @@ init -999 python in SSSSS:
 
         @property
         def slotsPerPage(self):
-            return renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
+            if hasColsAndRowsConfiguration:
+                return renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
+
+            return 4
 
         def setActiveSlot(self, slot):
             self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot + "" # Copy the data, not just the pointer

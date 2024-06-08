@@ -2,8 +2,8 @@ screen sssss_iconButton(icon, text=None, action=None, size=None, sensitive=None,
     style_prefix "SSSSS"
 
     python:
-        text_color = ('#1f1f1f55' if disabled else (textColor or color or '#ffffff'))
-        icon_color = ('#1f1f1f55' if disabled else (iconColor or color or '#ffffff'))
+        text_color = ('#2f2f2f55' if disabled else (textColor or color or '#ffffff'))
+        icon_color = ('#2f2f2f55' if disabled else (iconColor or color or '#ffffff'))
 
     fixed:
         fit_first True
