@@ -1,12 +1,12 @@
 init -99 python:
     _constant = True
     
-    def bafore_load(slotname):
+    def before_load(slotname):
         SSSSS.Autosaver.lastChoice = None
         SSSSS.Autosaver.activeSlotPending = slotname
         SSSSS.Autosaver.suppressAutosaveConfirm = False
     
-    def bafore_save(slotname):
+    def before_save(slotname):
         SSSSS.Autosaver.lastChoice = None
         SSSSS.Autosaver.setActiveSlot(slotname)
         SSSSS.Autosaver.setNextSlot()
@@ -16,20 +16,19 @@ init -99 python:
             new_kwargs.update(kwargs.copy())
 
             if(new_args and new_args[0]):
-                bafore_load(new_args[0])
+                before_load(new_args[0])
 
             SSSSS.Memories.memoryInProgress = False
 
             return func(*(args + new_args), **new_kwargs)
         return new_funct
-    _constant = True
 
     def save_partial(func, *args, **kwargs):
         def new_funct(*new_args, **new_kwargs):
             new_kwargs.update(kwargs.copy())
 
             if(new_args and new_args[0]):
-                bafore_save(new_args[0])
+                before_save(new_args[0])
 
             return func(*(args + new_args), **new_kwargs)
         return new_funct
