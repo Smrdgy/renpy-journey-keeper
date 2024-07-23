@@ -144,9 +144,14 @@ init 1 python in SSSSS:
                 import io
 
                 try:
-                    sio = io.BytesIO(base64.b64decode(self.thumbnail))
+                    # Decode the base64 string to bytes
+                    decoded_bytes = base64.b64decode(self.thumbnail)
+                    # Create a BytesIO object from the decoded bytes
+                    sio = io.BytesIO(decoded_bytes)
+                    # Load the image using Ren'Py's load_image function
                     rv = renpy.display.pgrender.load_image(sio, "image.png")
 
+                    # Return the Image object with specified dimensions
                     return Image(rv, width=width or maxWidth or defWidth, height=height or maxHeight or defHeight, fitAfterResize=maxWidth or maxHeight)
                 except Exception:
                     return ImagePlaceholder(width or defWidth, height or defHeight)
@@ -155,7 +160,10 @@ init 1 python in SSSSS:
                 return self.thumbnail != None
 
             def makeThumbnail(self):
-                self.thumbnail = base64.b64encode(renpy.game.interface.get_screenshot())
+                # Get the screenshot
+                screenshot = renpy.game.interface.get_screenshot()
+                # Encode it to a base64 string, the important word here is "string" because Python 3 would return b'' from base64.b64encode()...
+                self.thumbnail = base64.b64encode(screenshot).decode('utf-8')
 
             def removeThumbnail(self):
                 self.thumbnail = None
