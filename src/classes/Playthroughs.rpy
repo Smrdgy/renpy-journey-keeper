@@ -293,6 +293,8 @@ init 1 python in SSSSS:
             self.saveToPersistent()
             renpy.restart_interaction()
 
+            renpy.notify("Autosave on choice is " + ("enabled" if self.activePlaythrough.autosaveOnChoices else "disabled"))
+
         def activateByName(self, playthroughName):
             self.activateByInstance(self.get(playthroughName))
 

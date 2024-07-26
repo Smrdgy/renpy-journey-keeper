@@ -107,6 +107,7 @@ init -999 python in SSSSS:
         # The SSSSS_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
         # However when a manual save is loaded it might not be a choice screen.
         # If so, the save slot needs to move further as to not override the manual slot with the next autosave.
+        # TODO: Make this a toggleable setting, honestly it's sometimes more annoying than useful
         def processSlotAfterLoad(self):
             if(not Utils.isDisplayingChoices()):
                 self.setNextSlot()
