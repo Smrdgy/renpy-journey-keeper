@@ -220,6 +220,9 @@ init -1000 python in SSSSS:
         def save_persistent(self, data):
             for l in self.nativeLocations:
                 l.save_persistent(data)
+        
+        def remove(self, location):
+            self.locations.remove(location)
 
     class ToggleValueInArrayAction(renpy.ui.Action):
         def __eq__(self, o):

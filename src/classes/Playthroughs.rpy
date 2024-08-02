@@ -98,12 +98,11 @@ init 1 python in SSSSS:
 
                 return self
 
-            def editFromPlaythrough(self, playthrough):
-                self.name = playthrough.name
-
-                if(self.directory == None):
+            def editFromPlaythrough(self, playthrough, moveSaveDirectory=False):
+                if(self.directory == None or (moveSaveDirectory and playthrough.name != self.name)):
                     self.directory = Utils.name_to_directory_name(playthrough.name)
 
+                self.name = playthrough.name
                 self.description = playthrough.description
                 self.thumbnail = playthrough.thumbnail
                 self.storeChoices = playthrough.storeChoices
@@ -265,18 +264,25 @@ init 1 python in SSSSS:
 
             return True
 
-        def edit(self, playthrough, originalPlaythrough):
-            rv = originalPlaythrough.editFromPlaythrough(playthrough)
+        def edit(self, playthrough, originalPlaythrough, moveSaveDirectory=False):
+            rv = originalPlaythrough.editFromPlaythrough(playthrough, moveSaveDirectory=moveSaveDirectory)
                 
             self.saveToPersistent()
             renpy.restart_interaction()
 
             return rv
 
-        def addOrEdit(self, playthrough):
-            originalPlaythrough = self.getByID(playthrough.id)
-            if(originalPlaythrough != None):
-                rv = self.edit(playthrough, originalPlaythrough)
+        def addOrEdit(self, playthrough, moveSaveDirectory=False):
+            sourcePlaythrough = self.getByID(playthrough.id)
+            if(sourcePlaythrough != None):
+                if moveSaveDirectory and sourcePlaythrough.name != playthrough.name:
+                    result = self.renameSaveDirectory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name))
+
+                    if result != True:
+                        renpy.show_screen("SSSSS_MovePlaythroughDirectoryError", errors=result)
+                        return None
+
+                rv = self.edit(playthrough, sourcePlaythrough, moveSaveDirectory=moveSaveDirectory)
 
                 if self.activePlaythrough.id == rv.id:
                     SaveSystem.regeneratePlaythroughSaveInstance(rv)
@@ -334,6 +340,36 @@ init 1 python in SSSSS:
 
             return True
 
+        def renameSaveDirectory(self, playthrough, newName):
+            import os
+
+            instance = SaveSystem.getPlaythroughSaveInstance(playthrough.id)
+
+            if instance:
+                errors = []
+                paths = []
+
+                for location in instance.location.locations:
+                    newPath = os.path.abspath(os.path.join(location.directory, "..", newName))
+
+                    if os.path.exists(newPath):
+                        errors.append((newPath, "LOCATION_EXISTS"))
+                    else:
+                        oldPath = os.path.abspath(location.directory)
+
+                        paths.append((oldPath, newPath))
+
+                if len(errors) == 0:
+                    for oldPath, newPath in paths:
+                        if os.path.exists(oldPath):
+                            os.rename(oldPath, newPath)
+                        else:
+                            os.mkdir(newPath)
+
+                    return True
+
+            return errors
+
         def __setActivePlaythrough(self, playthrough=None):
             if(self.activePlaythrough != None):
                 self.activePlaythrough.beforeDeactivation()
@@ -358,7 +394,7 @@ init 1 python in SSSSS:
                 renpy.restart_interaction()
 
         class AddOrEdit(renpy.ui.Action):
-            def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations):#MODIFY HERE
+            def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory):#MODIFY HERE
                 self.playthrough = playthrough
                 self.name = name
                 self.description = description
@@ -366,6 +402,7 @@ init 1 python in SSSSS:
                 self.autosaveOnChoices = autosaveOnChoices
                 self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
                 self.enabledSaveLocations = enabledSaveLocations
+                self.moveSaveDirectory = moveSaveDirectory
                 #MODIFY HERE
 
             def __call__(self):
@@ -376,11 +413,12 @@ init 1 python in SSSSS:
                 autosaveOnChoices = self.autosaveOnChoices if not callable(self.autosaveOnChoices) else self.autosaveOnChoices()
                 useChoiceLabelAsSaveName = self.useChoiceLabelAsSaveName if not callable(self.useChoiceLabelAsSaveName) else self.useChoiceLabelAsSaveName()
                 enabledSaveLocations = self.enabledSaveLocations if not callable(self.enabledSaveLocations) else self.enabledSaveLocations()
+                moveSaveDirectory = self.moveSaveDirectory if not callable(self.moveSaveDirectory) else self.moveSaveDirectory()
                 #MODIFY HERE
 
                 playthrough = playthrough.copy().edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName, enabledSaveLocations=enabledSaveLocations)#MODIFY HERE
 
-                Playthroughs.addOrEdit(playthrough)
+                Playthroughs.addOrEdit(playthrough, moveSaveDirectory=moveSaveDirectory)
                 renpy.restart_interaction()
 
         class ActivatePlaythrough(renpy.ui.Action):

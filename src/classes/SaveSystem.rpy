@@ -146,7 +146,18 @@ init 1 python in SSSSS:
 
             return True
 
+        def removePlaythroughSaveInstance(self, playthrough):
+            oldInstance = self.getPlaythroughSaveInstance(playthrough.id)
+            if oldInstance != None:
+                self.removeInstance(oldInstance)
+
+        def removeInstance(self, instance):
+            for location in instance.location.locations:
+                SaveSystem.multilocation.remove(location)
+
         def regeneratePlaythroughSaveInstance(self, playthrough, noScan=False, autoActivate=True):
+            self.removePlaythroughSaveInstance(playthrough)
+
             instance = self.createPlaythroughSaveInstance(playthrough, noScan)
 
             if autoActivate:

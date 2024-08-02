@@ -12,6 +12,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     default autosaveOnChoices = playthrough.autosaveOnChoices
     default useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
     default enabledSaveLocations = playthrough.enabledSaveLocations
+    default moveSaveDirectory = True
     #MODIFY HERE
 
     default inputs = x52URM.InputGroup(
@@ -21,7 +22,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
         ],
         focusFirst=True,
         onSubmit=[
-            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=x52URM.GetScreenInput('name', 'inputs'), description=x52URM.GetScreenInput('description', 'inputs'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=URMGetScreenVariable('useChoiceLabelAsSaveName'), enabledSaveLocations=URMGetScreenVariable('enabledSaveLocations')),#MODIFY HERE
+            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=x52URM.GetScreenInput('name', 'inputs'), description=x52URM.GetScreenInput('description', 'inputs'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=URMGetScreenVariable('useChoiceLabelAsSaveName'), enabledSaveLocations=URMGetScreenVariable('enabledSaveLocations'), moveSaveDirectory=URMGetScreenVariable('moveSaveDirectory')),#MODIFY HERE
             Hide('SSSSS_EditPlaythrough')
         ],
         submitOnEnter=False
@@ -74,13 +75,10 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                         else:
                             use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=renpy.config.savedir), size=20)
 
-                        if isEdit:
-                            button:
-                                action None
-
-                                use sssss_icon("\ue897", color="#a95858", size=20)
-
                     $ allSaveLocations = SSSSS.SaveSystem.getAllNativeSaveLocationsForOptions()
+
+                    if(name != originalname and SSSSS.Playthroughs.isValidName(name)):
+                        use SSSSS_Checkbox(checked=moveSaveDirectory, text="Rename directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False), disabled=not SSSSS.Playthroughs.isValidName(name))
 
                     use SSSSS_Checkbox(checked=enabledSaveLocations != None, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', [] + allSaveLocations, None))
 
