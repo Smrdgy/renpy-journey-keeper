@@ -546,23 +546,27 @@ init 1 python in SSSSS:
                 self.playthrough = playthrough
 
             def __call__(self):
-                filename = self.playthrough.name + " timeline.txt"
+                import os
 
-                with open(filename, 'w') as f:
-                    i = 0
+                filename = self.playthrough.name + " timeline.txt"
+                dirPath = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+                path = os.path.normpath(os.path.join(dirPath, filename))
+
+                with open(path, 'w') as f:
+                    i = 1
 
                     for item in self.timeline:
                         f.write( str(i) + ". " + "     (" + item[0] + ")     " + self.__replace_tags(item[1]) + "\n")
 
                         i += 1
-                
-                import os
+
                 showConfirm(
                     title="Timeline exported into the game files",
-                    message="You can find the file in " + os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", filename)),
-                    yesText="",
-                    yesIcon=None,
-                    noText="OK",
+                    message="You can find the file in " + path,
+                    yes=OpenDirectoryAction(path=dirPath),
+                    yesText="Open location",
+                    yesIcon='\ue2c8',
+                    noText="Close",
                     noIcon=None
                 )
             

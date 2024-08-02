@@ -14,7 +14,11 @@ screen SSSSS_ChoicesTimeline(timeline, playthrough):
                 if entry[1] != "N/A":
                     hasTimelineEntry = True
 
+            exportAction = SSSSS.Playthroughs.ExportTimelineToFile(timeline, playthrough=playthrough)
+
         if hasTimelineEntry:
+            key 'K_e' action exportAction
+
             viewport:
                 mousewheel True
                 draggable True
@@ -32,7 +36,7 @@ screen SSSSS_ChoicesTimeline(timeline, playthrough):
                     hbox:
                         xalign 0.5
 
-                        use sssss_iconButton('\uf0fb', text="Export to file", action=SSSSS.Playthroughs.ExportTimelineToFile(timeline, playthrough=playthrough))
+                        use sssss_iconButton('\uf0fb', text="{u}E{/u}xport to file", action=exportAction)
 
                     hbox ysize 5
 

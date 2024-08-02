@@ -30,6 +30,8 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
     key 'K_TAB' action inputs.NextInput()
     key 'shift_K_TAB' action inputs.PreviousInput()
+    key 'ctrl_K_s' action inputs.onSubmit
+    key 'ctrl_K_DELETE' action Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough)
 
     use SSSSS_Dialog(title=("Edit playthrough" if isEdit else "New playthrough"), closeAction=Hide("SSSSS_EditPlaythrough")):
         style_prefix "SSSSS"
@@ -77,7 +79,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                     $ allSaveLocations = SSSSS.SaveSystem.getAllNativeSaveLocationsForOptions()
 
-                    if(name != originalname and SSSSS.Playthroughs.isValidName(name)):
+                    if(isEdit and playthrough.id > 1 and name != originalname and SSSSS.Playthroughs.isValidName(name)):
                         use SSSSS_Checkbox(checked=moveSaveDirectory, text="Rename directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False), disabled=not SSSSS.Playthroughs.isValidName(name))
 
                     use SSSSS_Checkbox(checked=enabledSaveLocations != None, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', [] + allSaveLocations, None))
@@ -181,11 +183,11 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 if(isEdit and playthrough.id != 1):
                     # Remove
                     hbox at right:
-                        use sssss_iconButton(icon="\ue92b", text="Remove", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), color="#ff0000")
+                        use sssss_iconButton(icon="\ue92b", text="{u}R{/u}emove", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), color="#ff0000")
 
                 # Save
                 hbox at right:
-                    use sssss_iconButton(icon="\ue161", text="Save", action=inputs.onSubmit, disabled=(enabledSaveLocations != None and len(enabledSaveLocations) == 0) or len(name) == 0)
+                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=inputs.onSubmit, disabled=(enabledSaveLocations != None and len(enabledSaveLocations) == 0) or len(name) == 0)
 
                 # Close
                 hbox at right:

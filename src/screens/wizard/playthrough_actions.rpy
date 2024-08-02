@@ -3,6 +3,17 @@ screen SSSSS_PlaythroughActions(playthrough):
     style_prefix 'SSSSS'
     modal True
 
+    python:
+        listSavesAction = [SSSSS.Playthroughs.ListSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
+        sequentializeSavesAction = [SSSSS.Playthroughs.TrySequentializeSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
+        constructTimelineAction = [SSSSS.Playthroughs.ConfirmConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")]
+        deleteAllSavesAction = [SSSSS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
+
+    key 'K_l' action listSavesAction
+    key 'K_s' action sequentializeSavesAction
+    key 'K_t' action constructTimelineAction
+    key 'K_d' action deleteAllSavesAction
+
     use SSSSS_Dialog(title="Playtrhough actions", closeAction=Hide("SSSSS_PlaythroughActions")):
         style_prefix "SSSSS"
 
@@ -15,19 +26,19 @@ screen SSSSS_PlaythroughActions(playthrough):
 
                 # List all saves
                 hbox at right:
-                    use sssss_iconButton(icon="\ue617", text="List saves", action=[SSSSS.Playthroughs.ListSaves(playthrough), Hide("SSSSS_PlaythroughActions")])
+                    use sssss_iconButton(icon="\ue617", text="{u}L{/u}ist saves", action=listSavesAction)
 
                 # Sequentialize saves
                 hbox at right:
-                    use sssss_iconButton(icon="\ue089", text="Sequentialize saves", action=[SSSSS.Playthroughs.TrySequentializeSaves(playthrough), Hide("SSSSS_PlaythroughActions")], disabled=not SSSSS.hasColsAndRowsConfiguration)
+                    use sssss_iconButton(icon="\ue089", text="{u}S{/u}equentialize saves", action=sequentializeSavesAction, disabled=not SSSSS.hasColsAndRowsConfiguration)
                 
                 # Show choices timeline
                 hbox at right:
-                    use sssss_iconButton(icon="\uf184", text="Show choice timeline", action=[SSSSS.Playthroughs.ConfirmConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")])
+                    use sssss_iconButton(icon="\uf184", text="Show choice {u}t{/u}imeline", action=constructTimelineAction)
                 
                 # Delete all saves
                 hbox at right:
-                    use sssss_iconButton(icon="\ue92b", text="Delete all saves", action=[SSSSS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("SSSSS_PlaythroughActions")], color="#f00")
+                    use sssss_iconButton(icon="\ue92b", text="{u}D{/u}elete all saves", action=deleteAllSavesAction, color="#f00")
                 
                 # Close
                 hbox at right:

@@ -3,6 +3,12 @@ screen SSSSS_ExitMemoryConfirm():
     style_prefix "SSSSS"
     modal True
 
+    $ returnAction = [SSSSS.Memories.ExitMemory(), MainMenu(confirm=False)] #TODO: Replace MainMenu() with Return() when the restoration of a session is figured out...
+
+    key 'K_RETURN' action returnAction #TODO: Not wokring, not sure why...
+    key 'K_KP_ENTER' action returnAction #TODO: Not wokring, not sure why...
+    key 'K_e' action returnAction
+
     use SSSSS_Dialog(title="Exit memory", closeAction=Return()):
         vbox:
             hbox:
@@ -19,7 +25,7 @@ screen SSSSS_ExitMemoryConfirm():
 
                     # Save
                     hbox at right:
-                        use sssss_iconButton(icon="\ue9ba", text="Exit memory", action=[SSSSS.Memories.ExitMemory(), MainMenu(confirm=False)]) #TODO: Replace MainMenu() with Return() when the restoration of a session is figured out...
+                        use sssss_iconButton(icon="\ue9ba", text="{u}E{/u}xit memory", action=returnAction)
 
                     # Close
                     hbox at right:

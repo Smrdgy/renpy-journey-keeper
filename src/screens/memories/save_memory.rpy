@@ -18,6 +18,7 @@ screen SSSSS_SaveMemory(screenshot):
 
     key 'K_TAB' action inputs.NextInput()
     key 'shift_K_TAB' action inputs.PreviousInput()
+    key 'ctrl_K_s' action inputs.onSubmit
 
     use SSSSS_Dialog(title="Save memory", closeAction=Hide("SSSSS_SaveMemory")):
         style_prefix "SSSSS"
@@ -43,7 +44,7 @@ screen SSSSS_SaveMemory(screenshot):
 
                 # Save
                 hbox at right:
-                    use sssss_iconButton(icon="\ue161", text="Save", action=inputs.onSubmit, disabled=not name)
+                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=inputs.onSubmit, disabled=not name)
 
                 # Close
                 hbox at right:
