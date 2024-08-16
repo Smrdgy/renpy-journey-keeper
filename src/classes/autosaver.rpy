@@ -169,6 +169,6 @@ init -999 python in SSSSS:
                 page, _, _ = Autosaver.getCurrentSlot()
                 page = int(page)
 
-                renpy.store.persistent._file_page = page
+                renpy.store.persistent._file_page = str(page)
 
                 Autosaver.setNextSlot()

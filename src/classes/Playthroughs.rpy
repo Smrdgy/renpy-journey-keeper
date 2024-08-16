@@ -377,7 +377,7 @@ init 1 python in SSSSS:
             renpy.store.persistent.SSSSS_lastActivePlaythrough = playthrough.id if playthrough != None else None
             self._activePlaythrough = playthrough
 
-            renpy.store.persistent._file_page = playthrough.selectedPage
+            renpy.store.persistent._file_page = str(playthrough.selectedPage)
             renpy.store.persistent._file_page_name = playthrough.filePageName or {}
 
         class ActivateNative(renpy.ui.Action):

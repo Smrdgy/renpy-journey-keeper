@@ -8,7 +8,7 @@ screen SSSSS_GoToPage():
                 page = int(page or 1)
 
                 if(page != renpy.store.persistent._file_page):
-                    renpy.store.persistent._file_page = page
+                    renpy.store.persistent._file_page = str(page)
 
         page = renpy.store.persistent._file_page
 
