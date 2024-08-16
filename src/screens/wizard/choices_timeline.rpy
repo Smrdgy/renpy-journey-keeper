@@ -44,7 +44,7 @@ screen SSSSS_ChoicesTimeline(timeline, playthrough):
                         hbox:
                             text "[i]." color "#bbe4ff"
 
-                            text entry[1].replace("[", "⟦").replace("]", "⟧")
+                            text entry[1].replace("[", "[[")
 
                             text "([entry[0]])" size 18 color "#4b4b4b"
 
