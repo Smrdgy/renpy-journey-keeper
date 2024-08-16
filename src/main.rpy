@@ -1,6 +1,3 @@
-init -9999 python:
-    renpy.config.search_prefixes.append("SSSSS/src/assets/") # Provides discoverability for assets that are used in SSSSS
-
 init 51 python in SSSSS:
     _constant = True
 
@@ -57,6 +54,8 @@ init 51 python in SSSSS:
             renpy.restart_interaction()
 
 init 999 python:
+    renpy.config.search_prefixes.append("SSSSS/src/assets/") # Provides discoverability for assets that are used in SSSSS
+
     if not 'w_s_e_s_w' in renpy.config.gestures:
         renpy.config.gestures['w_s_e_s_w'] = 'alt_K_p'
 
