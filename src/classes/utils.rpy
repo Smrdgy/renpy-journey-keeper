@@ -1,6 +1,8 @@
 init -1000 python in SSSSS:
     _constant = True
 
+    import re
+
     class x52NonPicklable(python_object):
         def __setstate__(self, d):
             pass
@@ -191,6 +193,11 @@ init -1000 python in SSSSS:
                 return isinstance(script, renpy.ast.Menu)
             except:
                 return False
+
+        # In built games `[ some text ]` it's not a problem, but if there ever is game with these and config.developer = True, it will throw an exception
+        @staticmethod
+        def replaceReservedCharacters(text):
+            return re.sub(r'\[(?!\[)', '[', text)
 
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):

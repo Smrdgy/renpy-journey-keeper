@@ -575,4 +575,5 @@ init 1 python in SSSSS:
                 pattern = r'\{(.*?)\}(.*?)\{\/(.*?)\}'
                 # Replace all occurrences of the pattern with just the content inside the tags
                 result = re.sub(pattern, r'\2', text)
-                return result
+
+                return result.replace('[[', '[')

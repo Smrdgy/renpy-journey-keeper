@@ -95,7 +95,7 @@ init -999 python in SSSSS:
 
             # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
             textComponent = renpy.ui.text(choice.label)
-            choiceText = ' '.join(textComponent.text).replace("[", "[[") # In built games `[ some text ]` it's not a problem, but if there ever is game with these and config.developer = True, it will throw an exception
+            choiceText = Utils.replaceReservedCharacters(' '.join(textComponent.text))
 
             Autosaver.lastChoice = choiceText
 
