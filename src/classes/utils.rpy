@@ -88,10 +88,14 @@ init -1000 python in SSSSS:
             try:
                 page, slot = save_name.split('-')
 
-                return page, slot
+                if page == int(page) and slot == int(slot):
+                    return page, slot
+
+                print("Can't resolve save name ", save_name)
+                return 0, 0
             except:
-                print("Can't resolve ", save_name)
-                return 1, 1
+                print("Can't resolve save name ", save_name)
+                return 0, 0
 
         @staticmethod
         def getSortedSaves():
