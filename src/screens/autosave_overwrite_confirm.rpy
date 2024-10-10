@@ -1,6 +1,6 @@
 screen SSSSS_AutosaveOverwriteConfirm():    
     default title = "Are you sure you want to overwrite your save?"
-    default message = "By choosing \"No\", the autosave feature will disable itself until you re-enable it again."
+    default message = "By choosing \"No & disable autosave\", the autosave feature will disabled until you re-enable it again."
 
     layer "SSSSSoverlay"
     style_prefix 'SSSSS'
@@ -29,8 +29,12 @@ screen SSSSS_AutosaveOverwriteConfirm():
 
                 # Move one over
                 hbox at right:
-                    use sssss_iconButton(icon="\ue941", text="Save one over", action=[SSSSS.Autosaver.MoveOneSlotOver(), Hide("SSSSS_AutosaveOverwriteConfirm"), SSSSS.Autosaver.TrySavePendingSave()])
+                    use sssss_iconButton(icon="\ue3cd", text="Save one over", action=[SSSSS.Autosaver.MoveOneSlotOver(), Hide("SSSSS_AutosaveOverwriteConfirm"), SSSSS.Autosaver.TrySavePendingSave()])
+
+                # Skip once
+                hbox at right:
+                    use sssss_iconButton(icon="\ue044", text="Skip this time", action=[SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")])
 
                 # No
                 hbox at right:
-                    use sssss_iconButton(icon="\ue5cd", text="No", action=[SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")])
+                    use sssss_iconButton(icon="\ue5cd", text="No & disable autosave", action=[SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")])
