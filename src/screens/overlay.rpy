@@ -2,7 +2,7 @@ screen SSSSS_Overlay():
     layer "screens"
     style_prefix "SSSSS"
 
-    key 'K_a' action SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive()
+    key 'alt_K_a' action SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive()
 
     if not SSSSS.Memories.memoryInProgress and not renpy.store._in_replay:
         key "K_F5" action SSSSS.Playthroughs.QuickSave()
