@@ -82,6 +82,14 @@ init -1000 python in SSSSS:
 
             return int(new_width), int(new_height)
 
+    class GetScreenVariable(x52NonPicklable):
+        def __init__(self, name, key=None):
+            self.name = name
+            self.key = key
+        
+        def __call__(self):
+            Utils.getScreenVariable(self.name, self.key)
+
     class Utils(x52NonPicklable):
         @staticmethod
         def splitSavename(save_name):
@@ -202,6 +210,19 @@ init -1000 python in SSSSS:
         @staticmethod
         def replaceReservedCharacters(text):
             return re.sub(r'\[(?!\[)', '[', text)
+
+        @staticmethod
+        def getScreenVariable(variableName, dictionaryKey=None):
+            cs = renpy.current_screen()
+            
+            if not cs or not variableName in cs.scope:
+                return
+            
+            if(dictionaryKey):
+                key = dictionaryKey if not callable(dictionaryKey) else dictionaryKey()
+                return cs.scope[variableName][key]
+            else:
+                return cs.scope[variableName]
 
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):

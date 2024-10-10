@@ -24,9 +24,9 @@ style SSSSS_label is SSSSS_default
 style SSSSS_label_text is SSSSS_text:
     bold True
 
-style SSSSS_input_input is SSSSS_text:
-    offset (10, -5)
+style textinput is SSSSS_text:
     color "#959595"
+    offset (10, 1)
 
 style SSSSS_vscrollbar:
     base_bar "#00000072"

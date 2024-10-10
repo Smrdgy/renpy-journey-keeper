@@ -15,22 +15,13 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     default moveSaveDirectory = True
     #MODIFY HERE
 
-    default inputs = x52URM.InputGroup(
-        [
-            ('name', x52URM.Input(text=name, updateScreenVariable="name")),
-            ('description', x52URM.Input(text=description, updateScreenVariable="description", multiline=True)),
-        ],
-        focusFirst=True,
-        onSubmit=[
-            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=x52URM.GetScreenInput('name', 'inputs'), description=x52URM.GetScreenInput('description', 'inputs'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=URMGetScreenVariable('useChoiceLabelAsSaveName'), enabledSaveLocations=URMGetScreenVariable('enabledSaveLocations'), moveSaveDirectory=URMGetScreenVariable('moveSaveDirectory')),#MODIFY HERE
+    python:
+        submitAction = [
+            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=URMGetScreenVariable('name'), description=URMGetScreenVariable('description'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=URMGetScreenVariable('useChoiceLabelAsSaveName'), enabledSaveLocations=URMGetScreenVariable('enabledSaveLocations'), moveSaveDirectory=URMGetScreenVariable('moveSaveDirectory')),#MODIFY HERE
             Hide('SSSSS_EditPlaythrough')
-        ],
-        submitOnEnter=False
-    )
+        ]
 
-    key 'K_TAB' action inputs.NextInput()
-    key 'shift_K_TAB' action inputs.PreviousInput()
-    key 'ctrl_K_s' action inputs.onSubmit
+    key 'ctrl_K_s' action submitAction
     key 'ctrl_K_DELETE' action Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough)
 
     use SSSSS_Dialog(title=("Edit playthrough" if isEdit else "New playthrough"), closeAction=Hide("SSSSS_EditPlaythrough")):
@@ -45,18 +36,8 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
             vbox:
                 text "Name:"
-                frame:
-                    button:
-                        style_prefix "" # Have to override some other styles that are applying for some reson...
 
-                        key_events True
-                        action inputs.name.Enable()
-
-                        frame style "SSSSS_default":
-                            xfill True
-
-                            input value inputs.name:
-                                style "SSSSS_input_input"
+                add SSSSS.TextInput(id="name", variableName="name")
 
                 if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
                     text "Are you sure? This name already exists." color '#ffb14c' offset (15, 2)
@@ -120,18 +101,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 hbox ysize 10
 
                 text "Description:"
-                frame:
-                    button:
-                        style_prefix "" # Have to override some other styles that are applying for some reson...
-
-                        key_events True
-                        action inputs.description.Enable()
-
-                        frame style "SSSSS_default":
-                            xfill True
-
-                            input value inputs.description:
-                                style "SSSSS_input_input"
+                add SSSSS.TextInput(id="description", variableName="description", multiline=True)
 
                 hbox ysize 10
 
@@ -143,7 +113,11 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                         use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not SSSSS.hasColsAndRowsConfiguration)
                         if not SSSSS.hasColsAndRowsConfiguration:
                             text "{size=-10}This game uses an unusual save system, thus autosave is not possible{/size}" color "#ff4c4c" offset (35, -10)
-                        use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=13}(Works only if \"Autosave on choice\" is enabled and the autosave is performed){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not SSSSS.hasColsAndRowsConfiguration or not autosaveOnChoices)
+
+                        hbox:
+                            offset (15, 0)
+
+                            use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=13}(Applies only for the saves created by this mod's autosave system!){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not SSSSS.hasColsAndRowsConfiguration or not autosaveOnChoices)
 
                 hbox ysize 10
 
@@ -187,7 +161,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                 # Save
                 hbox at right:
-                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=inputs.onSubmit, disabled=(enabledSaveLocations != None and len(enabledSaveLocations) == 0) or len(name) == 0)
+                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction, disabled=(enabledSaveLocations != None and len(enabledSaveLocations) == 0) or len(name) == 0)
 
                 # Close
                 hbox at right:

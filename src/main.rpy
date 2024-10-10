@@ -69,3 +69,22 @@ init 999 python:
 
     renpy.config.after_load_callbacks.append(SSSSS.afterLoadCallback)
     renpy.config.start_interact_callbacks.append(SSSSS.startInteractCallback)
+
+    # Input.
+    renpy.config.keymap.update({
+        'input_backspace': [ 'K_BACKSPACE', 'repeat_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_backspace') else renpy.config.keymap.input_backspace,
+        'input_next_line': [ 'K_RETURN', 'repeat_K_RETURN', 'K_KP_ENTER', 'repeat_K_KP_ENTER' ] if not hasattr(renpy.config.keymap, 'input_next_line') else renpy.config.keymap.input_next_line,
+        'input_left': [ 'K_LEFT', 'repeat_K_LEFT' ] if not hasattr(renpy.config.keymap, 'input_left') else renpy.config.keymap.input_left,
+        'input_right': [ 'K_RIGHT', 'repeat_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_right') else renpy.config.keymap.input_right,
+        'input_up': [ 'K_UP', 'repeat_K_UP' ] if not hasattr(renpy.config.keymap, 'input_up') else renpy.config.keymap.input_up,
+        'input_down': [ 'K_DOWN', 'repeat_K_DOWN' ] if not hasattr(renpy.config.keymap, 'input_down') else renpy.config.keymap.input_down,
+        'input_delete': [ 'K_DELETE', 'repeat_K_DELETE' ] if not hasattr(renpy.config.keymap, 'input_delete') else renpy.config.keymap.input_delete,
+        'input_home': [ 'K_HOME', 'meta_K_LEFT' ] if not hasattr(renpy.config.keymap, 'input_home') else renpy.config.keymap.input_home,
+        'input_end': [ 'K_END', 'meta_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_end') else renpy.config.keymap.input_end,
+        'input_copy': [ 'ctrl_noshift_K_INSERT', 'ctrl_noshift_K_c', 'meta_noshift_K_c' ] if not hasattr(renpy.config.keymap, 'input_copy') else renpy.config.keymap.input_copy,
+        'input_paste': [ 'shift_K_INSERT', 'ctrl_noshift_K_v', 'meta_noshift_K_v' ] if not hasattr(renpy.config.keymap, 'input_paste') else renpy.config.keymap.input_paste,
+        'input_jump_word_left': [ 'ctrl_K_LEFT', 'repeat_ctrl_K_LEFT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_left') else renpy.config.keymap.input_jump_word_left,
+        'input_jump_word_right': [ 'ctrl_K_RIGHT', 'repeat_ctrl_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_right') else renpy.config.keymap.input_jump_word_right,
+        'input_delete_word': [ 'repeat_ctrl_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_word') else renpy.config.keymap.input_delete_word,
+        'input_delete_full': [ 'repeat_meta_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_full') else renpy.config.keymap.input_delete_full,
+    })
