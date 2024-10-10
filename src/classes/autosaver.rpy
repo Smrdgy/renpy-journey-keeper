@@ -28,18 +28,16 @@ init -999 python in SSSSS:
 
             return 4
 
-        def setActiveSlot(self, slot):
-            page, slot = Utils.splitSavename(slot)
+        def setActiveSlot(self, slotname):
+            page, slot = Utils.splitSavename(slotname)
 
             #Last resort check to counter forced autosaves screwing up the counter (e.g. $ renpy.save("auto-1") somewhere in the dialog)
-            if page == int(page) and slot == int(slot) and page != 0 and slot != 0:
+            if page != 0 and slot != 0:
                 self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot + "" # Copy the data, not just the pointer
-                renpy.store.SSSSS_ActiveSlot = slot
+                renpy.store.SSSSS_ActiveSlot = slotname
 
         def getNextSlot(self):
             page, slot = Utils.splitSavename(renpy.store.SSSSS_ActiveSlot)
-            page = int(page)
-            slot = int(slot)
 
             slot += 1
 
@@ -54,15 +52,11 @@ init -999 python in SSSSS:
         def getCurrentSlot(self):
             slotString = renpy.store.SSSSS_ActiveSlot
             page, slot = Utils.splitSavename(slotString)
-            page = int(page)
-            slot = int(slot)
 
             return page, slot, slotString
 
         def getPreviousSlot(self):
             page, slot = Utils.splitSavename(renpy.store.SSSSS_ActiveSlot)
-            page = int(page)
-            slot = int(slot)
 
             slot -= 1
 
@@ -171,7 +165,6 @@ init -999 python in SSSSS:
                 Autosaver.pendingSave = None
 
                 page, _, _ = Autosaver.getCurrentSlot()
-                page = int(page)
 
                 renpy.store.persistent._file_page = str(page)
 

@@ -88,8 +88,8 @@ init -1000 python in SSSSS:
             try:
                 page, slot = save_name.split('-')
 
-                if page == int(page) and slot == int(slot):
-                    return page, slot
+                if page.isdigit() and slot.isdigit():
+                    return int(page), int(slot)
 
                 print("Can't resolve save name ", save_name)
                 return 0, 0
@@ -109,7 +109,7 @@ init -1000 python in SSSSS:
         @staticmethod
         def __custom_saves_sort(save_name):
             page, slot = Utils.splitSavename(save_name)
-            return int(page), int(slot)
+            return page, slot
 
         @staticmethod
         def name_to_directory_name(title):
