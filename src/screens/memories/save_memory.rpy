@@ -1,39 +1,24 @@
-screen SSSSS_SaveMemory(screenshot):
+screen SSSSS_SaveMemory():
     layer "SSSSSoverlay"
     style_prefix 'SSSSS'
     modal True
 
     default name = ''
 
-    default inputs = x52URM.InputGroup(
-        [
-            ('name', x52URM.Input(text=name, updateScreenVariable="name"))
-        ],
-        focusFirst=True,
-        onSubmit=[
-            SSSSS.Memories.CreateMemory(name=x52URM.GetScreenInput('name', 'inputs'), screenshot=screenshot),
+    python:
+        submitAction = [
+            SSSSS.Memories.CreateMemory(name=x52URM.GetScreenInput('name')),
             Hide('SSSSS_SaveMemory')
         ]
-    )
 
-    key 'K_TAB' action inputs.NextInput()
-    key 'shift_K_TAB' action inputs.PreviousInput()
-    key 'ctrl_K_s' action inputs.onSubmit
+    key 'ctrl_K_s' action submitAction
 
     use SSSSS_Dialog(title="Save memory", closeAction=Hide("SSSSS_SaveMemory")):
         style_prefix "SSSSS"
 
         vbox:
             text "Name:"
-            frame:
-                button:
-                    style_prefix "" # Have to override some other styles that are applying for some reson...
-
-                    key_events True
-                    action inputs.name.Enable()
-
-                    input value inputs.name:
-                        style "SSSSS_input_input"
+            add SSSSS.TextInput(id="name", variableName="name", editable=True)
 
         hbox:
             xfill True
@@ -44,7 +29,7 @@ screen SSSSS_SaveMemory(screenshot):
 
                 # Save
                 hbox at right:
-                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=inputs.onSubmit, disabled=not name)
+                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction, disabled=not name)
 
                 # Close
                 hbox at right:

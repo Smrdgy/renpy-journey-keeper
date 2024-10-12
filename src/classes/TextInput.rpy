@@ -530,34 +530,34 @@ init 1 python in SSSSS:
                     if ord(c) >= 32:
                         raw_text += c
 
-            elif renpy.map_event(ev, 'input_next_input'):
-                if self.id:
-                    inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
-                    print(inputIDs)
-                    i = inputIDs.index(self.id) + 1
+            # elif renpy.map_event(ev, 'input_next_input'):
+            #     if self.id:
+            #         inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
+            #         print(inputIDs)
+            #         i = inputIDs.index(self.id) + 1
 
-                    if i == 0:
-                        return
+            #         if i == 0:
+            #             return
 
-                    if i < 0:
-                        i = len(inputIDs) - 1
+            #         if i < 0:
+            #             i = len(inputIDs) - 1
                     
-                    renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, inputIDs[i])()
-                    raise renpy.display.core.IgnoreEvent()
+            #         renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, inputIDs[i])()
+            #         raise renpy.display.core.IgnoreEvent()
 
-            elif renpy.map_event(ev, 'input_prev_input'):
-                if self.id:
-                    inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
-                    i = inputIDs.index(self.id) - 1
+            # elif renpy.map_event(ev, 'input_prev_input'):
+            #     if self.id:
+            #         inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
+            #         i = inputIDs.index(self.id) - 1
 
-                    if i == -1:
-                        return
+            #         if i == -1:
+            #             return
 
-                    if i > len(inputIDs) - 1:
-                        i = 0
+            #         if i > len(inputIDs) - 1:
+            #             i = 0
                     
-                    renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, inputIDs[i])()
-                    raise renpy.display.core.IgnoreEvent()
+            #         renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, inputIDs[i])()
+            #         raise renpy.display.core.IgnoreEvent()
 
 
             elif ev.type == pygame.TEXTEDITING:
