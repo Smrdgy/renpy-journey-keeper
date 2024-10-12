@@ -53,6 +53,7 @@ init 1 python in SSSSS:
         """
 
         activeTextInputScreenVariableName = "__activeTextInput__"
+        availableTextInputsScreenVariableName = "__availableInputs__"
         changed = None
         prefix = ""
         suffix = ""
@@ -140,11 +141,15 @@ init 1 python in SSSSS:
                 caret = CaretBlink(caret, caret_blink)
 
             self.caret = caret
-            # TextInputBase.caret_pos = len(self.content)
-            # TextInputBase.old_caret_pos = TextInputBase.caret_pos
-    
-            if self.id:
+
+            if self.id and not editable:
                 self.editable = Utils.getScreenVariable(self.activeTextInputScreenVariableName) == self.id
+
+            if self.id:
+                inputs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
+                inputs.append(self.id)
+
+                renpy.store.SetScreenVariable(self.availableTextInputsScreenVariableName, inputs)
 
             if button:
                 button.clicked = TextInputBase.ToggleProxy(self)
@@ -156,6 +161,9 @@ init 1 python in SSSSS:
                 self.caret_pos = replaces.caret_pos
                 self.shown = replaces.shown
                 self.editable = replaces.editable
+
+            if editable:
+                TextInputBase.caret_pos = len(self.content)
 
             self.update_text(self.content, self.editable)
 
@@ -521,6 +529,36 @@ init 1 python in SSSSS:
                 for c in text:
                     if ord(c) >= 32:
                         raw_text += c
+
+            elif renpy.map_event(ev, 'input_next_input'):
+                if self.id:
+                    inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
+                    print(inputIDs)
+                    i = inputIDs.index(self.id) + 1
+
+                    if i == 0:
+                        return
+
+                    if i < 0:
+                        i = len(inputIDs) - 1
+                    
+                    renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, inputIDs[i])()
+                    raise renpy.display.core.IgnoreEvent()
+
+            elif renpy.map_event(ev, 'input_prev_input'):
+                if self.id:
+                    inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
+                    i = inputIDs.index(self.id) - 1
+
+                    if i == -1:
+                        return
+
+                    if i > len(inputIDs) - 1:
+                        i = 0
+                    
+                    renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, inputIDs[i])()
+                    raise renpy.display.core.IgnoreEvent()
+
 
             elif ev.type == pygame.TEXTEDITING:
                 self.update_text(self.content, self.editable, check_size=True)

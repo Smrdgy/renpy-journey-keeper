@@ -37,7 +37,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
             vbox:
                 text "Name:"
 
-                add SSSSS.TextInput(id="name", variableName="name")
+                add SSSSS.TextInput(id="name", variableName="name", editable=True)
 
                 if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
                     text "Are you sure? This name already exists." color '#ffb14c' offset (15, 2)

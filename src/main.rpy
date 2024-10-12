@@ -59,13 +59,13 @@ init 999 python:
     if not 'w_s_e_s_w' in renpy.config.gestures:
         renpy.config.gestures['w_s_e_s_w'] = 'alt_K_p'
 
-    if not 'SSSSSsidepanel' in config.layers:
-        config.layers.insert(config.layers.index("overlay"), 'SSSSSsidepanel')
-        config.context_clear_layers.append('SSSSSsidepanel')
+    if not "SSSSSsidepanel" in renpy.config.layers:
+        renpy.add_layer("SSSSSsidepanel", above="overlay")
+        config.context_clear_layers.append("SSSSSsidepanel")
     
-    if not 'SSSSSoverlay' in config.layers:
-        config.layers.insert(config.layers.index("overlay"), 'SSSSSoverlay')
-        config.context_clear_layers.append('SSSSSoverlay')
+    if not "SSSSSoverlay" in renpy.config.layers:
+        renpy.add_layer("SSSSSoverlay", above="SSSSSsidepanel")
+        config.context_clear_layers.append("SSSSSoverlay")
 
     renpy.config.after_load_callbacks.append(SSSSS.afterLoadCallback)
     renpy.config.start_interact_callbacks.append(SSSSS.startInteractCallback)
@@ -87,4 +87,6 @@ init 999 python:
         'input_jump_word_right': [ 'ctrl_K_RIGHT', 'repeat_ctrl_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_right') else renpy.config.keymap.input_jump_word_right,
         'input_delete_word': [ 'repeat_ctrl_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_word') else renpy.config.keymap.input_delete_word,
         'input_delete_full': [ 'repeat_meta_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_full') else renpy.config.keymap.input_delete_full,
+        # 'input_next_input': ['noshift_K_TAB'], #TODO: Finish prev/next input via TAB
+        # 'input_prev_input': ['shift_K_TAB']
     })
