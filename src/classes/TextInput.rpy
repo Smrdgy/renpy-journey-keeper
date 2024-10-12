@@ -142,14 +142,14 @@ init 1 python in SSSSS:
 
             self.caret = caret
 
-            if self.id and not editable:
+            if self.id:
                 self.editable = Utils.getScreenVariable(self.activeTextInputScreenVariableName) == self.id
 
-            if self.id:
-                inputs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
-                inputs.append(self.id)
+            # if self.id:
+            #     inputs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
+            #     inputs.append(self.id)
 
-                renpy.store.SetScreenVariable(self.availableTextInputsScreenVariableName, inputs)
+            #     renpy.store.SetScreenVariable(self.availableTextInputsScreenVariableName, inputs)
 
             if button:
                 button.clicked = TextInputBase.ToggleProxy(self)
@@ -162,8 +162,8 @@ init 1 python in SSSSS:
                 self.shown = replaces.shown
                 self.editable = replaces.editable
 
-            if editable:
-                TextInputBase.caret_pos = len(self.content)
+            # if editable:
+            #     TextInputBase.caret_pos = len(self.content)
 
             self.update_text(self.content, self.editable)
 
