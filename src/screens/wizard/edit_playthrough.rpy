@@ -110,14 +110,14 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     xfill True
 
                     vbox:
-                        use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not SSSSS.hasColsAndRowsConfiguration)
-                        if not SSSSS.hasColsAndRowsConfiguration:
+                        use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
+                        if not SSSSS.Utils.hasColsAndRowsConfiguration():
                             text "{size=-10}This game uses an unusual save system, thus autosave is not possible{/size}" color "#ff4c4c" offset (35, -10)
 
                         hbox:
                             offset (15, 0)
 
-                            use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=13}(Applies only for the saves created by this mod's autosave system!){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not SSSSS.hasColsAndRowsConfiguration or not autosaveOnChoices)
+                            use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=13}(Applies only for the saves created by this mod's autosave system!){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
 
                 hbox ysize 10
 

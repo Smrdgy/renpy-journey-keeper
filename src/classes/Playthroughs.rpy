@@ -170,7 +170,7 @@ init 1 python in SSSSS:
             def sequentializeSaves(self):
                 current_page = 1
                 current_slot = 1
-                slots_per_page = renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
+                slots_per_page = Utils.getSlotsPerPage()
 
                 instance = SaveSystem.getPlaythroughSaveInstance(self.id)
                 instance.location.scan()
@@ -380,6 +380,8 @@ init 1 python in SSSSS:
             renpy.store.persistent._file_page = str(playthrough.selectedPage)
             renpy.store.persistent._file_page_name = playthrough.filePageName or {}
 
+            self.saveToPersistent()
+
         class ActivateNative(renpy.ui.Action):
             def __call__(self):
                 Playthroughs.activateNative()
@@ -453,7 +455,8 @@ init 1 python in SSSSS:
                 renpy.save(slotString)
                 Autosaver.setNextSlot()
 
-                renpy.notify("Quicksave created at {}".format(slotString))
+                if Settings.quickSaveNotificationEnabled:
+                    renpy.notify("Quicksave created at {}".format(slotString))
 
         class TrySequentializeSaves(renpy.ui.Action):
             def __init__(self, playthrough):

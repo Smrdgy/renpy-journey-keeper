@@ -1,8 +1,7 @@
 init 51 python in SSSSS:
     _constant = True
 
-    hasColsAndRowsConfiguration = hasattr(renpy.store.gui, "file_slot_cols") and hasattr(renpy.store.gui, "file_slot_rows")
-
+    Settings = SettingsClass()
     Playthroughs = PlaythroughsClass()
     SaveSystem = SaveSystemClass()
     Autosaver = AutosaverClass()

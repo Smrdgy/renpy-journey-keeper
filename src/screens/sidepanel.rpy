@@ -38,13 +38,13 @@ screen SSSSS_Sidepanel():
                 use SSSSS_Divider(sizeX=40)
 
                 use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
-                use sssss_iconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not SSSSS.hasColsAndRowsConfiguration)
+                use sssss_iconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not SSSSS.Utils.hasColsAndRowsConfiguration())
                 use sssss_iconButton('\ue2e6', tt="Actions", action=Show("SSSSS_PlaythroughActions", playthrough=playthrough))
 
                 use SSSSS_Divider(sizeX=40)
 
                 use sssss_iconButton('\ue666', tt="Custom pagination", action=SSSSS.Pagination.TogglePagination())
-                # use sssss_iconButton('\ue8b8', tt="Settings", action=Show("SSSSS_Settings"), disabled=True)
+                use sssss_iconButton('\ue8b8', tt="Settings", action=Show("SSSSS_Settings"))
 
 
 screen SSSSS_SidepanelHolder():
@@ -59,7 +59,7 @@ screen SSSSS_SidepanelHolder():
         preventSidepanel = SSSSS.Memories.memoryInProgress
         showSidepanel = not preventSidepanel and sidepanelShouldBeVisible
 
-    if(showSidepanel):
+    if showSidepanel:
         use SSSSS_Sidepanel()
     else:
         $ SSSSS.Pagination.showGoTo = False

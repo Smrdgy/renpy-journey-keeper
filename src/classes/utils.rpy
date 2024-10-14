@@ -198,6 +198,23 @@ init -1000 python in SSSSS:
             return renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
 
         @staticmethod
+        def getSlotsPerPage():
+            if Settings.customGridEnabled:
+                return Settings.customGridX * Settings.customGridY
+
+            if Utils.hasColsAndRowsConfiguration():
+                return renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
+
+            return 4
+
+        @staticmethod
+        def hasColsAndRowsConfiguration():
+            if Settings.customGridEnabled:
+                return True
+
+            return hasattr(renpy.store.gui, "file_slot_cols") and hasattr(renpy.store.gui, "file_slot_rows")
+
+        @staticmethod
         def isDisplayingChoices():
             try:
                 current = renpy.game.context().current
@@ -342,3 +359,80 @@ init -1000 python in SSSSS:
                     print "Unsupported OS: {}".format(system)
             except Exception as e:
                 print "An error occurred: {}".format(e)
+
+    # class DecrementScreenValue(renpy.ui.Action):
+    #     def __init__(self, variableName, amount = 1, min = None):
+    #         self.variableName = variableName
+    #         self.amount = amount
+    #         self.min = min
+
+    #     def __call__(self):
+    #         cs = renpy.current_screen()
+
+    #         if cs is None:
+    #             return
+
+    #         newValue = cs.scope[self.variableName] - self.amount
+
+    #         if self.min:
+    #             cs.scope[self.variableName] = max(self.min, newValue)
+    #         else:
+    #             cs.scope[self.variableName] = newValue
+
+    #         renpy.restart_interaction()
+
+    # class IncrementScreenValue(renpy.ui.Action):
+    #     def __init__(self, variableName, amount = 1, max = None):
+    #         self.variableName = variableName
+    #         self.amount = amount
+    #         self.max = max
+
+    #     def __call__(self):
+    #         cs = renpy.current_screen()
+
+    #         if cs is None:
+    #             return
+
+    #         newValue = cs.scope[self.variableName] + self.amount
+
+    #         if self.max:
+    #             cs.scope[self.variableName] = min(self.max, newValue)
+    #         else:
+    #             cs.scope[self.variableName] = newValue
+
+    #         renpy.restart_interaction()
+    
+    class SetKey(renpy.ui.Action):
+        def __init__(self, key, shift=False, ctrl=False, alt=False):
+            self.key = key
+            self.shift = shift
+            self.ctrl = ctrl
+            self.alt = alt
+
+        def resolveKey(self):
+            if self.key == None:
+                return None
+
+            parts = []
+
+            if self.shift:
+                if not "shift_" in self.key:
+                    parts.append("shift")
+            elif "shift_" in self.key:
+                parts.append("shift")
+
+            if self.ctrl:
+                if not "ctrl_" in self.key:
+                    parts.append("ctrl")
+            elif "ctrl" in self.key:
+                parts.append("ctrl")
+
+            if self.alt:
+                if not "alt_" in self.key:
+                    parts.append("alt")
+            elif "alt_" in self.key:
+                parts.append("alt")
+
+            parts.append(re.sub(r"(alt_)|(ctrl_)|(shift_)", "", self.key))
+
+            return "_".join(parts)

@@ -87,3 +87,23 @@ style SSSSS_pagination_textbutton_active is SSSSS_pagination_textbutton
 
 style SSSSS_pagination_textbutton_active_text is SSSSS_pagination_textbutton_text:
     color '#abe9ff'
+
+style keyinput is SSSSS_button:
+    background "#ffffff22"
+    xminimum 100
+
+style keyinput_text is SSSSS_text:
+    size 25
+    color "#abe9ff"
+
+style keyinput_text_placeholder is keyinput_text:
+    color "#ccc"
+
+style keyinput_disabled is keyinput:
+    background "#0e0e0e"
+
+style keyinput_disabled_text is keyinput_text:
+    color "#2f2f2f55"
+
+style keyinput_disabled_text_placeholder is keyinput_text_placeholder:
+    color "#2f2f2f55"

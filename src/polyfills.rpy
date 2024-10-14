@@ -1,6 +1,6 @@
 
 init 1 python:
-    class URMGetScreenVariable(x52URM.x52NonPicklable):
+    class URMGetScreenVariable(SSSSS.x52NonPicklable):
         def __init__(self, name, key=None):
             self.name = name
             self.key = key

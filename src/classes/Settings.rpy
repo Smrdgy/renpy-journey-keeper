@@ -1,0 +1,169 @@
+init 1 python in SSSSS:
+    _constant = True
+
+    import json
+
+    # Main Settings class
+    class SettingsClass(x52NonPicklable):
+        def __init__(self):
+            self.loadFromPersistent()
+        
+        def loadFromPersistent(self):
+            if renpy.store.persistent.SSSSS_Settings:
+                data = json.loads(renpy.store.persistent.SSSSS_Settings)
+            else:
+                data = {}
+    
+            self.autosaveNotificationEnabled = data.get("autosaveNotificationEnabled", False)
+            self.autosaveKey = data.get("autosaveKey", "alt_K_a")
+            self.quickSaveEnabled = data.get("quickSaveEnabled", True)
+            self.quickSaveNotificationEnabled = data.get("quickSaveNotificationEnabled", True)
+            self.quickSaveKey = data.get("quickSaveKey", "K_F5")
+            self.memoriesEnabled = data.get("memoriesEnabled", True)
+            self.memoriesKey = data.get("memoriesKey", "K_BACKQUOTE")
+            self.customGridEnabled = data.get("customGridEnabled", False)
+            self.customGridX = data.get("customGridX", 2)
+            self.customGridY = data.get("customGridY", 2)
+            self.loadScreenName = data.get("loadScreenName", "load")
+            self.saveScreenName = data.get("saveScreenName", "save")
+            self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", True)#TODO: Implement
+            self.sizeAdjustment = data.get("sizeAdjustment", 100)
+
+        def saveToPersistent(self):
+            renpy.store.persistent.SSSSS_Settings = json.dumps({
+                'autosaveNotificationEnabled': self.autosaveNotificationEnabled,
+                'autosaveKey': self.autosaveKey,
+                'quickSaveEnabled': self.quickSaveEnabled,
+                'quickSaveNotificationEnabled': self.quickSaveNotificationEnabled,
+                'quickSaveKey': self.quickSaveKey,
+                'memoriesEnabled': self.memoriesEnabled,
+                'memoriesKey': self.memoriesKey,
+                'customGridEnabled': self.customGridEnabled,
+                'customGridX': self.customGridX,
+                'customGridY': self.customGridY,
+                'loadScreenName': self.loadScreenName,
+                'saveScreenName': self.saveScreenName,
+                'offsetSlotAfterManualSaveIsLoaded': self.offsetSlotAfterManualSaveIsLoaded,
+                'sizeAdjustment': self.sizeAdjustment
+            })
+
+            renpy.save_persistent()
+
+        def reset(self):
+            renpy.store.persistent.SSSSS_Settings = None
+            self.loadFromPersistent()
+
+            renpy.save_persistent()
+
+        class Reset(renpy.ui.Action):
+            def __call__(self):
+                Settings.reset()
+                renpy.restart_interaction()
+
+
+
+        class SetAutosaveToggleKey(SetKey):
+            def __call__(self):
+                Settings.autosaveKey = self.resolveKey()
+
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class ToggleAutosaveNotificationEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.autosaveNotificationEnabled = not Settings.autosaveNotificationEnabled
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class ToggleQuickSaveEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.quickSaveEnabled = not Settings.quickSaveEnabled
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class ToggleQuickSaveNotificationEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.quickSaveNotificationEnabled = not Settings.quickSaveNotificationEnabled
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class SetQuickSaveKey(SetKey):
+            def __call__(self):
+                Settings.quickSaveKey = self.resolveKey()
+
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class ToggleMemoriesEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.memoriesEnabled = not Settings.memoriesEnabled
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class SetCreateMemoryKey(SetKey):
+            def __call__(self):
+                Settings.memoriesKey = self.resolveKey()
+
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class ToggleCustomGridEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.customGridEnabled = not Settings.customGridEnabled
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class DecrementCustomGridX(renpy.ui.Action):
+            def __call__(self):
+                Settings.customGridX = max(Settings.customGridX - 1, 1)
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+        
+        class IncrementCustomGridX(renpy.ui.Action):
+            def __call__(self):
+                Settings.customGridX = Settings.customGridX + 1
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+        
+        class DecrementCustomGridY(renpy.ui.Action):
+            def __call__(self):
+                Settings.customGridY = max(Settings.customGridY - 1, 1)
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+        
+        class IncrementCustomGridY(renpy.ui.Action):
+            def __call__(self):
+                Settings.customGridY = Settings.customGridY + 1
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class SetSaveScreenName(renpy.ui.Action):
+            def __init__(self, name):
+                self.name = name
+
+            def __call__(self):
+                Settings.saveScreenName = self.name
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class SetLoadScreenName(renpy.ui.Action):
+            def __init__(self, name):
+                self.name = name
+
+            def __call__(self):
+                Settings.loadScreenName = self.name
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class IncrementSizeAdjustment(renpy.ui.Action):
+            def __call__(self):
+                Settings.sizeAdjustment = min(Settings.sizeAdjustment + 1, 200)
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+        
+        class DecrementSizeAdjustment(renpy.ui.Action):
+            def __call__(self):
+                Settings.sizeAdjustment = max(Settings.sizeAdjustment - 1, 1)
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+                

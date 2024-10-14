@@ -30,7 +30,7 @@ screen SSSSS_PlaythroughActions(playthrough):
 
                 # Sequentialize saves
                 hbox at right:
-                    use sssss_iconButton(icon="\ue089", text="{u}S{/u}equentialize saves", action=sequentializeSavesAction, disabled=not SSSSS.hasColsAndRowsConfiguration)
+                    use sssss_iconButton(icon="\ue089", text="{u}S{/u}equentialize saves", action=sequentializeSavesAction, disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
                 
                 # Show choices timeline
                 hbox at right:
