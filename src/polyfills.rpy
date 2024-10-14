@@ -1,18 +1,11 @@
 
-init 1 python:
-    class URMGetScreenVariable(SSSSS.x52NonPicklable):
-        def __init__(self, name, key=None):
+init -1600 python:
+    class GetScreenVariable(SSSSS.x52NonPicklable):
+        def __init__(self, name):
             self.name = name
-            self.key = key
         
         def __call__(self):
             cs = renpy.current_screen()
             
-            if not cs or not self.name in cs.scope:
-                return
-            
-            if(self.key):
-                key = self.key if not callable(self.key) else self.key()
-                return cs.scope[self.name][key]
-            else:
+            if cs and self.name in cs.scope:
                 return cs.scope[self.name]

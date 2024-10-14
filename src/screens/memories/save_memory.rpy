@@ -7,7 +7,7 @@ screen SSSSS_SaveMemory():
 
     python:
         submitAction = [
-            SSSSS.Memories.CreateMemory(name=x52URM.GetScreenInput('name')),
+            SSSSS.Memories.CreateMemory(name=GetScreenVariable('name')),
             Hide('SSSSS_SaveMemory')
         ]
 
@@ -18,7 +18,7 @@ screen SSSSS_SaveMemory():
 
         vbox:
             text "Name:"
-            add SSSSS.TextInput(id="name", variableName="name", editable=True)
+            add SSSSS.TextInput(variableName="name", editable=True)
 
         hbox:
             xfill True

@@ -17,7 +17,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
     python:
         submitAction = [
-            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=URMGetScreenVariable('name'), description=URMGetScreenVariable('description'), storeChoices=URMGetScreenVariable('storeChoices'), autosaveOnChoices=URMGetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=URMGetScreenVariable('useChoiceLabelAsSaveName'), enabledSaveLocations=URMGetScreenVariable('enabledSaveLocations'), moveSaveDirectory=URMGetScreenVariable('moveSaveDirectory')),#MODIFY HERE
+            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=GetScreenVariable('name'), description=GetScreenVariable('description'), storeChoices=GetScreenVariable('storeChoices'), autosaveOnChoices=GetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=GetScreenVariable('useChoiceLabelAsSaveName'), enabledSaveLocations=GetScreenVariable('enabledSaveLocations'), moveSaveDirectory=GetScreenVariable('moveSaveDirectory')),#MODIFY HERE
             Hide('SSSSS_EditPlaythrough')
         ]
 

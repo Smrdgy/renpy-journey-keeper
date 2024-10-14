@@ -134,34 +134,4 @@ init -999 python in x52URM:
             if self._m1_inputs__inputs[self._m1_inputs__selectedIndex][1].editable:
                 self._m1_inputs__inputs[self._m1_inputs__selectedIndex][1].Enable()()
 
-
-    class GetScreenInput(x52NonPicklable):
-        """ Class that returns input value on a screen by calling it or by converting it to a string like `str(GetScreenInput('someInput', 'someOptionalInputGroup'))` """
-        
-        def __init__(self, inputName, groupName=None):
-            self.inputName = inputName
-            self.groupName = groupName
-        
-        def __str__(self):
-            return self()
-        
-        def __call__(self):
-            cs = renpy.current_screen()
-            
-            if not cs: 
-                return
-            else:
-                scope = cs.scope
-            
-            input = None
-            if self.groupName:
-                if self.groupName in scope and hasattr(scope[self.groupName], self.inputName):
-                    input = getattr(scope[self.groupName], self.inputName)
-            elif self.inputName in scope:
-                input = scope[self.inputName]
-            
-            if input == None:
-                raise Exception('0x52: x52Input screenvariable "{}" not found'.format(self.groupName or self.inputName))
-            else:
-                return str(input)
 # Decompiled by unrpyc: https://github.com/CensoredUsername/unrpyc
