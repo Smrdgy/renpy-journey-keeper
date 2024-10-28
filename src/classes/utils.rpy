@@ -293,7 +293,7 @@ init -2000 python in SSSSS:
             if cs is None:
                 return
 
-            arr = cs.scope[self.name]
+            arr = [] + cs.scope[self.name]
 
             if self.value in arr:
                 arr.remove(self.value)

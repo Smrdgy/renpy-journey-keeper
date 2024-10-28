@@ -11,7 +11,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     default storeChoices = playthrough.storeChoices
     default autosaveOnChoices = playthrough.autosaveOnChoices
     default useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
-    default enabledSaveLocations = playthrough.enabledSaveLocations
+    default enabledSaveLocations = playthrough.enabledSaveLocations or False
     default moveSaveDirectory = True
     #MODIFY HERE
 
@@ -63,9 +63,9 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     if(isEdit and playthrough.id > 1 and name != originalname and SSSSS.Playthroughs.isValidName(name)):
                         use SSSSS_Checkbox(checked=moveSaveDirectory, text="Rename directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False), disabled=not SSSSS.Playthroughs.isValidName(name))
 
-                    use SSSSS_Checkbox(checked=enabledSaveLocations != None, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', [] + allSaveLocations, None))
+                    use SSSSS_Checkbox(checked=enabledSaveLocations != False, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', allSaveLocations, False))
 
-                    if enabledSaveLocations != None:
+                    if enabledSaveLocations != False:
                         hbox:
                             use SSSSS_XSpacer()
 
@@ -168,7 +168,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                 # Save
                 hbox:
-                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction, disabled=(enabledSaveLocations != None and len(enabledSaveLocations) == 0) or len(name) == 0)
+                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0)
 
                 # Close
                 hbox:

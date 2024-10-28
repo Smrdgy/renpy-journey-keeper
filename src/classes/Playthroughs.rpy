@@ -93,7 +93,7 @@ init 1 python in SSSSS:
                 if selectedPage != None: self.selectedPage = selectedPage
                 if filePageName != None: self.filePageName = filePageName
                 if useChoiceLabelAsSaveName != None: self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
-                if enabledSaveLocations != None: self.enabledSaveLocations = enabledSaveLocations
+                if enabledSaveLocations != None: self.enabledSaveLocations = enabledSaveLocations or None #enabledSaveLocations can be False, in that case it needs to be replaced with None
                 #MODIFY HERE
 
                 return self
