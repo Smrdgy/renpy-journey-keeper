@@ -160,6 +160,18 @@ screen SSSSS_Settings():
                             for screen in relevantLoadScreens:
                                 use SSSSS_Radio(checked=SSSSS.Settings.loadScreenName == screen, text=("\"load\" (default)" if screen == "load" else "\"" + screen + "\""), action=SSSSS.Settings.SetLoadScreenName(screen))
 
+                use SSSSS_YSpacer()
+
+                hbox:
+                    xfill True
+
+                    vbox xalign 0.5:
+                        hbox xalign 0.5:
+                            use SSSSS_Title("SSSSS v1.0.0")
+                        text "{a=https://github.com/Smrdgy/renpy-sssss}Click here to open the GitHub page.{/a}" xalign 0.5
+                        text "{a=https://github.com/Smrdgy/renpy-sssss/issues}Click here to view and/or submit issue(s).{/a}" xalign 0.5
+                    
+
         hbox:
             xfill True
             yfill True
