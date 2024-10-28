@@ -82,6 +82,14 @@ screen SSSSS_Settings():
                 use SSSSS_YSpacer()
 
                 vbox:
+                    use SSSSS_Title("Sidepanel")
+                    vbox:
+                        text "Toggle visibility mode key"
+                        use SSSSS_KeyInput(assignment=SSSSS.Settings.changeSidepanelVisibilityKey, action=SSSSS.Settings.SetChangeSidepanelVisibilityKey)
+
+                use SSSSS_YSpacer()
+
+                vbox:
                     use SSSSS_Title("Memories")
                     vbox:
                         use SSSSS_Checkbox(checked=SSSSS.Settings.memoriesEnabled, text="Enabled", action=SSSSS.Settings.ToggleMemoriesEnabled())

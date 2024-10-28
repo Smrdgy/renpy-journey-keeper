@@ -28,6 +28,7 @@ init 1 python in SSSSS:
             self.saveScreenName = data.get("saveScreenName", "save")
             self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", True)#TODO: Implement
             self.sizeAdjustment = data.get("sizeAdjustment", 0)
+            self.changeSidepanelVisibilityKey = data.get("changeSidepanelVisibilityKey", "alt_K_p")
 
         def saveToPersistent(self):
             renpy.store.persistent.SSSSS_Settings = json.dumps({
@@ -44,7 +45,8 @@ init 1 python in SSSSS:
                 'loadScreenName': self.loadScreenName,
                 'saveScreenName': self.saveScreenName,
                 'offsetSlotAfterManualSaveIsLoaded': self.offsetSlotAfterManualSaveIsLoaded,
-                'sizeAdjustment': self.sizeAdjustment
+                'sizeAdjustment': self.sizeAdjustment,
+                'changeSidepanelVisibilityKey': self.changeSidepanelVisibilityKey,
             })
 
             renpy.save_persistent()
@@ -170,6 +172,13 @@ init 1 python in SSSSS:
         class ResetSizeAdjustment(renpy.ui.Action):
             def __call__(self):
                 Settings.sizeAdjustment = 0
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class SetChangeSidepanelVisibilityKey(SetKey):
+            def __call__(self):
+                Settings.changeSidepanelVisibilityKey = self.resolveKey()
+
                 Settings.saveToPersistent()
                 renpy.restart_interaction()
                 

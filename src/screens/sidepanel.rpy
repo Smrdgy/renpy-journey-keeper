@@ -50,7 +50,7 @@ screen SSSSS_Sidepanel():
 screen SSSSS_SidepanelHolder():
     layer "SSSSSsidepanel"
 
-    key "alt_K_p" action SSSSS.ToggleSidepanel()
+    key SSSSS.Settings.changeSidepanelVisibilityKey action SSSSS.ToggleSidepanel()
 
     python:
         isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None

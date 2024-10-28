@@ -37,10 +37,10 @@ init 51 python in SSSSS:
 
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):
-            if(not hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode")):
+            if not hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode") or renpy.config.SSSSS_sidepanelVisibilityMode == None:
                 renpy.config.SSSSS_sidepanelVisibilityMode = True
-
-            if renpy.config.SSSSS_sidepanelVisibilityMode == True:
+                renpy.notify("Sidepanel is now visible at all times")
+            elif renpy.config.SSSSS_sidepanelVisibilityMode == True:
                 renpy.config.SSSSS_sidepanelVisibilityMode = False
                 renpy.notify("Sidepanel is now hidden at all times")
             elif renpy.config.SSSSS_sidepanelVisibilityMode == False:
