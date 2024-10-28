@@ -87,7 +87,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                                         fullPath = os.path.join(path, computedDirectory)
 
                                     hbox:
-                                        use SSSSS_Checkbox(checked=location in enabledSaveLocations, text=locationType + " - {color=#818181}{size=-5}" + fullPath + "{/size}{/c}", action=SSSSS.ToggleValueInArrayAction('enabledSaveLocations', location))
+                                        use SSSSS_Checkbox(checked=location in enabledSaveLocations, text=locationType + " - {color=#818181}{size=-5}" + fullPath + "{/size}{/c}", action=ToggleSetMembership(enabledSaveLocations, location))
 
                                         hbox:
                                             xpos 0.5

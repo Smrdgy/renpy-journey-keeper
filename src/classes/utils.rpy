@@ -272,50 +272,6 @@ init -2000 python in SSSSS:
         
         def remove(self, location):
             self.locations.remove(location)
-
-    class ToggleValueInArrayAction(renpy.ui.Action):
-        def __eq__(self, o):
-            if self is o:
-                return True
-
-            if _type(self) is not _type(o):
-                return False
-
-            return self.name == o.name and self.value == o.value
-
-        def __init__(self, name, value):
-            self.name = name
-            self.value = value
-
-        def __call__(self):
-            cs = renpy.current_screen()
-
-            if cs is None:
-                return
-
-            arr = [] + cs.scope[self.name]
-
-            if self.value in arr:
-                arr.remove(self.value)
-            else:
-                arr.append(self.value)
-
-            cs.scope[self.name] = arr
-
-            renpy.restart_interaction()
-
-        def get_selected(self):
-            cs = renpy.current_screen()
-
-            if cs is None:
-                return False
-
-            if self.name not in cs.scope:
-                return False
-
-            rv = cs.scope[self.name]
-
-            return self.value in rv
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):
