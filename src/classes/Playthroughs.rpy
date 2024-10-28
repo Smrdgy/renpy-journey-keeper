@@ -449,11 +449,10 @@ init 1 python in SSSSS:
 
         class QuickSave(renpy.ui.Action):
             def __call__(self):
-                _, _, slotString = Autosaver.getNextSlot()
+                _, _, slotString = Autosaver.getCurrentSlot()
 
                 renpy.take_screenshot()
                 renpy.save(slotString)
-                Autosaver.setNextSlot()
 
                 if Settings.quickSaveNotificationEnabled:
                     renpy.notify("Quicksave created at {}".format(slotString))
