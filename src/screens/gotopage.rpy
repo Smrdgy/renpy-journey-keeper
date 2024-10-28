@@ -3,21 +3,25 @@ screen SSSSS_GoToPage():
     modal True
 
     python:
-        def setPage(page):
-            if(page.isdigit() or page == ""):
-                page = int(page or 1)
+        class Value(InputValue):
+            def __init__(self):
+                self.page = ""
 
-                if(page != renpy.store.persistent._file_page):
-                    renpy.store.persistent._file_page = str(page)
+            def get_text(self):
+                return self.page
 
-        page = renpy.store.persistent._file_page
+            def set_text(self, page):
+                if(page.isdigit() or page == ""):
+                    self.page = str(page)
 
-    default inputs = x52URM.InputGroup(
-        [
-            ('page', x52URM.Input(text="", updateScreenVariable="page", onInput=setPage)),
-        ],
-        focusFirst=True,
-    )
+                    page = int(page or 1)
+
+                    if(page != renpy.store.persistent._file_page):
+                        renpy.store.persistent._file_page = str(page)
+
+                        renpy.restart_interaction()
+
+    default value = Value()
 
     frame:
         xysize (0, 0)
@@ -26,15 +30,9 @@ screen SSSSS_GoToPage():
 
         frame:
             style "SSSSS_frame"
-            xysize adjustable((90, 60))
+            xysize adjustable((90, 40))
             xalign 0.5 yalign 1
             offset adjustable((-40, -60))
             background "#000000cc"
 
-            button:
-                style_prefix "" # Have to override some other styles that are applying for some reson...
-
-                key_events True
-                action inputs.page.Enable()
-
-                input value inputs.page style "textinput"
+            use SSSSS_TextInput(placeholder=renpy.store.persistent._file_page, value=value, editable=True, layout="nobreak", offset=(-10, -15))

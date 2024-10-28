@@ -102,7 +102,7 @@ init 1 python in SSSSS:
             self.id = id
 
             if variableName:
-                default = Utils.getScreenVariable(self.variableName)
+                default = Utils.getScreenVariable(self.variableName) or ''
 
             if value:
                 self.value = value
@@ -255,6 +255,13 @@ init 1 python in SSSSS:
 
                 if self.changed:
                     self.changed(new_content)
+
+                    new_value = self.value.get_text()
+                    if new_value != new_content:
+                        #The new value was most likely rejected, restore the previous position
+                        TextInputBase.caret_pos = TextInputBase.old_caret_pos
+
+                    self.update_text(new_value, editable, check_size)
 
                 if self.variableName:
                     renpy.store.SetScreenVariable(self.variableName, new_content)()
@@ -649,7 +656,9 @@ init 1 python in SSSSS:
     class TextInput(TextInputBase):
         pass
 
-screen SSSSS_TextInput(placeholder=None, variableName=None, value=None, **params):
+screen SSSSS_TextInput(placeholder=None, variableName=None, value=None, offset=None, **params):
+    style_prefix "SSSSS"
+
     python:
         showPlaceholder = False
 
@@ -657,13 +666,17 @@ screen SSSSS_TextInput(placeholder=None, variableName=None, value=None, **params
             inputValue = None
             if variableName:
                 inputValue = SSSSS.Utils.getScreenVariable(variableName)
-            elif value and callable(value, "get_text"):
-                inputValue = value.get_text
+            elif value and callable(value.get_text):
+                inputValue = value.get_text()
 
             showPlaceholder = inputValue != None and len(inputValue) == 0
 
-    text (placeholder if showPlaceholder else "") style "SSSSS_placeholder" offset adjustable((8, 10), minValue=1)
-    hbox:
-        xfill True
-        yoffset adjustable(-15, minValue=1)
-        add SSSSS.TextInput(variableName=variableName, value=value, **params)
+    vbox:
+        if offset:
+            offset adjustable(offset)
+
+        text (placeholder if showPlaceholder else "") style "SSSSS_placeholder" offset adjustable((8, 10), minValue=1)
+        hbox:
+            xfill True
+            yoffset adjustable(-15, minValue=1)
+            add SSSSS.TextInput(variableName=variableName, value=value, **params)
