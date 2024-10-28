@@ -26,9 +26,9 @@ screen SSSSS_GoToPage():
 
         frame:
             style "SSSSS_frame"
-            xysize (90, 60)
+            xysize adjustable((90, 60))
             xalign 0.5 yalign 1
-            offset (-40, -60)
+            offset adjustable((-40, -60))
             background "#000000cc"
 
             button:
@@ -37,4 +37,4 @@ screen SSSSS_GoToPage():
                 key_events True
                 action inputs.page.Enable()
 
-                input value inputs.page color '#fff'
+                input value inputs.page style "textinput"

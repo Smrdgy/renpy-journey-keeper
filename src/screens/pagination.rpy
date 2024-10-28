@@ -45,7 +45,7 @@ screen SSSSS_Pagination():
                 yalign 0.5
                 spacing 10
 
-                hbox at left:
+                hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
                     use sssss_iconButton('\uf045', tt="Go to page", action=SSSSS.Pagination.ToggleGoToPage())
                     if SSSSS.Pagination.showGoTo:
                         use SSSSS_GoToPage()
@@ -54,13 +54,13 @@ screen SSSSS_Pagination():
                     yalign 0.5
                     spacing 10
 
-                    hbox at left:
+                    hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
                         spacing 10
 
                         textbutton "<<" action FilePage(max(currentPage - 10, 1)) style "SSSSS_pagination_textbutton"
                         textbutton "<" action FilePage(max(currentPage - 1, 1)) style "SSSSS_pagination_textbutton"
 
-                    grid 10 1 at center:
+                    grid 10 1 xpos 0.5 xanchor 0.5 ypos 1.0 yanchor 1.0:
                         spacing 10
                         
                         if pageOffset == 0:
@@ -73,9 +73,16 @@ screen SSSSS_Pagination():
                                 textbutton "[page]":
                                     action FilePage(page)
                                     style ("SSSSS_pagination_textbutton_active" if page == currentPage else "SSSSS_pagination_textbutton")
-                                    at center
+                                    xpos 0.5
+                                    xanchor 0.5
+                                    ypos 1.0
+                                    yanchor 1.0
 
-                    hbox at right:
+                    hbox:
+                        xpos 1.0
+                        xanchor 1.0
+                        ypos 1.0
+                        yanchor 1.0
                         spacing 10
 
                         textbutton ">" action FilePageNext() style "SSSSS_pagination_textbutton"

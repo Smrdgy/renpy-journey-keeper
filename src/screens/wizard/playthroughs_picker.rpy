@@ -38,7 +38,12 @@ screen SSSSS_PlaythroughsPicker():
                         background (activeColor if isActivePlaythrough else "#ffffff11")
                         action [SSSSS.Playthroughs.ActivatePlaythrough(playthrough), Hide("SSSSS_PlaythroughsPicker")]
 
-                        vbox at center:
+                        vbox:
+                            xpos 0.5
+                            xanchor 0.5
+                            ypos 1.0
+                            yanchor 1.0
+
                             frame:
                                 padding (0, 0, 0, 0)
                                 xmaximum thumbnailSize[0]
@@ -71,10 +76,10 @@ screen SSSSS_PlaythroughsPicker():
                                 hbox:
                                     xfill True
 
-                                    hbox at left:
+                                    hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
                                         use sssss_iconButton('\ue872', text="Remove", tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), disabled=playthrough.id == 1, color="#ff0000")
 
-                                    hbox at right:
+                                    hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
                                         use sssss_iconButton('\ue3c9', text="Edit", tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), color=(onActiveColor if isActivePlaythrough else None))
 
                 for _ in range(0, spotsToFill):

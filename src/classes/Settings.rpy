@@ -27,7 +27,7 @@ init 1 python in SSSSS:
             self.loadScreenName = data.get("loadScreenName", "load")
             self.saveScreenName = data.get("saveScreenName", "save")
             self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", True)#TODO: Implement
-            self.sizeAdjustment = data.get("sizeAdjustment", 100)
+            self.sizeAdjustment = data.get("sizeAdjustment", 0)
 
         def saveToPersistent(self):
             renpy.store.persistent.SSSSS_Settings = json.dumps({
@@ -157,13 +157,19 @@ init 1 python in SSSSS:
 
         class IncrementSizeAdjustment(renpy.ui.Action):
             def __call__(self):
-                Settings.sizeAdjustment = min(Settings.sizeAdjustment + 1, 200)
+                Settings.sizeAdjustment = min(Settings.sizeAdjustment + 1, 100)
                 Settings.saveToPersistent()
                 renpy.restart_interaction()
         
         class DecrementSizeAdjustment(renpy.ui.Action):
             def __call__(self):
-                Settings.sizeAdjustment = max(Settings.sizeAdjustment - 1, 1)
+                Settings.sizeAdjustment = max(Settings.sizeAdjustment - 1, -100)
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class ResetSizeAdjustment(renpy.ui.Action):
+            def __call__(self):
+                Settings.sizeAdjustment = 0
                 Settings.saveToPersistent()
                 renpy.restart_interaction()
                 

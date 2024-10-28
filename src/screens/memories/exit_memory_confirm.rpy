@@ -20,13 +20,13 @@ screen SSSSS_ExitMemoryConfirm():
                 xfill True
                 yfill True
 
-                vbox at right:
-                    yalign 1.0
+                style_prefix "SSSSS_dialog_action_buttons"
 
+                vbox:
                     # Save
-                    hbox at right:
+                    hbox:
                         use sssss_iconButton(icon="\ue9ba", text="{u}E{/u}xit memory", action=returnAction)
 
                     # Close
-                    hbox at right:
+                    hbox:
                         use sssss_iconButton(icon="\ue5c4", text="Return", action=Return())

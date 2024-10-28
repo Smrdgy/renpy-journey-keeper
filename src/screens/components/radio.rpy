@@ -1,9 +1,9 @@
-screen SSSSS_Radio(checked, text, action=None, xsize=None, sensitive=None, disabled=False, iconColor='#ffffff', textColor = '#ffffff'):
-    style_prefix 'SSSSS'
+screen SSSSS_Radio(checked, text, action=None, xsize=None, sensitive=None, disabled=False, color=None, iconColor=None, textColor=None):
+    style_prefix 'SSSSS_radio'
 
     python:
-        icon_color = '#2f2f2f55' if disabled else (iconColor or color or '#ffffff')
-        text_color = '#2f2f2f55' if disabled else (textColor or color or '#ffffff')
+        icon_color = '#2f2f2f55' if disabled else (iconColor or color)
+        text_color = '#2f2f2f55' if disabled else (textColor or color)
 
     button:
         xsize xsize
@@ -17,4 +17,6 @@ screen SSSSS_Radio(checked, text, action=None, xsize=None, sensitive=None, disab
                 use sssss_icon("\ue836", color=icon_color)
             
             if text:
-                text text yalign .5 color text_color
+                text text yalign .5:
+                    if text_color:
+                        color text_color

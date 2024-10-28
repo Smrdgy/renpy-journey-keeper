@@ -24,11 +24,14 @@ screen SSSSS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="
             xfill True
             yfill True
 
-            vbox at right:
-                yalign 1.0
+            style_prefix "SSSSS_dialog_action_buttons"
 
-                use sssss_iconButton(icon=yesIcon, text=yesText, action=yesAction, color=yesColor)
-                use sssss_iconButton(icon=noIcon, text=noText, action=noAction, color=noColor)
+            vbox:
+                hbox:
+                    use sssss_iconButton(icon=yesIcon, text=yesText, action=yesAction, color=yesColor)
+
+                hbox:
+                    use sssss_iconButton(icon=noIcon, text=noText, action=noAction, color=noColor)
 
 init python in SSSSS:
     def showConfirm(title="", message=None, yes=None, no=None, yesText="{u}Y{/u}es", noText="{u}N{/u}o", yesIcon="\ue876", noIcon="\ue5cd", yesColor=None, noColor=None):

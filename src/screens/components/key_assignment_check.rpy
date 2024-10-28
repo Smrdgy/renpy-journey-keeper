@@ -5,7 +5,7 @@ screen SSSSS_KeyAssignmentCheck(assignment):
         for key in renpy.config.keymap:
             item = renpy.config.keymap[key]
 
-            if assignment in item:
+            if item and assignment in item:
                 # if assignment in keys:
                 conflicts.append(key)
 

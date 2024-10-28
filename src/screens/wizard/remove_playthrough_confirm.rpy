@@ -39,13 +39,13 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             xfill True
             yfill True
 
-            vbox at right:
-                yalign 1.0
+            style_prefix "SSSSS_dialog_action_buttons"
 
+            vbox:
                 # Remove
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue92b", text=removeText, action=deleteAction, color="#ff0000")
 
                 # Close
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_RemovePlaythroughConfirm"))

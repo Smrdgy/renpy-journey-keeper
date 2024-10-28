@@ -282,19 +282,7 @@ init 1 python in SSSSS:
                     renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, None)()
 
         def per_interact(self):
-
-            global default_input_value
-
-            if self.value is not None:
-
-                inputs.append(self)
-                input_values.append(self.value)
-
-                if self.value.default and (default_input_value is None):
-                    default_input_value = self.value
-
             if not self.shown:
-
                 if self.value is not None:
                     default = self.value.get_text()
                     self.default = str(default)
@@ -660,3 +648,22 @@ init 1 python in SSSSS:
 
     class TextInput(TextInputBase):
         pass
+
+screen SSSSS_TextInput(placeholder=None, variableName=None, value=None, **params):
+    python:
+        showPlaceholder = False
+
+        if placeholder:
+            inputValue = None
+            if variableName:
+                inputValue = SSSSS.Utils.getScreenVariable(variableName)
+            elif value and callable(value, "get_text"):
+                inputValue = value.get_text
+
+            showPlaceholder = inputValue != None and len(inputValue) == 0
+
+    text (placeholder if showPlaceholder else "") style "SSSSS_placeholder" offset adjustable((8, 10), minValue=1)
+    hbox:
+        xfill True
+        yoffset adjustable(-15, minValue=1)
+        add SSSSS.TextInput(variableName=variableName, value=value, **params)

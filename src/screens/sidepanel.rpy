@@ -1,6 +1,6 @@
 screen SSSSS_Sidepanel():
     style_prefix 'SSSSS'
-    default estimatedPanelSize = (80, 350)
+    default estimatedPanelSize = adjustable((80, 350))
 
     python:
         _constant = True

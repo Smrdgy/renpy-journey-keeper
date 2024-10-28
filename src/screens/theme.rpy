@@ -14,7 +14,7 @@ style SSSSS_default is default:
 
 style SSSSS_text is SSSSS_default:
     color '#ffffff'
-    size 20
+    size adjustable(20)
     text_align 0.0
     outlines []
     alt ''
@@ -24,20 +24,23 @@ style SSSSS_label is SSSSS_default
 style SSSSS_label_text is SSSSS_text:
     bold True
 
+style SSSSS_placeholder is SSSSS_text:
+    color "#454545"
+
 style textinput is SSSSS_text:
     color "#959595"
-    offset (10, 1)
+    offset adjustable((10, 1), minValue=1)
 
 style SSSSS_vscrollbar:
     base_bar "#00000072"
     thumb '#fff'
     hover_thumb '#7084e6'
-    xsize 18
+    xsize adjustable(18)
     # base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", Borders(6, 10, 6, 10), tile=False)
     # thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", Borders(6, 10, 6, 10), tile=False)
 
 style SSSSS_frame is SSSSS_default:
-    padding (15, 15)
+    padding adjustable((15, 15), minValue=1)
 
 style SSSSS_vbox is SSSSS_default
 style SSSSS_hbox is SSSSS_default
@@ -52,11 +55,12 @@ style SSSSS_dialog_overlay:
     background '#000000ff'
 
 style SSSSS_dialog_title:
-    padding (40, 40, 40, 0)
+    padding adjustable((40, 40, 40, 0), minValue=1)
+    size adjustable(40)
     xfill True
 
 style SSSSS_dialog_content:
-    padding (40, 0, 40, 40)
+    padding adjustable((40, 0, 40, 40), minValue=1)
    
 style SSSSS_dialog_vbox is SSSSS_vbox
 style SSSSS_dialog_hbox is SSSSS_hbox
@@ -66,12 +70,41 @@ style SSSSS_dialog_label is SSSSS_label
 style SSSSS_dialog_label_text is SSSSS_label_text
 style SSSSS_dialog_button is SSSSS_button
 
+# Action buttons
+
+style SSSSS_dialog_action_buttons_vbox is SSSSS_vbox:
+    # "at right" @see 00definitions.rpy
+    xpos 1.0
+    xanchor 1.0
+    ypos 1.0
+    yanchor 1.0
+
+    yalign 1.0
+
+style SSSSS_dialog_action_buttons_hbox is SSSSS_hbox:
+    # "at right" @see 00definitions.rpy
+    xpos 1.0
+    xanchor 1.0
+    ypos 1.0
+    yanchor 1.0
+
 ##################
 #     BUTTON     #
 ##################
 
 style SSSSS_button is SSSSS_default:
-    padding (5, 5)
+    padding adjustable((5, 5), minValue=1)
+
+style SSSSS_icon_button is SSSSS_button
+
+style SSSSS_icon_button_text is SSSSS_text:
+    hover_color "#abe9ff"
+
+style SSSSS_checkbox is SSSSS_button
+style SSSSS_checkbox_text is SSSSS_icon_button_text
+
+style SSSSS_radio is SSSSS_button
+style SSSSS_radio_text is SSSSS_icon_button_text
    
 style SSSSS_pagination_textbutton:
     background None
@@ -80,7 +113,7 @@ style SSSSS_pagination_textbutton:
 style SSSSS_pagination_textbutton_text is SSSSS_text:
     color '#cdcdcd'
     hover_color '#ffffff'
-    size 25
+    size adjustable(25)
     text_align 0.5
 
 style SSSSS_pagination_textbutton_active is SSSSS_pagination_textbutton
@@ -88,12 +121,16 @@ style SSSSS_pagination_textbutton_active is SSSSS_pagination_textbutton
 style SSSSS_pagination_textbutton_active_text is SSSSS_pagination_textbutton_text:
     color '#abe9ff'
 
+##################
+#      INPUT     #
+##################
+
 style keyinput is SSSSS_button:
     background "#ffffff22"
-    xminimum 100
+    xminimum adjustable(100)
 
 style keyinput_text is SSSSS_text:
-    size 25
+    size adjustable(25)
     color "#abe9ff"
 
 style keyinput_text_placeholder is keyinput_text:
@@ -107,3 +144,51 @@ style keyinput_disabled_text is keyinput_text:
 
 style keyinput_disabled_text_placeholder is keyinput_text_placeholder:
     color "#2f2f2f55"
+
+##################
+#      ICONS     #
+##################
+
+style SSSSS_material_outlined_icon:
+    font 'fonts/MaterialIconsOutlined-Regular.otf'
+
+style SSSSS_material_regular_icon:
+    font 'fonts/MaterialIcons-Regular.ttf'
+
+style SSSSS_icon is SSSSS_text:
+    font 'fonts/MaterialIconsOutlined-Regular.otf'
+    hover_font 'fonts/MaterialIcons-Regular.ttf'
+    hover_color "#abe9ff"
+    size adjustable(30)
+
+##################
+#     Titles     #
+##################
+
+style SSSSS_title is SSSSS_text:
+    color "#abe9ff"
+
+style SSSSS_title_1 is SSSSS_title:
+    size adjustable(30)
+    bold True
+
+style SSSSS_title_2 is SSSSS_title:
+    size adjustable(25)
+
+style SSSSS_spacer_x_1:
+    xsize adjustable(20)
+
+style SSSSS_spacer_x_2:
+    xsize adjustable(20)
+
+style SSSSS_spacer_x_3:
+    xsize adjustable(10)
+
+style SSSSS_spacer_y_1:
+    ysize adjustable(40)
+
+style SSSSS_spacer_y_2:
+    ysize adjustable(20)
+
+style SSSSS_spacer_y_3:
+    ysize adjustable(10)

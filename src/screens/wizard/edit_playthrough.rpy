@@ -17,7 +17,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
     python:
         submitAction = [
-            SSSSS.Playthroughs.AddOrEdit(playthrough=playthrough, name=GetScreenVariable('name'), description=GetScreenVariable('description'), storeChoices=GetScreenVariable('storeChoices'), autosaveOnChoices=GetScreenVariable('autosaveOnChoices'), useChoiceLabelAsSaveName=GetScreenVariable('useChoiceLabelAsSaveName'), enabledSaveLocations=GetScreenVariable('enabledSaveLocations'), moveSaveDirectory=GetScreenVariable('moveSaveDirectory')),#MODIFY HERE
+            SSSSS.Playthroughs.AddOrEdit(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory),#MODIFY HERE
             Hide('SSSSS_EditPlaythrough')
         ]
 
@@ -35,20 +35,20 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
             ymaximum 0.85
 
             vbox:
-                text "Name:"
+                use SSSSS_Title("Name")
 
-                add SSSSS.TextInput(id="name", variableName="name", editable=True)
+                use SSSSS_TextInput(id="name", variableName="name", editable=True, placeholder="Click here to start writing the name")
 
                 if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
-                    text "Are you sure? This name already exists." color '#ffb14c' offset (15, 2)
+                    text "Are you sure? This name already exists." color '#ffb14c' offset adjustable((15, 2), minValue=1)
 
                 if(playthrough.id != 1):
                     python:
                         computedDirectory = playthrough.directory if (playthrough.directory != None) else (SSSSS.Utils.name_to_directory_name(name) if name else None) or ""
 
-                    text "Directory:"
+                    use SSSSS_Title("Directory", 2)
                     hbox:
-                        offset (15, 0)
+                        offset adjustable((15, 0), minValue=1)
 
                         text "saves/" color '#e5e5e5'
                         text "[computedDirectory]" color '#a2ebff'
@@ -66,69 +66,76 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     use SSSSS_Checkbox(checked=enabledSaveLocations != None, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', [] + allSaveLocations, None))
 
                     if enabledSaveLocations != None:
-                        vbox:
-                            xoffset 30
+                        hbox:
+                            use SSSSS_XSpacer()
 
-                            for location in allSaveLocations:
-                                python:
-                                    locationType = "Extra"
-                                    path = location
+                            vbox:
+                                for location in allSaveLocations:
+                                    python:
+                                        locationType = "Extra"
+                                        path = location
 
-                                    # User savedir (appdata or library).
-                                    if location == "USER":
-                                        locationType = "Library" if renpy.macapp else "%APPDATA%"
-                                        path = renpy.config.savedir
-                                    # Game-local savedir.
-                                    elif location == "GAME":
-                                        locationType = "Game files"
-                                        path = os.path.join(renpy.config.gamedir, "saves")
+                                        # User savedir (appdata or library).
+                                        if location == "USER":
+                                            locationType = "Library" if renpy.macapp else "%APPDATA%"
+                                            path = renpy.config.savedir
+                                        # Game-local savedir.
+                                        elif location == "GAME":
+                                            locationType = "Game files"
+                                            path = os.path.join(renpy.config.gamedir, "saves")
 
-                                    fullPath = os.path.join(path, computedDirectory)
+                                        fullPath = os.path.join(path, computedDirectory)
 
-                                hbox:
-                                    use SSSSS_Checkbox(checked=location in enabledSaveLocations, text=locationType + " - {color=#818181}{size=-5}" + fullPath + "{/size}{/c}", action=SSSSS.ToggleValueInArrayAction('enabledSaveLocations', location))
+                                    hbox:
+                                        use SSSSS_Checkbox(checked=location in enabledSaveLocations, text=locationType + " - {color=#818181}{size=-5}" + fullPath + "{/size}{/c}", action=SSSSS.ToggleValueInArrayAction('enabledSaveLocations', location))
 
-                                    hbox at truecenter:
-                                        if isEdit:
-                                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=fullPath), size=15, color="#818181")
-                                        else:
-                                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=path), size=15, color="#818181")
+                                        hbox:
+                                            xpos 0.5
+                                            xanchor 0.5
+                                            ypos 0.5
+                                            yanchor 0.5
 
-                            if len(enabledSaveLocations) == 0:
-                                hbox ysize 10
-                                text "At least one location must be enabled!" color '#ff4c4c' xoffset 10
+                                            if isEdit:
+                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=fullPath), size=15, color="#818181")
+                                            else:
+                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=path), size=15, color="#818181")
 
-                hbox ysize 10
+                                if len(enabledSaveLocations) == 0:
+                                    use SSSSS_YSpacer(3)
 
-                text "Description:"
-                add SSSSS.TextInput(id="description", variableName="description", multiline=True)
+                                    text "At least one location must be enabled!" color '#ff4c4c' xoffset adjustable(10)
 
-                hbox ysize 10
+                use SSSSS_YSpacer()
 
-                text "Options:"
+                use SSSSS_Title("Description")
+                use SSSSS_TextInput(id="description", variableName="description", multiline=True, placeholder="Click here to start writing the description")
+
+                use SSSSS_YSpacer()
+
+                use SSSSS_Title("Options")
                 hbox:
                     xfill True
 
                     vbox:
                         use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
                         if not SSSSS.Utils.hasColsAndRowsConfiguration():
-                            text "{size=-10}This game uses an unusual save system, thus autosave is not possible{/size}" color "#ff4c4c" offset (35, -10)
+                            text "{size=-10}This game uses an unusual save system, thus autosave is not possible{/size}" color "#ff4c4c" offset adjustable((35, -10), minValue=1)
 
                         hbox:
-                            offset (15, 0)
+                            offset adjustable((15, 0), minValue=1)
 
-                            use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=13}(Applies only for the saves created by this mod's autosave system!){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
+                            use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system!){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
 
-                hbox ysize 10
+                use SSSSS_YSpacer()
 
                 if isEdit:
-                    text "Thumbnail:"
+                    use SSSSS_Title("Thumbnail")
                     hbox:
                         frame:
-                            xysize (160, 160)
+                            xysize adjustable((160, 160))
 
                             if playthrough.hasThumbnail():
-                                add playthrough.getThumbnail(width=150, maxHeight=150)
+                                add playthrough.getThumbnail(width=adjustable(150), maxHeight=adjustable(150))
                             else:
                                 button:
                                     style_prefix ""
@@ -151,18 +158,18 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
             xfill True
             yfill True
 
-            vbox at right:
-                yalign 1.0
+            style_prefix "SSSSS_dialog_action_buttons"
 
+            vbox:
                 if(isEdit and playthrough.id != 1):
                     # Remove
-                    hbox at right:
+                    hbox:
                         use sssss_iconButton(icon="\ue92b", text="{u}R{/u}emove", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), color="#ff0000")
 
                 # Save
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction, disabled=(enabledSaveLocations != None and len(enabledSaveLocations) == 0) or len(name) == 0)
 
                 # Close
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_EditPlaythrough"))

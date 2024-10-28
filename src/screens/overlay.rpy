@@ -15,6 +15,8 @@ screen SSSSS_Overlay():
         if SSSSS.Autosaver.afterLoadSavePositionPending:
             $ SSSSS.Autosaver.processSlotAfterLoad()
 
+    key "ctrl_alt_shift_K_p" action SSSSS.Settings.ResetSizeAdjustment()
+
     python:
         isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None
 

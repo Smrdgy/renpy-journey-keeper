@@ -12,20 +12,25 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
             hbox:
                 xfill True
 
-                frame:
-                    padding (20, 20, 20, 20)
+                frame style "SSSSS_frame":
+                    padding adjustable((20, 20, 20, 20))
 
                     use sssss_iconButton(icon=None, action=None)
 
-                hbox at center:
+                hbox:
+                    xalign 0.5
+                    yalign 0.5
+
                     if icon:
                         use sssss_icon(icon)
 
                     if title:
-                        text title yalign .5 size 40 text_align 0.5
+                        text title style_suffix "title" yalign .5 text_align 0.5
 
-                frame at right:
-                    padding (20, 20, 20, 20)
+                frame style "SSSSS_frame":
+                    xalign 1.0
+                    yalign 0.5
+                    padding adjustable((20, 20, 20, 20))
 
                     use sssss_iconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 

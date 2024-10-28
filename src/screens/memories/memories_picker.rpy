@@ -35,7 +35,12 @@ screen SSSSS_MemoriesLibrary():
                         background "#ffffff11"
                         action [Hide("SSSSS_MemoriesLibrary"), SSSSS.Memories.LoadMemoryWithConfirm(slotname)]
 
-                        vbox at center:
+                        vbox:
+                            xpos 0.5
+                            xanchor 0.5
+                            ypos 1.0
+                            yanchor 1.0
+
                             add SSSSS.Memories.GetScreenshot(slotname) xalign 0.5
 
                             text slotname

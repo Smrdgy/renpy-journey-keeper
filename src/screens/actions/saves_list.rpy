@@ -15,7 +15,7 @@ screen SSSSS_SavesList(saves=[]):
             vbox:
                 text "{b}{color=#70bde6}[savesLen]{/c}{/b} saves found."
                 
-                hbox ysize 10
+                hbox ysize adjustable(10)
 
                 for save_name in saves:
                     $ page, slot = SSSSS.Utils.splitSavename(save_name)

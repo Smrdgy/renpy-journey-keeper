@@ -24,13 +24,13 @@ screen SSSSS_SaveMemory():
             xfill True
             yfill True
 
-            vbox at right:
-                yalign 1.0
+            style_prefix "SSSSS_dialog_action_buttons"
 
+            vbox:
                 # Save
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction, disabled=not name)
 
                 # Close
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_SaveMemory"))

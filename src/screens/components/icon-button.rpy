@@ -2,27 +2,33 @@ screen sssss_iconButton(icon, text=None, action=None, size=None, sensitive=None,
     style_prefix "SSSSS"
 
     python:
-        text_color = ('#2f2f2f55' if disabled else (textColor or color or '#ffffff'))
-        icon_color = ('#2f2f2f55' if disabled else (iconColor or color or '#ffffff'))
+        text_color = ('#2f2f2f55' if disabled else (textColor or color))
+        icon_color = ('#2f2f2f55' if disabled else (iconColor or color))
 
-    fixed:
-        fit_first True
+    # fixed:
+    #     fit_first True
 
-        button:
-            sensitive sensitive
-            tooltip tt
-            key_events True
+    button:
+        sensitive sensitive
+        tooltip tt
+        key_events True
 
-            if(not disabled):
-                action action
+        if(not disabled):
+            action action
 
-            hbox:
-                use sssss_icon(toggledIcon if toggled else icon, color=icon_color, size=size)
+        hbox:
+            style_prefix "SSSSS_icon_button"
 
-                if text:
-                    text text yalign .5 color text_color:
-                        if size:
-                            size size
+            use sssss_icon(toggledIcon if toggled else icon, color=icon_color, size=size)
+
+            if text:
+                text text yalign .5:
+                    if text_color:
+                        color text_color
+                    if size:
+                        size adjustable(size)
+
+            transclude
 
         # if(tt):
         #     $ tooltip = GetTooltip()

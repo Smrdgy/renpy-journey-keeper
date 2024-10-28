@@ -21,25 +21,25 @@ screen SSSSS_PlaythroughActions(playthrough):
             xfill True
             yfill True
 
-            vbox at right:
-                yalign 1.0
+            style_prefix "SSSSS_dialog_action_buttons"
 
+            vbox:
                 # List all saves
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue617", text="{u}L{/u}ist saves", action=listSavesAction)
 
                 # Sequentialize saves
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue089", text="{u}S{/u}equentialize saves", action=sequentializeSavesAction, disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
                 
                 # Show choices timeline
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\uf184", text="Show choice {u}t{/u}imeline", action=constructTimelineAction)
                 
                 # Delete all saves
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue92b", text="{u}D{/u}elete all saves", action=deleteAllSavesAction, color="#f00")
                 
                 # Close
-                hbox at right:
+                hbox:
                     use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_PlaythroughActions"))
