@@ -160,6 +160,14 @@ screen SSSSS_Settings():
                             for screen in relevantLoadScreens:
                                 use SSSSS_Radio(checked=SSSSS.Settings.loadScreenName == screen, text=("\"load\" (default)" if screen == "load" else "\"" + screen + "\""), action=SSSSS.Settings.SetLoadScreenName(screen))
 
+                if renpy.config.developer:
+                    use SSSSS_YSpacer()
+
+                    vbox:
+                        use SSSSS_Title("Debug", color="#f00")
+                        vbox:
+                            use SSSSS_Checkbox(checked=SSSSS.Settings.debugEnabled, text="Debug mode", action=SSSSS.Settings.ToggleDebugEnabled())
+
                 use SSSSS_YSpacer()
 
                 hbox:

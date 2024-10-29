@@ -22,7 +22,7 @@ screen SSSSS_Pagination():
         def pagination_dragged(drags, drop):
             renpy.store.persistent.SSSSS_PaginationPos = (drags[0].x, drags[0].y)
 
-    if renpy.config.developer:
+    if SSSSS.Settings.debugEnabled:
         frame:
             background "#ff0000cc"
             xysize estimatedPaginationSize

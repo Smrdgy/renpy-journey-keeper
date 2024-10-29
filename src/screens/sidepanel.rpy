@@ -12,7 +12,7 @@ screen SSSSS_Sidepanel():
         def sidepanel_dragged(drags, drop):
             renpy.store.persistent.SSSSS_sidepanelPos = (drags[0].x, drags[0].y)
 
-    if renpy.config.developer:
+    if SSSSS.Settings.debugEnabled:
         frame:
             background "#ff0000cc"
             xysize estimatedPanelSize

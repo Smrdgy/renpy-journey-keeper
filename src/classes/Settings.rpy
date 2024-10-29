@@ -29,6 +29,7 @@ init 1 python in SSSSS:
             self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", True)#TODO: Implement
             self.sizeAdjustment = data.get("sizeAdjustment", 0)
             self.changeSidepanelVisibilityKey = data.get("changeSidepanelVisibilityKey", "alt_K_p")
+            self.debugEnabled = data.get("debugEnabled", False)
 
         def saveToPersistent(self):
             renpy.store.persistent.SSSSS_Settings = json.dumps({
@@ -47,6 +48,7 @@ init 1 python in SSSSS:
                 'offsetSlotAfterManualSaveIsLoaded': self.offsetSlotAfterManualSaveIsLoaded,
                 'sizeAdjustment': self.sizeAdjustment,
                 'changeSidepanelVisibilityKey': self.changeSidepanelVisibilityKey,
+                'debugEnabled': self.debugEnabled,
             })
 
             renpy.save_persistent()
@@ -178,6 +180,13 @@ init 1 python in SSSSS:
         class SetChangeSidepanelVisibilityKey(SetKey):
             def __call__(self):
                 Settings.changeSidepanelVisibilityKey = self.resolveKey()
+
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class ToggleDebugEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.debugEnabled = not Settings.debugEnabled
 
                 Settings.saveToPersistent()
                 renpy.restart_interaction()
