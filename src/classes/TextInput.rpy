@@ -143,7 +143,10 @@ init 1 python in SSSSS:
             self.caret = caret
 
             if self.id:
-                self.editable = Utils.getScreenVariable(self.activeTextInputScreenVariableName) == self.id
+                if self.editable and Utils.getScreenVariable(self.activeTextInputScreenVariableName) == None:
+                    self.enable()
+                else:
+                    self.editable = Utils.getScreenVariable(self.activeTextInputScreenVariableName) == self.id
 
             # if self.id:
             #     inputs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
