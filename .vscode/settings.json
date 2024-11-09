@@ -1,6 +1,6 @@
 {
     "files.exclude": {
-        "**/*.rpyc": true,
+        // "**/*.rpyc": true,
         "**/*.rpa": true,
         "**/*.rpymc": true,
         "**/cache/": true
@@ -134,6 +134,12 @@
                 "scope": "renpy.meta.color.#70bde6",
                 "settings": {
                     "foreground": "#70bde6"
+                }
+            },
+            {
+                "scope": "renpy.meta.color.#abe9ff",
+                "settings": {
+                    "foreground": "#abe9ff"
                 }
             }
         ]

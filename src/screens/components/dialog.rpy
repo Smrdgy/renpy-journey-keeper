@@ -7,12 +7,12 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
         key 'K_ESCAPE' action closeAction
         key 'mouseup_3' action closeAction
 
-    frame style "SSSSS_dialog_overlay":
+    frame style_suffix "overlay":
         vbox:
             hbox:
                 xfill True
 
-                frame style "SSSSS_frame":
+                frame:
                     padding adjustable((20, 20, 20, 20))
 
                     use sssss_iconButton(icon=None, action=None)
@@ -27,7 +27,7 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
                     if title:
                         text title style_suffix "title" yalign .5 text_align 0.5
 
-                frame style "SSSSS_frame":
+                frame:
                     xalign 1.0
                     yalign 0.5
                     padding adjustable((20, 20, 20, 20))

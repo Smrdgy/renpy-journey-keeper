@@ -54,7 +54,7 @@ style SSSSS_dialog_overlay:
     yfill True
     background '#000000ff'
 
-style SSSSS_dialog_title:
+style SSSSS_dialog_title is SSSSS_text:
     padding adjustable((40, 40, 40, 0), minValue=1)
     size adjustable(40)
     xfill True
