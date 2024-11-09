@@ -13,8 +13,8 @@ screen SSSSS_Checkbox(checked, text, action=None, xsize=None, sensitive=None, di
         hbox:
             if checked:
                 use sssss_icon("\ue834", color=icon_color)
-            # elif checked == None:
-            #     use sssss_icon("\ue909") #Indetermined
+            elif checked == None:
+                use sssss_icon("\ue909") #Indetermined
             else:
                 use sssss_icon("\ue835", color=icon_color)
             

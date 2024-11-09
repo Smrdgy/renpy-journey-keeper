@@ -2,6 +2,10 @@ init -2000 python in SSSSS:
     _constant = True
 
     import re
+    import shutil
+    import os
+    import threading
+    disk_lock = threading.RLock()
 
     class x52NonPicklable(python_object):
         def __setstate__(self, d):
@@ -63,24 +67,7 @@ init -2000 python in SSSSS:
             return nrv
 
         def scale(self, image, desired_size):
-            original_size=image.get_size()
-
-            # Extract dimensions
-            desired_width, desired_height = desired_size
-            original_width, original_height = original_size
-
-            # Calculate scaling factors for width and height
-            width_scaling = float(desired_width) / float(original_width)
-            height_scaling = float(desired_height) / float(original_height)
-
-            # Choose the minimum scaling factor to fit the entire image
-            scaling_factor = min(width_scaling, height_scaling)
-
-            # Calculate adjusted image size
-            new_width = original_width * scaling_factor
-            new_height = original_height * scaling_factor
-
-            return int(new_width), int(new_height)
+            return Utils.resizeDimensionsToLimits(image.get_size(), desired_size)
 
     class GetScreenVariable(x52NonPicklable):
         def __init__(self, name, key=None):
@@ -241,6 +228,33 @@ init -2000 python in SSSSS:
             else:
                 return cs.scope[variableName]
 
+        @staticmethod
+        def resizeDimensionsToLimits(original_size, desired_size):
+            # Extract dimensions
+            desired_width, desired_height = desired_size
+            original_width, original_height = original_size
+
+            # Calculate scaling factors for width and height
+            width_scaling = float(desired_width) / float(original_width)
+            height_scaling = float(desired_height) / float(original_height)
+
+            # Choose the minimum scaling factor to fit the entire image
+            scaling_factor = min(width_scaling, height_scaling)
+
+            # Calculate adjusted image size
+            new_width = original_width * scaling_factor
+            new_height = original_height * scaling_factor
+
+            return int(new_width), int(new_height)
+
+        @staticmethod
+        def getLimitedImageSizeWithAspectRatio(desired_width, desired_height):
+            # Get the aspect ratio from Ren'Py's screen configuration
+            original_width = renpy.config.thumbnail_width or 1 if hasattr(renpy.config, "thumbnail_width") else 1
+            original_height = renpy.config.thumbnail_height or 1 if hasattr(renpy.config, "thumbnail_height") else 1
+
+            return Utils.resizeDimensionsToLimits((original_width, original_height), (desired_width, desired_height))
+
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):
             super(MultiLocation, self).__init__()
@@ -272,6 +286,86 @@ init -2000 python in SSSSS:
         
         def remove(self, location):
             self.locations.remove(location)
+
+        def newest_including_inactive(self, slotname):
+            """
+            Same logic as newest(), but this one includes locations with active=False.
+            """
+
+            mtime = -1
+            location = None
+
+            for l in self.locations:
+                slot_mtime = l.mtime(slotname)
+
+                if slot_mtime > mtime:
+                    mtime = slot_mtime
+                    location = l
+
+            return location
+
+        def has_save(self, slotname, check_inactive=True):
+            if check_inactive:
+                return self.newest_including_inactive(slotname) != None
+
+            return self.newest(slotname) != None
+
+        def screenshot_including_inactive(self, slotname):
+            l = self.newest_including_inactive(slotname)
+
+            if l is None:
+                return None
+
+            return l.screenshot(slotname)
+
+        def unlink_save(self, slotname, include_inactive=True):
+            for l in (self.active_locations() if include_inactive else self.locations):
+                l.unlink(slotname)
+
+        def list_including_inactive(self):
+            self.scan()
+
+            rv = set()
+
+            for l in self.locations:
+                original_active = l.active
+                l.active = True
+                l.scan()
+
+                rv.update(l.list())
+
+                l.active = original_active
+
+            return list(rv)
+
+        def copy_save_into_other_multilocation(self, save, multilocation, scan=True):
+            for l in multilocation.locations:
+                self.copy_save_into_other_location(save, l, scan)
+
+            if scan:
+                self.scan()
+
+        def copy_save_into_other_location(self, save, location, scan=True):
+            for l in self.locations:
+                l.copy_into_other_directory(save, save, location.directory, scan=False)
+            
+            if scan:
+                self.scan()
+
+    class FileLocation(renpy.savelocation.FileLocation):
+        def copy_into_other_directory(self, old, new, destination, scan=True):
+            with disk_lock:
+                old = self.filename(old)
+
+                if not os.path.exists(old):
+                    return
+
+                new = os.path.join(destination, renpy.exports.fsencode(new + renpy.savegame_suffix))
+
+                shutil.copyfile(old, new)
+
+                if scan:
+                    self.scan()
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):

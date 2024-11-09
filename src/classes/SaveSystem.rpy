@@ -53,18 +53,18 @@ init 1 python in SSSSS:
 
                 # 1. User savedir.
                 if playthrough.enabledSaveLocations == None or "USER" in playthrough.enabledSaveLocations:
-                    self._addLocation(renpy.savelocation.FileLocation(os.path.join(renpy.config.savedir, playthrough.directory)))
+                    self._addLocation(FileLocation(os.path.join(renpy.config.savedir, playthrough.directory)))
 
                 # 2. Game-local savedir.
                 if (not renpy.mobile) and (not renpy.macapp) and (playthrough.enabledSaveLocations == None or "GAME" in playthrough.enabledSaveLocations):
                     path = os.path.join(renpy.config.gamedir, "saves", playthrough.directory)
-                    self._addLocation(renpy.savelocation.FileLocation(path))
+                    self._addLocation(FileLocation(path))
 
                 if(hasattr(renpy.config, "extra_savedirs")):
                     # 3. Extra savedirs.
                     for extra_savedir in renpy.config.extra_savedirs:
                         if playthrough.enabledSaveLocations == None or extra_savedir in playthrough.enabledSaveLocations:
-                            self._addLocation(renpy.savelocation.FileLocation(os.path.join(extra_savedir, playthrough.directory)))
+                            self._addLocation(FileLocation(os.path.join(extra_savedir, playthrough.directory)))
 
                 if not noScan:
                     # Scan the location.
@@ -108,6 +108,9 @@ init 1 python in SSSSS:
                 fileLocation.active = False
                 SaveSystem.multilocation.add(fileLocation)
                 self.location.add(fileLocation)
+
+            def listAllSaves(self):
+                return self.location.list_including_inactive()
 
         def createPlaythroughSaveInstance(self, playthrough, noScan=False):
             self._playthroughSaves[playthrough.id] = SaveSystemClass.PlaythroughSaveClass(playthrough, noScan)
@@ -162,4 +165,11 @@ init 1 python in SSSSS:
 
             if autoActivate:
                 instance.activate()
+
+        def listAllSavesForPlaythrough(self, playthrough):
+            instance = self.getPlaythroughSaveInstance(playthrough.id)
+            if instance:
+                return instance.listAllSaves()
+
+            return Set()
             

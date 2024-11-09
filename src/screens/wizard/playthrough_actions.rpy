@@ -8,13 +8,15 @@ screen SSSSS_PlaythroughActions(playthrough):
         sequentializeSavesAction = [SSSSS.Playthroughs.TrySequentializeSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
         constructTimelineAction = [SSSSS.Playthroughs.ConfirmConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")]
         deleteAllSavesAction = [SSSSS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
+        MoveCopySavesAction = [Show("SSSSS_MoveCopySaves", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
 
     key 'K_l' action listSavesAction
     key 'K_s' action sequentializeSavesAction
     key 'K_t' action constructTimelineAction
     key 'K_d' action deleteAllSavesAction
+    key 'K_m' action MoveCopySavesAction
 
-    use SSSSS_Dialog(title="Playtrhough actions", closeAction=Hide("SSSSS_PlaythroughActions")):
+    use SSSSS_Dialog(title="Playthrough actions", closeAction=Hide("SSSSS_PlaythroughActions")):
         style_prefix "SSSSS"
 
         hbox:
@@ -35,6 +37,10 @@ screen SSSSS_PlaythroughActions(playthrough):
                 # Show choices timeline
                 hbox:
                     use sssss_iconButton(icon="\uf184", text="Show choice {u}t{/u}imeline", action=constructTimelineAction)
+
+                # Move/copy saves
+                hbox:
+                    use sssss_iconButton(icon="\ueb7d", text="{u}M{/u}ove/copy saves", action=MoveCopySavesAction)
                 
                 # Delete all saves
                 hbox:

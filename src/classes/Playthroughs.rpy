@@ -148,7 +148,7 @@ init 1 python in SSSSS:
                     # Create a BytesIO object from the decoded bytes
                     sio = io.BytesIO(decoded_bytes)
                     # Load the image using Ren'Py's load_image function
-                    rv = renpy.display.pgrender.load_image(sio, "image.png")
+                    rv = renpy.display.pgrender.load_image(sio, playthrough.id + "_thumbnail.png")
 
                     # Return the Image object with specified dimensions
                     return Image(rv, width=width or maxWidth or defWidth, height=height or maxHeight or defHeight, fitAfterResize=maxWidth or maxHeight)
