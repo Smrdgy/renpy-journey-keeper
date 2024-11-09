@@ -75,6 +75,7 @@ init 1 python in SSSSS:
                 if self.mode == "MOVE":
                     # Start cleanup in a separate thread
                     self.cleanup_thread = threading.Thread(target=self.process_cleanup)
+                    self.cleanup_thread.daemon = True
                     self.cleanup_thread.start()
                 else:
                     self.process_done()
@@ -97,13 +98,20 @@ init 1 python in SSSSS:
 
             # Create a thread to copy the save to avoid blocking the main thread
             self.save_thread = threading.Thread(target=self.copy_save_and_continue, args=(save,))
+            self.save_thread.daemon = True
             self.save_thread.start()
 
         def copy_save_and_continue(self, save):
-            # Perform the save copy
-            self.source_instance.location.copy_save_into_other_multilocation(save, self.destination_instance.location, scan=False)
+            try:
+                # Perform the save copy
+                self.source_instance.location.copy_save_into_other_multilocation(save, self.destination_instance.location, scan=False)
 
-            self.process_continue()
+                self.process_continue()
+            except Exception as e:
+                print(e)
+                self.error = "An error occurred while copying save \"" + save + "\":\n{color=#ff623a}" + str(e) + "{/color}"
+                renpy.restart_interaction()
+                self.process_stop()
 
         def process_continue(self):
             # Update progress and refresh the UI
@@ -123,6 +131,7 @@ init 1 python in SSSSS:
                 self.skipped.append(self.saves_to_process[self.processed])
 
                 self.skip_conflicts_thread = threading.Thread(target=self.process_continue)
+                self.skip_conflicts_thread.daemon = True
                 self.skip_conflicts_thread.start()
 
                 return
@@ -166,20 +175,26 @@ init 1 python in SSSSS:
             renpy.restart_interaction()
             time.sleep(0.05)
 
-            for save in self.saves_to_process:
-                if not self.processing:
-                    return
+            save = None
+            try:
+                for save in self.saves_to_process:
+                    if not self.processing:
+                        return
 
-                if not save in self.skipped:
-                    self.source_instance.location.unlink_save(save)
+                    if not save in self.skipped:
+                        self.source_instance.location.unlink_save(save, scan=False)
 
-                self.processed += 1
+                    self.processed += 1
 
-                # Allow UI updates during cleanup
-                time.sleep(0.05)
-                renpy.restart_interaction()
+                    # Allow UI updates during cleanup
+                    time.sleep(0.05)
+                    renpy.restart_interaction()
 
-            self.process_done()
+                self.process_done()
+            except Exception as e:
+                print(e)
+                self.error = "An error occurred while cleaning up save \"" + save + "\":\n{color=#ff623a}" + str(e) + "{/color}"
+                self.process_stop()
 
         def process_done(self):
             self.success = True

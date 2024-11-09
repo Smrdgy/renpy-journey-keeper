@@ -85,11 +85,13 @@ init -2000 python in SSSSS:
 
                 if page.isdigit() and slot.isdigit():
                     return int(page), int(slot)
-
-                print("Can't resolve save name ", save_name)
+                
+                if renpy.config.developer:
+                    print("Can't resolve save name ", save_name)
                 return 0, 0
             except:
-                print("Can't resolve save name ", save_name)
+                if renpy.config.developer:
+                    print("Can't resolve save name ", save_name)
                 return 0, 0
 
         @staticmethod
@@ -318,9 +320,9 @@ init -2000 python in SSSSS:
 
             return l.screenshot(slotname)
 
-        def unlink_save(self, slotname, include_inactive=True):
-            for l in (self.active_locations() if include_inactive else self.locations):
-                l.unlink(slotname)
+        def unlink_save(self, slotname, include_inactive=True, scan=True):
+            for l in (self.locations if include_inactive else self.active_locations()):
+                l.unlink_save(slotname, scan)
 
         def list_including_inactive(self):
             self.scan()
@@ -363,6 +365,15 @@ init -2000 python in SSSSS:
                 new = os.path.join(destination, renpy.exports.fsencode(new + renpy.savegame_suffix))
 
                 shutil.copyfile(old, new)
+
+                if scan:
+                    self.scan()
+
+        def unlink_save(self, slotname, scan=True):
+            with disk_lock:
+                filename = self.filename(slotname)
+                if os.path.exists(filename):
+                    os.unlink(filename)
 
                 if scan:
                     self.scan()
