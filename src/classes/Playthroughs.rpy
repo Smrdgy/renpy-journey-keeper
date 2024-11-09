@@ -148,7 +148,7 @@ init 1 python in SSSSS:
                     # Create a BytesIO object from the decoded bytes
                     sio = io.BytesIO(decoded_bytes)
                     # Load the image using Ren'Py's load_image function
-                    rv = renpy.display.pgrender.load_image(sio, playthrough.id + "_thumbnail.png")
+                    rv = renpy.display.pgrender.load_image(sio, "image.png")
 
                     # Return the Image object with specified dimensions
                     return Image(rv, width=width or maxWidth or defWidth, height=height or maxHeight or defHeight, fitAfterResize=maxWidth or maxHeight)
@@ -484,8 +484,6 @@ init 1 python in SSSSS:
                 self.playthrough = playthrough
 
             def __call__(self):
-                timeline = self.playthrough.constructTimeline()
-
                 showConfirm(
                     title="Construct timeline",
                     message="This process may take some time based on the amount of saves and your device. Do you wish to proceed?",
