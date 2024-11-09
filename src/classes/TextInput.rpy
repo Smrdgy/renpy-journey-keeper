@@ -281,7 +281,7 @@ init 1 python in SSSSS:
 
             TextInputBase.caret_pos = len(self.content)
 
-            if self.id:
+            if self.id and Utils.getScreenVariable(self.activeTextInputScreenVariableName) != self.id:
                 renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, self.id)()
 
         def disable(self):
