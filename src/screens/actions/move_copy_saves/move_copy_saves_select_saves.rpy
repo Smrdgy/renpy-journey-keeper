@@ -1,4 +1,7 @@
-screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails):
+screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save):
+    style_prefix 'SSSSS'
+    modal True
+
     viewport:
         mousewheel True
         draggable True
@@ -25,6 +28,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                     cs.scope["destination_playthrough"] = self.source_playthrough
                     cs.scope["saves_to_process"] = []
                     cs.scope["viewModel"] = None
+                    cs.scope["last_selected_save"] = None
 
                     renpy.restart_interaction()
 
@@ -38,6 +42,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                     cs.scope["viewModel"] = None
                     cs.scope["saves_to_process"] = []
                     cs.scope["source_playthrough"] = None
+                    cs.scope["last_selected_save"] = None
 
                     renpy.restart_interaction()
 
@@ -51,8 +56,43 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                     cs.scope["viewModel"] = None
                     cs.scope["saves_to_process"] = []
                     cs.scope["destination_playthrough"] = None
+                    cs.scope["last_selected_save"] = None
 
                     renpy.restart_interaction()
+
+            class SaveSelectedAction(renpy.ui.Action):
+                def __init__(self, saves, save, viewModel, last_selected_save):
+                    self.saves = saves
+                    self.save = save
+                    self.viewModel = viewModel
+                    self.last_selected_save = last_selected_save
+
+                def __call__(self):
+                    if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                        start_index = self.viewModel.source_saves.index(self.last_selected_save)
+                        end_index = self.viewModel.source_saves.index(self.save)
+
+                        if start_index > -1 and end_index > -1:
+                            new_saves = []
+
+                            for self.save in self.viewModel.source_saves[min(start_index, end_index):max(start_index, end_index) + 1]:
+                                if self.save in new_saves:
+                                    new_saves.remove(self.save)
+                                else:
+                                    new_saves.append(self.save)
+
+                            SetScreenVariable("saves_to_process", new_saves)() #TODO: Resolve possible duplicates
+                            return
+                    elif pygame.key.get_mods() & pygame.KMOD_LCTRL:
+                        if self.save in self.saves:
+                            self.saves.remove(self.save)
+                        else:
+                            self.saves.append(self.save)
+                    else:
+                        SetScreenVariable("saves_to_process", [self.save])()
+                    
+
+                    SetScreenVariable("last_selected_save", self.save)()
 
         vbox:
             xfill True
@@ -76,8 +116,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                 xfill True
 
                 vbox xalign 1.0:
-                    use SSSSS_Checkbox(checked=show_thumbnails, text="Show thumbnails", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
-                    text "{size=-5}(Might be laggy or outright crash){/size}" xalign 1.0 offset adjustable((0, -10), minValue=1)
+                    use SSSSS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
             vbox:
                 spacing 2
@@ -99,13 +138,13 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
 
                     button style ("SSSSS_row_button" if i % 2 == 0 else "SSSSS_row_odd_button") selected save in saves_to_process:
                         xfill True
-                        action ToggleSetMembership(saves_to_process, save)
+                        action [SaveSelectedAction(saves_to_process, save, viewModel, last_selected_save)]
 
                         #TODO: Add screenshots @see FileLocation:screenshot
 
                         grid 5 1:
                             xfill True
-                            use SSSSS_Checkbox(checked=save in saves_to_process, text="")
+                            use SSSSS_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
 
                             # Source
                             hbox yalign 0.5:
@@ -143,17 +182,22 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
         xfill True
         yfill True
 
-        style_prefix "SSSSS_dialog_action_buttons"
+        vbox xalign 0.0:
+            text "{color=#abe9ff}click{/color} to select only one"
+            text "{color=#abe9ff}shift + click{/color} to select multiple"
+            text "{color=#abe9ff}ctrl + click{/color} or {color=#abe9ff}click the checkbox{/color} to select/deselect one"
 
         vbox:
-            # Move
-            hbox:
-                use sssss_iconButton(icon="\ue675", text="Move", action=SSSSS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process, mode="MOVE"), disabled=len(saves_to_process) == 0)
+            style_prefix "SSSSS_dialog_action_buttons"
+            vbox xalign 1.0:
+                # Move
+                hbox:
+                    use sssss_iconButton(icon="\ue675", text="Move", action=SSSSS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process, mode="MOVE"), disabled=len(saves_to_process) == 0)
 
-            # Copy
-            hbox:
-                use sssss_iconButton(icon="\ue161", text="Copy", action=SSSSS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process), disabled=len(saves_to_process) == 0)
+                # Copy
+                hbox:
+                    use sssss_iconButton(icon="\ue161", text="Copy", action=SSSSS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process), disabled=len(saves_to_process) == 0)
 
-            # Close
-            hbox:
-                use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_MoveCopySaves"))
+                # Close
+                hbox:
+                    use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_MoveCopySaves"))

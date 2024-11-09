@@ -18,6 +18,7 @@ screen SSSSS_MoveCopySaves(playthrough):
     default destination_playthrough = None
     default saves_to_process = []
     default show_thumbnails = False
+    default last_selected_save = None
 
     default viewModel = None
 
@@ -38,7 +39,7 @@ screen SSSSS_MoveCopySaves(playthrough):
                 use SSSSS_MoveCopySavesSuccess(viewModel)
             else:
                 # Saves selection
-                use SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails)
+                use SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save)
         else:
             # Destination playthrough selection
             use SSSSS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_playthrough)
