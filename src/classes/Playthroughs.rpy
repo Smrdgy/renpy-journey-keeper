@@ -218,7 +218,7 @@ init 1 python in SSSSS:
                         choice = zf.read("choice")
                         timeline.append((slot, choice.decode("UTF-8")))
                     except Exception:
-                        timeline.append((slot, "N/A"))
+                        timeline.append((slot, None))
 
                     zf.close()
 

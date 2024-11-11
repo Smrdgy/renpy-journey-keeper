@@ -215,7 +215,27 @@ init -2000 python in SSSSS:
         # In built games `[ some text ]` it's not a problem, but if there ever is game with these and config.developer = True, it will throw an exception
         @staticmethod
         def replaceReservedCharacters(text):
-            return re.sub(r'\[(?!\[)', '[', text)
+            result = []
+            length = len(text)
+            i = 0
+
+            while i < length:
+                char = text[i]
+                # Check if this `[` is not part of a `[[` pattern.
+                if char == '[' and i < length - 1:
+                    # Escape single '['
+                    result.append('[')
+
+                    # If [ is following, skip futher
+                    if text[i+1] == '[':
+                        i += 1
+
+                result.append(char)
+                i += 1
+            
+            # Join list back into a string
+            print(''.join(result))
+            return ''.join(result)
 
         @staticmethod
         def getScreenVariable(variableName, dictionaryKey=None):
