@@ -121,6 +121,17 @@ style SSSSS_pagination_textbutton_active is SSSSS_pagination_textbutton
 style SSSSS_pagination_textbutton_active_text is SSSSS_pagination_textbutton_text:
     color '#abe9ff'
 
+style SSSSS_row_button is SSSSS_button:
+    selected_background "#7ff98172"
+    hover_background "#abe9ff6c"
+    selected_hover_background "#abffe76c"
+
+style SSSSS_row_odd_button is SSSSS_row_button:
+    background "#ffffff11"
+    selected_background "#7ff98172"
+    hover_background "#abe9ff6c"
+    selected_hover_background "#abffe76c"
+
 ##################
 #      INPUT     #
 ##################
@@ -192,3 +203,13 @@ style SSSSS_spacer_y_2:
 
 style SSSSS_spacer_y_3:
     ysize adjustable(10)
+
+##################
+#     Toolbar    #
+##################
+
+style SSSSS_toolbar:
+    padding adjustable((20, 0, 20, 0))
+
+style SSSSS_toolbar_active is SSSSS_toolbar:
+    background "#2b4047"

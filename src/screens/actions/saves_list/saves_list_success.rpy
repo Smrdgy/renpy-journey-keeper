@@ -1,4 +1,4 @@
-screen SSSSS_MoveCopySavesSuccess():
+screen SSSSS_SavesListSuccess(viewModel):
     style_prefix 'SSSSS'
     modal True
 
@@ -20,4 +20,7 @@ screen SSSSS_MoveCopySavesSuccess():
         vbox:
             # Close
             hbox:
-                use sssss_iconButton(icon="", text="OK", action=Hide("SSSSS_MoveCopySaves"))
+                if viewModel.return_on_success:
+                    use sssss_iconButton(icon="", text="OK", action=SSSSS.SavesListViewModel.ClearSuccessAction(viewModel))
+                else:
+                    use sssss_iconButton(icon="", text="OK", action=Hide("SSSSS_SavesList"))

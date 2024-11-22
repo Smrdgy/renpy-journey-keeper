@@ -81,7 +81,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                                 else:
                                     new_saves.append(self.save)
 
-                            SetScreenVariable("saves_to_process", new_saves)() #TODO: Resolve possible duplicates
+                            SetScreenVariable("saves_to_process", new_saves)()
                             return
                     elif pygame.key.get_mods() & pygame.KMOD_LCTRL:
                         if self.save in self.saves:

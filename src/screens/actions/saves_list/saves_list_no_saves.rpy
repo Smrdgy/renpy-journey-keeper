@@ -1,4 +1,4 @@
-screen SSSSS_MoveCopySavesSuccess():
+screen SSSSS_SavesListNoSaves():
     style_prefix 'SSSSS'
     modal True
 
@@ -8,7 +8,7 @@ screen SSSSS_MoveCopySavesSuccess():
         ymaximum 0.85
 
         vbox align (0.5, 0.5):
-            use SSSSS_Title("Done", color="#0f0")
+            use SSSSS_Title("No saves", color="#ff623a")
 
     # Dialog footer
     hbox:
@@ -20,4 +20,4 @@ screen SSSSS_MoveCopySavesSuccess():
         vbox:
             # Close
             hbox:
-                use sssss_iconButton(icon="", text="OK", action=Hide("SSSSS_MoveCopySaves"))
+                use sssss_iconButton(icon="", text="OK", action=Hide("SSSSS_SavesList"))

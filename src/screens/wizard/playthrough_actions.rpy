@@ -4,16 +4,14 @@ screen SSSSS_PlaythroughActions(playthrough):
     modal True
 
     python:
-        listSavesAction = [SSSSS.Playthroughs.ListSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
+        listSavesAction = [Show("SSSSS_SavesList", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
         sequentializeSavesAction = [SSSSS.Playthroughs.TrySequentializeSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
         constructTimelineAction = [SSSSS.Playthroughs.ConfirmConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")]
-        deleteAllSavesAction = [SSSSS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
         MoveCopySavesAction = [Show("SSSSS_MoveCopySaves", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
 
-    key 'K_l' action listSavesAction
+    key 'K_e' action listSavesAction
     key 'K_s' action sequentializeSavesAction
     key 'K_t' action constructTimelineAction
-    key 'K_d' action deleteAllSavesAction
     key 'K_m' action MoveCopySavesAction
 
     use SSSSS_Dialog(title="Playthrough actions", closeAction=Hide("SSSSS_PlaythroughActions")):
@@ -28,7 +26,7 @@ screen SSSSS_PlaythroughActions(playthrough):
             vbox:
                 # List all saves
                 hbox:
-                    use sssss_iconButton(icon="\ue617", text="{u}L{/u}ist saves", action=listSavesAction)
+                    use sssss_iconButton(icon="\ue617", text="Manag{u}e{/u} saves", action=listSavesAction)
 
                 # Sequentialize saves
                 hbox:
@@ -41,10 +39,6 @@ screen SSSSS_PlaythroughActions(playthrough):
                 # Move/copy saves
                 hbox:
                     use sssss_iconButton(icon="\ueb7d", text="{u}M{/u}ove/copy saves", action=MoveCopySavesAction)
-                
-                # Delete all saves
-                hbox:
-                    use sssss_iconButton(icon="\ue92b", text="{u}D{/u}elete all saves", action=deleteAllSavesAction, color="#f00")
                 
                 # Close
                 hbox:

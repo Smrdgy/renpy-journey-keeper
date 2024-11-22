@@ -1,14 +1,3 @@
-style SSSSS_row_button is SSSSS_button:
-    selected_background "#7ff98172"
-    hover_background "#abe9ff6c"
-    selected_hover_background "#abffe76c"
-
-style SSSSS_row_odd_button is SSSSS_row_button:
-    background "#ffffff11"
-    selected_background "#7ff98172"
-    hover_background "#abe9ff6c"
-    selected_hover_background "#abffe76c"
-
 screen SSSSS_MoveCopySaves(playthrough):
     layer "SSSSSoverlay"
     style_prefix 'SSSSS'
@@ -36,7 +25,7 @@ screen SSSSS_MoveCopySaves(playthrough):
                 use SSSSS_MoveCopySavesError(viewModel)
             elif viewModel.success:
                 # Success
-                use SSSSS_MoveCopySavesSuccess(viewModel)
+                use SSSSS_MoveCopySavesSuccess()
             else:
                 # Saves selection
                 use SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save)

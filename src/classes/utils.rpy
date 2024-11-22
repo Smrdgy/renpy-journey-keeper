@@ -86,11 +86,11 @@ init -2000 python in SSSSS:
                 if page.isdigit() and slot.isdigit():
                     return int(page), int(slot)
                 
-                if renpy.config.developer:
+                if Settings.debugEnabled:
                     print("Can't resolve save name ", save_name)
                 return 0, 0
             except:
-                if renpy.config.developer:
+                if Settings.debugEnabled:
                     print("Can't resolve save name ", save_name)
                 return 0, 0
 
@@ -106,6 +106,10 @@ init -2000 python in SSSSS:
         @staticmethod
         def __custom_saves_sort(save_name):
             page, slot = Utils.splitSavename(save_name)
+
+            if page == 0 and slot == 0:
+                return save_name
+
             return page, slot
 
         @staticmethod
@@ -374,6 +378,14 @@ init -2000 python in SSSSS:
             if scan:
                 self.scan()
 
+        def unlink_all(self, scan=True):
+            for l in self.active_locations():
+                for save in l.list():
+                    l.unlink_save(save, scan=False)
+            
+            if scan:
+                self.scan()
+
     class FileLocation(renpy.savelocation.FileLocation):
         def copy_into_other_directory(self, old, new, destination, scan=True):
             with disk_lock:
@@ -397,6 +409,15 @@ init -2000 python in SSSSS:
 
                 if scan:
                     self.scan()
+
+        def name(self):
+            if renpy.config.savedir in self.directory:
+                return "User data"
+
+            if renpy.config.gamedir in self.directory:
+                return "Game"
+
+            return self.directory
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):

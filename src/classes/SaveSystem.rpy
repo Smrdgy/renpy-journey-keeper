@@ -94,14 +94,7 @@ init 1 python in SSSSS:
                     shutil.rmtree(location.directory)
 
             def deleteSaveFiles(self):
-                for location in self.location.locations:
-                    for filename in os.listdir(location.directory):
-                        filepath = os.path.join(location.directory, filename)
-                        # Check if the file is a regular file and ends with ".save" extension
-                        if os.path.isfile(filepath) and filename.endswith('.save'):
-                            # Remove the file
-                            os.remove(filepath)
-
+                self.location.unlink_all()
                 SaveSystem.multilocation.scan()
 
             def _addLocation(self, fileLocation):
