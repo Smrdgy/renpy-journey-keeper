@@ -8,7 +8,7 @@ screen SSSSS_SavesListSuccess(viewModel):
         ymaximum 0.85
 
         vbox align (0.5, 0.5):
-            use SSSSS_Title("Done", color="#0f0")
+            use SSSSS_Title("Done", color=SSSSS.Colors.success)
 
     # Dialog footer
     hbox:

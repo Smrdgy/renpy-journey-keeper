@@ -11,7 +11,7 @@ screen SSSSS_KeyAssignmentCheck(assignment):
 
     if len(conflicts) > 0:
         vbox:
-            text "Conflicting mapping(s):" color "#ff9900"
+            text "Conflicting mapping(s):" color SSSSS.Colors.warning
             
             hbox:
                 hbox xsize 20

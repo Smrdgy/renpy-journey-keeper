@@ -90,7 +90,7 @@ init 1 python in SSSSS:
                 self.process_continue()
             except Exception as e:
                 print(e)
-                self.error = "An error occurred while deleting save \"" + save + "\":\n{color=#ff623a}" + str(e) + "{/color}"
+                self.error = "An error occurred while deleting save \"" + save + "\":\n{color=[SSSSS.Colors.error]}" + str(e) + "{/color}"
                 renpy.restart_interaction()
                 self.process_stop()
 
@@ -214,10 +214,10 @@ init 1 python in SSSSS:
             def __call__(self):
                 showConfirm(
                     title="Delete " + str(len(self.viewModel.selection)) + " save(s)",
-                    message="Do you really wish to delete these saves?\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}.",
+                    message="Do you really wish to delete these saves?\nThis action {u}{color=[SSSSS.Colors.error]}is irreversible{/c}{/u}.",
                     yes=SavesListViewModel.MassDeleteAction(self.viewModel),
                     yesIcon="\ue089",
-                    yesColor="#ff623a"
+                    yesColor=Colors.error
                 )
 
         class MassDeleteAction(renpy.ui.Action):
@@ -237,10 +237,10 @@ init 1 python in SSSSS:
             def __call__(self):
                 showConfirm(
                     title="Delete save \"" + self.save[0] + "\"",
-                    message="Do you really wish to delete \"" + self.save[0] + "\"" + (" from \"" + self.save[1].directory + "\"" if self.save[1] else "") + "?\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}.",
+                    message="Do you really wish to delete \"" + self.save[0] + "\"" + (" from \"" + self.save[1].directory + "\"" if self.save[1] else "") + "?\nThis action {u}{color=[SSSSS.Colors.error]}is irreversible{/c}{/u}.",
                     yes=SavesListViewModel.DeleteSingleAction(self.viewModel, self.save),
                     yesIcon="\ue089",
-                    yesColor="#ff623a"
+                    yesColor=Colors.error
                 )
 
         class DeleteSingleAction(renpy.ui.Action):

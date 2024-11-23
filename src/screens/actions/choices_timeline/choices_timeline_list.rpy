@@ -2,11 +2,11 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextI
     python:
         timeline = SSSSS.Utils.filter_timeline(viewModel.timeline, search)
 
-        current_state_text = "{color=#ff623a}disabled{/color}"
+        current_state_text = "{color=" + SSSSS.Colors.status_disabled + "}disabled{/color}"
         if viewModel.playthrough.autosaveOnChoices:
-            current_state_text = "{color=#0f0}enabled{/color}"
+            current_state_text = "{color=" + SSSSS.Colors.status_enabled + "}enabled{/color}"
 
-        choicesText = "Choices are saved into save files {u}only{/u} when this mod is active and \"Autosave on choice\" is enabled (currently [current_state_text]) in the playthrough settings.\n{color=#ffb14c}Warning - Manual and quick saves are unable to store choices.{/c}"
+        choicesText = "Choices are saved into save files {u}only{/u} when this mod is active and \"Autosave on choice\" is enabled (currently [current_state_text]) in the playthrough settings.\n{color=[SSSSS.Colors.warning]}Warning - Manual and quick saves are unable to store choices.{/c}"
 
         hasTimelineEntry = False
         for entry in viewModel.timeline:
@@ -58,11 +58,11 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextI
                                 vbox:
                                     hbox:
                                         hbox yalign 0.5:
-                                            use sssss_icon(icon="\ue8b6", size=20, hover_color="#abe9ff")
+                                            use sssss_icon(icon="\ue8b6", size=20, hover_color=SSSSS.Colors.hover)
 
                                         use SSSSS_TextInput(id="search", variableName="search", placeholder="Search for choice")
 
-                                    frame style "SSSSS_default" background "#ffffff22" hover_background "#abe9ff" ysize 2 offset adjustable((0, -10))
+                                    frame style "SSSSS_default" background "#ffffff22" hover_background SSSSS.Colors.hover ysize 2 offset adjustable((0, -10))
 
                         use SSSSS_XSpacer(offset=2)
 
@@ -85,18 +85,18 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextI
 
                                 hbox yalign 0.5:
                                     $ n = entry[0] + 1
-                                    text "[n]." hover_color "#abe9ff":
+                                    text "[n]." hover_color SSSSS.Colors.hover:
                                         if entry[1] is None:
-                                            color "#f2f2f255"
+                                            color SSSSS.Colors.na
 
                                     if entry[1] is None:
-                                        text "??????" color "#f2f2f255" hover_color "#abe9ff"
+                                        text "??????" color SSSSS.Colors.na hover_color SSSSS.Colors.hover
                                     else:
-                                        text SSSSS.Utils.replaceReservedCharacters(entry[1]) hover_color "#abe9ff"
+                                        text SSSSS.Utils.replaceReservedCharacters(entry[1]) hover_color SSSSS.Colors.hover
 
                                     use SSSSS_XSpacer(offset=3)
 
-                                    text "([entry[2]])" size 18 color "#4b4b4b" hover_color "#abe9ff"
+                                    text "([entry[2]])" size 18 color "#4b4b4b" hover_color SSSSS.Colors.hover
     else:
         vbox:
             hbox:
@@ -109,4 +109,4 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextI
                 yfill True
             
                 hbox xalign 0.5 yalign 0.5:
-                    use SSSSS_Title("No choices found.", color="#ff623a")
+                    use SSSSS_Title("No choices found.", color=SSSSS.Colors.error)

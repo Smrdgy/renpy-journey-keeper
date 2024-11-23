@@ -79,7 +79,7 @@ screen SSSSS_MoveCopySavesOverwriteConfirm(save, viewModel):
                 use SSSSS_Checkbox(checked=apply_to_all, text="Perform for all remaining conflicts", action=ToggleScreenVariable("apply_to_all", True, False))
 
                 hbox:
-                    use sssss_iconButton(icon="\ue89c", text="Overwrite", action=overwriteAction, color="#f00")
+                    use sssss_iconButton(icon="\ue89c", text="Overwrite", action=overwriteAction, color=SSSSS.Colors.danger)
 
                 hbox:
                     use sssss_iconButton(icon="\ue044", text="Skip", action=skipAction)

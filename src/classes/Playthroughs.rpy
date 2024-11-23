@@ -437,10 +437,10 @@ init 1 python in SSSSS:
 
                 showConfirm(
                     title="Sequentialize playthrough",
-                    message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[SSSSS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Playthroughs.SequentializeSaves(playthrough),
                     yesIcon="\ue089",
-                    yesColor="#ff623a"
+                    yesColor=Colors.error
                 )
 
         class SequentializeSaves(renpy.ui.Action):
@@ -475,8 +475,8 @@ init 1 python in SSSSS:
 
                 showConfirm(
                     title="Remove all saves",
-                    message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=#ff623a}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=[SSSSS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Playthroughs.DeleteAllSaves(self.playthrough),
                     yesIcon="\ue92b",
-                    yesColor="#ff623a"
+                    yesColor=Colors.error
                 )

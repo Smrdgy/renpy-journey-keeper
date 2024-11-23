@@ -32,7 +32,7 @@ screen SSSSS_MemoriesLibrary():
                         key_events True
                         xmaximum renpy.config.screen_width
                         ymaximum renpy.config.screen_height
-                        background "#ffffff11"
+                        background SSSSS.Colors.block_background
                         action [Hide("SSSSS_MemoriesLibrary"), SSSSS.Memories.LoadMemoryWithConfirm(slotname)]
 
                         vbox:

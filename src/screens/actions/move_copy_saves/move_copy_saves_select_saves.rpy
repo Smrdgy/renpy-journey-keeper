@@ -102,12 +102,12 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
 
                 hbox # Dummy
 
-                textbutton viewModel.source_playthrough.name text_color "#abe9ff":
+                textbutton viewModel.source_playthrough.name text_color SSSSS.Colors.theme:
                     action ClearSourcePlaythroughAction()
 
                 textbutton "→" action FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough)
 
-                textbutton viewModel.destination_playthrough.name text_color "#abe9ff":
+                textbutton viewModel.destination_playthrough.name text_color SSSSS.Colors.theme:
                     action ClearDestinationPlaythroughAction()
 
                 hbox # Dummy
@@ -157,7 +157,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                                     if save in source_saves:
                                         text save
                                     else:
-                                        text "N/A" color "#f2f2f255"
+                                        text "N/A" color SSSSS.Colors.na
 
                             text "→" yalign 0.5 xsize 40
 
@@ -167,7 +167,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                                     if save in other_saves:
                                         text save
                                     else:
-                                        text "N/A" color "#f2f2f255"
+                                        text "N/A" color SSSSS.Colors.na
 
                                 use SSSSS_XSpacer()
 
@@ -175,7 +175,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                                     image viewModel.destination_instance.location.screenshot_including_inactive(save) size SSSSS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
 
                             hbox yalign 0.5:
-                                text "Conflict!" color ("#ff9100" if save in other_saves else "#ffffff00")
+                                text "Conflict!" color (SSSSS.Colors.warning if save in other_saves else "#ffffff00")
         
     # Dialog footer
     hbox:

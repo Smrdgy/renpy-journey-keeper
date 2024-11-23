@@ -28,9 +28,9 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             hbox:
                 button:
                     action None
-                    use sssss_icon('\ue88e', color = "#8cb8ed")
+                    use sssss_icon('\ue88e', color = SSSSS.Colors.info)
                 hbox xsize 10
-                text "If you choose to delete the files, you won't be able to recover the playthrough." yalign .5 color "#8cb8ed"
+                text "If you choose to delete the files, you won't be able to recover the playthrough." yalign .5 color SSSSS.Colors.info
 
         python:
             removeText = "Remove & delete files" if deleteFiles else "Remove"
@@ -44,7 +44,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             vbox:
                 # Remove
                 hbox:
-                    use sssss_iconButton(icon="\ue92b", text=removeText, action=deleteAction, color="#ff0000")
+                    use sssss_iconButton(icon="\ue92b", text=removeText, action=deleteAction, color=SSSSS.Colors.danger)
 
                 # Close
                 hbox:

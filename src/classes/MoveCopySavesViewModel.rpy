@@ -109,7 +109,7 @@ init 1 python in SSSSS:
                 self.process_continue()
             except Exception as e:
                 print(e)
-                self.error = "An error occurred while copying save \"" + save + "\":\n{color=#ff623a}" + str(e) + "{/color}"
+                self.error = "An error occurred while copying save \"" + save + "\":\n{color=[SSSSS.Colors.error]}" + str(e) + "{/color}"
                 renpy.restart_interaction()
                 self.process_stop()
 
@@ -193,7 +193,7 @@ init 1 python in SSSSS:
                 self.process_done()
             except Exception as e:
                 print(e)
-                self.error = "An error occurred while cleaning up save \"" + save + "\":\n{color=#ff623a}" + str(e) + "{/color}"
+                self.error = "An error occurred while cleaning up save \"" + save + "\":\n{color=[SSSSS.Colors.error]}" + str(e) + "{/color}"
                 self.process_stop()
 
         def process_done(self):

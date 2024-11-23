@@ -11,11 +11,12 @@ screen SSSSS_MovePlaythroughDirectoryError(errors=[]):
             draggable True
             scrollbars "vertical"
             pagekeys True
+            ymaximum 0.85
 
             vbox:
-                text "{b}{color=#70bde6}[errorsLen]{/c}{/b} directory(s) failed to move:"
+                text "{b}{color=[SSSSS.Colors.theme]}[errorsLen]{/c}{/b} directory(s) failed to move:"
 
-                hbox ysize 10
+                use SSSSS_YSpacer(offset=3)
 
                 for error in errors:
                     python:
@@ -34,6 +35,17 @@ screen SSSSS_MovePlaythroughDirectoryError(errors=[]):
 
                         textbutton " - "
                         textbutton errorText:
-                            text_color "#ff4c4c"
+                            text_color SSSSS.Colors.error
+
+        hbox:
+            xfill True
+            yfill True
+
+            style_prefix "SSSSS_dialog_action_buttons"
+
+            vbox:
+                # Close
+                hbox:
+                    use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_MovePlaythroughDirectoryError"))
 
         

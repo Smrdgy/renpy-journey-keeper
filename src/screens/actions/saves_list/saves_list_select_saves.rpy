@@ -25,8 +25,8 @@ screen SSSSS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_s
                     use sssss_iconButton(icon="\ue5d5", action=SSSSS.SavesListViewModel.RefreshSavesAction(viewModel))
 
             hbox xalign 0.5 yalign 0.5:
-                use sssss_iconButton(icon="\ue8fe", text="Per save selection", action=SSSSS.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggledColor="#7ff981ff")
-                use sssss_iconButton(icon="\ue949", text="Per directory selection", action=SSSSS.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_DIRECTORY"), toggled=selection_mode == "PER_DIRECTORY", toggledColor="#7ff981ff")
+                use sssss_iconButton(icon="\ue8fe", text="Per save selection", action=SSSSS.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggledColor=SSSSS.Colors.selected)
+                use sssss_iconButton(icon="\ue949", text="Per directory selection", action=SSSSS.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_DIRECTORY"), toggled=selection_mode == "PER_DIRECTORY", toggledColor=SSSSS.Colors.selected)
 
             if selected_length > 0:
                 hbox xpos 1.0 xanchor 1.0:
@@ -123,7 +123,7 @@ screen SSSSS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_s
                                 hbox ysize adjustable(row_height):
                                     hbox xysize adjustable((42, 42))
 
-                                    text "N/A" yalign 0.5 color "#2f2f2f55"
+                                    text "N/A" yalign 0.5 color SSSSS.Colors.disabled
 
                         $ directory_index += 1
     
@@ -145,7 +145,7 @@ screen SSSSS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_s
             vbox xalign 1.0:
                 # Delete all saves
                 hbox:
-                    use sssss_iconButton(icon="\ue92b", text="{u}D{/u}elete all saves", action=[SSSSS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("SSSSS_SavesList")], color="#f00")
+                    use sssss_iconButton(icon="\ue92b", text="{u}D{/u}elete all saves", action=[SSSSS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("SSSSS_SavesList")], color=SSSSS.Colors.danger)
 
                 # Close
                 hbox:

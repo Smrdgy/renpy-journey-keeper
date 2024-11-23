@@ -36,7 +36,7 @@ screen SSSSS_MoveCopySavesProcessing(viewModel):
 
         vbox:
             hbox:
-                use sssss_iconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color="#f00")
+                use sssss_iconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=SSSSS.Colors.danger)
 
             # Close
             hbox:

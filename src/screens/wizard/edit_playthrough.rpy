@@ -40,7 +40,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 use SSSSS_TextInput(id="name", variableName="name", editable=True, placeholder="Click here to start writing the name")
 
                 if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
-                    text "Are you sure? This name already exists." color '#ffb14c' offset adjustable((15, 2), minValue=1)
+                    text "Are you sure? This name already exists." color SSSSS.Colors.warning offset adjustable((15, 2), minValue=1)
 
                 if(playthrough.id != 1):
                     python:
@@ -51,7 +51,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                         offset adjustable((15, 0), minValue=1)
 
                         text "saves/" color '#e5e5e5'
-                        text "[computedDirectory]" color '#a2ebff'
+                        text "[computedDirectory]" color SSSSS.Colors.theme
 
                         if isEdit:
                             use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20)
@@ -103,7 +103,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                                 if len(enabledSaveLocations) == 0:
                                     use SSSSS_YSpacer(3)
 
-                                    text "At least one location must be enabled!" color '#ff4c4c' xoffset adjustable(10)
+                                    text "At least one location must be enabled!" color SSSSS.Colors.error xoffset adjustable(10)
 
                 use SSSSS_YSpacer()
 
@@ -118,8 +118,17 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                     vbox:
                         use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
-                        if not SSSSS.Utils.hasColsAndRowsConfiguration():
-                            text "{size=-10}This game uses an unusual save system, thus autosave is not possible{/size}" color "#ff4c4c" offset adjustable((35, -10), minValue=1)
+                        # if not SSSSS.Utils.hasColsAndRowsConfiguration():
+                        text "{size=-7}{color=[SSSSS.Colors.error]}This game uses an unusual save configuration, the autosave feature cannot be enabled without making a manual adjustment.{/color}" offset adjustable((35, -10), minValue=1)
+                        hbox offset adjustable((35, -10), minValue=1):
+                            button style "SSSSS_default":
+                                action None
+
+                                use sssss_icon('\ue88e', color = SSSSS.Colors.info, size=13)
+
+                            hbox xsize adjustable(5)
+
+                            text "{size=-7}{color=[SSSSS.Colors.info]}For manual adjustment, count how many columns and rows there are, then head to the settings and look for {color=[SSSSS.Colors.theme]}\"Custom slots grid\"{/color}. There input the numbers appropriately.{/color}{/size}"
 
                         hbox:
                             offset adjustable((15, 0), minValue=1)
@@ -152,7 +161,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                             # Remove thumbnail
                             if playthrough.hasThumbnail():
-                                use sssss_iconButton(icon="\ue92b", text="Remove thumbnail", action=SSSSS.Playthroughs.RemoveThumbnail(playthrough=playthrough), color="#ff0000")
+                                use sssss_iconButton(icon="\ue92b", text="Remove thumbnail", action=SSSSS.Playthroughs.RemoveThumbnail(playthrough=playthrough), color=SSSSS.Colors.danger)
 
         hbox:
             xfill True
@@ -164,7 +173,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                 if(isEdit and playthrough.id != 1):
                     # Remove
                     hbox:
-                        use sssss_iconButton(icon="\ue92b", text="{u}R{/u}emove", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), color="#ff0000")
+                        use sssss_iconButton(icon="\ue92b", text="{u}R{/u}emove", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), color=SSSSS.Colors.danger)
 
                 # Save
                 hbox:

@@ -343,9 +343,9 @@ screen SSSSS_KeyInput(assignment=None, action=NullAction, disabled=False):
 
             use SSSSS_XSpacer(offset=2)
 
-            use sssss_iconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color="#fbbfbf")
+            use sssss_iconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color=SSSSS.Colors.reset)
 
         use SSSSS_KeyAssignmentCheck(assignment)
 
         if "ctrl_" in (assignment or ""):
-            text "Please be advised, while CTRL is allowed, it will most likely conflict with skip action." color "#ff9900"
+            text "Please be advised, while CTRL is allowed, it will most likely conflict with skip action." color SSSSS.Colors.warning

@@ -5,8 +5,6 @@ screen SSSSS_PlaythroughsPicker():
 
     default columns = 4
     default thumbnailSize = (int((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20), 200)
-    default activeColor = "#00ff15"
-    default onActiveColor = "#333"
 
     use SSSSS_Dialog(title="Select a playthrough", closeAction=Hide("SSSSS_PlaythroughsPicker")):
         style_prefix "SSSSS"
@@ -35,7 +33,7 @@ screen SSSSS_PlaythroughsPicker():
                     button:
                         xmaximum renpy.config.screen_width
                         ymaximum renpy.config.screen_height
-                        background (activeColor if isActivePlaythrough else "#ffffff11")
+                        background (SSSSS.Colors.selected_background if isActivePlaythrough else SSSSS.Colors.block_background) #TODO: Convert to style and add hover effect
                         action [SSSSS.Playthroughs.ActivatePlaythrough(playthrough), Hide("SSSSS_PlaythroughsPicker")]
 
                         vbox:
@@ -70,17 +68,15 @@ screen SSSSS_PlaythroughsPicker():
 
                                 text "[playthrough.name]":
                                     xalign 0.5
-                                    if isActivePlaythrough:
-                                        color onActiveColor
 
                                 hbox:
                                     xfill True
 
                                     hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
-                                        use sssss_iconButton('\ue872', text="Remove", tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), disabled=playthrough.id == 1, color="#ff0000")
+                                        use sssss_iconButton('\ue872', text="Remove", tt="Remove playthrough", action=Show("SSSSS_RemovePlaythroughConfirm", playthrough=playthrough), disabled=playthrough.id == 1, color=SSSSS.Colors.danger)
 
                                     hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
-                                        use sssss_iconButton('\ue3c9', text="Edit", tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), color=(onActiveColor if isActivePlaythrough else None))
+                                        use sssss_iconButton('\ue3c9', text="Edit", tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True))
 
                 for _ in range(0, spotsToFill):
                     text ""

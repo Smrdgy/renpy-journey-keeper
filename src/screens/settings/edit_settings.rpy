@@ -35,7 +35,7 @@ screen SSSSS_Settings():
 
                                 use sssss_iconButton(icon="\ue145", action=SSSSS.Settings.IncrementSizeAdjustment())
 
-                                use sssss_iconButton(icon="\ue8ba", action=SSSSS.Settings.ResetSizeAdjustment(), color="#fbbfbf", disabled=SSSSS.Settings.sizeAdjustment == 0)
+                                use sssss_iconButton(icon="\ue8ba", action=SSSSS.Settings.ResetSizeAdjustment(), color=SSSSS.Colors.reset, disabled=SSSSS.Settings.sizeAdjustment == 0)
 
                                 use SSSSS_XSpacer()
 
@@ -47,7 +47,7 @@ screen SSSSS_Settings():
                                 text "T" size adjustable(30) yalign 1.0
 
                     if originalSizeAdjustment != SSSSS.Settings.sizeAdjustment:
-                        text "To properly display all changes of this value, a restart of the game is required.\nIf anything goes wrong, you can reset the scaling via {u}CTRL + SHIFT + ALT + P{/u}." color "#ffb14c"
+                        text "To properly display all changes of this value, a restart of the game is required.\nIf anything goes wrong, you can reset the scaling via {u}CTRL + SHIFT + ALT + P{/u}." color SSSSS.Colors.warning
 
 
                 vbox:
@@ -119,7 +119,7 @@ screen SSSSS_Settings():
 
                                 hbox:
                                     vbox:
-                                        text "X axis" xalign 0.5
+                                        text "Columns" xalign 0.5
                                         hbox:
                                             use sssss_iconButton(icon="\ue15b", action=SSSSS.Settings.DecrementCustomGridX())
 
@@ -130,7 +130,7 @@ screen SSSSS_Settings():
                                     use SSSSS_XSpacer(2)
 
                                     vbox:
-                                        text "Y axis" xalign 0.5
+                                        text "Rows" xalign 0.5
                                         hbox:
                                             use sssss_iconButton(icon="\ue15b", action=SSSSS.Settings.DecrementCustomGridY())
 
@@ -141,7 +141,7 @@ screen SSSSS_Settings():
                                 grid SSSSS.Settings.customGridX SSSSS.Settings.customGridY spacing adjustable(5, minValue=1) offset (100, 0) yalign 0.5:
                                     for x in range(0, SSSSS.Settings.customGridX):
                                         for y in range(0, SSSSS.Settings.customGridY):
-                                            frame style "SSSSS_default" xysize (10, 10)
+                                            frame style "SSSSS_default" xysize (10, 10) background SSSSS.Colors.theme
 
                         use SSSSS_YSpacer(2)
 
@@ -164,7 +164,7 @@ screen SSSSS_Settings():
                     use SSSSS_YSpacer()
 
                     vbox:
-                        use SSSSS_Title("Debug", color="#f00")
+                        use SSSSS_Title("Debug", color=SSSSS.Colors.danger)
                         vbox:
                             use SSSSS_Checkbox(checked=SSSSS.Settings.debugEnabled, text="Debug mode", action=SSSSS.Settings.ToggleDebugEnabled())
 

@@ -2,8 +2,8 @@ screen sssss_iconButton(icon, text=None, action=None, size=None, sensitive=None,
     style_prefix "SSSSS"
 
     python:
-        text_color = ('#2f2f2f55' if disabled else ((toggledColor or textColor or color) if toggled else (textColor or color)))
-        icon_color = ('#2f2f2f55' if disabled else ((toggledColor or iconColor or color) if toggled else (iconColor or color)))
+        text_color = (SSSSS.Colors.disabled if disabled else ((toggledColor or textColor or color) if toggled else (textColor or color)))
+        icon_color = (SSSSS.Colors.disabled if disabled else ((toggledColor or iconColor or color) if toggled else (iconColor or color)))
         toggled_icon = toggledIcon or icon
 
     # fixed:

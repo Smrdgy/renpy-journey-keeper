@@ -68,7 +68,7 @@ init 1 python in SSSSS:
             except Exception as e:
                 print(e)
                 self.loading = False
-                self.error = "An error occurred while reading saves:\n{color=#ff623a}" + str(e) + "{/color}"
+                self.error = "An error occurred while reading saves:\n{color=[SSSSS.Colors.error]}" + str(e) + "{/color}"
                 renpy.restart_interaction()
                 return
 

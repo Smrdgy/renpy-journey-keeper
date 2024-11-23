@@ -13,7 +13,7 @@ style SSSSS_default is default:
     outlines []
 
 style SSSSS_text is SSSSS_default:
-    color '#ffffff'
+    color SSSSS.Colors.text_primary
     size adjustable(20)
     text_align 0.0
     outlines []
@@ -25,7 +25,7 @@ style SSSSS_label_text is SSSSS_text:
     bold True
 
 style SSSSS_placeholder is SSSSS_text:
-    color "#454545"
+    color SSSSS.Colors.text_placeholder
 
 style textinput is SSSSS_text:
     color "#959595"
@@ -34,7 +34,7 @@ style textinput is SSSSS_text:
 style SSSSS_vscrollbar:
     base_bar "#00000072"
     thumb '#fff'
-    hover_thumb '#7084e6'
+    hover_thumb SSSSS.Colors.hover
     xsize adjustable(18)
     # base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", Borders(6, 10, 6, 10), tile=False)
     # thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", Borders(6, 10, 6, 10), tile=False)
@@ -98,7 +98,7 @@ style SSSSS_button is SSSSS_default:
 style SSSSS_icon_button is SSSSS_button
 
 style SSSSS_icon_button_text is SSSSS_text:
-    hover_color "#abe9ff"
+    hover_color SSSSS.Colors.hover
 
 style SSSSS_checkbox is SSSSS_button
 style SSSSS_checkbox_text is SSSSS_icon_button_text
@@ -112,23 +112,25 @@ style SSSSS_pagination_textbutton:
 
 style SSSSS_pagination_textbutton_text is SSSSS_text:
     color '#cdcdcd'
-    hover_color '#ffffff'
+    hover_color SSSSS.Colors.hover
     size adjustable(25)
     text_align 0.5
+    #TODO: Black outlines?
 
 style SSSSS_pagination_textbutton_active is SSSSS_pagination_textbutton
 
 style SSSSS_pagination_textbutton_active_text is SSSSS_pagination_textbutton_text:
-    color '#abe9ff'
+    color SSSSS.Colors.selected
+    hover_color SSSSS.Colors.hover
 
 style SSSSS_row_button is SSSSS_button:
-    selected_background "#7ff98172"
+    selected_background SSSSS.Colors.selected_background
     hover_background "#abe9ff6c"
     selected_hover_background "#abffe76c"
 
 style SSSSS_row_odd_button is SSSSS_row_button:
-    background "#ffffff11"
-    selected_background "#7ff98172"
+    background SSSSS.Colors.block_background
+    selected_background SSSSS.Colors.selected_background
     hover_background "#abe9ff6c"
     selected_hover_background "#abffe76c"
 
@@ -142,7 +144,7 @@ style keyinput is SSSSS_button:
 
 style keyinput_text is SSSSS_text:
     size adjustable(25)
-    color "#abe9ff"
+    color SSSSS.Colors.theme
 
 style keyinput_text_placeholder is keyinput_text:
     color "#ccc"
@@ -151,10 +153,10 @@ style keyinput_disabled is keyinput:
     background "#0e0e0e"
 
 style keyinput_disabled_text is keyinput_text:
-    color "#2f2f2f55"
+    color SSSSS.Colors.disabled
 
 style keyinput_disabled_text_placeholder is keyinput_text_placeholder:
-    color "#2f2f2f55"
+    color SSSSS.Colors.disabled
 
 ##################
 #      ICONS     #
@@ -169,7 +171,7 @@ style SSSSS_material_regular_icon:
 style SSSSS_icon is SSSSS_text:
     font 'fonts/MaterialIconsOutlined-Regular.otf'
     hover_font 'fonts/MaterialIcons-Regular.ttf'
-    hover_color "#abe9ff"
+    hover_color SSSSS.Colors.hover
     size adjustable(30)
 
 ##################
@@ -177,7 +179,7 @@ style SSSSS_icon is SSSSS_text:
 ##################
 
 style SSSSS_title is SSSSS_text:
-    color "#abe9ff"
+    color SSSSS.Colors.theme
 
 style SSSSS_title_1 is SSSSS_title:
     size adjustable(30)

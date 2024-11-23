@@ -25,7 +25,7 @@ screen SSSSS_AutosaveOverwriteConfirm():
             vbox:
                 # Overwrite
                 hbox:
-                    use sssss_iconButton(icon="\ue161", text="Overwrite", action=[SSSSS.Autosaver.ConfirmDialogSave(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")], color="#f00")
+                    use sssss_iconButton(icon="\ue161", text="Overwrite", action=[SSSSS.Autosaver.ConfirmDialogSave(), SSSSS.Autosaver.ConfirmDialogClose(), Hide("SSSSS_AutosaveOverwriteConfirm")], color=SSSSS.Colors.danger)
 
                 # Move one over
                 hbox:

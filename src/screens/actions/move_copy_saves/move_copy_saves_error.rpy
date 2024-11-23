@@ -18,7 +18,7 @@ screen SSSSS_MoveCopySavesError(viewModel):
 
         vbox align (0.5, 0.5):
             hbox xalign 0.5:
-                use SSSSS_Title("Error", color="#f00")
+                use SSSSS_Title("Error", color=SSSSS.Colors.danger)
 
             use SSSSS_YSpacer(offset=2)
 

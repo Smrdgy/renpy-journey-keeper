@@ -8,7 +8,7 @@ screen SSSSS_SavesListNoSaves():
         ymaximum 0.85
 
         vbox align (0.5, 0.5):
-            use SSSSS_Title("No saves", color="#ff623a")
+            use SSSSS_Title("No saves", color=SSSSS.Colors.error)
 
     # Dialog footer
     hbox:
