@@ -341,7 +341,7 @@ screen SSSSS_KeyInput(assignment=None, action=NullAction, disabled=False):
             use SSSSS_Checkbox(checked="ctrl_" in (assignment or ""), text="Ctrl", action=action(assignment, ctrl=True), disabled=disabled or assignment == None)
             use SSSSS_Checkbox(checked="alt_" in (assignment or ""), text="Alt", action=action(assignment, alt=True), disabled=disabled or assignment == None)
 
-            hbox xsize adjustable(20, minValue=1)
+            use SSSSS_XSpacer(offset=2)
 
             use sssss_iconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color="#fbbfbf")
 

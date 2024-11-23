@@ -568,32 +568,34 @@ init -2000 python in SSSSS:
 
 init -1000 python:
     def adjustable(value, minValue=5): 
-        if SSSSS.Settings.sizeAdjustment == 0:
-            return value
+        # if SSSSS.Settings.sizeAdjustment == 0:
+        #     return value
 
         # Helper function to apply adjustment only to integers
         def adjust_number(value):
-            if isinstance(value, int):
-                size_adjustment = SSSSS.Settings.sizeAdjustment
-                min_value = minValue
-                max_value = 1080
+            return int(value * (renpy.config.screen_height / 1080.0)) + SSSSS.Settings.sizeAdjustment
 
-                # Base value is bounded by min and max
-                value = max(min_value, min(value, max_value))
+            # if isinstance(value, int):
+            #     size_adjustment = SSSSS.Settings.sizeAdjustment
+            #     min_value = minValue
+            #     max_value = 1080
+
+            #     # Base value is bounded by min and max
+            #     value = max(min_value, min(value, max_value))
                 
-                # Calculate scaled value based on positive or negative size_adjustment
-                if size_adjustment > 0:
-                    # Increase the value proportionally based on the size_adjustment
-                    scaled_value = value + size_adjustment
-                else:
-                    #TODO: This doesn't work at all... Fix it.
-                    # Decrease the value with damping to avoid going too low
-                    damping_factor = 1 + abs(size_adjustment) / 10
-                    scaled_value = max(min_value, value - int(value / damping_factor))
+            #     # Calculate scaled value based on positive or negative size_adjustment
+            #     if size_adjustment > 0:
+            #         # Increase the value proportionally based on the size_adjustment
+            #         scaled_value = value + size_adjustment
+            #     else:
+            #         #TODO: This doesn't work at all... Fix it.
+            #         # Decrease the value with damping to avoid going too low
+            #         damping_factor = 1 + abs(size_adjustment) / 10
+            #         scaled_value = max(min_value, value - int(value / damping_factor))
                 
-                # Ensure the scaled value stays within the min and max bounds
-                return max(min_value, min(scaled_value, max_value))
-            return value  # Return the number as is if it's a float
+            #     # Ensure the scaled value stays within the min and max bounds
+            #     return max(min_value, min(scaled_value, max_value))
+            # return value  # Return the number as is if it's a float
         
         # If the value is a tuple, apply adjustment to each element
         if isinstance(value, tuple):
