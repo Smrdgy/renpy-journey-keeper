@@ -6,6 +6,8 @@ init -2000 python in SSSSS:
     import os
     import threading
     disk_lock = threading.RLock()
+    import unicodedata
+    import sys
 
     class x52NonPicklable(python_object):
         def __setstate__(self, d):
@@ -280,6 +282,31 @@ init -2000 python in SSSSS:
             original_height = renpy.config.thumbnail_height or 1 if hasattr(renpy.config, "thumbnail_height") else 1
 
             return Utils.resizeDimensionsToLimits((original_width, original_height), (desired_width, desired_height))
+
+        @staticmethod
+        def filter_timeline(timeline, search):
+            if search is None or search == "":
+                return timeline
+
+            # Normalize strings to remove accents
+            def normalize(text):
+                if isinstance(text, str):
+                    text = text.decode('utf-8') if sys.version_info[0] < 3 else text
+                return unicodedata.normalize('NFD', text).encode('ascii', 'ignore').decode('utf-8')
+
+            normalized_search = normalize(search).lower()
+
+            filtered = []
+            for entry in timeline:
+                if not isinstance(entry, tuple) or len(entry) < 2:
+                    continue  # Skip invalid entries
+                text = entry[1]
+                if text is None:
+                    continue  # Skip entries with None in index 1
+                if normalized_search in normalize(text).lower():
+                    filtered.append(entry)
+
+            return filtered
 
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):

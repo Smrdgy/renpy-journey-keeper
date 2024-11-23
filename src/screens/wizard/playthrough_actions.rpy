@@ -6,7 +6,7 @@ screen SSSSS_PlaythroughActions(playthrough):
     python:
         listSavesAction = [Show("SSSSS_SavesList", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
         sequentializeSavesAction = [SSSSS.Playthroughs.TrySequentializeSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
-        constructTimelineAction = [SSSSS.Playthroughs.ConfirmConstructTimeline(playthrough), Hide("SSSSS_PlaythroughActions")]
+        constructTimelineAction = [Show("SSSSS_ChoicesTimeline", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
         MoveCopySavesAction = [Show("SSSSS_MoveCopySaves", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
 
     key 'K_e' action listSavesAction

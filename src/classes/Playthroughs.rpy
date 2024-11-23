@@ -194,36 +194,7 @@ init 1 python in SSSSS:
                 self.selectedPage = renpy.store.persistent._file_page
                 self.filePageName = renpy.store.persistent._file_page_name
 
-                Playthroughs.saveToPersistent()
-
-            def constructTimeline(self):
-                timeline = []
-                instance = SaveSystem.getPlaythroughSaveInstance(self.id)
-                instance.location.scan()
-
-                slots = Utils.getSortedSaves()
-
-                import zipfile
-                import os
-                
-                for slot in slots:
-                    filename = instance.location.locations[1].filename(slot) # File inside game folder
-
-                    if(not os.path.isfile(filename)):
-                        filename = instance.location.locations[0].filename(slot) # File inside %appData%'s Ren'Py folder
-
-                    zf = zipfile.ZipFile(filename, 'r', zipfile.ZIP_DEFLATED)
-
-                    try:
-                        choice = zf.read("choice")
-                        timeline.append((slot, choice.decode("UTF-8")))
-                    except Exception:
-                        timeline.append((slot, None))
-
-                    zf.close()
-
-                return timeline
-                        
+                Playthroughs.saveToPersistent()                        
 
         def add(self, playthrough):
             self._playthroughs.append(playthrough)
@@ -478,26 +449,6 @@ init 1 python in SSSSS:
 
             def __call__(self):
                 self.playthrough.sequentializeSaves()
-
-        class ConfirmConstructTimeline(renpy.ui.Action):
-            def __init__(self, playthrough):
-                self.playthrough = playthrough
-
-            def __call__(self):
-                showConfirm(
-                    title="Construct timeline",
-                    message="This process may take some time based on the amount of saves and your device. Do you wish to proceed?",
-                    yes=Playthroughs.ConstructTimeline(self.playthrough),
-                )
-                
-        class ConstructTimeline(renpy.ui.Action):
-            def __init__(self, playthrough):
-                self.playthrough = playthrough
-
-            def __call__(self):
-                timeline = self.playthrough.constructTimeline()
-
-                renpy.show_screen("SSSSS_ChoicesTimeline", timeline, self.playthrough)
         
         class RemoveThumbnail(renpy.ui.Action):
             def __init__(self, playthrough):
@@ -529,41 +480,3 @@ init 1 python in SSSSS:
                     yesIcon="\ue92b",
                     yesColor="#ff623a"
                 )
-        
-        class ExportTimelineToFile(renpy.ui.Action):
-            def __init__(self, timeline, playthrough):
-                self.timeline = timeline
-                self.playthrough = playthrough
-
-            def __call__(self):
-                import os
-
-                filename = self.playthrough.name + " timeline.txt"
-                dirPath = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-                path = os.path.normpath(os.path.join(dirPath, filename))
-
-                with open(path, 'w') as f:
-                    i = 1
-
-                    for item in self.timeline:
-                        f.write( str(i) + ". " + "     (" + item[0] + ")     " + self.__replace_tags(item[1]) + "\n")
-
-                        i += 1
-
-                showConfirm(
-                    title="Timeline exported into the game files",
-                    message="You can find the file in " + path,
-                    yes=OpenDirectoryAction(path=dirPath),
-                    yesText="Open location",
-                    yesIcon='\ue2c8',
-                    noText="Close",
-                    noIcon=None
-                )
-            
-            def __replace_tags(self, text):
-                # Define the pattern to match tags like {tag}content{/tag}
-                pattern = r'\{(.*?)\}(.*?)\{\/(.*?)\}'
-                # Replace all occurrences of the pattern with just the content inside the tags
-                result = re.sub(pattern, r'\2', text)
-
-                return result.replace('[[', '[')
