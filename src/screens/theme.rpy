@@ -102,9 +102,11 @@ style SSSSS_icon_button_text is SSSSS_text:
 
 style SSSSS_checkbox is SSSSS_button
 style SSSSS_checkbox_text is SSSSS_icon_button_text
+style SSSSS_checkbox_button is SSSSS_button
 
 style SSSSS_radio is SSSSS_button
 style SSSSS_radio_text is SSSSS_icon_button_text
+style SSSSS_radio_button is SSSSS_button
    
 style SSSSS_pagination_textbutton:
     background None
