@@ -13,6 +13,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
     default useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
     default enabledSaveLocations = playthrough.enabledSaveLocations or False
     default moveSaveDirectory = True
+    default __activeTextInput__ = "name"
     #MODIFY HERE
 
     python:
@@ -37,7 +38,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
             vbox:
                 use SSSSS_Title("Name")
 
-                use SSSSS_TextInput(id="name", variableName="name", editable=True, placeholder="Click here to start writing the name")
+                use SSSSS_TextInput(id="name", variableName="name", placeholder="Click here to start writing the name")
 
                 if(name != originalname and not SSSSS.Playthroughs.isValidName(name)):
                     text "Are you sure? This name already exists." color SSSSS.Colors.warning offset adjustable((15, 2), minValue=1)
