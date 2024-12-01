@@ -8,6 +8,7 @@ screen SSSSS_PlaythroughActions(playthrough):
         sequentializeSavesAction = [SSSSS.Playthroughs.TrySequentializeSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
         constructTimelineAction = [Show("SSSSS_ChoicesTimeline", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
         MoveCopySavesAction = [Show("SSSSS_MoveCopySaves", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
+        duplicatePlaythroughAction = [Show("SSSSS_DuplicatePlaythrough", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
 
     key 'K_e' action listSavesAction
     key 'K_s' action sequentializeSavesAction
@@ -24,6 +25,10 @@ screen SSSSS_PlaythroughActions(playthrough):
             style_prefix "SSSSS_dialog_action_buttons"
 
             vbox:
+                # Duplicate playthrough
+                hbox:
+                    use sssss_iconButton(icon="\uebbd", text="{u}D{/u}uplicate playthrough", action=duplicatePlaythroughAction)
+
                 # List all saves
                 hbox:
                     use sssss_iconButton(icon="\ue617", text="Manag{u}e{/u} saves", action=listSavesAction)

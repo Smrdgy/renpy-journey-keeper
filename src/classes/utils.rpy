@@ -413,6 +413,33 @@ init -2000 python in SSSSS:
             if scan:
                 self.scan()
 
+        def copy_all_saves_into_other_multilocation(self, multilocation, include_inactive=True, scan=True):
+            target_locations = multilocation.locations if include_inactive else multilocation.active_locations()
+            source_locations = self.locations if include_inactive else self.active_locations()
+
+            with disk_lock:
+                for i in range(0, len(target_locations)):
+                    source_location = source_locations[i]
+                    if not source_location:
+                        raise Exception("Source location not found")
+
+                    target_location = target_locations[i]
+                    if not target_location:
+                        raise Exception("Target location not found")
+
+                    shutil.rmtree(target_location.directory) # Clear anything that is already there and also remove the root directory, otherwise shutil.copytree would throw an exception...
+
+                    try:
+                        shutil.copytree(source_location.directory, target_location.directory)
+                    except Exception as e:
+                        print(e)
+                        return False
+
+                if scan:
+                    multilocation.scan()
+
+                return True
+
     class FileLocation(renpy.savelocation.FileLocation):
         def copy_into_other_directory(self, old, new, destination, scan=True):
             with disk_lock:

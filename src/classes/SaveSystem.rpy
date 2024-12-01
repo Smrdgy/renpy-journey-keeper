@@ -122,6 +122,8 @@ init 1 python in SSSSS:
             if(autoActivate):
                 instance.activate()
 
+            return instance
+
         def removeFilesForPlaythrough(self, playthrough):
             instance = self.getPlaythroughSaveInstance(playthrough.id)
 

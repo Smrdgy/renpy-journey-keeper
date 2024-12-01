@@ -483,3 +483,33 @@ init 1 python in SSSSS:
                     yesIcon="\ue92b",
                     yesColor=Colors.error
                 )
+
+        class DuplicatePlaythroughAction(renpy.ui.Action):
+            def __init__(self, playthrough, name, description):
+                self.playthrough = playthrough
+                self.name = name
+                self.description = description
+
+            def __call__(self):
+                new_playthrough = self.playthrough.copy()
+                new_playthrough.id = int(time.time())
+                new_playthrough.directory = None
+                new_playthrough.edit(name=self.name, description=self.description)
+
+                Playthroughs.add(new_playthrough)
+
+                original_instance = SaveSystem.getPlaythroughSaveInstance(self.playthrough.id)
+                if not original_instance:
+                    raise Exception("Can't find old save instance")
+
+                new_instance = SaveSystem.getPlaythroughSaveInstance(new_playthrough.id)
+                if not new_instance:
+                    raise Exception("Can't find new save instance")
+
+                original_instance.location.scan()
+                if not original_instance.location.copy_all_saves_into_other_multilocation(new_instance.location):
+                    raise Exception("Playthrough created but failed to transfer saves. Check the logs for more information.")
+
+                renpy.restart_interaction()
+
+                renpy.hide_screen("SSSSS_DuplicatePlaythrough")
