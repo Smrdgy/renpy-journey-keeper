@@ -119,17 +119,17 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                     vbox:
                         use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
-                        # if not SSSSS.Utils.hasColsAndRowsConfiguration():
-                        text "{size=-7}{color=[SSSSS.Colors.error]}This game uses an unusual save configuration, the autosave feature cannot be enabled without making a manual adjustment.{/color}" offset adjustable((35, -10), minValue=1)
-                        hbox offset adjustable((35, -10), minValue=1):
-                            button style "SSSSS_default":
-                                action None
+                        if not SSSSS.Utils.hasColsAndRowsConfiguration():
+                            text "{size=-7}{color=[SSSSS.Colors.error]}This game uses an unusual save configuration, the autosave feature cannot be enabled without making a manual adjustment.{/color}" offset adjustable((35, -10), minValue=1)
+                            hbox offset adjustable((35, -10), minValue=1):
+                                button style "SSSSS_default":
+                                    action None
 
-                                use sssss_icon('\ue88e', color = SSSSS.Colors.info, size=13)
+                                    use sssss_icon('\ue88e', color = SSSSS.Colors.info, size=13)
 
-                            hbox xsize adjustable(5)
+                                hbox xsize adjustable(5)
 
-                            text "{size=-7}{color=[SSSSS.Colors.info]}For manual adjustment, count how many columns and rows there are, then head to the settings and look for {color=[SSSSS.Colors.theme]}\"Custom slots grid\"{/color}. There input the numbers appropriately.{/color}{/size}"
+                                text "{size=-7}{color=[SSSSS.Colors.info]}For manual adjustment, count how many columns and rows there are, then head to the settings and look for {color=[SSSSS.Colors.theme]}\"Custom slots grid\"{/color}. There input the numbers appropriately.{/color}{/size}"
 
                         hbox:
                             offset adjustable((15, 0), minValue=1)
