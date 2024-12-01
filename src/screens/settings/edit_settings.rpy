@@ -54,6 +54,7 @@ screen SSSSS_Settings():
                     use SSSSS_Title("Autosave")
                     vbox:
                         use SSSSS_Checkbox(checked=SSSSS.Settings.autosaveNotificationEnabled, text="Show notification when autosave is performed", action=SSSSS.Settings.ToggleAutosaveNotificationEnabled())
+                        use SSSSS_Checkbox(checked=SSSSS.Settings.pageFollowsAutoSave, text="Change page based on the auto-saved slot", action=SSSSS.Settings.TogglePageFollowsAutoSaveEnabled())
                         
                         use SSSSS_YSpacer(2)
 
@@ -73,6 +74,7 @@ screen SSSSS_Settings():
 
                                 vbox:
                                     use SSSSS_Checkbox(checked=SSSSS.Settings.quickSaveNotificationEnabled, text="Show notification when quick save is performed", action=SSSSS.Settings.ToggleQuickSaveNotificationEnabled(), disabled=not SSSSS.Settings.quickSaveEnabled)
+                                    use SSSSS_Checkbox(checked=SSSSS.Settings.pageFollowsQuickSave, text="Change page based on the quick-saved slot", action=SSSSS.Settings.TogglePageFollowsQuickSaveEnabled())
 
                                     use SSSSS_YSpacer(2)
 

@@ -420,10 +420,13 @@ init 1 python in SSSSS:
 
         class QuickSave(renpy.ui.Action):
             def __call__(self):
-                _, _, slotString = Autosaver.getCurrentSlot()
+                page, _, slotString = Autosaver.getCurrentSlot()
 
                 renpy.take_screenshot()
                 renpy.save(slotString)
+
+                if Settings.pageFollowsQuicksSave:
+                    renpy.store.persistent._file_page = str(page)
 
                 if Settings.quickSaveNotificationEnabled:
                     renpy.notify("Quicksave created at {}".format(slotString))

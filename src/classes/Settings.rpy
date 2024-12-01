@@ -30,6 +30,8 @@ init -1000 python in SSSSS:
             self.sizeAdjustment = data.get("sizeAdjustment", 0)
             self.changeSidepanelVisibilityKey = data.get("changeSidepanelVisibilityKey", "alt_K_p")
             self.debugEnabled = data.get("debugEnabled", False)
+            self.pageFollowsQuickSave = data.get("pageFollowsQuickSave", True)
+            self.pageFollowsAutoSave = data.get("pageFollowsAutoSave", True)
 
         def saveToPersistent(self):
             renpy.store.persistent.SSSSS_Settings = json.dumps({
@@ -49,6 +51,8 @@ init -1000 python in SSSSS:
                 'sizeAdjustment': self.sizeAdjustment,
                 'changeSidepanelVisibilityKey': self.changeSidepanelVisibilityKey,
                 'debugEnabled': self.debugEnabled,
+                'pageFollowsQuickSave': self.pageFollowsQuickSave,
+                'pageFollowsAutoSave': self.pageFollowsAutoSave,
             })
 
             renpy.save_persistent()
@@ -187,6 +191,20 @@ init -1000 python in SSSSS:
         class ToggleDebugEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.debugEnabled = not Settings.debugEnabled
+
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class TogglePageFollowsQuickSaveEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.pageFollowsQuickSave = not Settings.pageFollowsQuickSave
+
+                Settings.saveToPersistent()
+                renpy.restart_interaction()
+
+        class TogglePageFollowsAutoSaveEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.pageFollowsAutoSave = not Settings.pageFollowsAutoSave
 
                 Settings.saveToPersistent()
                 renpy.restart_interaction()

@@ -158,10 +158,13 @@ init -999 python in SSSSS:
                 renpy.loadsave.location.scan()
                 renpy.loadsave.clear_slot(slotname)
 
+                if Settings.autoSaveNotificationEnabled:
+                    renpy.notify("Autosave created at {}".format(slotname))
+
                 Autosaver.pendingSave = None
 
-                page, _, _ = Autosaver.getCurrentSlot()
-
-                renpy.store.persistent._file_page = str(page)
+                if Settings.pageFollowsAutoSave:
+                    page, _, _ = Autosaver.getCurrentSlot()
+                    renpy.store.persistent._file_page = str(page)
 
                 Autosaver.setNextSlot()
