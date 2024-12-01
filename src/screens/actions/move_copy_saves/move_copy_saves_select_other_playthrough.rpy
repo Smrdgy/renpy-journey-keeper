@@ -14,10 +14,10 @@ screen SSSSS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination
             xfill True
             spacing 5
 
+            $ i = 0
             for playthrough in playthroughs:
-                button:
+                button style ("SSSSS_row_button" if i % 2 == 0 else "SSSSS_row_odd_button"):
                     xfill True
-                    background "#ffffff11"
                     action SetScreenVariable("destination_playthrough" if source_playthrough else "source_playthrough", playthrough)
 
                     hbox:
@@ -43,6 +43,8 @@ screen SSSSS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination
                         use SSSSS_XSpacer(2)
 
                         text "[playthrough.name]" yalign 0.5
+
+                $ i += 1
 
     # Dialog footer
     hbox:
