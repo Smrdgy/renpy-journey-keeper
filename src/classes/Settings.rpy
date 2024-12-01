@@ -1,19 +1,44 @@
 init -1000 python in SSSSS:
     _constant = True
 
+    import os
     import json
+    import __main__
+    import io
 
     # Main Settings class
     class SettingsClass(x52NonPicklable):
         def __init__(self):
-            self.loadFromPersistent()
-        
+            settings = self.loadFromUserDir()
+            settings.update(self.loadFromPersistent())
+
+            self.setSettings(settings)
+
+        @property
+        def global_dir(self):
+            return __main__.path_to_saves(renpy.config.gamedir, savedir)
+
+        def loadFromUserDir(self):
+            data = {}
+            path = os.path.join(self.global_dir, renpy.config.save_directory, "settings.json")
+            if os.path.isfile(path):
+                try:
+                    with io.open(path, "r", encoding="utf-8") as file:
+                        data = json.loads(renpy.store.persistent.SSSSS_Settings)
+                except:
+                    data = {}
+
+            return data
+
         def loadFromPersistent(self):
             if renpy.store.persistent.SSSSS_Settings:
                 data = json.loads(renpy.store.persistent.SSSSS_Settings)
             else:
                 data = {}
-    
+
+            return data
+
+        def setSettings(self, data):
             self.autosaveNotificationEnabled = data.get("autosaveNotificationEnabled", False)
             self.autosaveKey = data.get("autosaveKey", "alt_K_a")
             self.quickSaveEnabled = data.get("quickSaveEnabled", True)
@@ -33,8 +58,8 @@ init -1000 python in SSSSS:
             self.pageFollowsQuickSave = data.get("pageFollowsQuickSave", True)
             self.pageFollowsAutoSave = data.get("pageFollowsAutoSave", True)
 
-        def saveToPersistent(self):
-            renpy.store.persistent.SSSSS_Settings = json.dumps({
+        def getSettingsAsJson(self):
+            return json.dumps({
                 'autosaveNotificationEnabled': self.autosaveNotificationEnabled,
                 'autosaveKey': self.autosaveKey,
                 'quickSaveEnabled': self.quickSaveEnabled,
@@ -55,6 +80,26 @@ init -1000 python in SSSSS:
                 'pageFollowsAutoSave': self.pageFollowsAutoSave,
             })
 
+        def save(self):
+            self.saveToUserDir()
+            self.saveToPersistent()
+
+        def saveToUserDir(self):
+            dir_path = os.path.join(self.global_dir, renpy.config.save_directory)
+            file_path = os.path.join(dir_path, "settings.json")
+
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
+
+            try:
+                with io.open(file_path, "w", encoding="utf-8") as file:
+                    file.write(unicode(self.getSettingsAsJson()))
+            except:
+                pass
+
+        def saveToPersistent(self):
+            renpy.store.persistent.SSSSS_Settings = self.getSettingsAsJson()
+
             renpy.save_persistent()
 
         def reset(self):
@@ -68,81 +113,79 @@ init -1000 python in SSSSS:
                 Settings.reset()
                 renpy.restart_interaction()
 
-
-
         class SetAutosaveToggleKey(SetKey):
             def __call__(self):
                 Settings.autosaveKey = self.resolveKey()
 
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class ToggleAutosaveNotificationEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.autosaveNotificationEnabled = not Settings.autosaveNotificationEnabled
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class ToggleQuickSaveEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.quickSaveEnabled = not Settings.quickSaveEnabled
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class ToggleQuickSaveNotificationEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.quickSaveNotificationEnabled = not Settings.quickSaveNotificationEnabled
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class SetQuickSaveKey(SetKey):
             def __call__(self):
                 Settings.quickSaveKey = self.resolveKey()
 
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class ToggleMemoriesEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.memoriesEnabled = not Settings.memoriesEnabled
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class SetCreateMemoryKey(SetKey):
             def __call__(self):
                 Settings.memoriesKey = self.resolveKey()
 
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class ToggleCustomGridEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.customGridEnabled = not Settings.customGridEnabled
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class DecrementCustomGridX(renpy.ui.Action):
             def __call__(self):
                 Settings.customGridX = max(Settings.customGridX - 1, 1)
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
         
         class IncrementCustomGridX(renpy.ui.Action):
             def __call__(self):
                 Settings.customGridX = Settings.customGridX + 1
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
         
         class DecrementCustomGridY(renpy.ui.Action):
             def __call__(self):
                 Settings.customGridY = max(Settings.customGridY - 1, 1)
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
         
         class IncrementCustomGridY(renpy.ui.Action):
             def __call__(self):
                 Settings.customGridY = Settings.customGridY + 1
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class SetSaveScreenName(renpy.ui.Action):
@@ -151,7 +194,7 @@ init -1000 python in SSSSS:
 
             def __call__(self):
                 Settings.saveScreenName = self.name
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class SetLoadScreenName(renpy.ui.Action):
@@ -160,19 +203,19 @@ init -1000 python in SSSSS:
 
             def __call__(self):
                 Settings.loadScreenName = self.name
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class IncrementSizeAdjustment(renpy.ui.Action):
             def __call__(self):
                 Settings.sizeAdjustment = min(Settings.sizeAdjustment + 1, 100)
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
         
         class DecrementSizeAdjustment(renpy.ui.Action):
             def __call__(self):
                 Settings.sizeAdjustment = max(Settings.sizeAdjustment - 1, -100)
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class ResetSizeAdjustment(renpy.ui.Action):
@@ -181,34 +224,34 @@ init -1000 python in SSSSS:
                 #Also reset sidepanel and pagination positions just in case there are positioned somewhere outside of the screen
                 renpy.store.persistent.SSSSS_sidepanelPos = None
                 renpy.store.persistent.SSSSS_PaginationPos = None
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class SetChangeSidepanelVisibilityKey(SetKey):
             def __call__(self):
                 Settings.changeSidepanelVisibilityKey = self.resolveKey()
 
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class ToggleDebugEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.debugEnabled = not Settings.debugEnabled
 
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class TogglePageFollowsQuickSaveEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.pageFollowsQuickSave = not Settings.pageFollowsQuickSave
 
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
 
         class TogglePageFollowsAutoSaveEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.pageFollowsAutoSave = not Settings.pageFollowsAutoSave
 
-                Settings.saveToPersistent()
+                Settings.save()
                 renpy.restart_interaction()
                 

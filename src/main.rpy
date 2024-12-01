@@ -4,6 +4,8 @@ init -1000 python in SSSSS:
 init 51 python in SSSSS:
     _constant = True
 
+    savedir = "SSSSSS"
+
     Playthroughs = PlaythroughsClass()
     SaveSystem = SaveSystemClass()
     Autosaver = AutosaverClass()
