@@ -32,7 +32,7 @@ init 1 python in SSSSS:
             if(not hasNative):
                 self._playthroughs.insert(0, self.PlaythroughClass(id=1, directory="", name="Native", autosaveOnChoices=False, useChoiceLabelAsSaveName=False))#MODIFY HERE
 
-            if not hasMemories:
+            if not hasMemories and Settings.memoriesEnabled:
                 self._playthroughs.insert(1, self.PlaythroughClass(id=2, directory="_memories", name="Memories", autosaveOnChoices=False, useChoiceLabelAsSaveName=False))#MODIFY HERE
 
         @property

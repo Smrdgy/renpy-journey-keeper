@@ -33,7 +33,7 @@ screen SSSSS_Sidepanel():
             vbox:
                 use sssss_iconButton('\ueb73', tt="Open list of playthroughs", action=Show("SSSSS_PlaythroughsPicker"))
                 use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=None))
-                use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesLibrary"))
+                use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesLibrary"), disabled=not SSSSS.Settings.memoriesEnabled)
 
                 use SSSSS_Divider(sizeX=40)
 
