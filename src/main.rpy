@@ -1,7 +1,9 @@
+init -1000 python in SSSSS:
+    Settings = SettingsClass()
+
 init 51 python in SSSSS:
     _constant = True
 
-    Settings = SettingsClass()
     Playthroughs = PlaythroughsClass()
     SaveSystem = SaveSystemClass()
     Autosaver = AutosaverClass()

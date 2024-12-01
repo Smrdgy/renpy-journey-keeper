@@ -1,4 +1,4 @@
-init 1 python in SSSSS:
+init -1000 python in SSSSS:
     _constant = True
 
     import json
