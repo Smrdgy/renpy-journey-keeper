@@ -158,7 +158,7 @@ init -999 python in SSSSS:
                 renpy.loadsave.location.scan()
                 renpy.loadsave.clear_slot(slotname)
 
-                if Settings.autoSaveNotificationEnabled:
+                if Settings.autosaveNotificationEnabled:
                     renpy.notify("Autosave created at {}".format(slotname))
 
                 Autosaver.pendingSave = None
