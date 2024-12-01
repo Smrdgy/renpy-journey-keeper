@@ -127,14 +127,20 @@ style SSSSS_pagination_textbutton_active_text is SSSSS_pagination_textbutton_tex
 
 style SSSSS_row_button is SSSSS_button:
     selected_background SSSSS.Colors.selected_background
-    hover_background "#abe9ff6c"
-    selected_hover_background "#abffe76c"
+    hover_background SSSSS.Colors.block_hover_background
+    selected_hover_background SSSSS.Colors.block_selected_hover_background
 
 style SSSSS_row_odd_button is SSSSS_row_button:
     background SSSSS.Colors.block_background
     selected_background SSSSS.Colors.selected_background
-    hover_background "#abe9ff6c"
-    selected_hover_background "#abffe76c"
+    hover_background SSSSS.Colors.block_hover_background
+    selected_hover_background SSSSS.Colors.block_selected_hover_background
+
+style SSSSS_playthrough_button is SSSSS_button:
+    background SSSSS.Colors.block_background
+    hover_background SSSSS.Colors.block_hover_background
+    selected_background SSSSS.Colors.selected_background
+    selected_hover_background SSSSS.Colors.block_selected_hover_background
 
 ##################
 #      INPUT     #

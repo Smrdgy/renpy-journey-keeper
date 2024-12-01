@@ -24,5 +24,7 @@ init -999 python in SSSSS:
         selected_background = "#7ff98172"
 
         block_background = "#ffffff11"
+        block_hover_background = "#abe9ff6c"
+        block_selected_hover_background = "#abffe76c"
 
         reset = "#fbbfbf"
