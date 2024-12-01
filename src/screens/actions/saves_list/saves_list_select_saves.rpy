@@ -109,8 +109,6 @@ screen SSSSS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_s
 
                                                 hbox:
                                                     xalign 1.0
-                                                    xpos 1.0
-                                                    xanchor 1.0
                                                     yalign 0.5
 
                                                     if hovered_button == id:

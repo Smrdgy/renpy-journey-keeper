@@ -47,7 +47,7 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextI
                     use SSSSS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
                     # Seach box
-                    hbox yalign 0.0 xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
+                    hbox yalign 0.0 xpos 1.0 xanchor 1.0:
                         frame style "SSSSS_frame":
                             xysize adjustable((300, 50))
 

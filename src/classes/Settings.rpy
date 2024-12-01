@@ -178,6 +178,9 @@ init -1000 python in SSSSS:
         class ResetSizeAdjustment(renpy.ui.Action):
             def __call__(self):
                 Settings.sizeAdjustment = 0
+                #Also reset sidepanel and pagination positions just in case there are positioned somewhere outside of the screen
+                renpy.store.persistent.SSSSS_sidepanelPos = None
+                renpy.store.persistent.SSSSS_PaginationPos = None
                 Settings.saveToPersistent()
                 renpy.restart_interaction()
 
