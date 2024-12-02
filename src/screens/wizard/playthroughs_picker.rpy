@@ -112,7 +112,7 @@ screen SSSSS_PlaythroughsPicker():
 
                             text "New playthrough" xalign 0.5
 
-                            use sssss_iconButton('\usmrdgy', text="")
+                            use sssss_iconButton('smrdgy', text="")
 
                 for _ in range(0, spotsToFill):
                     text ""

@@ -18,10 +18,21 @@ init 1 python in SSSSS:
 
             hasNative = False
             hasMemories = False
-            if(renpy.store.persistent.SSSSS_playthroughs != None):
-                arr = json.loads(renpy.store.persistent.SSSSS_playthroughs)
 
-                for playthrough in arr:
+            userdir_playthroughs = UserDir.loadPlaythroughs()
+            persistent_playthroughs = self.loadFromPersistent()
+
+            userdir_mtime = UserDir.playthroughsMtime()
+            persistent_mtime = renpy.store.persistent.SSSSS_playthroughsMtime or 0
+
+            playthroughs = None
+            if userdir_mtime > persistent_mtime:
+                playthroughs = userdir_playthroughs
+            else:
+                playthroughs = persistent_playthroughs
+
+            if(playthroughs != None):
+                for playthrough in playthroughs:
                     if(playthrough.get("id") == 1):
                         hasNative = True
                     elif playthrough.get("id") == 2:
@@ -52,6 +63,12 @@ init 1 python in SSSSS:
                 return self._activePlaythrough
 
             return None
+
+        def loadFromPersistent(self):
+            if renpy.store.persistent.SSSSS_playthroughs:
+                return json.loads(renpy.store.persistent.SSSSS_playthroughs)
+
+            return []
 
         def createPlaythroughFromSerialization(self, data):
             return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
@@ -194,13 +211,13 @@ init 1 python in SSSSS:
                 self.selectedPage = renpy.store.persistent._file_page
                 self.filePageName = renpy.store.persistent._file_page_name
 
-                Playthroughs.saveToPersistent()                        
+                Playthroughs.save()                        
 
         def add(self, playthrough):
             self._playthroughs.append(playthrough)
             self.activateByInstance(playthrough)
 
-            self.saveToPersistent()
+            self.save()
             renpy.restart_interaction()
 
             return playthrough
@@ -238,7 +255,7 @@ init 1 python in SSSSS:
         def edit(self, playthrough, originalPlaythrough, moveSaveDirectory=False):
             rv = originalPlaythrough.editFromPlaythrough(playthrough, moveSaveDirectory=moveSaveDirectory)
                 
-            self.saveToPersistent()
+            self.save()
             renpy.restart_interaction()
 
             return rv
@@ -267,7 +284,7 @@ init 1 python in SSSSS:
 
             Autosaver.pendingSave = None
 
-            self.saveToPersistent()
+            self.save()
             renpy.restart_interaction()
 
             renpy.notify("Autosave on choice is " + ("enabled" if self.activePlaythrough.autosaveOnChoices else "disabled"))
@@ -286,7 +303,7 @@ init 1 python in SSSSS:
 
             self.__setActivePlaythrough(playthrough)
 
-            self.saveToPersistent()
+            self.save()
             renpy.restart_interaction()
 
         def activateNative(self):
@@ -295,12 +312,23 @@ init 1 python in SSSSS:
         def activateFirstOrNone(self):
             self.activateNative()
 
-        def saveToPersistent(self):
+        def save(self):
+            self.saveToUserDir()
+            self.saveToPersistent()
+
+        def getPlaythroughsAsJson(self):
             arr = []
             for playthrough in self.playthroughs:
                 arr.append(playthrough.serializable())
 
-            renpy.store.persistent.SSSSS_playthroughs = json.dumps(arr)
+            return json.dumps(arr)
+
+        def saveToUserDir(self):
+            UserDir.savePlaythroughs(self.getPlaythroughsAsJson())
+
+        def saveToPersistent(self):
+            renpy.store.persistent.SSSSS_playthroughs = self.getPlaythroughsAsJson()
+            renpy.store.persistent.SSSSS_playthroughsMtime = int(time.time())
 
             renpy.save_persistent()
 

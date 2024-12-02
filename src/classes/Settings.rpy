@@ -14,21 +14,8 @@ init -1000 python in SSSSS:
 
             self.setSettings(settings)
 
-        @property
-        def global_dir(self):
-            return __main__.path_to_saves(renpy.config.gamedir, savedir)
-
         def loadFromUserDir(self):
-            data = {}
-            path = os.path.join(self.global_dir, renpy.config.save_directory, "settings.json")
-            if os.path.isfile(path):
-                try:
-                    with io.open(path, "r", encoding="utf-8") as file:
-                        data = json.loads(renpy.store.persistent.SSSSS_Settings)
-                except:
-                    data = {}
-
-            return data
+            return UserDir.loadSettings()
 
         def loadFromPersistent(self):
             if renpy.store.persistent.SSSSS_Settings:
@@ -85,17 +72,7 @@ init -1000 python in SSSSS:
             self.saveToPersistent()
 
         def saveToUserDir(self):
-            dir_path = os.path.join(self.global_dir, renpy.config.save_directory)
-            file_path = os.path.join(dir_path, "settings.json")
-
-            if not os.path.exists(dir_path):
-                os.makedirs(dir_path)
-
-            try:
-                with io.open(file_path, "w", encoding="utf-8") as file:
-                    file.write(unicode(self.getSettingsAsJson()))
-            except:
-                pass
+            UserDir.saveSettings(self.getSettingsAsJson())
 
         def saveToPersistent(self):
             renpy.store.persistent.SSSSS_Settings = self.getSettingsAsJson()
@@ -104,6 +81,7 @@ init -1000 python in SSSSS:
 
         def reset(self):
             renpy.store.persistent.SSSSS_Settings = None
+            UserDir.removeSettings()
             self.loadFromPersistent()
 
             renpy.save_persistent()
