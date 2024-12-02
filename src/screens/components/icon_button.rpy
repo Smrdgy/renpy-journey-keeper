@@ -14,6 +14,8 @@ screen sssss_iconButton(icon, text=None, action=None, size=None, sensitive=None,
         tooltip tt
         key_events True
 
+        selected toggled
+
         if(not disabled):
             action action
 

@@ -43,7 +43,7 @@ screen SSSSS_Sidepanel():
 
                 use SSSSS_Divider(sizeX=40)
 
-                use sssss_iconButton('\ue666', tt="Custom pagination", action=SSSSS.Pagination.TogglePagination())
+                use sssss_iconButton('\ue666', tt="Custom pagination", action=SSSSS.Pagination.TogglePagination(), toggled=renpy.store.persistent.SSSSS_ShowPagination, toggledColor=SSSSS.Colors.selected)
                 use sssss_iconButton('\ue8b8', tt="Settings", action=Show("SSSSS_Settings"))
 
 
