@@ -39,7 +39,7 @@ init -1000 python in SSSSS:
             self.loadScreenName = data.get("loadScreenName", "load")
             self.saveScreenName = data.get("saveScreenName", "save")
             self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", True)#TODO: Implement
-            self.sizeAdjustment = data.get("sizeAdjustment", 0)
+            self.sizeAdjustment = data.get("sizeAdjustment", 0) or 0
             self.changeSidepanelVisibilityKey = data.get("changeSidepanelVisibilityKey", "alt_K_p")
             self.debugEnabled = data.get("debugEnabled", False)
             self.pageFollowsQuickSave = data.get("pageFollowsQuickSave", True)
@@ -186,15 +186,44 @@ init -1000 python in SSSSS:
 
         class IncrementSizeAdjustment(renpy.ui.Action):
             def __call__(self):
+                if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue is None:
+                    renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue = int(Settings.sizeAdjustment)
+
                 Settings.sizeAdjustment = min(Settings.sizeAdjustment + 1, 100)
                 Settings.save()
                 renpy.restart_interaction()
+
+                if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue == Settings.sizeAdjustment or Settings.sizeAdjustment == 0:
+                    renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue = None
         
         class DecrementSizeAdjustment(renpy.ui.Action):
             def __call__(self):
+                if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue is None:
+                    renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue = int(Settings.sizeAdjustment)
+
                 Settings.sizeAdjustment = max(Settings.sizeAdjustment - 1, -100)
                 Settings.save()
                 renpy.restart_interaction()
+
+                if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue == Settings.sizeAdjustment or Settings.sizeAdjustment == 0:
+                    renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue = None
+
+        class SetSizeAdjustment(renpy.ui.Action):
+            def __init__(self, value, store_rollback_value=True):
+                self.store_rollback_value = store_rollback_value
+                self.value = value or 0
+
+            def __call__(self):
+                if self.store_rollback_value:
+                    if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue is None:
+                        renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue = self.value
+
+                Settings.sizeAdjustment = self.value
+                Settings.save()
+                renpy.restart_interaction()
+
+                if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue == Settings.sizeAdjustment or Settings.sizeAdjustment == 0:
+                    renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue = None
 
         class ResetSizeAdjustment(renpy.ui.Action):
             def __call__(self):

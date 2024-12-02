@@ -37,6 +37,9 @@ init 51 python in SSSSS:
         if(not renpy.get_screen('SSSSS_Overlay')):
             renpy.show_screen('SSSSS_Overlay')
 
+        if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue != None:
+            renpy.show_screen('SSSSS_ConfirmSizeAdjustment')
+
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):
             if not hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode") or renpy.config.SSSSS_sidepanelVisibilityMode == None:

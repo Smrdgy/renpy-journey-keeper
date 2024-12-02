@@ -47,8 +47,10 @@ screen SSSSS_Settings():
                                 text "T" size adjustable(30) yalign 1.0
 
                     if originalSizeAdjustment != SSSSS.Settings.sizeAdjustment:
-                        text "To properly display all changes of this value, a restart of the game is required.\nIf anything goes wrong, you can reset the scaling via {u}CTRL + SHIFT + ALT + P{/u}." color SSSSS.Colors.warning
+                        text "To properly display all changes of this value, a restart of the game is required." color SSSSS.Colors.warning
+                        use SSSSS_InfoBox("If anything goes wrong, you can revert the value via confirm dialog, waiting 60 seconds, or manually, by simultaneously holding {u}CTRL + SHIFT + ALT + P{/u}.")
 
+                use SSSSS_YSpacer()
 
                 vbox:
                     use SSSSS_Title("Autosave")
