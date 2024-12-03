@@ -453,7 +453,7 @@ init 1 python in SSSSS:
                 renpy.take_screenshot()
                 renpy.save(slotString)
 
-                if Settings.pageFollowsQuicksSave:
+                if Settings.pageFollowsQuickSave:
                     renpy.store.persistent._file_page = str(page)
 
                 if Settings.quickSaveNotificationEnabled:
