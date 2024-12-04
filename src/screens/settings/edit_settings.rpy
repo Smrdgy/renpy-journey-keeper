@@ -19,6 +19,7 @@ screen SSSSS_Settings():
             ymaximum 0.85
 
             vbox:
+                # Accessibility
                 vbox:
                     use SSSSS_Title("Accessibility")
                     vbox:
@@ -52,6 +53,7 @@ screen SSSSS_Settings():
 
                 use SSSSS_YSpacer()
 
+                # Autosave
                 vbox:
                     use SSSSS_Title("Autosave")
                     vbox:
@@ -65,6 +67,7 @@ screen SSSSS_Settings():
 
                 use SSSSS_YSpacer()
 
+                # Quick save
                 vbox:
                     use SSSSS_Title("Quick save")
                     vbox:
@@ -85,6 +88,7 @@ screen SSSSS_Settings():
 
                 use SSSSS_YSpacer()
 
+                # Sidepanel
                 vbox:
                     use SSSSS_Title("Sidepanel")
                     vbox:
@@ -93,6 +97,7 @@ screen SSSSS_Settings():
 
                 use SSSSS_YSpacer()
 
+                # Memories
                 vbox:
                     use SSSSS_Title("Memories")
                     vbox:
@@ -110,6 +115,7 @@ screen SSSSS_Settings():
 
                 use SSSSS_YSpacer()
 
+                # Save/Load
                 vbox:
                     use SSSSS_Title("Save/Load")
                     vbox:
@@ -164,6 +170,32 @@ screen SSSSS_Settings():
                             for screen in relevantLoadScreens:
                                 use SSSSS_Radio(checked=SSSSS.Settings.loadScreenName == screen, text=("\"load\" (default)" if screen == "load" else "\"" + screen + "\""), action=SSSSS.Settings.SetLoadScreenName(screen))
 
+                use SSSSS_YSpacer()
+
+                # Updates
+                vbox:
+                    use SSSSS_Title("Updates")
+                    vbox:
+                        hbox:
+                            hbox yalign 0.5:
+                                if SSSSS.Updater.latest:
+                                    text "Latest version: {a=[SSSSS.Updater.latest_html_url]}[SSSSS.Updater.latest_version]"
+                                elif SSSSS.Updater.loading:
+                                    text "Latest version: {color=[SSSSS.Colors.info]}Loading...{/color}"
+                                else:
+                                    text "Latest version: {color=[SSSSS.Colors.disabled]}N/A{/color}"
+
+                            use sssss_iconButton("\ue5d5", text="Refresh", action=SSSSS.Updater.CheckForUpdateAction())
+
+                        use SSSSS_Checkbox(checked=SSSSS.Settings.updaterEnabled, text="Check for an update every time the game launches", action=SSSSS.Settings.ToggleUpdaterEnabled())
+
+                        if SSSSS.Settings.updaterEnabled:
+                            hbox:
+                                use SSSSS_XSpacer()
+
+                                vbox:
+                                    use SSSSS_Checkbox(checked=SSSSS.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=SSSSS.Settings.ToggleAutoUpdatesWithoutPromptEnabled())
+
                 if renpy.config.developer:
                     use SSSSS_YSpacer()
 
@@ -179,10 +211,9 @@ screen SSSSS_Settings():
 
                     vbox xalign 0.5:
                         hbox xalign 0.5:
-                            use SSSSS_Title("SSSSS v1.0.0")
-                        text "{a=https://github.com/Smrdgy/renpy-sssss}Click here to open the GitHub page.{/a}" xalign 0.5
-                        text "{a=https://github.com/Smrdgy/renpy-sssss/issues}Click here to view and/or submit issue(s).{/a}" xalign 0.5
-                    
+                            use SSSSS_Title(SSSSS.MOD_NAME + " v" + SSSSS.MOD_VERSION)
+                        text "{a=https://github.com/[SSSSS.MOD_GITHUB_OWNER]/[SSSSS.MOD_GITHUB_REPO]}Click here to open the GitHub page.{/a}" xalign 0.5
+                        text "{a=https://github.com/[SSSSS.MOD_GITHUB_OWNER]/[SSSSS.MOD_GITHUB_REPO]/issues}Click here to view and/or submit issue(s).{/a}" xalign 0.5
 
         hbox:
             xfill True

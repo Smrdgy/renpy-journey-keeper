@@ -4,6 +4,7 @@ init -1000 python in SSSSS:
 init 51 python in SSSSS:
     _constant = True
 
+    Updater = UpdaterClass()
     Playthroughs = PlaythroughsClass()
     SaveSystem = SaveSystemClass()
     Autosaver = AutosaverClass()
@@ -39,6 +40,9 @@ init 51 python in SSSSS:
 
         if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue != None:
             renpy.show_screen('SSSSS_ConfirmSizeAdjustment')
+
+        if Settings.updaterEnabled and not Updater.checked_for_update:
+            renpy.invoke_in_thread(Updater.check_for_update)
 
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):

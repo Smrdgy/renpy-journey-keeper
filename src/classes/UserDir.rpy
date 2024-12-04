@@ -1,4 +1,6 @@
 init -1001 python in SSSSS:
+    _constant = True
+
     import io
     import os
     import __main__

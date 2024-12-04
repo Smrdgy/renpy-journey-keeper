@@ -44,6 +44,8 @@ init -1000 python in SSSSS:
             self.debugEnabled = data.get("debugEnabled", False)
             self.pageFollowsQuickSave = data.get("pageFollowsQuickSave", True)
             self.pageFollowsAutoSave = data.get("pageFollowsAutoSave", True)
+            self.updaterEnabled = data.get("updaterEnabled", True)
+            self.autoUpdateWithoutPrompt = data.get("autoUpdateWithoutPrompt", False)
 
         def getSettingsAsJson(self):
             return json.dumps({
@@ -65,6 +67,8 @@ init -1000 python in SSSSS:
                 'debugEnabled': self.debugEnabled,
                 'pageFollowsQuickSave': self.pageFollowsQuickSave,
                 'pageFollowsAutoSave': self.pageFollowsAutoSave,
+                'updaterEnabled': self.updaterEnabled,
+                'autoUpdateWithoutPrompt': self.autoUpdateWithoutPrompt,
             })
 
         def save(self):
@@ -258,6 +262,21 @@ init -1000 python in SSSSS:
         class TogglePageFollowsAutoSaveEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.pageFollowsAutoSave = not Settings.pageFollowsAutoSave
+
+                Settings.save()
+                renpy.restart_interaction()
+
+        class ToggleUpdaterEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.updaterEnabled = not Settings.updaterEnabled
+
+                Settings.save()
+                renpy.restart_interaction()
+                renpy.restart_interaction()
+
+        class ToggleAutoUpdatesWithoutPromptEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.autoUpdateWithoutPrompt = not Settings.autoUpdateWithoutPrompt
 
                 Settings.save()
                 renpy.restart_interaction()

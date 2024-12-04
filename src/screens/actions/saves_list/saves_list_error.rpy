@@ -28,7 +28,7 @@ screen SSSSS_SavesListError(viewModel):
                 use SSSSS_YSpacer(offset=2)
 
                 text "For more information check log.txt" xalign 0.5 text_align 0.5
-                text "If this isn't a user error (e.g. incorrect permissions, manually deleted files, etc.), please report it at {a=https://github.com/Smrdgy/renpy-sssss/issues}https://github.com/Smrdgy/renpy-sssss/issues{/a}" xalign 0.5 text_align 0.5
+                text "If this isn't a user error (e.g. incorrect permissions, manually deleted files, etc.), please report it at {a=https://github.com/[SSSSS.MOD_GITHUB_OWNER]/[SSSSS.MOD_GITHUB_REPO]/issues}https://github.com/[SSSSS.MOD_GITHUB_OWNER]/[SSSSS.MOD_GITHUB_REPO]/issues{/a}" xalign 0.5 text_align 0.5
 
     # Dialog footer
     hbox:
