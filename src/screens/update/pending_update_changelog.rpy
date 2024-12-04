@@ -22,6 +22,12 @@ screen SSSSS_PendingUpdateChangelog(version, changelog):
 
         style_prefix "SSSSS_dialog_action_buttons"
 
+        hbox:
+            style_prefix "SSSSS"
+
+            text "{a=https://github.com/[SSSSS.MOD_GITHUB_OWNER]/[SSSSS.MOD_GITHUB_REPO]/releases/latest}{color=[SSSSS.Colors.text_light]}For manual download, click here.{/color}{/a}" yalign 0.5
+            use sssss_icon(icon="\ue895", size=20, color=SSSSS.Colors.text_light, hover_color=SSSSS.Colors.text_light)
+
         vbox:
             # Download and install
             hbox:
