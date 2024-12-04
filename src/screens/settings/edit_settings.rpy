@@ -224,7 +224,7 @@ screen SSSSS_Settings():
             vbox:
                 # Save
                 hbox:
-                    use sssss_iconButton(icon="\ue8ba", text="Reset", action=SSSSS.Settings.Reset()) #TODO: Confirm
+                    use sssss_iconButton(icon="\ue8ba", text="Reset", action=SSSSS.Settings.ConfirmReset(), color=SSSSS.Colors.danger)
 
                 # Close
                 hbox:

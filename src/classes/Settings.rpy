@@ -86,9 +86,20 @@ init -1000 python in SSSSS:
         def reset(self):
             renpy.store.persistent.SSSSS_Settings = None
             UserDir.removeSettings()
-            self.loadFromPersistent()
+            
+            self.setSettings({})
 
             renpy.save_persistent()
+
+        class ConfirmReset(renpy.ui.Action):
+            def __call__(self):
+                showConfirm(
+                    title="Reset settings",
+                    message="Do you really wish to reset all settings into their default configuration?",
+                    yes=Settings.Reset(),
+                    yesIcon="\ue8ba",
+                    yesColor=Colors.danger
+                )
 
         class Reset(renpy.ui.Action):
             def __call__(self):
