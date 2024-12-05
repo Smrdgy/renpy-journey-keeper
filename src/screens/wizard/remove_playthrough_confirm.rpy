@@ -7,10 +7,10 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
 
     $ deleteAction = [SSSSS.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")]
 
-    key 'K_RETURN' action deleteAction #TODO: Doesn't work not sure why...
-    key 'K_KP_ENTER' action deleteAction
-
     use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm")):
+        key 'K_RETURN' action deleteAction
+        key 'K_KP_ENTER' action deleteAction
+
         text "Are you sure you want to remove \"[playthrough.name]\"?" xalign .5
 
         frame:

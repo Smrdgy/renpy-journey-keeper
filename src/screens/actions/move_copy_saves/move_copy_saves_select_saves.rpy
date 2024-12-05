@@ -140,8 +140,6 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                         xfill True
                         action [SaveSelectedAction(saves_to_process, save, viewModel, last_selected_save)]
 
-                        #TODO: Add screenshots @see FileLocation:screenshot
-
                         grid 5 1:
                             xfill True
                             use SSSSS_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))

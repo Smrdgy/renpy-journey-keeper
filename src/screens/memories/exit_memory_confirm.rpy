@@ -5,11 +5,11 @@ screen SSSSS_ExitMemoryConfirm():
 
     $ returnAction = [SSSSS.Memories.ExitMemory(), MainMenu(confirm=False)] #TODO: Replace MainMenu() with Return() when the restoration of a session is figured out...
 
-    key 'K_RETURN' action returnAction #TODO: Not wokring, not sure why...
-    key 'K_KP_ENTER' action returnAction #TODO: Not wokring, not sure why...
-    key 'K_e' action returnAction
-
     use SSSSS_Dialog(title="Exit memory", closeAction=Return()):
+        key 'K_RETURN' action returnAction
+        key 'K_KP_ENTER' action returnAction
+        key 'K_e' action returnAction
+    
         vbox:
             hbox:
                 xfill True

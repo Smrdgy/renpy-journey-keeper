@@ -38,7 +38,7 @@ screen SSSSS_Pagination():
         dragged pagination_dragged
 
         frame:
-            background "#000000ee"
+            background "#000000fc"
 
             ## Buttons to access other pages.
             hbox:

@@ -5,7 +5,6 @@ screen SSSSS_Settings():
 
     default originalSizeAdjustment = SSSSS.Settings.sizeAdjustment
 
-    #TODO: Move this into another thread? Or maybe make the sceens load on button click so that only when it's needed it will be there?; https://stackoverflow.com/questions/7168508/background-function-in-python
     default activeScreens = [screen[0] for screen in renpy.display.screen.screens if (renpy.get_screen(screen) and not ("SSSSS_" in screen[0] or screen[0] == "save" or screen[0] == "load"))]
 
     use SSSSS_Dialog(title="Settings", closeAction=Hide("SSSSS_Settings")):

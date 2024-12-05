@@ -31,7 +31,7 @@ screen SSSSS_PendingUpdateChangelog(version, changelog):
         vbox:
             # Download and install
             hbox:
-                use sssss_iconButton(icon="\ue884", text="Download & install", action=SSSSS.Updater.InstallUpdateAction(version), color=SSSSS.Colors.success)
+                use sssss_iconButton(icon="\ue884", text="Download & install", action=SSSSS.Updater.InstallUpdateAction(), color=SSSSS.Colors.success)
 
             # Skip this update
             hbox:

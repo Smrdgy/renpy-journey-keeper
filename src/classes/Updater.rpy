@@ -206,9 +206,6 @@ init 1 python in SSSSS:
                 renpy.restart_interaction()
         
         class InstallUpdateAction(renpy.ui.Action):
-            def __init__(self, version):
-                self.version = version#TODO: Implement
-
             def __call__(self):
                 renpy.invoke_in_thread(Updater.download_and_install_latest_update)
                 renpy.restart_interaction()

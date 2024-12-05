@@ -117,7 +117,6 @@ style SSSSS_pagination_textbutton_text is SSSSS_text:
     hover_color SSSSS.Colors.hover
     size adjustable(25)
     text_align 0.5
-    #TODO: Black outlines?
 
 style SSSSS_pagination_textbutton_active is SSSSS_pagination_textbutton
 

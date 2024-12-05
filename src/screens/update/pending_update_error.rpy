@@ -1,4 +1,4 @@
-screen SSSSS_PendingUpdateError(version, error):
+screen SSSSS_PendingUpdateError(error):
     style_prefix 'SSSSS'
     modal True
 
@@ -31,7 +31,7 @@ screen SSSSS_PendingUpdateError(version, error):
         vbox:
             # OK
             hbox:
-                use sssss_iconButton(icon="\ue5d5", text="Retry", action=SSSSS.Updater.InstallUpdateAction(version))
+                use sssss_iconButton(icon="\ue5d5", text="Retry", action=SSSSS.Updater.InstallUpdateAction())
 
             # Close
             hbox:

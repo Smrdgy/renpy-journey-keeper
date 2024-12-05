@@ -9,7 +9,7 @@ screen SSSSS_PendingUpdate(version, changelog):
         elif SSSSS.Updater.installing:
             use SSSSS_PendingUpdateInstalling()
         elif SSSSS.Updater.error:
-            use SSSSS_PendingUpdateError(version, SSSSS.Updater.error)
+            use SSSSS_PendingUpdateError(SSSSS.Updater.error)
         elif SSSSS.Updater.installed:
             use SSSSS_PendingUpdateSuccess()
         else:
