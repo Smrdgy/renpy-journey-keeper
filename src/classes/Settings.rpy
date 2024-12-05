@@ -107,18 +107,24 @@ init -1000 python in SSSSS:
             renpy.save_persistent()
 
         class ConfirmReset(renpy.ui.Action):
+            def __init__(self, include_global=False):
+                self.include_global = include_global
+
             def __call__(self):
                 showConfirm(
                     title="Reset settings",
                     message="Do you really wish to reset all settings into their default configuration?",
-                    yes=Settings.Reset(),
+                    yes=Settings.Reset(self.include_global),
                     yesIcon="\ue8ba",
                     yesColor=Colors.danger
                 )
 
         class Reset(renpy.ui.Action):
+            def __init__(self, include_global=False):
+                self.include_global = include_global
+
             def __call__(self):
-                Settings.reset()
+                Settings.reset(self.include_global)
                 renpy.restart_interaction()
 
         class SetAutosaveToggleKey(SetKey):

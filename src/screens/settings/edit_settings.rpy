@@ -226,9 +226,9 @@ screen SSSSS_Settings():
             style_prefix "SSSSS_dialog_action_buttons"
 
             vbox:
-                # Save
+                # Reset
                 hbox:
-                    use sssss_iconButton(icon="\ue8ba", text="Reset", action=SSSSS.Settings.ConfirmReset(), color=SSSSS.Colors.danger)
+                    use sssss_iconButton(icon="\ue8ba", text="Reset", action=Show("SSSSS_ResetSettingsConfirm"), color=SSSSS.Colors.danger)
 
                 # Close
                 hbox:
