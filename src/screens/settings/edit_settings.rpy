@@ -174,7 +174,11 @@ screen SSSSS_Settings():
 
                 # Updates
                 vbox:
-                    use SSSSS_Title("Updates")
+                    hbox:
+                        use SSSSS_Title("Updates")
+
+                        text " {b}(Global){/b}" color SSSSS.Colors.text_light yalign 0.5
+
                     vbox:
                         hbox:
                             hbox yalign 0.5:
@@ -183,7 +187,7 @@ screen SSSSS_Settings():
                                 elif SSSSS.Updater.loading:
                                     text "Latest version: {color=[SSSSS.Colors.info]}Loading...{/color}"
                                 else:
-                                    text "Latest version: {color=[SSSSS.Colors.disabled]}N/A{/color}"
+                                    text "Latest version: {color=[SSSSS.Colors.na]}N/A{/color}"
 
                             use sssss_iconButton("\ue5d5", text="Refresh", action=SSSSS.Updater.CheckForUpdateAction())
 

@@ -9,13 +9,17 @@ init -1000 python in SSSSS:
     # Main Settings class
     class SettingsClass(x52NonPicklable):
         def __init__(self):
-            settings = self.loadFromUserDir()
+            settings = self.loadFromGlobalSettings()
+            settings.update(self.loadFromUserDir())
             settings.update(self.loadFromPersistent())
 
             self.setSettings(settings)
 
         def loadFromUserDir(self):
             return UserDir.loadSettings()
+
+        def loadFromGlobalSettings(self):
+            return UserDir.loadGlobalSettings()
 
         def loadFromPersistent(self):
             if renpy.store.persistent.SSSSS_Settings:
@@ -67,25 +71,36 @@ init -1000 python in SSSSS:
                 'debugEnabled': self.debugEnabled,
                 'pageFollowsQuickSave': self.pageFollowsQuickSave,
                 'pageFollowsAutoSave': self.pageFollowsAutoSave,
+            })
+
+        def getGlobalSettingsAsJson(self):
+            return json.dumps({
                 'updaterEnabled': self.updaterEnabled,
                 'autoUpdateWithoutPrompt': self.autoUpdateWithoutPrompt,
             })
 
         def save(self):
             self.saveToUserDir()
+            self.saveToGlobals()
             self.saveToPersistent()
 
         def saveToUserDir(self):
             UserDir.saveSettings(self.getSettingsAsJson())
+
+        def saveToGlobals(self):
+            UserDir.saveGlobalSettings(self.getGlobalSettingsAsJson())
 
         def saveToPersistent(self):
             renpy.store.persistent.SSSSS_Settings = self.getSettingsAsJson()
 
             renpy.save_persistent()
 
-        def reset(self):
+        def reset(self, include_global):
             renpy.store.persistent.SSSSS_Settings = None
             UserDir.removeSettings()
+
+            if include_global:
+                UserDir.removeGlobalSettings()
             
             self.setSettings({})
 
