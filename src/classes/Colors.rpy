@@ -6,7 +6,7 @@ init -999 python in SSSSS:
         hover = theme
 
         text_primary = "#fff"
-        text_light = "#ccc"
+        text_light = "#8f8f8f"
         text_placeholder = "#454545"
 
         success = "#0f0"

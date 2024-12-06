@@ -606,6 +606,20 @@ init -2000 python in SSSSS:
 
             return "_".join(parts)
 
+    class OpenTooltipAction(renpy.ui.Action):
+        def __init__(self, title=None, icon=None, message=None, interactive=False, side="top", pos=None):
+            self.title = title
+            self.icon = icon
+            self.message = message
+            self.interactive = interactive
+            self.side = side
+            self.pos = pos
+
+        def __call__(self):
+            if self.message:
+                renpy.show_screen("SSSSS_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side)
+                renpy.restart_interaction()
+
 init -1000 python:
     def adjustable(value, minValue=5): 
         # if SSSSS.Settings.sizeAdjustment == 0:
