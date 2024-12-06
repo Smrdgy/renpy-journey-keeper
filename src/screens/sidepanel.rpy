@@ -31,20 +31,20 @@ screen SSSSS_Sidepanel():
             background "#000000cc"
 
             vbox:
-                use sssss_iconButton('\ueb73', tt="Open list of playthroughs", action=Show("SSSSS_PlaythroughsPicker"))
-                use sssss_iconButton('\uea20', tt="New playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=None))
-                use sssss_iconButton('\ue02c', tt="Open memories", action=Show("SSSSS_MemoriesLibrary"), disabled=not SSSSS.Settings.memoriesEnabled)
+                use sssss_iconButton('\ueb73', tt="Select playthrough", ttSide="left", action=Show("SSSSS_PlaythroughsPicker"))
+                use sssss_iconButton('\uea20', tt="New playthrough", ttSide="left", action=Show("SSSSS_EditPlaythrough", playthrough=None))
+                use sssss_iconButton('\ue02c', tt="Open memories", ttSide="left", action=Show("SSSSS_MemoriesLibrary"), disabled=not SSSSS.Settings.memoriesEnabled)
 
                 use SSSSS_Divider(sizeX=40)
 
-                use sssss_iconButton('\ue3c9', tt="Edit playthrough", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
-                use sssss_iconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not SSSSS.Utils.hasColsAndRowsConfiguration())
-                use sssss_iconButton('\ue2e6', tt="Actions", action=Show("SSSSS_PlaythroughActions", playthrough=playthrough))
+                use sssss_iconButton('\ue3c9', tt="Edit playthrough", ttSide="left", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
+                use sssss_iconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", ttSide="left", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not SSSSS.Utils.hasColsAndRowsConfiguration())
+                use sssss_iconButton('\ue2e6', tt="Playthrough actions", ttSide="left", action=Show("SSSSS_PlaythroughActions", playthrough=playthrough))
 
                 use SSSSS_Divider(sizeX=40)
 
-                use sssss_iconButton('\ue666', tt="Custom pagination", action=SSSSS.Pagination.TogglePagination(), toggled=renpy.store.persistent.SSSSS_ShowPagination, toggledColor=SSSSS.Colors.selected)
-                use sssss_iconButton('\ue8b8', tt="Settings", action=Show("SSSSS_Settings"))
+                use sssss_iconButton('\ue666', tt="Custom pagination", ttSide="left", action=SSSSS.Pagination.TogglePagination(), toggled=renpy.store.persistent.SSSSS_ShowPagination, toggledColor=SSSSS.Colors.selected)
+                use sssss_iconButton('\ue8b8', tt="Settings", ttSide="left", action=Show("SSSSS_Settings"))
 
 
 screen SSSSS_SidepanelHolder():

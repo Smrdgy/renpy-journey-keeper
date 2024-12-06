@@ -118,7 +118,9 @@ screen SSSSS_Settings():
                 vbox:
                     use SSSSS_Title("Save/Load")
                     vbox:
-                        use SSSSS_Checkbox(checked=SSSSS.Settings.customGridEnabled, text="Custom slots grid", action=SSSSS.Settings.ToggleCustomGridEnabled())
+                        hbox:
+                            use SSSSS_Checkbox(checked=SSSSS.Settings.customGridEnabled, text="Custom slots grid", action=SSSSS.Settings.ToggleCustomGridEnabled())
+                            use SSSSS_Helper("When enabled, two new options will appear where you can enter the number of columns and rows for the save slots in the game's save/load menu. This is needed because some games use custom save systems that the mod's autosave/quicksave system can't handle automatically.")
 
                         if SSSSS.Settings.customGridEnabled:
                             use SSSSS_YSpacer(2)
@@ -154,8 +156,13 @@ screen SSSSS_Settings():
 
                             use SSSSS_YSpacer(2)
 
-                        use SSSSS_Checkbox(checked=SSSSS.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=SSSSS.Settings.ToggleOffsetSlotAfterManualSaveIsLoadedEnabled())
-                        use SSSSS_Checkbox(checked=SSSSS.Settings.offsetSlotAfterManualSave, text="Offset the slot after a manual save is performed", action=SSSSS.Settings.ToggleOffsetSlotAfterManualSaveEnabled())
+                        hbox:
+                            use SSSSS_Checkbox(checked=SSSSS.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=SSSSS.Settings.ToggleOffsetSlotAfterManualSaveIsLoadedEnabled())
+                            use SSSSS_Helper("If enabled, loading a save will shift the save slot by 1, ensuring the next autosave or quicksave does not overwrite the manual save.")
+
+                        hbox:
+                            use SSSSS_Checkbox(checked=SSSSS.Settings.offsetSlotAfterManualSave, text="Offset the slot after a manual save is performed", action=SSSSS.Settings.ToggleOffsetSlotAfterManualSaveEnabled())
+                            use SSSSS_Helper("If enabled, creating a manual save will shift the save slot by 1, preventing the next autosave or quicksave from overwriting it.")
 
                         use SSSSS_YSpacer(2)
 

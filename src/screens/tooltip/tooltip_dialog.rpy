@@ -85,4 +85,4 @@ screen SSSSS_TooltipDialog(title, icon, message, pos=None, interactive=False, si
                         hbox xpos 1.0 xanchor 1.0:
                             use sssss_iconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 
-                text message style "SSSSS_text" xalign 0.5 text_align 0.5
+                text message style "SSSSS_text" xalign 0.5
