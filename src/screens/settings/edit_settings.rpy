@@ -120,9 +120,9 @@ screen SSSSS_Settings():
                     vbox:
                         use SSSSS_Checkbox(checked=SSSSS.Settings.customGridEnabled, text="Custom slots grid", action=SSSSS.Settings.ToggleCustomGridEnabled())
 
-                        use SSSSS_YSpacer(2)
-
                         if SSSSS.Settings.customGridEnabled:
+                            use SSSSS_YSpacer(2)
+
                             hbox:
                                 use SSSSS_XSpacer()
 
@@ -151,6 +151,11 @@ screen SSSSS_Settings():
                                     for x in range(0, SSSSS.Settings.customGridX):
                                         for y in range(0, SSSSS.Settings.customGridY):
                                             frame style "SSSSS_default" xysize (10, 10) background SSSSS.Colors.theme
+
+                            use SSSSS_YSpacer(2)
+
+                        use SSSSS_Checkbox(checked=SSSSS.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=SSSSS.Settings.ToggleOffsetSlotAfterManualSaveIsLoadedEnabled())
+                        use SSSSS_Checkbox(checked=SSSSS.Settings.offsetSlotAfterManualSave, text="Offset the slot after a manual save is performed", action=SSSSS.Settings.ToggleOffsetSlotAfterManualSaveEnabled())
 
                         use SSSSS_YSpacer(2)
 

@@ -8,8 +8,12 @@ init -99 python in SSSSS:
     
     def before_save(slotname):
         Autosaver.lastChoice = None
-        Autosaver.setActiveSlot(slotname)
-        Autosaver.setNextSlot()
+
+        if Settings.offsetSlotAfterManualSave:
+            Autosaver.setActiveSlot(slotname)
+
+            if not Utils.isDisplayingChoicesInAnyContext():
+                Autosaver.setNextSlot()
 
     def load_partial(func, *args, **kwargs):
         def new_funct(*new_args, **new_kwargs):

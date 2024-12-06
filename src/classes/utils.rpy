@@ -218,6 +218,19 @@ init -2000 python in SSSSS:
             except:
                 return False
 
+        @staticmethod
+        def isDisplayingChoicesInAnyContext():
+            try:
+                for context in renpy.game.contexts:
+                    script = renpy.game.script.lookup(context.current)
+                    print(script)
+                    if isinstance(script, renpy.ast.Menu):
+                        return True
+            except Exception as e:
+                print(e)
+
+            return False
+
         # In built games `[ some text ]` it's not a problem, but if there ever is game with these and config.developer = True, it will throw an exception
         @staticmethod
         def replaceReservedCharacters(text):

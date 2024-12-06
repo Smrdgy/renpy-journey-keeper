@@ -42,7 +42,8 @@ init -1000 python in SSSSS:
             self.customGridY = data.get("customGridY", 2)
             self.loadScreenName = data.get("loadScreenName", "load")
             self.saveScreenName = data.get("saveScreenName", "save")
-            self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", True)#TODO: Implement
+            self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", False)
+            self.offsetSlotAfterManualSave = data.get("offsetSlotAfterManualSave", False)
             self.sizeAdjustment = data.get("sizeAdjustment", 0) or 0
             self.changeSidepanelVisibilityKey = data.get("changeSidepanelVisibilityKey", "alt_K_p")
             self.debugEnabled = data.get("debugEnabled", False)
@@ -66,6 +67,7 @@ init -1000 python in SSSSS:
                 'loadScreenName': self.loadScreenName,
                 'saveScreenName': self.saveScreenName,
                 'offsetSlotAfterManualSaveIsLoaded': self.offsetSlotAfterManualSaveIsLoaded,
+                'offsetSlotAfterManualSave': self.offsetSlotAfterManualSave,
                 'sizeAdjustment': self.sizeAdjustment,
                 'changeSidepanelVisibilityKey': self.changeSidepanelVisibilityKey,
                 'debugEnabled': self.debugEnabled,
@@ -309,6 +311,22 @@ init -1000 python in SSSSS:
         class ToggleAutoUpdatesWithoutPromptEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.autoUpdateWithoutPrompt = not Settings.autoUpdateWithoutPrompt
+
+                Settings.save()
+                renpy.restart_interaction()
+                renpy.restart_interaction()
+
+        class ToggleOffsetSlotAfterManualSaveIsLoadedEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.offsetSlotAfterManualSaveIsLoaded = not Settings.offsetSlotAfterManualSaveIsLoaded
+
+                Settings.save()
+                renpy.restart_interaction()
+                renpy.restart_interaction()
+
+        class ToggleOffsetSlotAfterManualSaveEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.offsetSlotAfterManualSave = not Settings.offsetSlotAfterManualSave
 
                 Settings.save()
                 renpy.restart_interaction()

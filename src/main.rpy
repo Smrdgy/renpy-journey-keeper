@@ -24,6 +24,9 @@ init 51 python in SSSSS:
             Autosaver.setActiveSlot(Autosaver.activeSlotPending)
             Autosaver.activeSlotPending = None
 
+            if Settings.offsetSlotAfterManualSaveIsLoaded:
+                Autosaver.setNextSlot()
+
         Autosaver.afterLoadSavePositionPending = True
 
     def startInteractCallback():
