@@ -116,7 +116,7 @@ init 1 python in SSSSS:
                 return self
 
             def editFromPlaythrough(self, playthrough, moveSaveDirectory=False):
-                if(self.directory == None or (moveSaveDirectory and playthrough.name != self.name)):
+                if(self.directory == None or (moveSaveDirectory and playthrough.name != self.name and playthrough.id != 1)):
                     self.directory = Utils.name_to_directory_name(playthrough.name)
 
                 self.name = playthrough.name
@@ -263,7 +263,7 @@ init 1 python in SSSSS:
         def addOrEdit(self, playthrough, moveSaveDirectory=False):
             sourcePlaythrough = self.getByID(playthrough.id)
             if(sourcePlaythrough != None):
-                if moveSaveDirectory and sourcePlaythrough.name != playthrough.name:
+                if moveSaveDirectory and sourcePlaythrough.name != playthrough.name and playthrough.id != 1:
                     result = self.renameSaveDirectory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name))
 
                     if result != True:
@@ -419,6 +419,9 @@ init 1 python in SSSSS:
 
                 playthrough = playthrough.copy().edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName, enabledSaveLocations=enabledSaveLocations)#MODIFY HERE
 
+                if moveSaveDirectory and playthrough.id == 1:
+                    moveSaveDirectory = False
+
                 Playthroughs.addOrEdit(playthrough, moveSaveDirectory=moveSaveDirectory)
                 renpy.restart_interaction()
 
@@ -452,6 +455,9 @@ init 1 python in SSSSS:
 
                 renpy.take_screenshot()
                 renpy.save(slotString)
+
+                if not Settings.offsetSlotAfterManualSave:
+                    Autosaver.setNextSlot()
 
                 if Settings.pageFollowsQuickSave:
                     renpy.store.persistent._file_page = str(page)
