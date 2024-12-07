@@ -181,35 +181,36 @@ screen SSSSS_Settings():
                             for screen in relevantLoadScreens:
                                 use SSSSS_Radio(checked=SSSSS.Settings.loadScreenName == screen, text=("\"load\" (default)" if screen == "load" else "\"" + screen + "\""), action=SSSSS.Settings.SetLoadScreenName(screen))
 
-                use SSSSS_YSpacer()
-
                 # Updates
-                vbox:
-                    hbox:
-                        use SSSSS_Title("Updates")
-
-                        text " {b}(Global){/b}" color SSSSS.Colors.text_light yalign 0.5
+                if not SSSSS.Updater.unavailable:
+                    use SSSSS_YSpacer()
 
                     vbox:
                         hbox:
-                            hbox yalign 0.5:
-                                if SSSSS.Updater.latest:
-                                    text "Latest version: {a=[SSSSS.Updater.latest_html_url]}[SSSSS.Updater.latest_version]"
-                                elif SSSSS.Updater.loading:
-                                    text "Latest version: {color=[SSSSS.Colors.info]}Loading...{/color}"
-                                else:
-                                    text "Latest version: {color=[SSSSS.Colors.na]}N/A{/color}"
+                            use SSSSS_Title("Updates")
 
-                            use sssss_iconButton("\ue5d5", text="Refresh", action=SSSSS.Updater.CheckForUpdateAction())
+                            text " {b}(Global){/b}" color SSSSS.Colors.text_light yalign 0.5
 
-                        use SSSSS_Checkbox(checked=SSSSS.Settings.updaterEnabled, text="Check for an update every time the game launches", action=SSSSS.Settings.ToggleUpdaterEnabled())
-
-                        if SSSSS.Settings.updaterEnabled:
+                        vbox:
                             hbox:
-                                use SSSSS_XSpacer()
+                                hbox yalign 0.5:
+                                    if SSSSS.Updater.latest:
+                                        text "Latest version: {a=[SSSSS.Updater.latest_html_url]}[SSSSS.Updater.latest_version]"
+                                    elif SSSSS.Updater.loading:
+                                        text "Latest version: {color=[SSSSS.Colors.info]}Loading...{/color}"
+                                    else:
+                                        text "Latest version: {color=[SSSSS.Colors.na]}N/A{/color}"
 
-                                vbox:
-                                    use SSSSS_Checkbox(checked=SSSSS.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=SSSSS.Settings.ToggleAutoUpdatesWithoutPromptEnabled())
+                                use sssss_iconButton("\ue5d5", text="Refresh", action=SSSSS.Updater.CheckForUpdateAction())
+
+                            use SSSSS_Checkbox(checked=SSSSS.Settings.updaterEnabled, text="Check for an update every time the game launches", action=SSSSS.Settings.ToggleUpdaterEnabled())
+
+                            if SSSSS.Settings.updaterEnabled:
+                                hbox:
+                                    use SSSSS_XSpacer()
+
+                                    vbox:
+                                        use SSSSS_Checkbox(checked=SSSSS.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=SSSSS.Settings.ToggleAutoUpdatesWithoutPromptEnabled())
 
                 if renpy.config.developer:
                     use SSSSS_YSpacer()

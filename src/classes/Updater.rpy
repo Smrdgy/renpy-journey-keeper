@@ -1,7 +1,8 @@
 init 1 python in SSSSS:
     _constant = True
+    _urllib_request = None
+    _urllib_error = None
 
-    import urllib2
     import json
     import re
     import os
@@ -17,6 +18,8 @@ init 1 python in SSSSS:
         download_url = "https://api.github.com/repos/{}/{}/releases/assets/".format(MOD_GITHUB_OWNER, MOD_GITHUB_REPO)
 
         authorization = "Bearer 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"#TODO: Remove when the repo becomes public
+
+        unavailable = False
 
         @property
         def latest_version(self):
@@ -44,7 +47,7 @@ init 1 python in SSSSS:
             self.latest = None
 
         def check_for_update(self, ignore_blacklist=False, ignore_force_auto_update=False):
-            if self.loading:
+            if self.loading or self.unavailable:
                 return
             
             self.checked_for_update = True
@@ -78,11 +81,11 @@ init 1 python in SSSSS:
             print("Fetching metadata from: ", self.url)
 
             try:
-                request = urllib2.Request(self.url)
+                request = _urllib_request.Request(self.url)
                 request.add_header("Authorization", self.authorization)
                 request.add_header("Accept", "application/vnd.github.v3+json")
 
-                response = urllib2.urlopen(request)
+                response = _urllib_request.urlopen(request)
                 json_string = response.read()
                 data = json.loads(json_string)
 
@@ -90,10 +93,10 @@ init 1 python in SSSSS:
                 renpy.restart_interaction()
  
                 return data
-            except urllib2.HTTPError as e:
+            except _urllib_error.HTTPError as e:
                 print("HTTP error occurred: ", e)
                 self.error = "A HTTP error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
-            except urllib2.URLError as e:
+            except _urllib_error.URLError as e:
                 print("URL error occurred: ", e)
                 self.error = "A URL error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except Exception as e:
@@ -141,11 +144,11 @@ init 1 python in SSSSS:
             self.error = None
             print("Downloadingn asset from: ", self.asset_id)
             try:
-                request = urllib2.Request(self.download_url + str(self.asset_id))
+                request = _urllib_request.Request(self.download_url + str(self.asset_id))
                 request.add_header("Accept", "application/octet-stream")
                 request.add_header("Authorization", self.authorization)
 
-                response = urllib2.urlopen(request)
+                response = _urllib_request.urlopen(request)
 
                 with open(self.download_path, "wb") as output_file:
                     output_file.write(response.read())
@@ -155,10 +158,10 @@ init 1 python in SSSSS:
                 renpy.restart_interaction()
 
                 return True
-            except urllib2.HTTPError as e:
+            except _urllib_error.HTTPError as e:
                 print("HTTP error occurred: ", e)
                 self.error = "A HTTP error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
-            except urllib2.URLError as e:
+            except _urllib_error.URLError as e:
                 print("URL error occurred: ", e)
                 self.error = "A URL error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except Exception as e:
@@ -223,3 +226,18 @@ init 1 python in SSSSS:
         class CheckForUpdateAction(renpy.ui.Action):
             def __call__(self):
                 Updater.check_for_update(ignore_blacklist=True, ignore_force_auto_update=True)
+
+    try:
+        import urllib2 as _urllib_request
+        import urllib2 as _urllib_error
+    except:
+        try:
+            import ssl
+            ssl._create_default_https_context = ssl._create_unverified_context
+
+            from urllib import request as _urllib_request
+            from urllib import error as _urllib_error
+        except Exception as e:
+            UpdaterClass.unavailable = True
+            print("No urllib present. SSSSS updater disabled")
+            pass
