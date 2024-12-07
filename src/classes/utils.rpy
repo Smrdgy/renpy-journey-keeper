@@ -110,9 +110,9 @@ init -2000 python in SSSSS:
             page, slot = Utils.splitSavename(save_name)
 
             if page == 0 and slot == 0:
-                return save_name
+                return save_name, ""
 
-            return page, slot
+            return str(page), str(slot)
 
         @staticmethod
         def name_to_directory_name(title):
