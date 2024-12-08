@@ -1,4 +1,6 @@
-screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextInput):
+screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search):
+    default search_input = SSSSS.TextInput("search")
+
     python:
         timeline = SSSSS.Utils.filter_timeline(viewModel.timeline, search)
 
@@ -17,9 +19,9 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextI
 
     if hasTimelineEntry:
         key 'K_e' action exportAction
-        key 'ctrl_K_f' action SetScreenVariable("__activeTextInput__", "search")
-        if activeTextInput == "search":
-            key 'K_ESCAPE' action SetScreenVariable("__activeTextInput__", None)
+        key 'ctrl_K_f' action SSSSS.TextInput.SetActiveAction("search")
+        if SSSSS.TextInput.is_active("search"):
+            key 'K_ESCAPE' action SSSSS.TextInput.SetActiveAction(None)
 
         viewport:
             mousewheel True
@@ -53,16 +55,16 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextI
 
                             button:
                                 key_events True
-                                action NullAction()
+                                action SetScreenVariable(SSSSS.TextInput.activeTextInputScreenVariableName, "search")
 
                                 vbox:
                                     hbox:
                                         hbox yalign 0.5:
                                             use sssss_icon(icon="\ue8b6", size=20, hover_color=SSSSS.Colors.hover)
 
-                                        use SSSSS_TextInput(id="search", variableName="search", placeholder="Search for choice")
+                                        add search_input.displayable(placeholder="Search for choice")
 
-                                    frame style "SSSSS_default" background "#ffffff22" hover_background SSSSS.Colors.hover ysize 2 offset adjustable((0, -10))
+                                    frame style "SSSSS_default" background "#ffffff22" hover_background SSSSS.Colors.hover ysize 2 offset adjustable((0, 2))
 
                         use SSSSS_XSpacer(offset=2)
 

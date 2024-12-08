@@ -24,12 +24,11 @@ style SSSSS_label is SSSSS_default
 style SSSSS_label_text is SSSSS_text:
     bold True
 
-style SSSSS_placeholder is SSSSS_text:
-    color SSSSS.Colors.text_placeholder
-
 style textinput is SSSSS_text:
     color "#959595"
     offset adjustable((10, 1), minValue=1)
+
+style textinput_caret is textinput
 
 style SSSSS_vscrollbar:
     base_bar "#00000072"

@@ -53,10 +53,10 @@ init -1000 python in SSSSS:
             self.autoUpdateWithoutPrompt = data.get("autoUpdateWithoutPrompt", False)
 
             # Update the old system (string only) to list #TODO: Remove at some point
-            if not callable(self.loadScreenName.append):
+            if not hasattr(self.loadScreenName, "append"):
                 self.loadScreenName = ["load"]
 
-            if not callable(self.saveScreenName.append):
+            if not hasattr(self.saveScreenName, "append"):
                 self.saveScreenName = ["save"]
 
         def getSettingsAsJson(self):

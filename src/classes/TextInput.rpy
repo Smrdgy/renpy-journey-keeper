@@ -33,7 +33,7 @@ init 1 python in SSSSS:
             return [ self.caret ]
 
         def render(self, width, height, st, at):
-            st -= self.st_base
+            st -= self.st_base or 0
 
             cr = renpy.display.render.render(self.caret, width, height, st, at)
             rv = renpy.display.render.Render(1, height)
@@ -47,273 +47,157 @@ init 1 python in SSSSS:
 
             return rv
 
-    class TextInputBase(renpy.text.text.Text): # @UndefinedVariable
-        """
-        This is a Displayable that takes text as input.
-        """
-
+    class TextInput(x52NonPicklable):
         activeTextInputScreenVariableName = "__activeTextInput__"
-        availableTextInputsScreenVariableName = "__availableInputs__"
-        changed = None
-        prefix = ""
-        suffix = ""
-        caret_pos = 0
-        old_caret_pos = 0
-        pixel_width = None
-        default = u""
-        edit_text = u""
-        value = None
-        shown = False
-        multiline = False
-        editable = False
 
-        st = 0
+        def __init__(self, identifier, variableName=None, value=None, auto_focus=False, disabled=False, multiline=False, allowed_characters=None, excluded_characters=None, max_length=None, placeholder=None):
+            self.id = identifier
+            self.variableName = variableName or identifier
+            self.disabled = disabled
+            self.value = value
+            self.displayable_reference = None
+            self.auto_focus = auto_focus
+            self.editable = False
+            self.edit_text = None
+            self.caret_pos = 0
+            self.old_caret_pos = 0
+            self.multiline = multiline
+            self.allowed_characters = allowed_characters
+            self.excluded_characters = excluded_characters
+            self.max_length = max_length
+            self.placeholder = placeholder
 
-        def __init__(
-            self,
-            id=None,
-            default="",
-            length=None,
-            style='textinput',
-            allow=None,
-            exclude=None,
-            prefix="",
-            suffix="",
-            changed=None,
-            button=None,
-            replaces=None,
-            editable=False,
-            pixel_width=None,
-            value=None,
-            copypaste=True,
-            caret_blink=1,
-            multiline=False,
-            text_size=None,
-            variableName=None,
-            **properties
-        ):
-            super(TextInputBase, self).__init__("", style=style, replaces=replaces, substitute=False, **properties)
+            if auto_focus:
+                self.enable()
+
+        def displayable(self, placeholder=None, **properties):
+            self.displayable_reference = TextInputDisplayable(controller=self, placeholder=placeholder, **properties)
+            return self.displayable_reference
+
+        def enable(self):
+            self.editable = True
+            self.caret_pos = len(self.get_value() or "")
+
+            TextInput.set_active(self.id)
+
+        def disable(self):
+            self.editable = False
+
+            cs = renpy.current_screen()
+            if not cs:
+                return
+
+            if cs.scope[self.activeTextInputScreenVariableName] == self.id:
+                cs.scope[self.activeTextInputScreenVariableName] = None
+
+                renpy.restart_interaction()
+        
+        def get_value(self):
+            if self.value:
+                return self.value.get_text()
+            elif self.variableName:
+                return Utils.getScreenVariable(self.variableName)
+            return None
+
+        @staticmethod
+        def is_active(id):
+            return Utils.getScreenVariable(TextInput.activeTextInputScreenVariableName) == id
+
+        @staticmethod
+        def set_active(id):
+            renpy.store.SetScreenVariable(TextInput.activeTextInputScreenVariableName, id)()
+
+        class SetActiveAction(renpy.ui.Action):
+            def __init__(self, id):
+                self.id = id
+
+            def __call__(self):
+                TextInput.set_active(self.id)
+
+    class TextInputDisplayable(renpy.text.text.Text):
+        focusable = True
+
+        def __init__(self, controller, placeholder=None, style="textinput", **properties):
+            super(TextInputDisplayable, self).__init__("", style=style, **properties)
 
             self.width_height = (0, 0)
-
-            self.button = None
+            self.controller = controller
+            self.prefix = ""
+            self.suffix = ""
+            self.shown = False
+            self.st = None
+            self.changed = None
+            self.placeholder = placeholder
             
-            self.variableName = variableName
-            self.id = id
+            if self.controller.value:
+                self.changed = self.controller.value.set_text
 
-            if variableName:
-                default = Utils.getScreenVariable(self.variableName) or ''
-
-            if value:
-                self.value = value
-                changed = value.set_text
-                default = value.get_text()
-
-            self.default = str(default)
+            self.default = self.controller.get_value() or ""
             self.content = self.default
 
-            self.length = length
+            if not self.controller.editable and TextInput.is_active(self.controller.id):
+                self.controller.enable()
+            elif self.controller.editable and not TextInput.is_active(self.controller.id):
+                self.controller.disable()
 
-            self.allow = allow
-            self.exclude = exclude
-            self.prefix = prefix
-            self.suffix = suffix
-            self.copypaste = copypaste
+            self.setup_caret(style, **properties)
 
-            self.changed = changed
+            self.update_text(self.content)
 
-            self.editable = editable
-            self.pixel_width = pixel_width
-
-            self.multiline = multiline
-
+        def setup_caret(self, style, **properties):
             caretprops = { 'color' : None }
 
             for i, v in properties.items():
-                if i.endswith("color"):
+                if i.endswith("color") or i.startswith("caret_"):
                     caretprops[i] = v
+            
+            caret = renpy.display.image.Solid(xysize=(1, self.style.size), style=style + "_caret", **caretprops)
+            self.caret = CaretBlink(caret, 1)
 
-            # Get font size for the caret's height
-            text_size = renpy.style.Style(style, properties).size
-            caret = renpy.display.image.Solid(xysize=(1, text_size), style=style, **caretprops)
-
-            if caret_blink:
-                caret = CaretBlink(caret, caret_blink)
-
-            self.caret = caret
-
-            if self.id:
-                if self.editable and Utils.getScreenVariable(self.activeTextInputScreenVariableName) == None:
-                    self.enable()
-                else:
-                    self.editable = Utils.getScreenVariable(self.activeTextInputScreenVariableName) == self.id
-
-            # if self.id:
-            #     inputs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
-            #     inputs.append(self.id)
-
-            #     renpy.store.SetScreenVariable(self.availableTextInputsScreenVariableName, inputs)
-
-            if button:
-                button.clicked = TextInputBase.ToggleProxy(self)
-                self.button = button
-
-            if isinstance(replaces, TextInputBase):
-                self.content = replaces.content
-                self.editable = replaces.editable
-                self.caret_pos = replaces.caret_pos
-                self.shown = replaces.shown
-                self.editable = replaces.editable
-
-            # if editable:
-            #     TextInputBase.caret_pos = len(self.content)
-
-            self.update_text(self.content, self.editable)
-
-        def place(self, dest, x, y, width, height, surf, main=True):
-            self.width_height = (width, height)
-
-            return super(TextInputBase, self).place(dest, x, y, width, height, surf, main)
-
-        class ToggleProxy(renpy.ui.Action):
-            def __init__(self, textinput):
-                self.textinput = textinput
-
-            def __call__(self):
-                if self.textinput.editable:
-                    self.textinput.disable()
-                else:
-                    self.textinput.enable()
-                
-
-        def update_text(self, new_content, editable, check_size=False):
-
-            edit = renpy.display.interface.text_editing
-
-            old_content = self.content
-
-            if new_content != self.content or editable != self.editable or edit:
-
-                renpy.display.render.redraw(self, 0)
-
-            self.editable = editable
-
-            # Choose the caret.
-            caret = self.style.caret
-
-            if caret is None:
-                caret = self.caret
-
-            # Format text being edited by the IME.
-            if edit:
-
-                self.edit_text = edit.text
-
-                edit_text_0 = edit.text[:edit.start]
-                edit_text_1 = edit.text[edit.start:edit.start + edit.length]
-                edit_text_2 = edit.text[edit.start + edit.length:]
-
-                edit_text = ""
-
-                if edit_text_0:
-                    edit_text += "{u=1}" + edit_text_0.replace("{", "{{") + "{/u}"
-
-                if edit_text_1:
-                    edit_text += "{u=2}" + edit_text_1.replace("{", "{{") + "{/u}"
-
-                if edit_text_2:
-                    edit_text += "{u=1}" + edit_text_2.replace("{", "{{") + "{/u}"
-
-            else:
-                self.edit_text = ""
-                edit_text = ""
-
-            def set_content(content):
-
-                if content == "":
-                    content = u" "
-
-                if editable:
-                    l = len(content)
-                    self.set_text([self.prefix, content[0:TextInputBase.caret_pos].replace("{", "{{"), edit_text, caret, content[TextInputBase.caret_pos:l].replace("{", "{{"), self.suffix])
-                else:
-                    self.set_text([self.prefix, content.replace("{", "{{"), self.suffix ])
-
-                if isinstance(self.caret, CaretBlink):
-                    self.caret.st_base = self.st
-                    renpy.display.render.redraw(self.caret, 0)
-
-            set_content(new_content)
-
-            if check_size and self.pixel_width:
-                w, _h = self.size()
-                if w > self.pixel_width:
-                    if self.editable:
-                        TextInputBase.caret_pos = TextInputBase.old_caret_pos
-                    set_content(old_content)
-                    return
-
-            if new_content != old_content:
-                self.content = new_content
-
-                if self.changed:
-                    self.changed(new_content)
-
-                    new_value = self.value.get_text()
-                    if new_value != new_content:
-                        #The new value was most likely rejected, restore the previous position
-                        TextInputBase.caret_pos = TextInputBase.old_caret_pos
-
-                    self.update_text(new_value, editable, check_size)
-
-                if self.variableName:
-                    renpy.store.SetScreenVariable(self.variableName, new_content)()
+        # =====================
+        # Displayable overrides
+        # =====================
 
         # This is needed to ensure the caret updates properly.
         def set_style_prefix(self, prefix, root):
             if prefix != self.style.prefix:
-                self.update_text(self.content, self.editable)
+                self.update_text(self.content)
 
-            super(TextInputBase, self).set_style_prefix(prefix, root)
-
-        def enable(self):
-            self.update_text(self.content, True)
-
-            TextInputBase.caret_pos = len(self.content)
-
-            if self.id and Utils.getScreenVariable(self.activeTextInputScreenVariableName) != self.id:
-                renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, self.id)()
-
-        def disable(self):
-            self.update_text(self.content, False)
-
-            if self.id:
-                if Utils.getScreenVariable(self.activeTextInputScreenVariableName) == self.id:
-                    renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, None)()
+            super(TextInputDisplayable, self).set_style_prefix(prefix, root)
 
         def per_interact(self):
             if not self.shown:
-                if self.value is not None:
-                    default = self.value.get_text()
-                    self.default = str(default)
-
-                self.content = self.default
-                self.update_text(self.content, self.editable)
+                self.content = self.controller.get_value() or ""
+                self.update_text(self.content)
 
                 self.shown = True
 
+        def place(self, dest, x, y, width, height, surf, main=True):
+            self.width_height = (width, height)
+
+            return super(TextInputDisplayable, self).place(dest, x, y, width, height, surf, main)
+
+        def render(self, width, height, st, at):
+            self.st = st
+
+            rv = super(TextInputDisplayable, self).render(width, height, st, at)
+
+            if self.controller.editable:
+                rv.text_input = True
+
+            return rv
+
         def event(self, ev, x, y, st):
             self.st = st
-            TextInputBase.old_caret_pos = TextInputBase.caret_pos
 
-            if not self.button and self.id:
-                try:
-                    self.handleClick(ev, x, y, st)
-                except:
-                    raise renpy.display.core.IgnoreEvent()
-                    
-
-            if not self.editable:
+            # Test for enable/disable on click
+            try:
+                self.__event_click(ev, x, y, st)
+            except Exception as e:
+                print(e)
+                raise renpy.display.core.IgnoreEvent()
+            
+            if not self.controller.editable:
                 return None
 
             edit_controls = any([
@@ -334,60 +218,60 @@ init 1 python in SSSSS:
                 raise renpy.display.core.IgnoreEvent()
             elif renpy.map_event(ev, "input_backspace"):
 
-                if self.content and TextInputBase.caret_pos > 0:
-                    content = self.content[0:TextInputBase.caret_pos - 1] + self.content[TextInputBase.caret_pos:l]
-                    TextInputBase.caret_pos -= 1
-                    self.update_text(content, self.editable)
+                if self.content and self.controller.caret_pos > 0:
+                    content = self.content[0:self.controller.caret_pos - 1] + self.content[self.controller.caret_pos:l]
+                    self.controller.caret_pos -= 1
+                    self.update_text(content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
-            elif self.multiline and renpy.map_event(ev, 'input_next_line'):
-                content = self.content[:TextInputBase.caret_pos] + '\n' + self.content[TextInputBase.caret_pos:]
-                TextInputBase.caret_pos += 1
-                self.update_text(content, self.editable)
+            elif self.controller.multiline and renpy.map_event(ev, 'input_next_line'):
+                content = self.content[:self.controller.caret_pos] + '\n' + self.content[self.controller.caret_pos:]
+                self.controller.caret_pos += 1
+                self.update_text(content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_left"):
-                if TextInputBase.caret_pos > 0:
-                    TextInputBase.caret_pos -= 1
-                    self.update_text(self.content, self.editable)
+                if self.controller.caret_pos > 0:
+                    self.controller.caret_pos -= 1
+                    self.update_text(self.content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_jump_word_left"):
-                if TextInputBase.caret_pos > 0:
+                if self.controller.caret_pos > 0:
                     space_pos = 0
-                    for item in re.finditer(r"\s+", self.content[:TextInputBase.caret_pos]):
+                    for item in re.finditer(r"\s+", self.content[:self.controller.caret_pos]):
                         _start, end = item.span()
-                        if end != TextInputBase.caret_pos:
+                        if end != self.controller.caret_pos:
                             space_pos = end
-                    TextInputBase.caret_pos = space_pos
-                    self.update_text(self.content, self.editable)
+                    self.controller.caret_pos = space_pos
+                    self.update_text(self.content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_right"):
-                if TextInputBase.caret_pos < l:
-                    TextInputBase.caret_pos += 1
-                    self.update_text(self.content, self.editable)
+                if self.controller.caret_pos < l:
+                    self.controller.caret_pos += 1
+                    self.update_text(self.content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_jump_word_right"):
-                if TextInputBase.caret_pos < l:
+                if self.controller.caret_pos < l:
                     space_pos = l
-                    for item in re.finditer(r"\s+", self.content[TextInputBase.caret_pos + 1:]):
+                    for item in re.finditer(r"\s+", self.content[self.controller.caret_pos + 1:]):
                         start, end = item.span()
                         space_pos = end
                         break
-                    TextInputBase.caret_pos = min(space_pos + TextInputBase.caret_pos + 1, l)
-                    self.update_text(self.content, self.editable)
+                    self.controller.caret_pos = min(space_pos + self.controller.caret_pos + 1, l)
+                    self.update_text(self.content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
@@ -403,18 +287,18 @@ init 1 python in SSSSS:
 
                 for i, line in enumerate(lines):
                     current_line_idx = i
-                    current_column = TextInputBase.caret_pos - char_count
+                    current_column = self.controller.caret_pos - char_count
 
-                    if char_count + len(line) > TextInputBase.caret_pos:
+                    if char_count + len(line) > self.controller.caret_pos:
                         break
 
                     char_count += len(line)
 
                 # If already on the first line, no movement is possible
                 if current_line_idx == 0:
-                    TextInputBase.caret_pos = 0
+                    self.controller.caret_pos = 0
 
-                    self.update_text(self.content, self.editable)
+                    self.update_text(self.content)
                     renpy.display.render.redraw(self, 0)
                     raise renpy.display.core.IgnoreEvent()
 
@@ -426,9 +310,9 @@ init 1 python in SSSSS:
                 new_caret_pos = sum(len(line) for line in lines[:current_line_idx - 1]) + new_column
 
                 # Update the caret position
-                TextInputBase.caret_pos = new_caret_pos
+                self.controller.caret_pos = new_caret_pos
 
-                self.update_text(self.content, self.editable)
+                self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
             
@@ -443,18 +327,18 @@ init 1 python in SSSSS:
 
                 for i, line in enumerate(lines):
                     current_line_idx = i
-                    current_column = TextInputBase.caret_pos - char_count
+                    current_column = self.controller.caret_pos - char_count
 
-                    if char_count + len(line) > TextInputBase.caret_pos:
+                    if char_count + len(line) > self.controller.caret_pos:
                         break
 
                     char_count += len(line)
 
                 # If already on the last line, no movement is possible
                 if current_line_idx == len(lines) - 1:
-                    TextInputBase.caret_pos = len(self.content)  # Move to the end of the content (last position)
+                    self.controller.caret_pos = len(self.content)  # Move to the end of the content (last position)
 
-                    self.update_text(self.content, self.editable)
+                    self.update_text(self.content)
                     renpy.display.render.redraw(self, 0)
                     raise renpy.display.core.IgnoreEvent()
 
@@ -466,61 +350,61 @@ init 1 python in SSSSS:
                 new_caret_pos = sum(len(line) for line in lines[:current_line_idx + 1]) + new_column
 
                 # Update the caret position
-                TextInputBase.caret_pos = new_caret_pos
+                self.controller.caret_pos = new_caret_pos
 
-                self.update_text(self.content, self.editable)
+                self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
             
             elif renpy.map_event(ev, "input_delete"):
-                if TextInputBase.caret_pos < l:
-                    content = self.content[0:TextInputBase.caret_pos] + self.content[TextInputBase.caret_pos + 1:l]
-                    self.update_text(content, self.editable)
+                if self.controller.caret_pos < l:
+                    content = self.content[0:self.controller.caret_pos] + self.content[self.controller.caret_pos + 1:l]
+                    self.update_text(content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_delete_word"):
-                if TextInputBase.caret_pos <= l:
+                if self.controller.caret_pos <= l:
                     space_pos = 0
-                    for item in re.finditer(r"\s+", self.content[:TextInputBase.caret_pos]):
+                    for item in re.finditer(r"\s+", self.content[:self.controller.caret_pos]):
                         start, end = item.span()
-                        if end != TextInputBase.caret_pos:
+                        if end != self.controller.caret_pos:
                             space_pos = end
-                    content = self.content[0:space_pos] + self.content[TextInputBase.caret_pos:l]
-                    TextInputBase.caret_pos = space_pos
-                    self.update_text(content, self.editable)
+                    content = self.content[0:space_pos] + self.content[self.controller.caret_pos:l]
+                    self.controller.caret_pos = space_pos
+                    self.update_text(content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_delete_full"):
-                if TextInputBase.caret_pos <= l:
-                    content = self.content[TextInputBase.caret_pos:l]
-                    TextInputBase.caret_pos = 0
-                    self.update_text(content, self.editable)
+                if self.controller.caret_pos <= l:
+                    content = self.content[self.controller.caret_pos:l]
+                    self.controller.caret_pos = 0
+                    self.update_text(content)
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_home"):
-                TextInputBase.caret_pos = 0
-                self.update_text(self.content, self.editable)
+                self.controller.caret_pos = 0
+                self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_end"):
-                TextInputBase.caret_pos = l
-                self.update_text(self.content, self.editable)
+                self.controller.caret_pos = l
+                self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
-            elif self.copypaste and renpy.map_event(ev, "input_copy"):
+            elif renpy.map_event(ev, "input_copy"):
                 text = self.content.encode("utf-8")
                 pygame.scrap.put(pygame.scrap.SCRAP_TEXT, text)
                 raise renpy.display.core.IgnoreEvent()
 
-            elif self.copypaste and renpy.map_event(ev, "input_paste"):
+            elif renpy.map_event(ev, "input_paste"):
                 text = pygame.scrap.get(pygame.scrap.SCRAP_TEXT)
                 text = text.decode("utf-8")
                 raw_text = ""
@@ -559,7 +443,7 @@ init 1 python in SSSSS:
 
 
             elif ev.type == pygame.TEXTEDITING:
-                self.update_text(self.content, self.editable, check_size=True)
+                self.update_text(self.content, check_size=True)
 
                 raise renpy.display.core.IgnoreEvent()
 
@@ -581,105 +465,140 @@ init 1 python in SSSSS:
 
                 text = ""
 
+                allow = self.controller.allowed_characters
+                exclude = self.controller.excluded_characters
+
                 for c in raw_text:
 
                     # Allow is given
-                    if self.allow:
+                    if allow:
 
                         # Allow is regex
-                        if isinstance(self.allow, re.Pattern):
+                        if isinstance(allow, re.Pattern):
 
                             # Character doesn't match
-                            if self.allow.search(c) is None:
+                            if allow.search(c) is None:
                                 continue
 
                         # Allow is string
-                        elif c not in self.allow:
+                        elif c not in allow:
                             continue
 
                     # Exclude is given
-                    if self.exclude:
+                    if exclude:
 
                         # Exclude is regex
-                        if isinstance(self.exclude, re.Pattern):
+                        if isinstance(exclude, re.Pattern):
 
                             # Character matches
-                            if self.exclude.search(c) is not None:
+                            if exclude.search(c) is not None:
                                 continue
 
                         # Exclude is string
-                        elif c in self.exclude:
+                        elif c in exclude:
                             continue
 
                     text += c
 
-                if self.length:
-                    remaining = self.length - len(self.content)
+                if self.controller.max_length:
+                    remaining = self.controller.max_length - len(self.content)
                     text = text[:remaining]
 
                 if text:
 
-                    content = self.content[0:TextInputBase.caret_pos] + text + self.content[TextInputBase.caret_pos:l]
-                    TextInputBase.caret_pos += len(text)
+                    content = self.content[0:self.controller.caret_pos] + text + self.content[self.controller.caret_pos:l]
+                    self.controller.caret_pos += len(text)
 
-                    self.update_text(content, self.editable, check_size=True)
+                    self.update_text(content, check_size=True)
 
                 raise renpy.display.core.IgnoreEvent()
 
-        def render(self, width, height, st, at):
-            self.st = st
+        # =================
+        # Private functions
+        # =================
 
-            rv = super(TextInputBase, self).render(width, height, st, at)
-
-            if self.editable:
-                rv.text_input = True
-
-            return rv
-
-        def handleClick(self, ev, x, y, st):
-            def handle_click():
-                if not self.editable:
-                    self.enable()
-                    return renpy.display.core.IgnoreEvent()
-
-                return None
-
-            # If clicked,
+        def __event_click(self, ev, x, y, st):
             if renpy.map_event(ev, "button_select"):
                 width, height = self.width_height
 
                 # Ensure clicked inside
                 if x >= 0 and x <= width and y >= 0 and y <= height:
-                    return handle_click()
-                else:
-                    self.disable()
+                    if not self.controller.editable:
+                        self.controller.enable()
+                        return renpy.display.core.IgnoreEvent()
+                elif self.controller.editable:
+                    self.controller.disable()
 
             return None
 
-    class TextInput(TextInputBase):
-        pass
+        def update_text(self, new_content, check_size=False):
+            editable = self.controller.editable
+            edit = renpy.display.interface.text_editing
+            old_content = self.content
 
-screen SSSSS_TextInput(placeholder=None, variableName=None, value=None, offset=None, **params):
-    style_prefix "SSSSS"
+            if new_content != self.content or editable != self.controller.editable or edit:
+                renpy.display.render.redraw(self, 0)
 
-    python:
-        showPlaceholder = False
+            self.controller.editable = editable
 
-        if placeholder:
-            inputValue = None
-            if variableName:
-                inputValue = SSSSS.Utils.getScreenVariable(variableName)
-            elif value and callable(value.get_text):
-                inputValue = value.get_text()
+            # Choose the caret.
+            caret = self.style.caret
+            if caret is None:
+                caret = self.caret
 
-            showPlaceholder = inputValue != None and len(inputValue) == 0
+            # Format text being edited by the IME.
+            if edit:
+                self.edit_text = edit.text
 
-    vbox:
-        if offset:
-            offset adjustable(offset)
+                edit_text_0 = edit.text[:edit.start]
+                edit_text_1 = edit.text[edit.start:edit.start + edit.length]
+                edit_text_2 = edit.text[edit.start + edit.length:]
 
-        text (placeholder if showPlaceholder else "") style "SSSSS_placeholder" offset adjustable((8, 10), minValue=1)
-        hbox:
-            xfill True
-            yoffset adjustable(-15, minValue=1)
-            add SSSSS.TextInput(variableName=variableName, value=value, **params)
+                edit_text = ""
+
+                if edit_text_0:
+                    edit_text += "{u=1}" + edit_text_0.replace("{", "{{") + "{/u}"
+
+                if edit_text_1:
+                    edit_text += "{u=2}" + edit_text_1.replace("{", "{{") + "{/u}"
+
+                if edit_text_2:
+                    edit_text += "{u=1}" + edit_text_2.replace("{", "{{") + "{/u}"
+
+            else:
+                self.edit_text = ""
+                edit_text = ""
+
+            def set_content(content):
+                if content == "":
+                    content = self.placeholder or self.controller.placeholder or u" "
+                    self.style.color = Colors.text_placeholder# Set placeholder color
+
+                if editable:
+                    l = len(content)
+                    self.set_text([self.prefix, content[0:self.controller.caret_pos].replace("{", "{{"), edit_text, caret, content[self.controller.caret_pos:l].replace("{", "{{"), self.suffix])
+                else:
+                    self.set_text([self.prefix, content.replace("{", "{{"), self.suffix ])
+
+                if isinstance(self.caret, CaretBlink):
+                    self.caret.st_base = self.st
+                    renpy.display.render.redraw(self.caret, 0)
+
+            set_content(new_content)
+
+            if new_content != old_content:
+                self.content = new_content
+
+                if self.changed:
+                    self.changed(new_content)
+
+                    new_value = self.controller.get_value() or ""
+                    if new_value != new_content:
+                        #The new value was most likely rejected, restore the previous position
+                        self.controller.caret_pos = self.controller.old_caret_pos
+
+                    self.update_text(new_value, check_size)
+
+                if self.controller.variableName:
+                    renpy.store.SetScreenVariable(self.controller.variableName, new_content)()
+        

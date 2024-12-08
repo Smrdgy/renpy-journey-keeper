@@ -5,7 +5,6 @@ screen SSSSS_ChoicesTimeline(playthrough):
 
     default show_thumbnails = False
     default search = ""
-    default __activeTextInput__ = None
 
     default viewModel = SSSSS.ChoicesTimelineViewModel(playthrough)
 
@@ -15,4 +14,4 @@ screen SSSSS_ChoicesTimeline(playthrough):
         elif viewModel.error:
             use SSSSS_ChoicesTimelineError(viewModel)
         else:
-            use SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search, activeTextInput=__activeTextInput__)
+            use SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search)

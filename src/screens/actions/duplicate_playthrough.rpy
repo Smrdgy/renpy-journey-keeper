@@ -5,7 +5,9 @@ screen SSSSS_DuplicatePlaythrough(playthrough):
 
     default name = ""
     default description = playthrough.description
-    default __activeTextInput__ = "name"
+    
+    default name_input = SSSSS.TextInput("name", auto_focus=True)
+    default description_input = SSSSS.TextInput("description", multiline=True)
 
     python:
         submitAction = SSSSS.Playthroughs.DuplicatePlaythroughAction(playthrough=playthrough, name=name, description=description)
@@ -25,7 +27,7 @@ screen SSSSS_DuplicatePlaythrough(playthrough):
             vbox:
                 use SSSSS_Title("Name")
 
-                use SSSSS_TextInput(id="name", variableName="name", placeholder="Click here to start writing the name")
+                add name_input.displayable(placeholder="Click here to start writing the name")
 
                 if(not SSSSS.Playthroughs.isValidName(name)):
                     vbox offset adjustable((15, 2), minValue=1):
@@ -35,7 +37,7 @@ screen SSSSS_DuplicatePlaythrough(playthrough):
                 use SSSSS_YSpacer()
 
                 use SSSSS_Title("Description")
-                use SSSSS_TextInput(id="description", variableName="description", multiline=True, placeholder="Click here to start writing the description")
+                add description_input.displayable(placeholder="Click here to start writing the description")
 
         hbox:
             xfill True

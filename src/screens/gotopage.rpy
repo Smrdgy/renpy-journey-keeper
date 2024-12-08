@@ -22,6 +22,7 @@ screen SSSSS_GoToPage():
                         renpy.restart_interaction()
 
     default value = Value()
+    default page_input = SSSSS.TextInput("page", value=value, auto_focus=True)
 
     frame:
         xysize (0, 0)
@@ -35,4 +36,4 @@ screen SSSSS_GoToPage():
             offset adjustable((-40, -60))
             background "#000000cc"
 
-            use SSSSS_TextInput(placeholder=renpy.store.persistent._file_page, value=value, editable=True, layout="nobreak", offset=(-10, -15))
+            add page_input.displayable(placeholder=renpy.store.persistent._file_page, layout="nobreak", offset=(-10, -7))
