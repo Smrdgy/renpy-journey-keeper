@@ -38,7 +38,6 @@ screen SSSSS_SettingsLoadSaveScreens(update_at_runtime=False):
     vbox:
         use SSSSS_Title("Save page", 3)
         for screen in relevantSaveScreens:
-            $ print(screen)
             use SSSSS_Checkbox(checked=screen in SSSSS.Settings.saveScreenName, text=("\"save\" (default)" if screen == "save" else "\"" + screen + "\""), action=SSSSS.Settings.SetSaveScreenName(screen), disabled=screen == "save")
 
         use SSSSS_YSpacer(2)

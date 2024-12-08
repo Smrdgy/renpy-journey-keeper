@@ -223,7 +223,6 @@ init -2000 python in SSSSS:
             try:
                 for context in renpy.game.contexts:
                     script = renpy.game.script.lookup(context.current)
-                    print(script)
                     if isinstance(script, renpy.ast.Menu):
                         return True
             except Exception as e:
