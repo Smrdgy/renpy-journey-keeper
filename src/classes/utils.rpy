@@ -71,14 +71,6 @@ init -2000 python in SSSSS:
         def scale(self, image, desired_size):
             return Utils.resizeDimensionsToLimits(image.get_size(), desired_size)
 
-    class GetScreenVariable(x52NonPicklable):
-        def __init__(self, name, key=None):
-            self.name = name
-            self.key = key
-        
-        def __call__(self):
-            Utils.getScreenVariable(self.name, self.key)
-
     class Utils(x52NonPicklable):
         @staticmethod
         def splitSavename(save_name):

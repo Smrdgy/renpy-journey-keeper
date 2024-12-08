@@ -7,7 +7,7 @@ screen SSSSS_SaveMemory():
 
     python:
         submitAction = [
-            SSSSS.Memories.CreateMemory(name=GetScreenVariable('name')),
+            SSSSS.Memories.CreateMemory(name=name),
             Hide('SSSSS_SaveMemory')
         ]
 
