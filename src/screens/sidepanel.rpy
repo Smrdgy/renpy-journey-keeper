@@ -53,7 +53,7 @@ screen SSSSS_SidepanelHolder():
     key SSSSS.Settings.changeSidepanelVisibilityKey action SSSSS.ToggleSidepanel()
 
     python:
-        isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None
+        isSaveLoadScreen = SSSSS.Utils.is_save_load_screen()
         visibilityMode = renpy.config.SSSSS_sidepanelVisibilityMode if hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode") else isSaveLoadScreen
         sidepanelShouldBeVisible = isSaveLoadScreen if visibilityMode == None else visibilityMode
         preventSidepanel = SSSSS.Memories.memoryInProgress

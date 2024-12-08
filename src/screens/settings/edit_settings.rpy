@@ -5,8 +5,6 @@ screen SSSSS_Settings():
 
     default originalSizeAdjustment = SSSSS.Settings.sizeAdjustment
 
-    default activeScreens = [screen[0] for screen in renpy.display.screen.screens if (renpy.get_screen(screen) and not ("SSSSS_" in screen[0] or screen[0] == "save" or screen[0] == "load"))]
-
     use SSSSS_Dialog(title="Settings", closeAction=Hide("SSSSS_Settings")):
         style_prefix "SSSSS"
 
@@ -166,20 +164,21 @@ screen SSSSS_Settings():
 
                         use SSSSS_YSpacer(2)
 
-                        python:
-                            relevantSaveScreens = ["save"] + activeScreens
-                            relevantLoadScreens = ["load"] + activeScreens
+                        hbox:
+                            use SSSSS_XSpacer()
 
-                        vbox:
-                            use SSSSS_Title("Save page", 2)
-                            for screen in relevantSaveScreens:
-                                use SSSSS_Radio(checked=SSSSS.Settings.saveScreenName == screen, text=("\"save\" (default)" if screen == "save" else "\"" + screen + "\""), action=SSSSS.Settings.SetSaveScreenName(screen))
+                            vbox:
+                                use SSSSS_Title("Screens", 2)
+                                
+                                hbox:
+                                    use SSSSS_XSpacer()
 
-                            use SSSSS_YSpacer(2)
+                                    vbox:
+                                        use SSSSS_SettingsLoadSaveScreens()
 
-                            use SSSSS_Title("Load page", 2)
-                            for screen in relevantLoadScreens:
-                                use SSSSS_Radio(checked=SSSSS.Settings.loadScreenName == screen, text=("\"load\" (default)" if screen == "load" else "\"" + screen + "\""), action=SSSSS.Settings.SetLoadScreenName(screen))
+                                        hbox:
+                                            use sssss_iconButton("\ue8fb", text="Detach from settings", action=[Show("SSSSS_SettingsLoadSaveScreensStandalone"), SSSSS.SetSidepanelVisibilityAction(None), Hide("SSSSS_Settings")])
+                                            use SSSSS_Helper("Click to isolate the 'Screens' section, hiding other settings for a focused view. Monitor real-time updates on currently displayed screens to easily choose the correct screen names, with immediate visual feedback on changes.")
 
                 # Updates
                 if not SSSSS.Updater.unavailable:

@@ -321,6 +321,14 @@ init -2000 python in SSSSS:
 
             return filtered
 
+        @staticmethod
+        def is_save_load_screen():
+            for screen in ["save", "load"] + Settings.saveScreenName + Settings.loadScreenName:
+                if renpy.get_screen(screen) != None:
+                    return True
+            
+            return False
+
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):
             super(MultiLocation, self).__init__()

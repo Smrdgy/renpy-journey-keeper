@@ -40,8 +40,8 @@ init -1000 python in SSSSS:
             self.customGridEnabled = data.get("customGridEnabled", False)
             self.customGridX = data.get("customGridX", 2)
             self.customGridY = data.get("customGridY", 2)
-            self.loadScreenName = data.get("loadScreenName", "load")
-            self.saveScreenName = data.get("saveScreenName", "save")
+            self.loadScreenName = data.get("loadScreenName", ["load"])
+            self.saveScreenName = data.get("saveScreenName", ["save"])
             self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", False)
             self.offsetSlotAfterManualSave = data.get("offsetSlotAfterManualSave", False)
             self.sizeAdjustment = data.get("sizeAdjustment", 0) or 0
@@ -51,6 +51,13 @@ init -1000 python in SSSSS:
             self.pageFollowsAutoSave = data.get("pageFollowsAutoSave", True)
             self.updaterEnabled = data.get("updaterEnabled", True)
             self.autoUpdateWithoutPrompt = data.get("autoUpdateWithoutPrompt", False)
+
+            # Update the old system (string only) to list #TODO: Remove at some point
+            if not callable(self.loadScreenName.append):
+                self.loadScreenName = ["load"]
+
+            if not callable(self.saveScreenName.append):
+                self.saveScreenName = ["save"]
 
         def getSettingsAsJson(self):
             return json.dumps({
@@ -209,7 +216,10 @@ init -1000 python in SSSSS:
                 self.name = name
 
             def __call__(self):
-                Settings.saveScreenName = self.name
+                if self.name in Settings.saveScreenName:
+                    Settings.saveScreenName.remove(self.name)
+                else:
+                    Settings.saveScreenName.append(self.name)
                 Settings.save()
                 renpy.restart_interaction()
 
@@ -218,7 +228,10 @@ init -1000 python in SSSSS:
                 self.name = name
 
             def __call__(self):
-                Settings.loadScreenName = self.name
+                if self.name in Settings.loadScreenName:
+                    Settings.loadScreenName.remove(self.name)
+                else:
+                    Settings.loadScreenName.append(self.name)
                 Settings.save()
                 renpy.restart_interaction()
 
@@ -275,6 +288,7 @@ init -1000 python in SSSSS:
         class SetChangeSidepanelVisibilityKey(SetKey):
             def __call__(self):
                 Settings.changeSidepanelVisibilityKey = self.resolveKey()
+                renpy.config.gestures['w_s_e_s_w'] = Settings.changeSidepanelVisibilityKey
 
                 Settings.save()
                 renpy.restart_interaction()

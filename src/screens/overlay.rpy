@@ -18,7 +18,7 @@ screen SSSSS_Overlay():
     key "ctrl_alt_shift_K_p" action SSSSS.Settings.ResetSizeAdjustment()
 
     python:
-        isSaveLoadScreen = renpy.get_screen("load") != None or renpy.get_screen("save") != None
+        isSaveLoadScreen = SSSSS.Utils.is_save_load_screen()
 
     if isSaveLoadScreen and SSSSS.Memories.memoryInProgress:
         use SSSSS_ExitMemoryConfirm()

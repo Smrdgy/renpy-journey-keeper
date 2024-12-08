@@ -50,16 +50,34 @@ init 51 python in SSSSS:
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):
             if not hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode") or renpy.config.SSSSS_sidepanelVisibilityMode == None:
-                renpy.config.SSSSS_sidepanelVisibilityMode = True
-                renpy.notify("Sidepanel is now visible at all times")
+                # Visible at all times
+                SetSidepanelVisibilityAction(visibility=True)()
             elif renpy.config.SSSSS_sidepanelVisibilityMode == True:
-                renpy.config.SSSSS_sidepanelVisibilityMode = False
-                renpy.notify("Sidepanel is now hidden at all times")
+                # Hidden at all times
+                SetSidepanelVisibilityAction(visibility=False)()
             elif renpy.config.SSSSS_sidepanelVisibilityMode == False:
-                renpy.config.SSSSS_sidepanelVisibilityMode = None
-                renpy.notify("Sidepanel is now visible only in save/load screen")
+                # Visible only in save/load screen
+                SetSidepanelVisibilityAction(visibility=None)()
             else:
-                renpy.config.SSSSS_sidepanelVisibilityMode = True
+                # Visible at all times
+                SetSidepanelVisibilityAction(visibility=True)()
+
+            renpy.restart_interaction()
+        
+    class SetSidepanelVisibilityAction(renpy.ui.Action):
+        def __init__(self, visibility):
+            self.visibility = visibility # True/False/None
+
+        def __call__(self):
+            renpy.config.SSSSS_sidepanelVisibilityMode = self.visibility
+
+            if renpy.config.SSSSS_sidepanelVisibilityMode == True:
+                renpy.notify("Sidepanel is now visible at all times")
+            elif renpy.config.SSSSS_sidepanelVisibilityMode == False:
+                renpy.notify("Sidepanel is now hidden at all times")
+            elif renpy.config.SSSSS_sidepanelVisibilityMode == None:
+                renpy.notify("Sidepanel is now visible only on the save/load screen")
+            else:
                 renpy.notify("Sidepanel is now visible at all times")
 
             renpy.restart_interaction()
@@ -68,7 +86,7 @@ init 999 python:
     renpy.config.search_prefixes.append("SSSSS/src/assets/") # Provides discoverability for assets that are used in SSSSS
 
     if not 'w_s_e_s_w' in renpy.config.gestures:
-        renpy.config.gestures['w_s_e_s_w'] = 'alt_K_p'
+        renpy.config.gestures['w_s_e_s_w'] = SSSSS.Settings.changeSidepanelVisibilityKey
 
     if not "SSSSSsidepanel" in renpy.config.layers:
         renpy.add_layer("SSSSSsidepanel", above="overlay")

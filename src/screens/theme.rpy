@@ -195,6 +195,9 @@ style SSSSS_title_1 is SSSSS_title:
 style SSSSS_title_2 is SSSSS_title:
     size adjustable(25)
 
+style SSSSS_title_3 is SSSSS_title:
+    size adjustable(20)
+
 style SSSSS_spacer_x_1:
     xsize adjustable(20)
 
