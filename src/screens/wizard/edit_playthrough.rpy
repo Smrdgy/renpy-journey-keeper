@@ -101,9 +101,9 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                                             yanchor 0.5
 
                                             if isEdit:
-                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=fullPath), size=15, color="#818181", tt="Open directory")
+                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=fullPath), size=15, color="#818181", tt="Open directory", hover_color=SSSSS.Colors.hover)
                                             else:
-                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=path), size=15, color="#818181", tt="Open directory")
+                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=path), size=15, color="#818181", tt="Open directory", hover_color=SSSSS.Colors.hover)
 
                                 if len(enabledSaveLocations) == 0:
                                     use SSSSS_YSpacer(3)

@@ -17,6 +17,7 @@ init -999 python in SSSSS:
 
         status_enabled = success
         status_disabled = error
+        status_enabled_disabled = "#002200"
 
         disabled = "#2f2f2f55"
         na = disabled # N/A

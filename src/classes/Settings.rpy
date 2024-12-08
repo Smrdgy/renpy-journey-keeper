@@ -9,9 +9,18 @@ init -1000 python in SSSSS:
     # Main Settings class
     class SettingsClass(x52NonPicklable):
         def __init__(self):
-            settings = self.loadFromGlobalSettings()
+            global_settings = self.loadFromGlobalSettings()
+
+            settings = {}
+            settings.update(global_settings)
             settings.update(self.loadFromUserDir())
             settings.update(self.loadFromPersistent())
+
+            print(settings.get("globalizedSettings", []))
+            # Apply globalized settings again in case some local setting is overwriting it
+            for setting in settings.get("globalizedSettings", []):
+                if global_settings.get(setting):
+                    settings[setting] = global_settings.get(setting)
 
             self.setSettings(settings)
 
@@ -51,6 +60,7 @@ init -1000 python in SSSSS:
             self.pageFollowsAutoSave = data.get("pageFollowsAutoSave", True)
             self.updaterEnabled = data.get("updaterEnabled", True)
             self.autoUpdateWithoutPrompt = data.get("autoUpdateWithoutPrompt", False)
+            self.globalizedSettings = data.get("globalizedSettings", [])
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -83,10 +93,19 @@ init -1000 python in SSSSS:
             })
 
         def getGlobalSettingsAsJson(self):
-            return json.dumps({
+            settings = {
                 'updaterEnabled': self.updaterEnabled,
                 'autoUpdateWithoutPrompt': self.autoUpdateWithoutPrompt,
-            })
+                'globalizedSettings': self.globalizedSettings,
+            }
+
+            for setting_name in self.globalizedSettings:
+                if hasattr(self, setting_name):
+                    settings[setting_name] = getattr(self, setting_name)
+                else:
+                    print("Setting not found {}".format(setting_name))
+
+            return json.dumps(settings)
 
         def save(self):
             self.saveToUserDir()
@@ -344,4 +363,16 @@ init -1000 python in SSSSS:
 
                 Settings.save()
                 renpy.restart_interaction()
-                
+        
+        class ToggleGlobalizedSetting(renpy.ui.Action):
+            def __init__(self, setting_name):
+                self.setting_name = setting_name
+
+            def __call__(self):
+                if self.setting_name in Settings.globalizedSettings:
+                    Settings.globalizedSettings.remove(self.setting_name)
+                else:
+                    Settings.globalizedSettings.append(self.setting_name)
+
+                Settings.save()
+                renpy.restart_interaction()

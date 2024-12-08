@@ -54,12 +54,19 @@ screen SSSSS_Settings():
                 vbox:
                     use SSSSS_Title("Autosave")
                     vbox:
-                        use SSSSS_Checkbox(checked=SSSSS.Settings.autosaveNotificationEnabled, text="Show notification when autosave is performed", action=SSSSS.Settings.ToggleAutosaveNotificationEnabled())
-                        use SSSSS_Checkbox(checked=SSSSS.Settings.pageFollowsAutoSave, text="Change page based on the auto-saved slot", action=SSSSS.Settings.TogglePageFollowsAutoSaveEnabled())
+                        hbox:
+                            use SSSSS_Checkbox(checked=SSSSS.Settings.autosaveNotificationEnabled, text="Show notification when autosave is performed", action=SSSSS.Settings.ToggleAutosaveNotificationEnabled())
+                            use SSSSS_ToggleSettingGlobalizationButton("autosaveNotificationEnabled")
+
+                        hbox:
+                            use SSSSS_Checkbox(checked=SSSSS.Settings.pageFollowsAutoSave, text="Change page based on the auto-saved slot", action=SSSSS.Settings.TogglePageFollowsAutoSaveEnabled())
+                            use SSSSS_ToggleSettingGlobalizationButton("pageFollowsAutoSave")
                         
                         use SSSSS_YSpacer(2)
 
-                        text "Toggle autosave key"
+                        hbox:
+                            text "Toggle autosave key" yalign 0.5
+                            use SSSSS_ToggleSettingGlobalizationButton("autosaveKey")
                         use SSSSS_KeyInput(assignment=SSSSS.Settings.autosaveKey, action=SSSSS.Settings.SetAutosaveToggleKey)
 
                 use SSSSS_YSpacer()
@@ -68,19 +75,29 @@ screen SSSSS_Settings():
                 vbox:
                     use SSSSS_Title("Quick save")
                     vbox:
-                        use SSSSS_Checkbox(checked=SSSSS.Settings.quickSaveEnabled, text="Enabled", action=SSSSS.Settings.ToggleQuickSaveEnabled())
+                        hbox:
+                            use SSSSS_Checkbox(checked=SSSSS.Settings.quickSaveEnabled, text="Enabled", action=SSSSS.Settings.ToggleQuickSaveEnabled())
+                            use SSSSS_ToggleSettingGlobalizationButton("quickSaveEnabled")
 
                         if SSSSS.Settings.quickSaveEnabled:
                             hbox:
                                 use SSSSS_XSpacer()
 
                                 vbox:
-                                    use SSSSS_Checkbox(checked=SSSSS.Settings.quickSaveNotificationEnabled, text="Show notification when quick save is performed", action=SSSSS.Settings.ToggleQuickSaveNotificationEnabled(), disabled=not SSSSS.Settings.quickSaveEnabled)
-                                    use SSSSS_Checkbox(checked=SSSSS.Settings.pageFollowsQuickSave, text="Change page based on the quick-saved slot", action=SSSSS.Settings.TogglePageFollowsQuickSaveEnabled())
+                                    hbox:
+                                        use SSSSS_Checkbox(checked=SSSSS.Settings.quickSaveNotificationEnabled, text="Show notification when quick save is performed", action=SSSSS.Settings.ToggleQuickSaveNotificationEnabled(), disabled=not SSSSS.Settings.quickSaveEnabled)
+                                        use SSSSS_ToggleSettingGlobalizationButton("quickSaveNotificationEnabled")
+
+                                    hbox:
+                                        use SSSSS_Checkbox(checked=SSSSS.Settings.pageFollowsQuickSave, text="Change page based on the quick-saved slot", action=SSSSS.Settings.TogglePageFollowsQuickSaveEnabled())
+                                        use SSSSS_ToggleSettingGlobalizationButton("pageFollowsQuickSave")
 
                                     use SSSSS_YSpacer(2)
 
-                                    text "Perform quick save key"
+                                    hbox:
+                                        text "Perform quick save key" yalign 0.5
+                                        use SSSSS_ToggleSettingGlobalizationButton("quickSaveKey")
+
                                     use SSSSS_KeyInput(assignment=SSSSS.Settings.quickSaveKey, action=SSSSS.Settings.SetQuickSaveKey, disabled=not SSSSS.Settings.quickSaveEnabled)
 
                 use SSSSS_YSpacer()
@@ -89,7 +106,10 @@ screen SSSSS_Settings():
                 vbox:
                     use SSSSS_Title("Sidepanel")
                     vbox:
-                        text "Toggle visibility mode key"
+                        hbox:
+                            text "Toggle visibility mode key" yalign 0.5
+                            use SSSSS_ToggleSettingGlobalizationButton("changeSidepanelVisibilityKey")
+
                         use SSSSS_KeyInput(assignment=SSSSS.Settings.changeSidepanelVisibilityKey, action=SSSSS.Settings.SetChangeSidepanelVisibilityKey)
 
                 use SSSSS_YSpacer()
@@ -107,7 +127,10 @@ screen SSSSS_Settings():
                                 use SSSSS_XSpacer()
 
                                 vbox:
-                                    text "Create memory key"
+                                    hbox:
+                                        text "Create memory key" yalign 0.5
+                                        use SSSSS_ToggleSettingGlobalizationButton("memoriesKey")
+
                                     use SSSSS_KeyInput(assignment=SSSSS.Settings.memoriesKey, action=SSSSS.Settings.SetCreateMemoryKey, disabled=not SSSSS.Settings.memoriesEnabled)
 
                 use SSSSS_YSpacer()
@@ -157,10 +180,12 @@ screen SSSSS_Settings():
                         hbox:
                             use SSSSS_Checkbox(checked=SSSSS.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=SSSSS.Settings.ToggleOffsetSlotAfterManualSaveIsLoadedEnabled())
                             use SSSSS_Helper("If enabled, loading a save will shift the save slot by 1, ensuring the next autosave or quicksave does not overwrite the manual save.")
+                            use SSSSS_ToggleSettingGlobalizationButton("offsetSlotAfterManualSaveIsLoaded")
 
                         hbox:
                             use SSSSS_Checkbox(checked=SSSSS.Settings.offsetSlotAfterManualSave, text="Offset the slot after a manual save is performed", action=SSSSS.Settings.ToggleOffsetSlotAfterManualSaveEnabled())
                             use SSSSS_Helper("If enabled, creating a manual save will shift the save slot by 1, preventing the next autosave or quicksave from overwriting it.")
+                            use SSSSS_ToggleSettingGlobalizationButton("offsetSlotAfterManualSave")
 
                         use SSSSS_YSpacer(2)
 
@@ -188,7 +213,7 @@ screen SSSSS_Settings():
                         hbox:
                             use SSSSS_Title("Updates")
 
-                            text " {b}(Global){/b}" color SSSSS.Colors.text_light yalign 0.5
+                            use SSSSS_ToggleSettingGlobalizationButton("updaterEnabled", disabled=True, force_enabled=True)
 
                         vbox:
                             hbox:
