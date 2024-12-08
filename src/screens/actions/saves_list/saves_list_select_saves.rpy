@@ -22,7 +22,7 @@ screen SSSSS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_s
                         text "[selected_length] item(s) selected"
 
                 if selected_length == 0:
-                    use sssss_iconButton(icon="\ue5d5", action=SSSSS.SavesListViewModel.RefreshSavesAction(viewModel))
+                    use sssss_iconButton(icon="\ue5d5", action=SSSSS.SavesListViewModel.RefreshSavesAction(viewModel), tt="Rescan saves")
 
             hbox xalign 0.5 yalign 0.5:
                 use sssss_iconButton(icon="\ue8fe", text="Per save selection", action=SSSSS.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggledColor=SSSSS.Colors.selected)
@@ -31,7 +31,7 @@ screen SSSSS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_s
             if selected_length > 0:
                 hbox xpos 1.0 xanchor 1.0:
                     # Delete selection
-                    use sssss_iconButton(icon="\ue872", action=SSSSS.SavesListViewModel.MassDeleteConfirmAction(viewModel))
+                    use sssss_iconButton(icon="\ue872", action=SSSSS.SavesListViewModel.MassDeleteConfirmAction(viewModel), tt="Delete {} save(s)".format(selected_length), ttSide="left")
 
     viewport:
         mousewheel True
@@ -63,7 +63,7 @@ screen SSSSS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_s
                         hbox:
                             text location.directory size adjustable(10) yalign 0.5
 
-                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=location.directory), size=15)
+                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
 
                         $ i = 0
                         for save in viewModel.all_saves:
@@ -113,10 +113,10 @@ screen SSSSS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_s
 
                                                     if hovered_button == id:
                                                         # Load
-                                                        use sssss_iconButton(icon="\ue1c4", action=FileLoad(slot, confirm=True, page=page))
+                                                        use sssss_iconButton(icon="\ue1c4", action=FileLoad(slot, confirm=True, page=page), tt="Load save")
 
                                                         # Delete
-                                                        use sssss_iconButton(icon="\ue872", action=SSSSS.SavesListViewModel.DeleteSingleConfirmAction(viewModel, (save, location)))
+                                                        use sssss_iconButton(icon="\ue872", action=SSSSS.SavesListViewModel.DeleteSingleConfirmAction(viewModel, (save, location)), tt="Delete save")
                             else:
                                 hbox ysize adjustable(row_height):
                                     hbox xysize adjustable((42, 42))

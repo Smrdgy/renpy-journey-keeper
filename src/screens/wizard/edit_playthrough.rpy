@@ -57,16 +57,18 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                         text "[computedDirectory]" color SSSSS.Colors.theme
 
                         if isEdit:
-                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20)
+                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", ttSide="right")
                         else:
-                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=renpy.config.savedir), size=20)
+                            use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", ttSide="right")
 
                     $ allSaveLocations = SSSSS.SaveSystem.getAllNativeSaveLocationsForOptions()
 
                     if(isEdit and playthrough.id > 1 and name != originalname and SSSSS.Playthroughs.isValidName(name)):
-                        use SSSSS_Checkbox(checked=moveSaveDirectory, text="Rename directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False), disabled=not SSSSS.Playthroughs.isValidName(name))
+                        use SSSSS_Checkbox(checked=moveSaveDirectory, text="Rename the directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False), disabled=not SSSSS.Playthroughs.isValidName(name))
 
-                    use SSSSS_Checkbox(checked=enabledSaveLocations != False, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', allSaveLocations, False))
+                    hbox:
+                        use SSSSS_Checkbox(checked=enabledSaveLocations != False, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', allSaveLocations, False))
+                        use SSSSS_Helper("Here, you can manage where saves are stored. By default, Ren'Py saves are kept in two locations: the game folder and the user directory. If you want to disable one of these locations, for example, to save storage space, you can do that here.")
 
                     if enabledSaveLocations != False:
                         hbox:
@@ -99,9 +101,9 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                                             yanchor 0.5
 
                                             if isEdit:
-                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=fullPath), size=15, color="#818181")
+                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=fullPath), size=15, color="#818181", tt="Open directory")
                                             else:
-                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=path), size=15, color="#818181")
+                                                use sssss_iconButton(icon="\ue2c8", action=SSSSS.OpenDirectoryAction(path=path), size=15, color="#818181", tt="Open directory")
 
                                 if len(enabledSaveLocations) == 0:
                                     use SSSSS_YSpacer(3)
@@ -120,9 +122,11 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
                     xfill True
 
                     vbox:
-                        use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
+                        hbox:
+                            use SSSSS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
+                            use SSSSS_Helper("This system automatically saves your progress (not to be confused with Ren'Py's autosave) right before you make a choice in the game, making it easier to back up and track your progress.")
                         if not SSSSS.Utils.hasColsAndRowsConfiguration():
-                            text "{size=-7}{color=[SSSSS.Colors.error]}This game uses an unusual save configuration, the autosave feature cannot be enabled without making a manual adjustment.{/color}" offset adjustable((35, -10), minValue=1)
+                            text "{size=-7}{color=[SSSSS.Colors.error]}This game uses an unconventional save configuration, so the autosave feature requires a manual adjustment to be enabled.{/color}" offset adjustable((35, -10), minValue=1)
                             hbox offset adjustable((35, -10), minValue=1):
                                 button style "SSSSS_default":
                                     action None
@@ -131,12 +135,12 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                                 hbox xsize adjustable(5)
 
-                                text "{size=-7}{color=[SSSSS.Colors.info]}For manual adjustment, count how many columns and rows there are, then head to the settings and look for {color=[SSSSS.Colors.theme]}\"Custom slots grid\"{/color}. There input the numbers appropriately.{/color}{/size}"
+                                text "{size=-7}{color=[SSSSS.Colors.info]}For manual adjustment, count the number of columns and rows, then go to the settings and find {color=[SSSSS.Colors.theme]}\"Custom slots grid\"{/color}. There, enter the numbers accordingly.{/color}{/size}"
 
                         hbox:
                             offset adjustable((15, 0), minValue=1)
 
-                            use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system!){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
+                            use SSSSS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system enabled above){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not SSSSS.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
 
                 use SSSSS_YSpacer()
 
@@ -160,7 +164,7 @@ screen SSSSS_EditPlaythrough(playthrough, isEdit=False):
 
                         vbox:
                             # Set thumbnail
-                            use sssss_iconButton(icon="\ue3f4", text="Use current scene as thumbnail", action=SSSSS.Playthroughs.SetThumbnail(playthrough=playthrough))
+                            use sssss_iconButton(icon="\ue3f4", text="Set the current scene as the thumbnail", action=SSSSS.Playthroughs.SetThumbnail(playthrough=playthrough))
 
                             # Remove thumbnail
                             if playthrough.hasThumbnail():

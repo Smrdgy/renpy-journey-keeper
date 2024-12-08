@@ -105,7 +105,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                 textbutton viewModel.source_playthrough.name text_color SSSSS.Colors.theme:
                     action ClearSourcePlaythroughAction()
 
-                textbutton "→" action FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough)
+                textbutton "→" action FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough) hovered SSSSS.OpenTooltipAction(message="Swap playthroughs") unhovered Hide("SSSSS_TooltipDialog")
 
                 textbutton viewModel.destination_playthrough.name text_color SSSSS.Colors.theme:
                     action ClearDestinationPlaythroughAction()

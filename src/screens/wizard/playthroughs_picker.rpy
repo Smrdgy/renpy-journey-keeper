@@ -76,10 +76,10 @@ screen SSSSS_PlaythroughsPicker():
                                     xfill True
 
                                     hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
-                                        use sssss_iconButton('\ue872', text="Remove", tt="Remove playthrough", action=delete_action, disabled=playthrough.id == 1, color=SSSSS.Colors.danger)
+                                        use sssss_iconButton('\ue872', text="Remove", action=delete_action, disabled=playthrough.id == 1, color=SSSSS.Colors.danger)
 
                                     hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
-                                        use sssss_iconButton('\ue3c9', text="Edit", tt="Edit playthrough", action=edit_action)
+                                        use sssss_iconButton('\ue3c9', text="Edit", action=edit_action)
 
                 button style "SSSSS_playthrough_button":
                     action Show("SSSSS_EditPlaythrough", playthrough=None)
