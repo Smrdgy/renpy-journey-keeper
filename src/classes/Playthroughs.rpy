@@ -71,17 +71,16 @@ init 1 python in SSSSS:
             return []
 
         def createPlaythroughFromSerialization(self, data):
-            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), layout=data.get("layout"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
+            return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
 
         class PlaythroughClass(x52NonPicklable):
-            def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, layout="normal", autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False, enabledSaveLocations=None):#MODIFY HERE
+            def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False, enabledSaveLocations=None):#MODIFY HERE
                 self.id = id or int(time.time())
                 self.directory = directory if (directory != None) else (Utils.name_to_directory_name(name) if name else None)
                 self.name = name
                 self.description = description
                 self.thumbnail = thumbnail
                 self.storeChoices = storeChoices
-                self.layout = layout
                 self.autosaveOnChoices = autosaveOnChoices
                 self.selectedPage = selectedPage
                 self.filePageName = filePageName
@@ -93,9 +92,9 @@ init 1 python in SSSSS:
                 return None
 
             def copy(self):
-                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.description, self.thumbnail, self.storeChoices, self.layout, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName, self.enabledSaveLocations)#MODIFY HERE
+                return PlaythroughsClass.PlaythroughClass(self.id, self.directory, self.name, self.description, self.thumbnail, self.storeChoices, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName, self.enabledSaveLocations)#MODIFY HERE
 
-            def edit(self, name=None, description=None, thumbnail=None, storeChoices=None, layout=None, autosaveOnChoices=None, selectedPage=None, filePageName=None, useChoiceLabelAsSaveName=None, enabledSaveLocations=None):#MODIFY HERE
+            def edit(self, name=None, description=None, thumbnail=None, storeChoices=None, autosaveOnChoices=None, selectedPage=None, filePageName=None, useChoiceLabelAsSaveName=None, enabledSaveLocations=None):#MODIFY HERE
                 if name != None:
                     self.name = name
 
@@ -105,7 +104,6 @@ init 1 python in SSSSS:
                 if description != None: self.description = description
                 if thumbnail != None: self.thumbnail = thumbnail
                 if storeChoices != None: self.storeChoices = storeChoices
-                if layout != None: self.layout = layout
                 if autosaveOnChoices != None: self.autosaveOnChoices = autosaveOnChoices
                 if selectedPage != None: self.selectedPage = selectedPage
                 if filePageName != None: self.filePageName = filePageName
@@ -123,7 +121,6 @@ init 1 python in SSSSS:
                 self.description = playthrough.description
                 self.thumbnail = playthrough.thumbnail
                 self.storeChoices = playthrough.storeChoices
-                self.layout = playthrough.layout
                 self.autosaveOnChoices = playthrough.autosaveOnChoices
                 self.selectedPage = playthrough.selectedPage
                 self.filePageName = playthrough.filePageName
@@ -141,7 +138,6 @@ init 1 python in SSSSS:
                     'description': self.description,
                     'thumbnail': self.thumbnail,
                     'storeChoices': self.storeChoices,
-                    'layout': self.layout,
                     'autosaveOnChoices': self.autosaveOnChoices,
                     'selectedPage': self.selectedPage,
                     'filePageName': self.filePageName,
