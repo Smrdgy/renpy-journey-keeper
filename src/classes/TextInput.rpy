@@ -474,7 +474,7 @@ init 1 python in SSSSS:
                     if allow:
 
                         # Allow is regex
-                        if isinstance(allow, re.Pattern):
+                        if isinstance(allow, re.Pattern if hasattr(re, "Pattern") else re._pattern_type):
 
                             # Character doesn't match
                             if allow.search(c) is None:
@@ -488,7 +488,7 @@ init 1 python in SSSSS:
                     if exclude:
 
                         # Exclude is regex
-                        if isinstance(exclude, re.Pattern):
+                        if isinstance(exclude, re.Pattern if hasattr(re, "Pattern") else re._pattern_type):
 
                             # Character matches
                             if exclude.search(c) is not None:

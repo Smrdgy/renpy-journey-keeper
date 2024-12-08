@@ -61,8 +61,8 @@ screen SSSSS_SidepanelHolder():
 
     if showSidepanel:
         use SSSSS_Sidepanel()
-    else:
-        $ SSSSS.Pagination.showGoTo = False
 
     if(showSidepanel and isSaveLoadScreen and SSSSS.Pagination.isShowingPagination):
         use SSSSS_Pagination()
+    else:
+        $ renpy.hide_screen("SSSSS_GoToPage")

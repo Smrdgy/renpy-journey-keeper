@@ -47,8 +47,6 @@ screen SSSSS_Pagination():
 
                 hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
                     use sssss_iconButton('\uf045', tt="Go to page", action=SSSSS.Pagination.ToggleGoToPage())
-                    if SSSSS.Pagination.showGoTo:
-                        use SSSSS_GoToPage()
 
                 hbox:
                     yalign 0.5

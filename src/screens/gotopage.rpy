@@ -1,6 +1,6 @@
 screen SSSSS_GoToPage():
+    layer "SSSSSoverlay"
     style_prefix 'SSSSS'
-    modal True
 
     python:
         class Value(InputValue):
@@ -21,19 +21,10 @@ screen SSSSS_GoToPage():
 
                         renpy.restart_interaction()
 
-    default value = Value()
-    default page_input = SSSSS.TextInput("page", value=value, auto_focus=True)
+    default page_input = SSSSS.TextInput("page", value=Value(), auto_focus=True, allowed_characters="0123456789", max_length=6)
 
-    frame:
-        xysize (0, 0)
-        padding (0, 0, 0, 0)
-        background None
+    use SSSSS_TooltipDialog():
+        frame style "SSSSS_default":
+            xysize adjustable((90, 25))
 
-        frame:
-            style "SSSSS_frame"
-            xysize adjustable((90, 40))
-            xalign 0.5 yalign 1
-            offset adjustable((-40, -60))
-            background "#000000cc"
-
-            add page_input.displayable(placeholder=renpy.store.persistent._file_page, layout="nobreak", offset=(-10, -7))
+            add page_input.displayable(placeholder=renpy.store.persistent._file_page)

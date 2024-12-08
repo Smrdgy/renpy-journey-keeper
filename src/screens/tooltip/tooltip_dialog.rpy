@@ -1,4 +1,4 @@
-screen SSSSS_TooltipDialog(title, icon, message, pos=None, interactive=False, side="top", distance=adjustable(20), clamp=False):
+screen SSSSS_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=adjustable(20), clamp=False):
     layer "SSSSSoverlay"
     style_prefix 'SSSSS_dialog'
     zorder 99999
@@ -66,23 +66,26 @@ screen SSSSS_TooltipDialog(title, icon, message, pos=None, interactive=False, si
             xmaximum int(renpy.config.screen_width / 4)
 
             vbox:
-                hbox:
-                    if interactive:
-                        use sssss_iconButton(icon=None, action=None)
-
+                if title or icon or interactive:
                     hbox:
-                        xalign 0.5
-                        yalign 0.5
+                        if interactive:
+                            use sssss_iconButton(icon=None, action=None)
 
-                        if icon:
-                            use sssss_icon(icon)
+                        hbox:
+                            xalign 0.5
+                            yalign 0.5
 
-                        if title:
-                            hbox xalign 0.5:
-                                use SSSSS_Title(title)
+                            if icon:
+                                use sssss_icon(icon)
 
-                    if interactive:
-                        hbox xpos 1.0 xanchor 1.0:
-                            use sssss_iconButton(icon="\ue5cd", action=[closeAction, NullAction()])
+                            if title:
+                                hbox xalign 0.5:
+                                    use SSSSS_Title(title)
 
-                text message style "SSSSS_text" xalign 0.5
+                        if interactive:
+                            hbox xpos 1.0 xanchor 1.0:
+                                use sssss_iconButton(icon="\ue5cd", action=[closeAction, NullAction()])
+
+                if message:
+                    text message style "SSSSS_text" xalign 0.5
+                transclude

@@ -18,7 +18,7 @@ screen sssss_iconButton(icon, text=None, action=None, size=None, sensitive=None,
         selected toggled
 
         if(not disabled):
-            action action
+            action [Hide("SSSSS_TooltipDialog"), action]
 
         hbox:
             style_prefix "SSSSS_icon_button"
