@@ -9,12 +9,16 @@ init -1001 python in URPS:
 
     class UserDir(x52NonPicklable):
         @staticmethod
+        def is_available():
+            return renpy.config.save_directory != None
+
+        @staticmethod
         def root_path():
             return __main__.path_to_saves(renpy.config.gamedir, savedir)
 
         @staticmethod
         def game_path():
-            return os.path.join(UserDir.root_path(), renpy.config.save_directory)
+            return os.path.join(UserDir.root_path(), renpy.config.save_directory or "")
 
         @staticmethod
         def settings_path():
@@ -71,6 +75,9 @@ init -1001 python in URPS:
 
         @staticmethod
         def loadJson(path):
+            if not renpy.config.save_directory:
+                return None
+
             if os.path.isfile(path):
                 try:
                     with io.open(path, "r", encoding="utf-8") as file:
@@ -81,6 +88,9 @@ init -1001 python in URPS:
 
         @staticmethod
         def saveJson(file_path, data):
+            if not renpy.config.save_directory:
+                return False
+
             if renpy.config.save_directory in file_path:
                 dir_path = UserDir.game_path()
 
