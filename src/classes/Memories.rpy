@@ -1,4 +1,4 @@
-init 1 python in SSSSS:
+init 1 python in URPS:
     _constant = True
 
     class MemoriesClass(x52NonPicklable):
@@ -91,7 +91,7 @@ init 1 python in SSSSS:
         class OpenSaveMemory(renpy.ui.Action):
             def __call__(self):
                 renpy.take_screenshot()
-                renpy.show_screen("SSSSS_SaveMemory")
+                renpy.show_screen("URPS_SaveMemory")
                 renpy.restart_interaction()
 
         class CreateMemory(renpy.ui.Action):

@@ -1,5 +1,5 @@
-screen sssss_iconButton(icon, text=None, action=None, size=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=None, disabled=False, color=None, textColor=None, iconColor=None, toggledColor=None, hovered=None, unhovered=None, hover_color=None, disabled_color=SSSSS.Colors.disabled):
-    style_prefix "SSSSS"
+screen URPS_IconButton(icon, text=None, action=None, size=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=None, disabled=False, color=None, textColor=None, iconColor=None, toggledColor=None, hovered=None, unhovered=None, hover_color=None, disabled_color=URPS.Colors.disabled):
+    style_prefix "URPS"
 
     python:
         text_color = (disabled_color if disabled else ((toggledColor or textColor or color) if toggled else (textColor or color)))
@@ -13,17 +13,17 @@ screen sssss_iconButton(icon, text=None, action=None, size=None, sensitive=None,
         sensitive sensitive
         key_events True
 
-        hovered [SSSSS.OpenTooltipAction(message=tt, side=ttSide), hovered]
-        unhovered [Hide("SSSSS_TooltipDialog"), unhovered]
+        hovered [URPS.OpenTooltipAction(message=tt, side=ttSide), hovered]
+        unhovered [Hide("URPS_TooltipDialog"), unhovered]
         selected toggled
 
         if(not disabled):
-            action [Hide("SSSSS_TooltipDialog"), action]
+            action [Hide("URPS_TooltipDialog"), action]
 
         hbox:
-            style_prefix "SSSSS_icon_button"
+            style_prefix "URPS_Icon_button"
 
-            use sssss_icon(toggled_icon if toggled else icon, color=icon_color, size=size, hover_color=hover_color)
+            use URPS_Icon(toggled_icon if toggled else icon, color=icon_color, size=size, hover_color=hover_color)
 
             if text:
                 text text yalign .5:

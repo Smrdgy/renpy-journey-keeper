@@ -1,6 +1,6 @@
-screen SSSSS_SettingsLoadSaveScreensStandalone():
-    layer "SSSSSoverlay"
-    style_prefix "SSSSS"
+screen URPS_SettingsLoadSaveScreensStandalone():
+    layer "URPS_Overlay"
+    style_prefix "URPS"
 
     drag:
         draggable True
@@ -14,6 +14,6 @@ screen SSSSS_SettingsLoadSaveScreensStandalone():
             padding adjustable((20, 20, 20, 20))
 
             vbox:
-                use SSSSS_SettingsLoadSaveScreens(update_at_runtime=True)
+                use URPS_SettingsLoadSaveScreens(update_at_runtime=True)
 
-                use sssss_iconButton("\ue5c4", text="Return to the settings", action=[Hide("SSSSS_SettingsLoadSaveScreensStandalone"), Show("SSSSS_Settings")])
+                use URPS_IconButton("\ue5c4", text="Return to the settings", action=[Hide("URPS_SettingsLoadSaveScreensStandalone"), Show("URPS_Settings")])

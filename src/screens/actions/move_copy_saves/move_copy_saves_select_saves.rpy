@@ -1,5 +1,5 @@
-screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save):
-    style_prefix 'SSSSS'
+screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save):
+    style_prefix 'URPS'
     modal True
 
     viewport:
@@ -102,12 +102,12 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
 
                 hbox # Dummy
 
-                textbutton viewModel.source_playthrough.name text_color SSSSS.Colors.theme:
+                textbutton viewModel.source_playthrough.name text_color URPS.Colors.theme:
                     action ClearSourcePlaythroughAction()
 
-                textbutton "→" action FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough) hovered SSSSS.OpenTooltipAction(message="Swap playthroughs") unhovered Hide("SSSSS_TooltipDialog")
+                textbutton "→" action FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough) hovered URPS.OpenTooltipAction(message="Swap playthroughs") unhovered Hide("URPS_TooltipDialog")
 
-                textbutton viewModel.destination_playthrough.name text_color SSSSS.Colors.theme:
+                textbutton viewModel.destination_playthrough.name text_color URPS.Colors.theme:
                     action ClearDestinationPlaythroughAction()
 
                 hbox # Dummy
@@ -116,7 +116,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                 xfill True
 
                 vbox xalign 1.0:
-                    use SSSSS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
             vbox:
                 spacing 2
@@ -128,7 +128,7 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
 
                     hbox:
                         xfill True
-                        use SSSSS_Checkbox(checked=None if len(saves_to_process) != len(source_saves) and len(saves_to_process) > 0 else len(saves_to_process) == len(source_saves), text="")
+                        use URPS_Checkbox(checked=None if len(saves_to_process) != len(source_saves) and len(saves_to_process) > 0 else len(saves_to_process) == len(source_saves), text="")
 
                         text str(len(saves_to_process)) + " selected" yalign 0.5
 
@@ -136,26 +136,26 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                 for save in source_saves:
                     $ i += 1
 
-                    button style ("SSSSS_row_button" if i % 2 == 0 else "SSSSS_row_odd_button") selected save in saves_to_process:
+                    button style ("URPS_row_button" if i % 2 == 0 else "URPS_row_odd_button") selected save in saves_to_process:
                         xfill True
                         action [SaveSelectedAction(saves_to_process, save, viewModel, last_selected_save)]
 
                         grid 5 1:
                             xfill True
-                            use SSSSS_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
+                            use URPS_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
 
                             # Source
                             hbox yalign 0.5:
                                 if show_thumbnails:
-                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size SSSSS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
 
-                                use SSSSS_XSpacer()
+                                use URPS_XSpacer()
 
                                 hbox yalign 0.5:
                                     if save in source_saves:
                                         text save
                                     else:
-                                        text "N/A" color SSSSS.Colors.na
+                                        text "N/A" color URPS.Colors.na
 
                             text "→" yalign 0.5 xsize 40
 
@@ -165,15 +165,15 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
                                     if save in other_saves:
                                         text save
                                     else:
-                                        text "N/A" color SSSSS.Colors.na
+                                        text "N/A" color URPS.Colors.na
 
-                                use SSSSS_XSpacer()
+                                use URPS_XSpacer()
 
                                 if show_thumbnails:
-                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size SSSSS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
 
                             hbox yalign 0.5:
-                                text "Conflict!" color (SSSSS.Colors.warning if save in other_saves else "#ffffff00")
+                                text "Conflict!" color (URPS.Colors.warning if save in other_saves else "#ffffff00")
         
     # Dialog footer
     hbox:
@@ -186,16 +186,16 @@ screen SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnai
             text "{color=#abe9ff}ctrl + click{/color} or {color=#abe9ff}click the checkbox{/color} to select/deselect one"
 
         vbox:
-            style_prefix "SSSSS_dialog_action_buttons"
+            style_prefix "URPS_dialog_action_buttons"
             vbox xalign 1.0:
                 # Move
                 hbox:
-                    use sssss_iconButton(icon="\ue675", text="Move", action=SSSSS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process, mode="MOVE"), disabled=len(saves_to_process) == 0)
+                    use URPS_IconButton(icon="\ue675", text="Move", action=URPS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process, mode="MOVE"), disabled=len(saves_to_process) == 0)
 
                 # Copy
                 hbox:
-                    use sssss_iconButton(icon="\ue161", text="Copy", action=SSSSS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process), disabled=len(saves_to_process) == 0)
+                    use URPS_IconButton(icon="\ue161", text="Copy", action=URPS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process), disabled=len(saves_to_process) == 0)
 
                 # Close
                 hbox:
-                    use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_MoveCopySaves"))
+                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_MoveCopySaves"))

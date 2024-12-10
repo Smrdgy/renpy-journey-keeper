@@ -1,6 +1,6 @@
-screen SSSSS_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=adjustable(20), clamp=False):
-    layer "SSSSSoverlay"
-    style_prefix 'SSSSS_dialog'
+screen URPS_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=adjustable(20), clamp=False):
+    layer "URPS_Overlay"
+    style_prefix 'URPS_dialog'
     zorder 99999
     
     default mouse_position = renpy.get_mouse_pos()
@@ -43,7 +43,7 @@ screen SSSSS_TooltipDialog(title=None, icon=None, message=None, pos=None, intera
                 min(max(draggable_pos[1], 0), renpy.config.screen_height - adjustable(200 + distance)),
             )
 
-        closeAction = Hide("SSSSS_TooltipDialog")
+        closeAction = Hide("URPS_TooltipDialog")
 
     if closeAction:
         key 'K_ESCAPE' action closeAction
@@ -60,7 +60,7 @@ screen SSSSS_TooltipDialog(title=None, icon=None, message=None, pos=None, intera
         yanchor yanchor
         droppable False
 
-        frame style "SSSSS_default":
+        frame style "URPS_default":
             background "#0c0c0cfc"
             padding (10, 10, 10, 10)
             xmaximum int(renpy.config.screen_width / 4)
@@ -69,23 +69,23 @@ screen SSSSS_TooltipDialog(title=None, icon=None, message=None, pos=None, intera
                 if title or icon or interactive:
                     hbox:
                         if interactive:
-                            use sssss_iconButton(icon=None, action=None)
+                            use URPS_IconButton(icon=None, action=None)
 
                         hbox:
                             xalign 0.5
                             yalign 0.5
 
                             if icon:
-                                use sssss_icon(icon)
+                                use URPS_Icon(icon)
 
                             if title:
                                 hbox xalign 0.5:
-                                    use SSSSS_Title(title)
+                                    use URPS_Title(title)
 
                         if interactive:
                             hbox xpos 1.0 xanchor 1.0:
-                                use sssss_iconButton(icon="\ue5cd", action=[closeAction, NullAction()])
+                                use URPS_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 
                 if message:
-                    text message style "SSSSS_text" xalign 0.5
+                    text message style "URPS_text" xalign 0.5
                 transclude

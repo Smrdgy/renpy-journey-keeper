@@ -1,50 +1,50 @@
-screen SSSSS_PlaythroughActions(playthrough):
-    layer "SSSSSoverlay"
-    style_prefix 'SSSSS'
+screen URPS_PlaythroughActions(playthrough):
+    layer "URPS_Overlay"
+    style_prefix 'URPS'
     modal True
 
     python:
-        listSavesAction = [Show("SSSSS_SavesList", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
-        sequentializeSavesAction = [SSSSS.Playthroughs.TrySequentializeSaves(playthrough), Hide("SSSSS_PlaythroughActions")]
-        constructTimelineAction = [Show("SSSSS_ChoicesTimeline", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
-        MoveCopySavesAction = [Show("SSSSS_MoveCopySaves", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
-        duplicatePlaythroughAction = [Show("SSSSS_DuplicatePlaythrough", playthrough=playthrough), Hide("SSSSS_PlaythroughActions")]
+        listSavesAction = [Show("URPS_SavesList", playthrough=playthrough), Hide("URPS_PlaythroughActions")]
+        sequentializeSavesAction = [URPS.Playthroughs.TrySequentializeSaves(playthrough), Hide("URPS_PlaythroughActions")]
+        constructTimelineAction = [Show("URPS_ChoicesTimeline", playthrough=playthrough), Hide("URPS_PlaythroughActions")]
+        MoveCopySavesAction = [Show("URPS_MoveCopySaves", playthrough=playthrough), Hide("URPS_PlaythroughActions")]
+        duplicatePlaythroughAction = [Show("URPS_DuplicatePlaythrough", playthrough=playthrough), Hide("URPS_PlaythroughActions")]
 
     key 'K_e' action listSavesAction
     key 'K_s' action sequentializeSavesAction
     key 'K_t' action constructTimelineAction
     key 'K_m' action MoveCopySavesAction
 
-    use SSSSS_Dialog(title="Playthrough actions", closeAction=Hide("SSSSS_PlaythroughActions")):
-        style_prefix "SSSSS"
+    use URPS_Dialog(title="Playthrough actions", closeAction=Hide("URPS_PlaythroughActions")):
+        style_prefix "URPS"
 
         hbox:
             xfill True
             yfill True
 
-            style_prefix "SSSSS_dialog_action_buttons"
+            style_prefix "URPS_dialog_action_buttons"
 
             vbox:
                 # Duplicate playthrough
                 hbox:
-                    use sssss_iconButton(icon="\uebbd", text="{u}D{/u}uplicate playthrough", action=duplicatePlaythroughAction)
+                    use URPS_IconButton(icon="\uebbd", text="{u}D{/u}uplicate playthrough", action=duplicatePlaythroughAction)
 
                 # List all saves
                 hbox:
-                    use sssss_iconButton(icon="\ue617", text="Manag{u}e{/u} saves", action=listSavesAction)
+                    use URPS_IconButton(icon="\ue617", text="Manag{u}e{/u} saves", action=listSavesAction)
 
                 # Sequentialize saves
                 hbox:
-                    use sssss_iconButton(icon="\ue089", text="{u}S{/u}equentialize saves", action=sequentializeSavesAction, disabled=not SSSSS.Utils.hasColsAndRowsConfiguration())
+                    use URPS_IconButton(icon="\ue089", text="{u}S{/u}equentialize saves", action=sequentializeSavesAction, disabled=not URPS.Utils.hasColsAndRowsConfiguration())
                 
                 # Show choices timeline
                 hbox:
-                    use sssss_iconButton(icon="\uf184", text="Show choice {u}t{/u}imeline", action=constructTimelineAction)
+                    use URPS_IconButton(icon="\uf184", text="Show choice {u}t{/u}imeline", action=constructTimelineAction)
 
                 # Move/copy saves
                 hbox:
-                    use sssss_iconButton(icon="\ueb7d", text="{u}M{/u}ove/copy saves", action=MoveCopySavesAction)
+                    use URPS_IconButton(icon="\ueb7d", text="{u}M{/u}ove/copy saves", action=MoveCopySavesAction)
                 
                 # Close
                 hbox:
-                    use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_PlaythroughActions"))
+                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_PlaythroughActions"))

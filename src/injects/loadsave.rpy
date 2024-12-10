@@ -1,4 +1,4 @@
-init -99 python in SSSSS:
+init -99 python in URPS:
     _constant = True
     
     def before_load(slotname):

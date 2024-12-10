@@ -1,10 +1,10 @@
-screen sssss_icon(icon, color=None, hover_color=None, size=None):
-    style_prefix "SSSSS"
+screen URPS_Icon(icon, color=None, hover_color=None, size=None):
+    style_prefix "URPS"
 
-    frame style "SSSSS_default":
+    frame style "URPS_default":
         hbox:
             if icon:
-                text icon style 'SSSSS_icon':
+                text icon style 'URPS_Icon':
                     if color:
                         color color
                     if hover_color:

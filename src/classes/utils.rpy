@@ -1,4 +1,4 @@
-init -2000 python in SSSSS:
+init -2000 python in URPS:
     _constant = True
 
     import re
@@ -616,17 +616,17 @@ init -2000 python in SSSSS:
 
         def __call__(self):
             if self.message:
-                renpy.show_screen("SSSSS_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side)
+                renpy.show_screen("URPS_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side)
                 renpy.restart_interaction()
 
 init -1000 python:
     def adjustable(value, minValue=5): 
-        # if SSSSS.Settings.sizeAdjustment == 0:
+        # if URPS.Settings.sizeAdjustment == 0:
         #     return value
 
         # Helper function to apply adjustment only to integers
         def adjust_number(value):
-            return int(value * (renpy.config.screen_height / 1080.0)) + SSSSS.Settings.sizeAdjustment
+            return int(value * (renpy.config.screen_height / 1080.0)) + URPS.Settings.sizeAdjustment
         
         # If the value is a tuple, apply adjustment to each element
         if isinstance(value, tuple):

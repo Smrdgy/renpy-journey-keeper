@@ -1,5 +1,5 @@
-screen SSSSS_Pagination():
-    style_prefix 'SSSSS'
+screen URPS_Pagination():
+    style_prefix 'URPS'
 
     default estimatedPaginationSize = (950, 80)
 
@@ -17,12 +17,12 @@ screen SSSSS_Pagination():
             currentPage = 1
             pageOffset = 0
 
-        paginationPos = store.persistent.SSSSS_PaginationPos or (int(renpy.config.screen_width / 2 - estimatedPaginationSize[0] / 2), int(renpy.config.screen_height - estimatedPaginationSize[1] - 15))
+        paginationPos = store.persistent.URPS_PaginationPos or (int(renpy.config.screen_width / 2 - estimatedPaginationSize[0] / 2), int(renpy.config.screen_height - estimatedPaginationSize[1] - 15))
 
         def pagination_dragged(drags, drop):
-            renpy.store.persistent.SSSSS_PaginationPos = (drags[0].x, drags[0].y)
+            renpy.store.persistent.URPS_PaginationPos = (drags[0].x, drags[0].y)
 
-    if SSSSS.Settings.debugEnabled:
+    if URPS.Settings.debugEnabled:
         frame:
             background "#ff0000cc"
             xysize estimatedPaginationSize
@@ -46,7 +46,7 @@ screen SSSSS_Pagination():
                 spacing 10
 
                 hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
-                    use sssss_iconButton('\uf045', tt="Go to page", action=SSSSS.Pagination.ToggleGoToPage())
+                    use URPS_IconButton('\uf045', tt="Go to page", action=URPS.Pagination.ToggleGoToPage())
 
                 hbox:
                     yalign 0.5
@@ -55,8 +55,8 @@ screen SSSSS_Pagination():
                     hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
                         spacing 10
 
-                        textbutton "<<" action FilePage(max(currentPage - 10, 1)) style "SSSSS_pagination_textbutton"
-                        textbutton "<" action FilePage(max(currentPage - 1, 1)) style "SSSSS_pagination_textbutton"
+                        textbutton "<<" action FilePage(max(currentPage - 10, 1)) style "URPS_pagination_textbutton"
+                        textbutton "<" action FilePage(max(currentPage - 1, 1)) style "URPS_pagination_textbutton"
 
                     grid 10 1 xpos 0.5 xanchor 0.5 ypos 1.0 yanchor 1.0:
                         spacing 10
@@ -70,7 +70,7 @@ screen SSSSS_Pagination():
 
                                 textbutton "[page]":
                                     action FilePage(page)
-                                    style ("SSSSS_pagination_textbutton_active" if page == currentPage else "SSSSS_pagination_textbutton")
+                                    style ("URPS_pagination_textbutton_active" if page == currentPage else "URPS_pagination_textbutton")
                                     xpos 0.5
                                     xanchor 0.5
                                     ypos 1.0
@@ -83,5 +83,5 @@ screen SSSSS_Pagination():
                         yanchor 1.0
                         spacing 10
 
-                        textbutton ">" action FilePageNext() style "SSSSS_pagination_textbutton"
-                        textbutton ">>" action FilePage(currentPage + 10) style "SSSSS_pagination_textbutton"
+                        textbutton ">" action FilePageNext() style "URPS_pagination_textbutton"
+                        textbutton ">>" action FilePage(currentPage + 10) style "URPS_pagination_textbutton"

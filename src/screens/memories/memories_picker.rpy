@@ -1,13 +1,13 @@
-screen SSSSS_MemoriesLibrary():
-    layer "SSSSSoverlay"
-    style_prefix 'SSSSS'
+screen URPS_MemoriesLibrary():
+    layer "URPS_Overlay"
+    style_prefix 'URPS'
     modal True
 
     default columns = 4
     default thumbnailSize = (int((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20), 200)
 
-    use SSSSS_Dialog(title="Select a memory to play", closeAction=Hide("SSSSS_MemoriesLibrary")):
-        style_prefix "SSSSS"
+    use URPS_Dialog(title="Select a memory to play", closeAction=Hide("URPS_MemoriesLibrary")):
+        style_prefix "URPS"
 
         viewport:
             mousewheel True
@@ -16,7 +16,7 @@ screen SSSSS_MemoriesLibrary():
             pagekeys True
 
             python:
-                memories = SSSSS.Memories.getMemories()
+                memories = URPS.Memories.getMemories()
                 totalMemories = len(memories)
                 rows = totalMemories // columns
                 if totalMemories % columns != 0:
@@ -32,8 +32,8 @@ screen SSSSS_MemoriesLibrary():
                         key_events True
                         xmaximum renpy.config.screen_width
                         ymaximum renpy.config.screen_height
-                        background SSSSS.Colors.block_background
-                        action [Hide("SSSSS_MemoriesLibrary"), SSSSS.Memories.LoadMemoryWithConfirm(slotname)]
+                        background URPS.Colors.block_background
+                        action [Hide("URPS_MemoriesLibrary"), URPS.Memories.LoadMemoryWithConfirm(slotname)]
 
                         vbox:
                             xpos 0.5
@@ -41,7 +41,7 @@ screen SSSSS_MemoriesLibrary():
                             ypos 1.0
                             yanchor 1.0
 
-                            add SSSSS.Memories.GetScreenshot(slotname) xalign 0.5
+                            add URPS.Memories.GetScreenshot(slotname) xalign 0.5
 
                             text slotname
 

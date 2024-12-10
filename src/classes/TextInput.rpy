@@ -1,4 +1,4 @@
-init 1 python in SSSSS:
+init 1 python in URPS:
     _constant = True
 
     import pygame_sdl2 as pygame

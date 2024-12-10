@@ -1,8 +1,8 @@
 # Unfortunately this must be saved into the save game, so the system can properly recognize which slot to use next,
 # especially when a manual save is made somewhere in between and then a rollback occurs.
-default SSSSS_ActiveSlot = "1-1"
+default URPS_ActiveSlot = "1-1"
 
-init -999 python in SSSSS:
+init -999 python in URPS:
     _constant = True
 
     import time
@@ -30,11 +30,11 @@ init -999 python in SSSSS:
 
             #Last resort check to counter forced autosaves screwing up the counter (e.g. $ renpy.save("auto-1") somewhere in the dialog)
             if page != 0 and slot != 0:
-                self.prevActiveSlot = renpy.store.SSSSS_ActiveSlot + "" # Copy the data, not just the pointer
-                renpy.store.SSSSS_ActiveSlot = slotname
+                self.prevActiveSlot = renpy.store.URPS_ActiveSlot + "" # Copy the data, not just the pointer
+                renpy.store.URPS_ActiveSlot = slotname
 
         def getNextSlot(self):
-            page, slot = Utils.splitSavename(renpy.store.SSSSS_ActiveSlot)
+            page, slot = Utils.splitSavename(renpy.store.URPS_ActiveSlot)
 
             slot += 1
 
@@ -47,13 +47,13 @@ init -999 python in SSSSS:
             return page, slot, slotString
 
         def getCurrentSlot(self):
-            slotString = renpy.store.SSSSS_ActiveSlot
+            slotString = renpy.store.URPS_ActiveSlot
             page, slot = Utils.splitSavename(slotString)
 
             return page, slot, slotString
 
         def getPreviousSlot(self):
-            page, slot = Utils.splitSavename(renpy.store.SSSSS_ActiveSlot)
+            page, slot = Utils.splitSavename(renpy.store.URPS_ActiveSlot)
 
             slot -= 1
 
@@ -76,9 +76,9 @@ init -999 python in SSSSS:
         def trySavePendingSave(self):
             if(self.pendingSave != None):
                 # If the save slot is not bigger than the very last one, do once a confirm whether to disable autosaving
-                if renpy.scan_saved_game(renpy.store.SSSSS_ActiveSlot) and not self.suppressAutosaveConfirm and not renpy.store.SSSSS_ActiveSlot == self.prevActiveSlot:
+                if renpy.scan_saved_game(renpy.store.URPS_ActiveSlot) and not self.suppressAutosaveConfirm and not renpy.store.URPS_ActiveSlot == self.prevActiveSlot:
                     self.confirmDialogOpened = True
-                    renpy.show_screen("SSSSS_AutosaveOverwriteConfirm")
+                    renpy.show_screen("URPS_AutosaveOverwriteConfirm")
                     return
 
                 self.pendingSave.save()
@@ -99,7 +99,7 @@ init -999 python in SSSSS:
                 self.pendingSave.takeAndSaveScreenshot()
                 self.trySavePendingSave()
 
-        # The SSSSS_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
+        # The URPS_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
         # However when a manual save is loaded it might not be a choice screen.
         # If so, the save slot needs to move further as to not override the manual slot with the next autosave.
         def processSlotAfterLoad(self):
@@ -152,7 +152,7 @@ init -999 python in SSSSS:
 
             # If this becomes laggy, check the ren'py's autosave system and its threading
             def save(self):
-                slotname = renpy.store.SSSSS_ActiveSlot
+                slotname = renpy.store.URPS_ActiveSlot
 
                 renpy.loadsave.location.save(slotname, self.saveRecord)
                 renpy.loadsave.location.scan()

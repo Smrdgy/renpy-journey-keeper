@@ -1,4 +1,4 @@
-init -999 python in SSSSS:
+init -999 python in URPS:
     _constant = True
 
     class Colors:

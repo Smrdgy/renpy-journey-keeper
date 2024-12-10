@@ -1,4 +1,4 @@
-screen SSSSS_MoveCopySavesProcessing(viewModel):
+screen URPS_MoveCopySavesProcessing(viewModel):
     python:
         processed = viewModel.processed
         to_process = len(viewModel.saves_to_process)
@@ -20,9 +20,9 @@ screen SSSSS_MoveCopySavesProcessing(viewModel):
             xmaximum 0.85
 
             hbox xalign 0.5:
-                use SSSSS_Title("Copying saves..." if viewModel.stage == "COPY" else "Removing old saves...")
+                use URPS_Title("Copying saves..." if viewModel.stage == "COPY" else "Removing old saves...")
 
-            use SSSSS_YSpacer()
+            use URPS_YSpacer()
 
             text "[processed]/[to_process]" xalign 0.5
             bar value processed range to_process
@@ -32,12 +32,12 @@ screen SSSSS_MoveCopySavesProcessing(viewModel):
         xfill True
         yfill True
 
-        style_prefix "SSSSS_dialog_action_buttons"
+        style_prefix "URPS_dialog_action_buttons"
 
         vbox:
             hbox:
-                use sssss_iconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=SSSSS.Colors.danger)
+                use URPS_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=URPS.Colors.danger)
 
             # Close
             hbox:
-                use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_MoveCopySaves"))
+                use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_MoveCopySaves"))

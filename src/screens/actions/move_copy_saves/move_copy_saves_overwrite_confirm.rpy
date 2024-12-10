@@ -1,4 +1,4 @@
-screen SSSSS_MoveCopySavesOverwriteConfirm(save, viewModel):
+screen URPS_MoveCopySavesOverwriteConfirm(save, viewModel):
     python:
         class SkipAction(renpy.ui.Action):
             def __init__(self, viewModel, apply_to_all):
@@ -23,8 +23,8 @@ screen SSSSS_MoveCopySavesOverwriteConfirm(save, viewModel):
             def __call__(self):
                 self.viewModel.process_stop()
 
-    layer "SSSSSoverlay"
-    style_prefix "SSSSS"
+    layer "URPS_Overlay"
+    style_prefix "URPS"
 
     modal True
 
@@ -39,52 +39,52 @@ screen SSSSS_MoveCopySavesOverwriteConfirm(save, viewModel):
     default target_screenshot = viewModel.destination_instance.location.screenshot_including_inactive(save)
 
     python:
-        skipAction = [Hide("SSSSS_MoveCopySavesOverwriteConfirm"), SkipAction(viewModel=viewModel, apply_to_all=apply_to_all)]
-        overwriteAction = [Hide("SSSSS_MoveCopySavesOverwriteConfirm"), OverwriteAction(viewModel=viewModel, apply_to_all=apply_to_all)]
-        cancelAction = [Hide("SSSSS_MoveCopySavesOverwriteConfirm"), CancelAction(viewModel=viewModel)]
+        skipAction = [Hide("URPS_MoveCopySavesOverwriteConfirm"), SkipAction(viewModel=viewModel, apply_to_all=apply_to_all)]
+        overwriteAction = [Hide("URPS_MoveCopySavesOverwriteConfirm"), OverwriteAction(viewModel=viewModel, apply_to_all=apply_to_all)]
+        cancelAction = [Hide("URPS_MoveCopySavesOverwriteConfirm"), CancelAction(viewModel=viewModel)]
 
     key 'K_RETURN' action cancelAction
     key 'K_KP_ENTER' action overwriteAction
 
-    use SSSSS_Dialog(title="Saves conflict!", message="Save " + save + " already exist in the target directory.\nPlease, select which action to perform.", closeAction=cancelAction):
+    use URPS_Dialog(title="Saves conflict!", message="Save " + save + " already exist in the target directory.\nPlease, select which action to perform.", closeAction=cancelAction):
         vbox:
             xfill True
 
-            use SSSSS_YSpacer()
+            use URPS_YSpacer()
 
             hbox xalign 0.5:
                 grid 3 1:
                     if source_screenshot:
-                        add source_screenshot size SSSSS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
+                        add source_screenshot size URPS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
                     else:
                         add ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
                     text "→" size adjustable(40) align (0.5, 0.5)
 
                     if target_screenshot:
-                        add target_screenshot size SSSSS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
+                        add target_screenshot size URPS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
                     else:
                         add ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
-            use SSSSS_YSpacer()
+            use URPS_YSpacer()
 
 
         hbox:
             xfill True
             yfill True
 
-            style_prefix "SSSSS_dialog_action_buttons"
+            style_prefix "URPS_dialog_action_buttons"
 
             vbox:
-                use SSSSS_Checkbox(checked=apply_to_all, text="Perform for all remaining conflicts", action=ToggleScreenVariable("apply_to_all", True, False))
+                use URPS_Checkbox(checked=apply_to_all, text="Perform for all remaining conflicts", action=ToggleScreenVariable("apply_to_all", True, False))
 
                 hbox:
-                    use sssss_iconButton(icon="\ue89c", text="Overwrite", action=overwriteAction, color=SSSSS.Colors.danger)
+                    use URPS_IconButton(icon="\ue89c", text="Overwrite", action=overwriteAction, color=URPS.Colors.danger)
 
                 hbox:
-                    use sssss_iconButton(icon="\ue044", text="Skip", action=skipAction)
+                    use URPS_IconButton(icon="\ue044", text="Skip", action=skipAction)
 
                 hbox:
-                    use sssss_iconButton(icon="\ue5cd", text="Abort", action=cancelAction)
+                    use URPS_IconButton(icon="\ue5cd", text="Abort", action=cancelAction)
 
         

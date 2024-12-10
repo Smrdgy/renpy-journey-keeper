@@ -1,4 +1,4 @@
-init 1 python in SSSSS:
+init 1 python in URPS:
     _constant = True
 
     import json
@@ -11,10 +11,16 @@ init 1 python in SSSSS:
         _activePlaythrough = None
 
         def __init__(self):
+            # Legacy conversion #TODO: Remove at some point
+            if renpy.store.persistent.SSSSS_playthroughs:
+                renpy.store.persistent.URPS_Playthroughs = renpy.store.persistent.SSSSS_playthroughs
+                renpy.store.persistent.URPS_PlaythroughsMtime = int(time.time())
+                renpy.store.persistent.SSSSS_playthroughs = None
+
             # For some reason the __init__ is called twice in Ren'Py 7.0.0.196.
             # When that happens the playthroughs are loaded twice which led to a buildup of playthroughs when saved. This if should mitigate that.
-            if hasattr(renpy.config, "SSSSS_playthroughs_initialized"): return
-            renpy.config.SSSSS_playthroughs_initialized = True
+            if hasattr(renpy.config, "URPS_Playthroughs_initialized"): return
+            renpy.config.URPS_Playthroughs_initialized = True
 
             hasNative = False
             hasMemories = False
@@ -23,7 +29,7 @@ init 1 python in SSSSS:
             persistent_playthroughs = self.loadFromPersistent()
 
             userdir_mtime = UserDir.playthroughsMtime()
-            persistent_mtime = renpy.store.persistent.SSSSS_playthroughsMtime or 0
+            persistent_mtime = renpy.store.persistent.URPS_PlaythroughsMtime or 0
 
             playthroughs = None
             if userdir_mtime > persistent_mtime:
@@ -65,8 +71,8 @@ init 1 python in SSSSS:
             return None
 
         def loadFromPersistent(self):
-            if renpy.store.persistent.SSSSS_playthroughs:
-                return json.loads(renpy.store.persistent.SSSSS_playthroughs)
+            if renpy.store.persistent.URPS_Playthroughs:
+                return json.loads(renpy.store.persistent.URPS_Playthroughs)
 
             return []
 
@@ -263,7 +269,7 @@ init 1 python in SSSSS:
                     result = self.renameSaveDirectory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name))
 
                     if result != True:
-                        renpy.show_screen("SSSSS_MovePlaythroughDirectoryError", errors=result)
+                        renpy.show_screen("URPS_MovePlaythroughDirectoryError", errors=result)
                         return None
 
                 rv = self.edit(playthrough, sourcePlaythrough, moveSaveDirectory=moveSaveDirectory)
@@ -323,8 +329,8 @@ init 1 python in SSSSS:
             UserDir.savePlaythroughs(self.getPlaythroughsAsJson())
 
         def saveToPersistent(self):
-            renpy.store.persistent.SSSSS_playthroughs = self.getPlaythroughsAsJson()
-            renpy.store.persistent.SSSSS_playthroughsMtime = int(time.time())
+            renpy.store.persistent.URPS_Playthroughs = self.getPlaythroughsAsJson()
+            renpy.store.persistent.URPS_PlaythroughsMtime = int(time.time())
 
             renpy.save_persistent()
 
@@ -369,7 +375,7 @@ init 1 python in SSSSS:
             if(self.activePlaythrough != None):
                 self.activePlaythrough.beforeDeactivation()
 
-            renpy.store.persistent.SSSSS_lastActivePlaythrough = playthrough.id if playthrough != None else None
+            renpy.store.persistent.URPS_lastActivePlaythrough = playthrough.id if playthrough != None else None
             self._activePlaythrough = playthrough
 
             renpy.store.persistent._file_page = str(playthrough.selectedPage)
@@ -470,7 +476,7 @@ init 1 python in SSSSS:
 
                 showConfirm(
                     title="Sequentialize playthrough",
-                    message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[SSSSS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[URPS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Playthroughs.SequentializeSaves(playthrough),
                     yesIcon="\ue089",
                     yesColor=Colors.error
@@ -508,7 +514,7 @@ init 1 python in SSSSS:
 
                 showConfirm(
                     title="Remove all saves",
-                    message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=[SSSSS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=[URPS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Playthroughs.DeleteAllSaves(self.playthrough),
                     yesIcon="\ue92b",
                     yesColor=Colors.error
@@ -542,4 +548,4 @@ init 1 python in SSSSS:
 
                 renpy.restart_interaction()
 
-                renpy.hide_screen("SSSSS_DuplicatePlaythrough")
+                renpy.hide_screen("URPS_DuplicatePlaythrough")

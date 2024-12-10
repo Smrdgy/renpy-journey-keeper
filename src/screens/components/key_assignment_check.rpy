@@ -1,4 +1,4 @@
-screen SSSSS_KeyAssignmentCheck(assignment):
+screen URPS_KeyAssignmentCheck(assignment):
     python:
         conflicts = []
 
@@ -11,7 +11,7 @@ screen SSSSS_KeyAssignmentCheck(assignment):
 
     if len(conflicts) > 0:
         vbox:
-            text "Conflicting mapping(s):" color SSSSS.Colors.warning
+            text "Conflicting mapping(s):" color URPS.Colors.warning
             
             hbox:
                 hbox xsize 20

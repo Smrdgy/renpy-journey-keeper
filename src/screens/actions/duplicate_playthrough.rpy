@@ -1,21 +1,21 @@
-screen SSSSS_DuplicatePlaythrough(playthrough):
-    layer "SSSSSoverlay"
-    style_prefix 'SSSSS'
+screen URPS_DuplicatePlaythrough(playthrough):
+    layer "URPS_Overlay"
+    style_prefix 'URPS'
     modal True
 
     default name = ""
     default description = playthrough.description
     
-    default name_input = SSSSS.TextInput("name", auto_focus=True)
-    default description_input = SSSSS.TextInput("description", multiline=True)
+    default name_input = URPS.TextInput("name", auto_focus=True)
+    default description_input = URPS.TextInput("description", multiline=True)
 
     python:
-        submitAction = SSSSS.Playthroughs.DuplicatePlaythroughAction(playthrough=playthrough, name=name, description=description)
+        submitAction = URPS.Playthroughs.DuplicatePlaythroughAction(playthrough=playthrough, name=name, description=description)
 
     key 'ctrl_K_s' action submitAction
 
-    use SSSSS_Dialog(title="Duplicate \"" + playthrough.name + "\"", closeAction=Hide("SSSSS_DuplicatePlaythrough")):
-        style_prefix "SSSSS"
+    use URPS_Dialog(title="Duplicate \"" + playthrough.name + "\"", closeAction=Hide("URPS_DuplicatePlaythrough")):
+        style_prefix "URPS"
 
         viewport:
             mousewheel True
@@ -25,30 +25,30 @@ screen SSSSS_DuplicatePlaythrough(playthrough):
             ymaximum 0.85
 
             vbox:
-                use SSSSS_Title("Name")
+                use URPS_Title("Name")
 
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
-                if(not SSSSS.Playthroughs.isValidName(name)):
+                if(not URPS.Playthroughs.isValidName(name)):
                     vbox offset adjustable((15, 2), minValue=1):
-                        text "Are you sure? This name already exists." color SSSSS.Colors.warning
-                        use SSSSS_InfoBox("All existing saves of \"" + name + "\" will be deleted. This action {u}{color=[SSSSS.Colors.error]}is irreversible{/color}{/u}!")
+                        text "Are you sure? This name already exists." color URPS.Colors.warning
+                        use URPS_InfoBox("All existing saves of \"" + name + "\" will be deleted. This action {u}{color=[URPS.Colors.error]}is irreversible{/color}{/u}!")
 
-                use SSSSS_YSpacer()
+                use URPS_YSpacer()
 
-                use SSSSS_Title("Description")
+                use URPS_Title("Description")
                 add description_input.displayable(placeholder="Click here to start writing the description")
 
         hbox:
             xfill True
             yfill True
 
-            style_prefix "SSSSS_dialog_action_buttons"
+            style_prefix "URPS_dialog_action_buttons"
 
             vbox:
                 # Save
                 hbox:
-                    use sssss_iconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction)
+                    use URPS_IconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction)
                 # Close
                 hbox:
-                    use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_DuplicatePlaythrough"))
+                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_DuplicatePlaythrough"))

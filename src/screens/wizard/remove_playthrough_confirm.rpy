@@ -1,13 +1,13 @@
-screen SSSSS_RemovePlaythroughConfirm(playthrough):
-    layer "SSSSSoverlay"
-    style_prefix 'SSSSS'
+screen URPS_RemovePlaythroughConfirm(playthrough):
+    layer "URPS_Overlay"
+    style_prefix 'URPS'
     modal True
 
     default deleteFiles = False
 
-    $ deleteAction = [SSSSS.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("SSSSS_RemovePlaythroughConfirm"), Hide("SSSSS_EditPlaythrough")]
+    $ deleteAction = [URPS.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("URPS_RemovePlaythroughConfirm"), Hide("URPS_EditPlaythrough")]
 
-    use SSSSS_Dialog(title="Delete playthrough", closeAction=Hide("SSSSS_RemovePlaythroughConfirm")):
+    use URPS_Dialog(title="Delete playthrough", closeAction=Hide("URPS_RemovePlaythroughConfirm")):
         key 'K_RETURN' action deleteAction
         key 'K_KP_ENTER' action deleteAction
 
@@ -18,7 +18,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             xalign 0.5
             padding (0, 10, 0, 0)
 
-            use SSSSS_Checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
+            use URPS_Checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
 
         frame:
             background None
@@ -26,7 +26,7 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             xalign 0.5
 
             hbox yalign .5:
-                use SSSSS_InfoBox("If you choose to delete the files, you won't be able to recover the playthrough.")
+                use URPS_InfoBox("If you choose to delete the files, you won't be able to recover the playthrough.")
 
         python:
             removeText = "Remove & delete files" if deleteFiles else "Remove"
@@ -35,13 +35,13 @@ screen SSSSS_RemovePlaythroughConfirm(playthrough):
             xfill True
             yfill True
 
-            style_prefix "SSSSS_dialog_action_buttons"
+            style_prefix "URPS_dialog_action_buttons"
 
             vbox:
                 # Remove
                 hbox:
-                    use sssss_iconButton(icon="\ue92b", text=removeText, action=deleteAction, color=SSSSS.Colors.danger)
+                    use URPS_IconButton(icon="\ue92b", text=removeText, action=deleteAction, color=URPS.Colors.danger)
 
                 # Close
                 hbox:
-                    use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_RemovePlaythroughConfirm"))
+                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_RemovePlaythroughConfirm"))

@@ -1,5 +1,5 @@
-screen SSSSS_SavesListNoSaves():
-    style_prefix 'SSSSS'
+screen URPS_SavesListNoSaves():
+    style_prefix 'URPS'
     modal True
 
     vbox:
@@ -8,16 +8,16 @@ screen SSSSS_SavesListNoSaves():
         ymaximum 0.85
 
         vbox align (0.5, 0.5):
-            use SSSSS_Title("No saves", color=SSSSS.Colors.error)
+            use URPS_Title("No saves", color=URPS.Colors.error)
 
     # Dialog footer
     hbox:
         xfill True
         yfill True
 
-        style_prefix "SSSSS_dialog_action_buttons"
+        style_prefix "URPS_dialog_action_buttons"
 
         vbox:
             # Close
             hbox:
-                use sssss_iconButton(icon="", text="OK", action=Hide("SSSSS_SavesList"))
+                use URPS_IconButton(icon="", text="OK", action=Hide("URPS_SavesList"))

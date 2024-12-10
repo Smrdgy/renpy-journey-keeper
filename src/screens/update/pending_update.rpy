@@ -1,16 +1,16 @@
-screen SSSSS_PendingUpdate(version, changelog):
-    layer "SSSSSoverlay"
-    style_prefix 'SSSSS'
+screen URPS_PendingUpdate(version, changelog):
+    layer "URPS_Overlay"
+    style_prefix 'URPS'
     modal True
 
-    use SSSSS_Dialog(title="[SSSSS.MOD_NAME] - Update found", message="{color=[SSSSS.Colors.theme]}{b}v" + version + "{/b}{/color}", closeAction=Hide("SSSSS_PendingUpdate")):
-        if SSSSS.Updater.downloading:
-            use SSSSS_PendingUpdateDownloading()
-        elif SSSSS.Updater.installing:
-            use SSSSS_PendingUpdateInstalling()
-        elif SSSSS.Updater.error:
-            use SSSSS_PendingUpdateError(SSSSS.Updater.error)
-        elif SSSSS.Updater.installed:
-            use SSSSS_PendingUpdateSuccess()
+    use URPS_Dialog(title="[URPS.MOD_NAME] - Update found", message="{color=[URPS.Colors.theme]}{b}v" + version + "{/b}{/color}", closeAction=Hide("URPS_PendingUpdate")):
+        if URPS.Updater.downloading:
+            use URPS_PendingUpdateDownloading()
+        elif URPS.Updater.installing:
+            use URPS_PendingUpdateInstalling()
+        elif URPS.Updater.error:
+            use URPS_PendingUpdateError(URPS.Updater.error)
+        elif URPS.Updater.installed:
+            use URPS_PendingUpdateSuccess()
         else:
-            use SSSSS_PendingUpdateChangelog(version, changelog)
+            use URPS_PendingUpdateChangelog(version, changelog)

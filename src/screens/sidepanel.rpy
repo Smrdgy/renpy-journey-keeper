@@ -1,18 +1,18 @@
-screen SSSSS_Sidepanel():
-    style_prefix 'SSSSS'
+screen URPS_Sidepanel():
+    style_prefix 'URPS'
     default estimatedPanelSize = adjustable((80, 350))
 
     python:
         _constant = True
 
-        playthrough = SSSSS.Playthroughs.activePlaythrough
+        playthrough = URPS.Playthroughs.activePlaythrough
         noPlaythrough = playthrough == None
-        sidepanelPos = store.persistent.SSSSS_sidepanelPos or (int(renpy.config.screen_width - estimatedPanelSize[0] - 15), int(renpy.config.screen_height / 2 - estimatedPanelSize[1] / 2))
+        sidepanelPos = store.persistent.URPS_sidepanelPos or (int(renpy.config.screen_width - estimatedPanelSize[0] - 15), int(renpy.config.screen_height / 2 - estimatedPanelSize[1] / 2))
 
         def sidepanel_dragged(drags, drop):
-            renpy.store.persistent.SSSSS_sidepanelPos = (drags[0].x, drags[0].y)
+            renpy.store.persistent.URPS_sidepanelPos = (drags[0].x, drags[0].y)
 
-    if SSSSS.Settings.debugEnabled:
+    if URPS.Settings.debugEnabled:
         frame:
             background "#ff0000cc"
             xysize estimatedPanelSize
@@ -31,38 +31,38 @@ screen SSSSS_Sidepanel():
             background "#000000cc"
 
             vbox:
-                use sssss_iconButton('\ueb73', tt="Select playthrough", ttSide="left", action=Show("SSSSS_PlaythroughsPicker"))
-                use sssss_iconButton('\uea20', tt="New playthrough", ttSide="left", action=Show("SSSSS_EditPlaythrough", playthrough=None))
-                use sssss_iconButton('\ue02c', tt="Open memories", ttSide="left", action=Show("SSSSS_MemoriesLibrary"), disabled=not SSSSS.Settings.memoriesEnabled)
+                use URPS_IconButton('\ueb73', tt="Select playthrough", ttSide="left", action=Show("URPS_PlaythroughsPicker"))
+                use URPS_IconButton('\uea20', tt="New playthrough", ttSide="left", action=Show("URPS_EditPlaythrough", playthrough=None))
+                use URPS_IconButton('\ue02c', tt="Open memories", ttSide="left", action=Show("URPS_MemoriesLibrary"), disabled=not URPS.Settings.memoriesEnabled)
 
-                use SSSSS_Divider(sizeX=40)
+                use URPS_Divider(sizeX=40)
 
-                use sssss_iconButton('\ue3c9', tt="Edit playthrough", ttSide="left", action=Show("SSSSS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
-                use sssss_iconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", ttSide="left", action=SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not SSSSS.Utils.hasColsAndRowsConfiguration())
-                use sssss_iconButton('\ue2e6', tt="Playthrough actions", ttSide="left", action=Show("SSSSS_PlaythroughActions", playthrough=playthrough))
+                use URPS_IconButton('\ue3c9', tt="Edit playthrough", ttSide="left", action=Show("URPS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
+                use URPS_IconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt="Autosave on choices", ttSide="left", action=URPS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not URPS.Utils.hasColsAndRowsConfiguration())
+                use URPS_IconButton('\ue2e6', tt="Playthrough actions", ttSide="left", action=Show("URPS_PlaythroughActions", playthrough=playthrough))
 
-                use SSSSS_Divider(sizeX=40)
+                use URPS_Divider(sizeX=40)
 
-                use sssss_iconButton('\ue666', tt="Custom pagination", ttSide="left", action=SSSSS.Pagination.TogglePagination(), toggled=renpy.store.persistent.SSSSS_ShowPagination, toggledColor=SSSSS.Colors.selected)
-                use sssss_iconButton('\ue8b8', tt="Settings", ttSide="left", action=Show("SSSSS_Settings"))
+                use URPS_IconButton('\ue666', tt="Custom pagination", ttSide="left", action=URPS.Pagination.TogglePagination(), toggled=renpy.store.persistent.URPS_ShowPagination, toggledColor=URPS.Colors.selected)
+                use URPS_IconButton('\ue8b8', tt="Settings", ttSide="left", action=Show("URPS_Settings"))
 
 
-screen SSSSS_SidepanelHolder():
-    layer "SSSSSsidepanel"
+screen URPS_SidepanelHolder():
+    layer "URPS_Sidepanel"
 
-    key SSSSS.Settings.changeSidepanelVisibilityKey action SSSSS.ToggleSidepanel()
+    key URPS.Settings.changeSidepanelVisibilityKey action URPS.ToggleSidepanel()
 
     python:
-        isSaveLoadScreen = SSSSS.Utils.is_save_load_screen()
-        visibilityMode = renpy.config.SSSSS_sidepanelVisibilityMode if hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode") else isSaveLoadScreen
+        isSaveLoadScreen = URPS.Utils.is_save_load_screen()
+        visibilityMode = renpy.config.URPS_sidepanelVisibilityMode if hasattr(renpy.config, "URPS_sidepanelVisibilityMode") else isSaveLoadScreen
         sidepanelShouldBeVisible = isSaveLoadScreen if visibilityMode == None else visibilityMode
-        preventSidepanel = SSSSS.Memories.memoryInProgress
+        preventSidepanel = URPS.Memories.memoryInProgress
         showSidepanel = not preventSidepanel and sidepanelShouldBeVisible
 
     if showSidepanel:
-        use SSSSS_Sidepanel()
+        use URPS_Sidepanel()
 
-    if(showSidepanel and isSaveLoadScreen and SSSSS.Pagination.isShowingPagination):
-        use SSSSS_Pagination()
+    if(showSidepanel and isSaveLoadScreen and URPS.Pagination.isShowingPagination):
+        use URPS_Pagination()
     else:
-        $ renpy.hide_screen("SSSSS_GoToPage")
+        $ renpy.hide_screen("URPS_GoToPage")

@@ -332,20 +332,20 @@ init 1 python:
         return KeyInputButton(assignment=assignment, action=action, style="keyinput_disabled" if disabled else style, **properties)
 
 # Screen
-screen SSSSS_KeyInput(assignment=None, action=NullAction, disabled=False):
+screen URPS_KeyInput(assignment=None, action=NullAction, disabled=False):
     vbox:
         hbox:
             add KeyInput(assignment=assignment, action=action, disabled=disabled)
 
-            use SSSSS_Checkbox(checked="shift_" in (assignment or ""), text="Shift", action=action(assignment, shift=True), disabled=disabled or assignment == None)
-            use SSSSS_Checkbox(checked="ctrl_" in (assignment or ""), text="Ctrl", action=action(assignment, ctrl=True), disabled=disabled or assignment == None)
-            use SSSSS_Checkbox(checked="alt_" in (assignment or ""), text="Alt", action=action(assignment, alt=True), disabled=disabled or assignment == None)
+            use URPS_Checkbox(checked="shift_" in (assignment or ""), text="Shift", action=action(assignment, shift=True), disabled=disabled or assignment == None)
+            use URPS_Checkbox(checked="ctrl_" in (assignment or ""), text="Ctrl", action=action(assignment, ctrl=True), disabled=disabled or assignment == None)
+            use URPS_Checkbox(checked="alt_" in (assignment or ""), text="Alt", action=action(assignment, alt=True), disabled=disabled or assignment == None)
 
-            use SSSSS_XSpacer(offset=2)
+            use URPS_XSpacer(offset=2)
 
-            use sssss_iconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color=SSSSS.Colors.reset)
+            use URPS_IconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color=URPS.Colors.reset)
 
-        use SSSSS_KeyAssignmentCheck(assignment)
+        use URPS_KeyAssignmentCheck(assignment)
 
         if "ctrl_" in (assignment or ""):
-            text "Please be advised, while CTRL is allowed, it will most likely conflict with skip action." color SSSSS.Colors.warning
+            text "Please be advised, while CTRL is allowed, it will most likely conflict with skip action." color URPS.Colors.warning

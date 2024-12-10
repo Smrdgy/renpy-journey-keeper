@@ -1,5 +1,5 @@
-screen SSSSS_SavesListProcessing(viewModel):
-    style_prefix 'SSSSS'
+screen URPS_SavesListProcessing(viewModel):
+    style_prefix 'URPS'
     modal True
 
     python:
@@ -23,9 +23,9 @@ screen SSSSS_SavesListProcessing(viewModel):
             xmaximum 0.85
 
             hbox xalign 0.5:
-                use SSSSS_Title("Removing saves...")
+                use URPS_Title("Removing saves...")
 
-            use SSSSS_YSpacer()
+            use URPS_YSpacer()
 
             text "[processed]/[to_process]" xalign 0.5
             bar value processed range to_process
@@ -35,12 +35,12 @@ screen SSSSS_SavesListProcessing(viewModel):
         xfill True
         yfill True
 
-        style_prefix "SSSSS_dialog_action_buttons"
+        style_prefix "URPS_dialog_action_buttons"
 
         vbox:
             hbox:
-                use sssss_iconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=SSSSS.Colors.danger)
+                use URPS_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=URPS.Colors.danger)
 
             # Close
             hbox:
-                use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_SavesList"))
+                use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_SavesList"))

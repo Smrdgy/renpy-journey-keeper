@@ -1,11 +1,11 @@
-screen SSSSS_ExitMemoryConfirm():
+screen URPS_ExitMemoryConfirm():
     layer "screens"
-    style_prefix "SSSSS"
+    style_prefix "URPS"
     modal True
 
-    $ returnAction = [SSSSS.Memories.ExitMemory(), MainMenu(confirm=False)] #TODO: Replace MainMenu() with Return() when the restoration of a session is figured out...
+    $ returnAction = [URPS.Memories.ExitMemory(), MainMenu(confirm=False)] #TODO: Replace MainMenu() with Return() when the restoration of a session is figured out...
 
-    use SSSSS_Dialog(title="Exit memory", closeAction=Return()):
+    use URPS_Dialog(title="Exit memory", closeAction=Return()):
         key 'K_RETURN' action returnAction
         key 'K_KP_ENTER' action returnAction
         key 'K_e' action returnAction
@@ -20,13 +20,13 @@ screen SSSSS_ExitMemoryConfirm():
                 xfill True
                 yfill True
 
-                style_prefix "SSSSS_dialog_action_buttons"
+                style_prefix "URPS_dialog_action_buttons"
 
                 vbox:
                     # Save
                     hbox:
-                        use sssss_iconButton(icon="\ue9ba", text="{u}E{/u}xit memory", action=returnAction)
+                        use URPS_IconButton(icon="\ue9ba", text="{u}E{/u}xit memory", action=returnAction)
 
                     # Close
                     hbox:
-                        use sssss_iconButton(icon="\ue5c4", text="Return", action=Return())
+                        use URPS_IconButton(icon="\ue5c4", text="Return", action=Return())

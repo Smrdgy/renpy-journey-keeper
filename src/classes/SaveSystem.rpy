@@ -1,4 +1,4 @@
-init 1 python in SSSSS:
+init 1 python in URPS:
     _constant = True
 
     import os
@@ -81,7 +81,7 @@ init 1 python in SSSSS:
 
                 renpy.loadsave.clear_cache()
                 SaveSystem.multilocation.scan()
-                renpy.store.persistent.SSSSS_lastActivePlaythrough = self.playthrough.id
+                renpy.store.persistent.URPS_lastActivePlaythrough = self.playthrough.id
                 SaveSystem._activePlaythroughSave = self
 
             def deactivate(self):

@@ -1,14 +1,14 @@
-screen SSSSS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="{u}Y{/u}es", noText="{u}N{/u}o", yesIcon=None, noIcon="\ue5cd", yesColor=None, noColor=None):
-    layer "SSSSSoverlay"
-    style_prefix "SSSSS"
+screen URPS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="{u}Y{/u}es", noText="{u}N{/u}o", yesIcon=None, noIcon="\ue5cd", yesColor=None, noColor=None):
+    layer "URPS_Overlay"
+    style_prefix "URPS"
 
     modal True
 
     zorder 199
 
     python:
-        yesAction = [yes, Hide("SSSSS_Confirm")]
-        noAction = [no, Hide("SSSSS_Confirm")]
+        yesAction = [yes, Hide("URPS_Confirm")]
+        noAction = [no, Hide("URPS_Confirm")]
 
     key 'K_RETURN' action yesAction
     key 'K_KP_ENTER' action yesAction
@@ -19,20 +19,20 @@ screen SSSSS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="
     if noText == "No":
         key 'K_n' action noAction
 
-    use SSSSS_Dialog(title=title, message=message, closeAction=noAction):
+    use URPS_Dialog(title=title, message=message, closeAction=noAction):
         hbox:
             xfill True
             yfill True
 
-            style_prefix "SSSSS_dialog_action_buttons"
+            style_prefix "URPS_dialog_action_buttons"
 
             vbox:
                 hbox:
-                    use sssss_iconButton(icon=yesIcon, text=yesText, action=yesAction, color=yesColor)
+                    use URPS_IconButton(icon=yesIcon, text=yesText, action=yesAction, color=yesColor)
 
                 hbox:
-                    use sssss_iconButton(icon=noIcon, text=noText, action=noAction, color=noColor)
+                    use URPS_IconButton(icon=noIcon, text=noText, action=noAction, color=noColor)
 
-init python in SSSSS:
+init python in URPS:
     def showConfirm(title="", message=None, yes=None, no=None, yesText="{u}Y{/u}es", noText="{u}N{/u}o", yesIcon="\ue876", noIcon="\ue5cd", yesColor=None, noColor=None):
-        renpy.run(renpy.store.Show("SSSSS_Confirm", title=title, message=message, yes=yes, no=no, yesText=yesText, noText=noText, yesIcon=yesIcon, noIcon=noIcon, yesColor=yesColor, noColor=noColor))
+        renpy.run(renpy.store.Show("URPS_Confirm", title=title, message=message, yes=yes, no=no, yesText=yesText, noText=noText, yesIcon=yesIcon, noIcon=noIcon, yesColor=yesColor, noColor=noColor))

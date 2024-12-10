@@ -1,5 +1,5 @@
-screen SSSSS_PendingUpdateError(error):
-    style_prefix 'SSSSS'
+screen URPS_PendingUpdateError(error):
+    style_prefix 'URPS'
     modal True
 
     vbox:
@@ -9,30 +9,30 @@ screen SSSSS_PendingUpdateError(error):
 
         vbox align (0.5, 0.5):
             hbox xalign 0.5:
-                use SSSSS_Title("Error", color=SSSSS.Colors.danger)
+                use URPS_Title("Error", color=URPS.Colors.danger)
 
-            use SSSSS_YSpacer(offset=2)
+            use URPS_YSpacer(offset=2)
 
             vbox xalign 0.5:
                 text error xalign 0.5 text_align 0.5
 
-                use SSSSS_YSpacer(offset=2)
+                use URPS_YSpacer(offset=2)
 
                 text "For more information check log.txt" xalign 0.5 text_align 0.5
-                text "If this isn't a user error (e.g. incorrect permissions), please report it at {a=https://github.com/[SSSSS.MOD_GITHUB_OWNER]/[SSSSS.MOD_GITHUB_REPO]/issues}https://github.com/[SSSSS.MOD_GITHUB_OWNER]/[SSSSS.MOD_GITHUB_REPO]/issues{/a}" xalign 0.5 text_align 0.5
+                text "If this isn't a user error (e.g. incorrect permissions), please report it at {a=https://github.com/[URPS.MOD_GITHUB_OWNER]/[URPS.MOD_GITHUB_REPO]/issues}https://github.com/[URPS.MOD_GITHUB_OWNER]/[URPS.MOD_GITHUB_REPO]/issues{/a}" xalign 0.5 text_align 0.5
 
     # Dialog footer
     hbox:
         xfill True
         yfill True
 
-        style_prefix "SSSSS_dialog_action_buttons"
+        style_prefix "URPS_dialog_action_buttons"
 
         vbox:
             # OK
             hbox:
-                use sssss_iconButton(icon="\ue5d5", text="Retry", action=SSSSS.Updater.InstallUpdateAction())
+                use URPS_IconButton(icon="\ue5d5", text="Retry", action=URPS.Updater.InstallUpdateAction())
 
             # Close
             hbox:
-                use sssss_iconButton(icon="\ue5cd", text="Close", action=Hide("SSSSS_PendingUpdate"))
+                use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_PendingUpdate"))

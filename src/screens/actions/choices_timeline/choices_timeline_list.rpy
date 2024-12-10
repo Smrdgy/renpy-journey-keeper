@@ -1,27 +1,27 @@
-screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search):
-    default search_input = SSSSS.TextInput("search")
+screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
+    default search_input = URPS.TextInput("search")
 
     python:
-        timeline = SSSSS.Utils.filter_timeline(viewModel.timeline, search)
+        timeline = URPS.Utils.filter_timeline(viewModel.timeline, search)
 
-        current_state_text = "{color=" + SSSSS.Colors.status_disabled + "}disabled{/color}"
+        current_state_text = "{color=" + URPS.Colors.status_disabled + "}disabled{/color}"
         if viewModel.playthrough.autosaveOnChoices:
-            current_state_text = "{color=" + SSSSS.Colors.status_enabled + "}enabled{/color}"
+            current_state_text = "{color=" + URPS.Colors.status_enabled + "}enabled{/color}"
 
-        choicesText = "Choices are saved into save files {u}only{/u} when this mod is active and \"Autosave on choice\" is enabled (currently [current_state_text]) in the playthrough settings.\n{color=[SSSSS.Colors.warning]}Warning - Manual and quick saves are unable to store choices.{/c}"
+        choicesText = "Choices are saved into save files {u}only{/u} when this mod is active and \"Autosave on choice\" is enabled (currently [current_state_text]) in the playthrough settings.\n{color=[URPS.Colors.warning]}Warning - Manual and quick saves are unable to store choices.{/c}"
 
         hasTimelineEntry = False
         for entry in viewModel.timeline:
             if entry[1] != None:
                 hasTimelineEntry = True
 
-        exportAction = SSSSS.ChoicesTimelineViewModel.ExportTimelineToFile(viewModel)
+        exportAction = URPS.ChoicesTimelineViewModel.ExportTimelineToFile(viewModel)
 
     if hasTimelineEntry:
         key 'K_e' action exportAction
-        key 'ctrl_K_f' action SSSSS.TextInput.SetActiveAction("search")
-        if SSSSS.TextInput.is_active("search"):
-            key 'K_ESCAPE' action SSSSS.TextInput.SetActiveAction(None)
+        key 'ctrl_K_f' action URPS.TextInput.SetActiveAction("search")
+        if URPS.TextInput.is_active("search"):
+            key 'K_ESCAPE' action URPS.TextInput.SetActiveAction(None)
 
         viewport:
             mousewheel True
@@ -38,67 +38,67 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                 hbox:
                     xalign 0.5
 
-                    use sssss_iconButton('\uf0fb', text="{u}E{/u}xport to file", action=exportAction)
+                    use URPS_IconButton('\uf0fb', text="{u}E{/u}xport to file", action=exportAction)
 
-                use SSSSS_YSpacer(offset=3)
+                use URPS_YSpacer(offset=3)
 
                 hbox:
                     xfill True
 
                     # Toggle thumbnails
-                    use SSSSS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
                     # Seach box
                     hbox yalign 0.0 xpos 1.0 xanchor 1.0:
-                        frame style "SSSSS_frame":
+                        frame style "URPS_frame":
                             xysize adjustable((300, 50))
 
                             button:
                                 key_events True
-                                action SetScreenVariable(SSSSS.TextInput.activeTextInputScreenVariableName, "search")
+                                action SetScreenVariable(URPS.TextInput.activeTextInputScreenVariableName, "search")
 
                                 vbox:
                                     hbox:
                                         hbox yalign 0.5:
-                                            use sssss_icon(icon="\ue8b6", size=20, hover_color=SSSSS.Colors.hover)
+                                            use URPS_Icon(icon="\ue8b6", size=20, hover_color=URPS.Colors.hover)
 
                                         add search_input.displayable(placeholder="Search for choice")
 
-                                    frame style "SSSSS_default" background "#ffffff22" hover_background SSSSS.Colors.hover ysize 2 offset adjustable((0, 2))
+                                    frame style "URPS_default" background "#ffffff22" hover_background URPS.Colors.hover ysize 2 offset adjustable((0, 2))
 
-                        use SSSSS_XSpacer(offset=2)
+                        use URPS_XSpacer(offset=2)
 
-                use SSSSS_YSpacer(offset=3)
+                use URPS_YSpacer(offset=3)
 
                 vbox:
                     spacing (3 if show_thumbnails else 0)
 
                     for entry in timeline:
-                        $ page, slot = SSSSS.Utils.splitSavename(entry[2])
+                        $ page, slot = URPS.Utils.splitSavename(entry[2])
 
-                        button style "SSSSS_text":
-                            action [FileLoad(slot, confirm=True, page=page), Hide("SSSSS_ChoicesTimeline")]
+                        button style "URPS_text":
+                            action [FileLoad(slot, confirm=True, page=page), Hide("URPS_ChoicesTimeline")]
 
                             hbox:
                                 if show_thumbnails:
-                                    image renpy.slot_screenshot(entry[2]) size SSSSS.Utils.resizeDimensionsToLimits((renpy.config.thumbnail_width, renpy.config.thumbnail_height), (100, 100))
+                                    image renpy.slot_screenshot(entry[2]) size URPS.Utils.resizeDimensionsToLimits((renpy.config.thumbnail_width, renpy.config.thumbnail_height), (100, 100))
 
-                                    use SSSSS_XSpacer(offset=3)
+                                    use URPS_XSpacer(offset=3)
 
                                 hbox yalign 0.5:
                                     $ n = entry[0] + 1
-                                    text "[n]." hover_color SSSSS.Colors.hover:
+                                    text "[n]." hover_color URPS.Colors.hover:
                                         if entry[1] is None:
-                                            color SSSSS.Colors.na
+                                            color URPS.Colors.na
 
                                     if entry[1] is None:
-                                        text "??????" color SSSSS.Colors.na hover_color SSSSS.Colors.hover
+                                        text "??????" color URPS.Colors.na hover_color URPS.Colors.hover
                                     else:
-                                        text SSSSS.Utils.replaceReservedCharacters(entry[1]) hover_color SSSSS.Colors.hover
+                                        text URPS.Utils.replaceReservedCharacters(entry[1]) hover_color URPS.Colors.hover
 
-                                    use SSSSS_XSpacer(offset=3)
+                                    use URPS_XSpacer(offset=3)
 
-                                    text "([entry[2]])" size 18 color "#4b4b4b" hover_color SSSSS.Colors.hover
+                                    text "([entry[2]])" size 18 color "#4b4b4b" hover_color URPS.Colors.hover
     else:
         vbox:
             hbox:
@@ -111,4 +111,4 @@ screen SSSSS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                 yfill True
             
                 hbox xalign 0.5 yalign 0.5:
-                    use SSSSS_Title("No choices found.", color=SSSSS.Colors.error)
+                    use URPS_Title("No choices found.", color=URPS.Colors.error)

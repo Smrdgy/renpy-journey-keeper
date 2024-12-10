@@ -1,6 +1,6 @@
-screen SSSSS_MoveCopySaves(playthrough):
-    layer "SSSSSoverlay"
-    style_prefix 'SSSSS'
+screen URPS_MoveCopySaves(playthrough):
+    layer "URPS_Overlay"
+    style_prefix 'URPS'
     modal True
 
     default source_playthrough = playthrough
@@ -11,24 +11,24 @@ screen SSSSS_MoveCopySaves(playthrough):
 
     default viewModel = None
 
-    use SSSSS_Dialog(title="Move/Copy saves" if destination_playthrough else "Select other playthrough", message=None if destination_playthrough else "Select the playthrough you want to move/copy saves into.", closeAction=Hide("SSSSS_MoveCopySaves")):
-        style_prefix "SSSSS"
+    use URPS_Dialog(title="Move/Copy saves" if destination_playthrough else "Select other playthrough", message=None if destination_playthrough else "Select the playthrough you want to move/copy saves into.", closeAction=Hide("URPS_MoveCopySaves")):
+        style_prefix "URPS"
 
         if source_playthrough and destination_playthrough:
-            $ viewModel = viewModel or SSSSS.MoveCopySavesViewModel(source_playthrough, destination_playthrough)
+            $ viewModel = viewModel or URPS.MoveCopySavesViewModel(source_playthrough, destination_playthrough)
 
             if viewModel.processing:
                 # Processing
-                use SSSSS_MoveCopySavesProcessing(viewModel)
+                use URPS_MoveCopySavesProcessing(viewModel)
             elif viewModel.error:
                 # Error
-                use SSSSS_MoveCopySavesError(viewModel)
+                use URPS_MoveCopySavesError(viewModel)
             elif viewModel.success:
                 # Success
-                use SSSSS_MoveCopySavesSuccess()
+                use URPS_MoveCopySavesSuccess()
             else:
                 # Saves selection
-                use SSSSS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save)
+                use URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save)
         else:
             # Destination playthrough selection
-            use SSSSS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_playthrough)
+            use URPS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_playthrough)

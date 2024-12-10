@@ -1,6 +1,6 @@
-screen SSSSS_GoToPage():
-    layer "SSSSSoverlay"
-    style_prefix 'SSSSS'
+screen URPS_GoToPage():
+    layer "URPS_Overlay"
+    style_prefix 'URPS'
 
     python:
         class Value(InputValue):
@@ -21,10 +21,10 @@ screen SSSSS_GoToPage():
 
                         renpy.restart_interaction()
 
-    default page_input = SSSSS.TextInput("page", value=Value(), auto_focus=True, allowed_characters="0123456789", max_length=6)
+    default page_input = URPS.TextInput("page", value=Value(), auto_focus=True, allowed_characters="0123456789", max_length=6)
 
-    use SSSSS_TooltipDialog():
-        frame style "SSSSS_default":
+    use URPS_TooltipDialog():
+        frame style "URPS_default":
             xysize adjustable((90, 25))
 
             add page_input.displayable(placeholder=renpy.store.persistent._file_page)

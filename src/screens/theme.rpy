@@ -1,4 +1,4 @@
-style SSSSS_default is default:
+style URPS_default is default:
     background None
     hover_background None
     selected_background None
@@ -12,66 +12,66 @@ style SSSSS_default is default:
 
     outlines []
 
-style SSSSS_text is SSSSS_default:
-    color SSSSS.Colors.text_primary
+style URPS_text is URPS_default:
+    color URPS.Colors.text_primary
     size adjustable(20)
     text_align 0.0
     outlines []
     alt ''
     font 'DejaVuSans.ttf'
 
-style SSSSS_label is SSSSS_default
-style SSSSS_label_text is SSSSS_text:
+style URPS_label is URPS_default
+style URPS_label_text is URPS_text:
     bold True
 
-style textinput is SSSSS_text:
+style textinput is URPS_text:
     color "#959595"
     offset adjustable((10, 1), minValue=1)
 
 style textinput_caret is textinput
 
-style SSSSS_vscrollbar:
+style URPS_vscrollbar:
     base_bar "#00000072"
     thumb '#fff'
-    hover_thumb SSSSS.Colors.hover
+    hover_thumb URPS.Colors.hover
     xsize adjustable(18)
     # base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", Borders(6, 10, 6, 10), tile=False)
     # thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", Borders(6, 10, 6, 10), tile=False)
 
-style SSSSS_frame is SSSSS_default:
+style URPS_frame is URPS_default:
     padding adjustable((15, 15), minValue=1)
 
-style SSSSS_vbox is SSSSS_default
-style SSSSS_hbox is SSSSS_default
+style URPS_vbox is URPS_default
+style URPS_hbox is URPS_default
 
 ##################
 #     DIALOG     #
 ##################
 
-style SSSSS_dialog_overlay:
+style URPS_dialog_overlay:
     xfill True
     yfill True
     background '#000000ff'
 
-style SSSSS_dialog_title is SSSSS_text:
+style URPS_dialog_title is URPS_text:
     padding adjustable((40, 40, 40, 0), minValue=1)
     size adjustable(40)
     xfill True
 
-style SSSSS_dialog_content:
+style URPS_dialog_content:
     padding adjustable((40, 0, 40, 40), minValue=1)
    
-style SSSSS_dialog_vbox is SSSSS_vbox
-style SSSSS_dialog_hbox is SSSSS_hbox
-style SSSSS_dialog_frame is SSSSS_frame
-style SSSSS_dialog_text is SSSSS_text
-style SSSSS_dialog_label is SSSSS_label
-style SSSSS_dialog_label_text is SSSSS_label_text
-style SSSSS_dialog_button is SSSSS_button
+style URPS_dialog_vbox is URPS_vbox
+style URPS_dialog_hbox is URPS_hbox
+style URPS_dialog_frame is URPS_frame
+style URPS_dialog_text is URPS_text
+style URPS_dialog_label is URPS_label
+style URPS_dialog_label_text is URPS_label_text
+style URPS_dialog_button is URPS_button
 
 # Action buttons
 
-style SSSSS_dialog_action_buttons_vbox is SSSSS_vbox:
+style URPS_dialog_action_buttons_vbox is URPS_vbox:
     # "at right" @see 00definitions.rpy
     xpos 1.0
     xanchor 1.0
@@ -80,7 +80,7 @@ style SSSSS_dialog_action_buttons_vbox is SSSSS_vbox:
 
     yalign 1.0
 
-style SSSSS_dialog_action_buttons_hbox is SSSSS_hbox:
+style URPS_dialog_action_buttons_hbox is URPS_hbox:
     # "at right" @see 00definitions.rpy
     xpos 1.0
     xanchor 1.0
@@ -91,66 +91,66 @@ style SSSSS_dialog_action_buttons_hbox is SSSSS_hbox:
 #     BUTTON     #
 ##################
 
-style SSSSS_button is SSSSS_default:
+style URPS_button is URPS_default:
     padding adjustable((5, 5), minValue=1)
 
-style SSSSS_icon_button is SSSSS_button
+style URPS_Icon_button is URPS_button
 
-style SSSSS_icon_button_text is SSSSS_text:
-    hover_color SSSSS.Colors.hover
+style URPS_Icon_button_text is URPS_text:
+    hover_color URPS.Colors.hover
 
-style SSSSS_checkbox is SSSSS_button
-style SSSSS_checkbox_text is SSSSS_icon_button_text
-style SSSSS_checkbox_button is SSSSS_button
+style URPS_checkbox is URPS_button
+style URPS_checkbox_text is URPS_Icon_button_text
+style URPS_checkbox_button is URPS_button
 
-style SSSSS_radio is SSSSS_button
-style SSSSS_radio_text is SSSSS_icon_button_text
-style SSSSS_radio_button is SSSSS_button
+style URPS_radio is URPS_button
+style URPS_radio_text is URPS_Icon_button_text
+style URPS_radio_button is URPS_button
    
-style SSSSS_pagination_textbutton:
+style URPS_pagination_textbutton:
     background None
     yalign 0.5
 
-style SSSSS_pagination_textbutton_text is SSSSS_text:
+style URPS_pagination_textbutton_text is URPS_text:
     color '#cdcdcd'
-    hover_color SSSSS.Colors.hover
+    hover_color URPS.Colors.hover
     size adjustable(25)
     text_align 0.5
 
-style SSSSS_pagination_textbutton_active is SSSSS_pagination_textbutton
+style URPS_pagination_textbutton_active is URPS_pagination_textbutton
 
-style SSSSS_pagination_textbutton_active_text is SSSSS_pagination_textbutton_text:
-    color SSSSS.Colors.selected
-    hover_color SSSSS.Colors.hover
+style URPS_pagination_textbutton_active_text is URPS_pagination_textbutton_text:
+    color URPS.Colors.selected
+    hover_color URPS.Colors.hover
 
-style SSSSS_row_button is SSSSS_button:
-    selected_background SSSSS.Colors.selected_background
-    hover_background SSSSS.Colors.block_hover_background
-    selected_hover_background SSSSS.Colors.block_selected_hover_background
+style URPS_row_button is URPS_button:
+    selected_background URPS.Colors.selected_background
+    hover_background URPS.Colors.block_hover_background
+    selected_hover_background URPS.Colors.block_selected_hover_background
 
-style SSSSS_row_odd_button is SSSSS_row_button:
-    background SSSSS.Colors.block_background
-    selected_background SSSSS.Colors.selected_background
-    hover_background SSSSS.Colors.block_hover_background
-    selected_hover_background SSSSS.Colors.block_selected_hover_background
+style URPS_row_odd_button is URPS_row_button:
+    background URPS.Colors.block_background
+    selected_background URPS.Colors.selected_background
+    hover_background URPS.Colors.block_hover_background
+    selected_hover_background URPS.Colors.block_selected_hover_background
 
-style SSSSS_playthrough_button is SSSSS_button:
-    background SSSSS.Colors.block_background
-    hover_background SSSSS.Colors.block_hover_background
-    selected_background SSSSS.Colors.selected_background
-    selected_hover_background SSSSS.Colors.block_selected_hover_background
+style URPS_playthrough_button is URPS_button:
+    background URPS.Colors.block_background
+    hover_background URPS.Colors.block_hover_background
+    selected_background URPS.Colors.selected_background
+    selected_hover_background URPS.Colors.block_selected_hover_background
 
 ##################
 #      INPUT     #
 ##################
 
-style keyinput is SSSSS_button:
+style keyinput is URPS_button:
     background "#ffffff22"
     xminimum adjustable(100)
 
-style keyinput_text is SSSSS_text:
+style keyinput_text is URPS_text:
     size adjustable(25)
-    color SSSSS.Colors.theme
+    color URPS.Colors.theme
 
 style keyinput_text_placeholder is keyinput_text:
     color "#ccc"
@@ -159,68 +159,68 @@ style keyinput_disabled is keyinput:
     background "#0e0e0e"
 
 style keyinput_disabled_text is keyinput_text:
-    color SSSSS.Colors.disabled
+    color URPS.Colors.disabled
 
 style keyinput_disabled_text_placeholder is keyinput_text_placeholder:
-    color SSSSS.Colors.disabled
+    color URPS.Colors.disabled
 
 ##################
 #      ICONS     #
 ##################
 
-style SSSSS_material_outlined_icon:
+style URPS_material_outlined_icon:
     font 'fonts/MaterialIconsOutlined-Regular.otf'
 
-style SSSSS_material_regular_icon:
+style URPS_material_regular_icon:
     font 'fonts/MaterialIcons-Regular.ttf'
 
-style SSSSS_icon is SSSSS_text:
+style URPS_Icon is URPS_text:
     font 'fonts/MaterialIconsOutlined-Regular.otf'
     hover_font 'fonts/MaterialIcons-Regular.ttf'
-    hover_color SSSSS.Colors.hover
+    hover_color URPS.Colors.hover
     size adjustable(30)
 
 ##################
 #     Titles     #
 ##################
 
-style SSSSS_title is SSSSS_text:
-    color SSSSS.Colors.theme
+style URPS_title is URPS_text:
+    color URPS.Colors.theme
 
-style SSSSS_title_1 is SSSSS_title:
+style URPS_title_1 is URPS_title:
     size adjustable(30)
     bold True
 
-style SSSSS_title_2 is SSSSS_title:
+style URPS_title_2 is URPS_title:
     size adjustable(25)
 
-style SSSSS_title_3 is SSSSS_title:
+style URPS_title_3 is URPS_title:
     size adjustable(20)
 
-style SSSSS_spacer_x_1:
+style URPS_spacer_x_1:
     xsize adjustable(20)
 
-style SSSSS_spacer_x_2:
+style URPS_spacer_x_2:
     xsize adjustable(20)
 
-style SSSSS_spacer_x_3:
+style URPS_spacer_x_3:
     xsize adjustable(10)
 
-style SSSSS_spacer_y_1:
+style URPS_spacer_y_1:
     ysize adjustable(40)
 
-style SSSSS_spacer_y_2:
+style URPS_spacer_y_2:
     ysize adjustable(20)
 
-style SSSSS_spacer_y_3:
+style URPS_spacer_y_3:
     ysize adjustable(10)
 
 ##################
 #     Toolbar    #
 ##################
 
-style SSSSS_toolbar:
+style URPS_toolbar:
     padding adjustable((20, 0, 20, 0))
 
-style SSSSS_toolbar_active is SSSSS_toolbar:
+style URPS_toolbar_active is URPS_toolbar:
     background "#2b4047"

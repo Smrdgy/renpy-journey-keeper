@@ -1,6 +1,6 @@
-screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
+screen URPS_Dialog(title=None, message=None, closeAction=None, icon=None):
     layer "overlay"
-    style_prefix 'SSSSS_dialog'
+    style_prefix 'URPS_dialog'
     modal True
 
     if closeAction:
@@ -15,14 +15,14 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
                 frame:
                     padding adjustable((20, 20, 20, 20))
 
-                    use sssss_iconButton(icon=None, action=None)
+                    use URPS_IconButton(icon=None, action=None)
 
                 hbox:
                     xalign 0.5
                     yalign 0.5
 
                     if icon:
-                        use sssss_icon(icon)
+                        use URPS_Icon(icon)
 
                     if title:
                         text title style_suffix "title" yalign .5 text_align 0.5
@@ -32,7 +32,7 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
                     yalign 0.5
                     padding adjustable((20, 20, 20, 20))
 
-                    use sssss_iconButton(icon="\ue5cd", action=[closeAction, NullAction()])
+                    use URPS_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 
             button:
                 style_suffix "content"
@@ -41,6 +41,6 @@ screen SSSSS_Dialog(title=None, message=None, closeAction=None, icon=None):
                 has vbox
 
                 if(message):
-                    text message style "SSSSS_text" xalign 0.5 text_align 0.5
+                    text message style "URPS_text" xalign 0.5 text_align 0.5
 
                 transclude

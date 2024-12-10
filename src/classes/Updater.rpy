@@ -1,4 +1,4 @@
-init 1 python in SSSSS:
+init 1 python in URPS:
     _constant = True
     _urllib_request = None
     _urllib_error = None
@@ -60,7 +60,7 @@ init 1 python in SSSSS:
             self.latest = self.fetch_latest_release()
             if self.latest:
                 version = self.latest.get("tag_name")
-                if version != MOD_VERSION and (ignore_blacklist or renpy.store.persistent.SSSSS_IgnoredUpdate != version):
+                if version != MOD_VERSION and (ignore_blacklist or renpy.store.persistent.URPS_IgnoredUpdate != version):
                     self.pending_update = self.latest
 
                     assets = self.pending_update.get("assets")
@@ -70,7 +70,7 @@ init 1 python in SSSSS:
                         if Settings.autoUpdateWithoutPrompt and not ignore_force_auto_update:
                             Updater.InstallUpdateAction(version)()
                         else:
-                            renpy.show_screen("SSSSS_PendingUpdate", version=version, changelog=self.translate_markdown(self.latest.get("body")))
+                            renpy.show_screen("URPS_PendingUpdate", version=version, changelog=self.translate_markdown(self.latest.get("body")))
 
 
         def fetch_latest_release(self):
@@ -95,13 +95,13 @@ init 1 python in SSSSS:
                 return data
             except _urllib_error.HTTPError as e:
                 print("HTTP error occurred: ", e)
-                self.error = "A HTTP error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A HTTP error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except _urllib_error.URLError as e:
                 print("URL error occurred: ", e)
-                self.error = "A URL error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A URL error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except Exception as e:
                 print("An error occurred: ", e)
-                self.error = "An unexpected error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
 
             self.loading = False
             renpy.restart_interaction()
@@ -132,7 +132,7 @@ init 1 python in SSSSS:
                     return True
                 except Exception as e:
                     print("Error moving file: ", e)
-                    self.error = "An unexpected error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                    self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
 
             self.installing = False
             renpy.restart_interaction()
@@ -160,13 +160,13 @@ init 1 python in SSSSS:
                 return True
             except _urllib_error.HTTPError as e:
                 print("HTTP error occurred: ", e)
-                self.error = "A HTTP error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A HTTP error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except _urllib_error.URLError as e:
                 print("URL error occurred: ", e)
-                self.error = "A URL error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A URL error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except Exception as e:
                 print("An error occurred: ", e)
-                self.error = "An unexpected error occurred: {color=[SSSSS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
 
             self.downloading = False
             renpy.restart_interaction()
@@ -193,9 +193,9 @@ init 1 python in SSSSS:
             # Interpolation [...]
             text = Utils.replaceReservedCharacters(text)
             # Headers
-            text = re.sub(r'^# (.*?)$', r'{color=[SSSSS.Colors.theme]}{b}\1{/b}{/color}', text, flags=re.MULTILINE)
-            text = re.sub(r'^## (.*?)$', r'{color=[SSSSS.Colors.theme]}{i}\1{/i}{/color}', text, flags=re.MULTILINE)
-            text = re.sub(r'^### (.*?)$', r'{color=[SSSSS.Colors.theme]}\1{/color}', text, flags=re.MULTILINE)
+            text = re.sub(r'^# (.*?)$', r'{color=[URPS.Colors.theme]}{b}\1{/b}{/color}', text, flags=re.MULTILINE)
+            text = re.sub(r'^## (.*?)$', r'{color=[URPS.Colors.theme]}{i}\1{/i}{/color}', text, flags=re.MULTILINE)
+            text = re.sub(r'^### (.*?)$', r'{color=[URPS.Colors.theme]}\1{/color}', text, flags=re.MULTILINE)
 
             return text
 
@@ -204,7 +204,7 @@ init 1 python in SSSSS:
                 self.version = version
 
             def __call__(self):
-                renpy.store.persistent.SSSSS_IgnoredUpdate = self.version
+                renpy.store.persistent.URPS_IgnoredUpdate = self.version
 
                 renpy.restart_interaction()
         
@@ -217,7 +217,7 @@ init 1 python in SSSSS:
             def __call__(self):
                 showConfirm(
                     title="Disable updates",
-                    message="Do you really wish to disable automatic checking for the updates?\n{color=[SSSSS.Colors.info]}You can re-enable it in the settings at any time.{/color}",
+                    message="Do you really wish to disable automatic checking for the updates?\n{color=[URPS.Colors.info]}You can re-enable it in the settings at any time.{/color}",
                     yes=Settings.ToggleUpdaterEnabled(),
                     yesIcon="\ue888",
                     yesColor=Colors.error
@@ -239,5 +239,5 @@ init 1 python in SSSSS:
             from urllib import error as _urllib_error
         except Exception as e:
             UpdaterClass.unavailable = True
-            print("No urllib present. SSSSS updater disabled")
+            print("No urllib present. URPS updater disabled")
             pass

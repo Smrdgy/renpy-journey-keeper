@@ -1,11 +1,11 @@
-init -1001 python in SSSSS:
+init -1001 python in URPS:
     _constant = True
 
     import io
     import os
     import __main__
 
-    savedir = "SSSSS"
+    savedir = "URPS"
 
     class UserDir(x52NonPicklable):
         @staticmethod

@@ -1,10 +1,10 @@
-screen SSSSS_InfoBox(text):
+screen URPS_InfoBox(text):
     button: # Prevent any hover effects
         action None
 
         hbox:
-            use sssss_icon('\ue88e', color = SSSSS.Colors.info)
+            use URPS_Icon('\ue88e', color = URPS.Colors.info)
 
             hbox xsize 10
 
-            text text color SSSSS.Colors.info yalign 0.5
+            text text color URPS.Colors.info yalign 0.5

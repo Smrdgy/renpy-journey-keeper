@@ -1,24 +1,24 @@
-screen SSSSS_Overlay():
+screen URPS_Overlay():
     layer "screens"
-    style_prefix "SSSSS"
+    style_prefix "URPS"
 
-    if SSSSS.Settings.autosaveKey:
-        key SSSSS.Settings.autosaveKey action SSSSS.Playthroughs.ToggleAutosaveOnChoicesOnActive()
+    if URPS.Settings.autosaveKey:
+        key URPS.Settings.autosaveKey action URPS.Playthroughs.ToggleAutosaveOnChoicesOnActive()
 
-    if not SSSSS.Memories.memoryInProgress and not renpy.store._in_replay and SSSSS.Settings.quickSaveEnabled and SSSSS.Settings.quickSaveKey:
-        key SSSSS.Settings.quickSaveKey action SSSSS.Playthroughs.QuickSave()
+    if not URPS.Memories.memoryInProgress and not renpy.store._in_replay and URPS.Settings.quickSaveEnabled and URPS.Settings.quickSaveKey:
+        key URPS.Settings.quickSaveKey action URPS.Playthroughs.QuickSave()
 
-    if not renpy.store._in_replay and SSSSS.Settings.memoriesEnabled and SSSSS.Settings.memoriesKey:
-        key SSSSS.Settings.memoriesKey action SSSSS.Memories.OpenSaveMemory()
+    if not renpy.store._in_replay and URPS.Settings.memoriesEnabled and URPS.Settings.memoriesKey:
+        key URPS.Settings.memoriesKey action URPS.Memories.OpenSaveMemory()
 
-    if SSSSS.Playthroughs.activePlaythrough.autosaveOnChoices:
-        if SSSSS.Autosaver.afterLoadSavePositionPending:
-            $ SSSSS.Autosaver.processSlotAfterLoad()
+    if URPS.Playthroughs.activePlaythrough.autosaveOnChoices:
+        if URPS.Autosaver.afterLoadSavePositionPending:
+            $ URPS.Autosaver.processSlotAfterLoad()
 
-    key "ctrl_alt_shift_K_p" action SSSSS.Settings.ResetSizeAdjustment()
+    key "ctrl_alt_shift_K_p" action URPS.Settings.ResetSizeAdjustment()
 
     python:
-        isSaveLoadScreen = SSSSS.Utils.is_save_load_screen()
+        isSaveLoadScreen = URPS.Utils.is_save_load_screen()
 
-    if isSaveLoadScreen and SSSSS.Memories.memoryInProgress:
-        use SSSSS_ExitMemoryConfirm()
+    if isSaveLoadScreen and URPS.Memories.memoryInProgress:
+        use URPS_ExitMemoryConfirm()

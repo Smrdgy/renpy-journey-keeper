@@ -1,7 +1,7 @@
-init -1000 python in SSSSS:
+init -1000 python in URPS:
     Settings = SettingsClass()
 
-init 51 python in SSSSS:
+init 51 python in URPS:
     _constant = True
 
     Updater = UpdaterClass()
@@ -13,8 +13,8 @@ init 51 python in SSSSS:
 
     SaveSystem.setupLocations()
 
-    if Playthroughs.activePlaythroughOrNone == None and renpy.store.persistent.SSSSS_lastActivePlaythrough != None:
-        Playthroughs.activateByID(renpy.store.persistent.SSSSS_lastActivePlaythrough)
+    if Playthroughs.activePlaythroughOrNone == None and renpy.store.persistent.URPS_lastActivePlaythrough != None:
+        Playthroughs.activateByID(renpy.store.persistent.URPS_lastActivePlaythrough)
     else:
         Playthroughs.activateNative()
 
@@ -32,30 +32,30 @@ init 51 python in SSSSS:
     def startInteractCallback():
         SaveSystem.overrideNativeLocation()
 
-        if(not renpy.get_screen('SSSSS_SidepanelHolder')):
-            renpy.show_screen('SSSSS_SidepanelHolder')
+        if(not renpy.get_screen('URPS_SidepanelHolder')):
+            renpy.show_screen('URPS_SidepanelHolder')
 
-            if(renpy.store.persistent.SSSSS_playthroughs != None and renpy.store.persistent.SSSSS_lastActivePlaythrough != None):
-                Playthroughs.activateByID(renpy.store.persistent.SSSSS_lastActivePlaythrough)
+            if(renpy.store.persistent.URPS_Playthroughs != None and renpy.store.persistent.URPS_lastActivePlaythrough != None):
+                Playthroughs.activateByID(renpy.store.persistent.URPS_lastActivePlaythrough)
 
-        if(not renpy.get_screen('SSSSS_Overlay')):
-            renpy.show_screen('SSSSS_Overlay')
+        if(not renpy.get_screen('URPS_Overlay')):
+            renpy.show_screen('URPS_Overlay')
 
-        if renpy.store.persistent.SSSSS_SizeAdjustmentRollbackValue != None:
-            renpy.show_screen('SSSSS_ConfirmSizeAdjustment')
+        if renpy.store.persistent.URPS_SizeAdjustmentRollbackValue != None:
+            renpy.show_screen('URPS_ConfirmSizeAdjustment')
 
         if Settings.updaterEnabled and not Updater.checked_for_update:
             renpy.invoke_in_thread(Updater.check_for_update)
 
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):
-            if not hasattr(renpy.config, "SSSSS_sidepanelVisibilityMode") or renpy.config.SSSSS_sidepanelVisibilityMode == None:
+            if not hasattr(renpy.config, "URPS_sidepanelVisibilityMode") or renpy.config.URPS_sidepanelVisibilityMode == None:
                 # Visible at all times
                 SetSidepanelVisibilityAction(visibility=True)()
-            elif renpy.config.SSSSS_sidepanelVisibilityMode == True:
+            elif renpy.config.URPS_sidepanelVisibilityMode == True:
                 # Hidden at all times
                 SetSidepanelVisibilityAction(visibility=False)()
-            elif renpy.config.SSSSS_sidepanelVisibilityMode == False:
+            elif renpy.config.URPS_sidepanelVisibilityMode == False:
                 # Visible only in save/load screen
                 SetSidepanelVisibilityAction(visibility=None)()
             else:
@@ -69,13 +69,13 @@ init 51 python in SSSSS:
             self.visibility = visibility # True/False/None
 
         def __call__(self):
-            renpy.config.SSSSS_sidepanelVisibilityMode = self.visibility
+            renpy.config.URPS_sidepanelVisibilityMode = self.visibility
 
-            if renpy.config.SSSSS_sidepanelVisibilityMode == True:
+            if renpy.config.URPS_sidepanelVisibilityMode == True:
                 renpy.notify("Sidepanel is now visible at all times")
-            elif renpy.config.SSSSS_sidepanelVisibilityMode == False:
+            elif renpy.config.URPS_sidepanelVisibilityMode == False:
                 renpy.notify("Sidepanel is now hidden at all times")
-            elif renpy.config.SSSSS_sidepanelVisibilityMode == None:
+            elif renpy.config.URPS_sidepanelVisibilityMode == None:
                 renpy.notify("Sidepanel is now visible only on the save/load screen")
             else:
                 renpy.notify("Sidepanel is now visible at all times")
@@ -83,21 +83,21 @@ init 51 python in SSSSS:
             renpy.restart_interaction()
 
 init 999 python:
-    renpy.config.search_prefixes.append("SSSSS/src/assets/") # Provides discoverability for assets that are used in SSSSS
+    renpy.config.search_prefixes.append("URPS/src/assets/") # Provides discoverability for assets that are used in URPS
 
     if not 'w_s_e_s_w' in renpy.config.gestures:
-        renpy.config.gestures['w_s_e_s_w'] = SSSSS.Settings.changeSidepanelVisibilityKey
+        renpy.config.gestures['w_s_e_s_w'] = URPS.Settings.changeSidepanelVisibilityKey
 
-    if not "SSSSSsidepanel" in renpy.config.layers:
-        renpy.add_layer("SSSSSsidepanel", above="overlay")
-        config.context_clear_layers.append("SSSSSsidepanel")
+    if not "URPS_Sidepanel" in renpy.config.layers:
+        renpy.add_layer("URPS_Sidepanel", above="overlay")
+        config.context_clear_layers.append("URPS_Sidepanel")
     
-    if not "SSSSSoverlay" in renpy.config.layers:
-        renpy.add_layer("SSSSSoverlay", above="SSSSSsidepanel")
-        config.context_clear_layers.append("SSSSSoverlay")
+    if not "URPS_Overlay" in renpy.config.layers:
+        renpy.add_layer("URPS_Overlay", above="URPS_Sidepanel")
+        config.context_clear_layers.append("URPS_Overlay")
 
-    renpy.config.after_load_callbacks.append(SSSSS.afterLoadCallback)
-    renpy.config.start_interact_callbacks.append(SSSSS.startInteractCallback)
+    renpy.config.after_load_callbacks.append(URPS.afterLoadCallback)
+    renpy.config.start_interact_callbacks.append(URPS.startInteractCallback)
 
     # Input.
     renpy.config.keymap.update({

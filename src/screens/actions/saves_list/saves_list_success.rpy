@@ -1,5 +1,5 @@
-screen SSSSS_SavesListSuccess(viewModel):
-    style_prefix 'SSSSS'
+screen URPS_SavesListSuccess(viewModel):
+    style_prefix 'URPS'
     modal True
 
     vbox:
@@ -8,19 +8,19 @@ screen SSSSS_SavesListSuccess(viewModel):
         ymaximum 0.85
 
         vbox align (0.5, 0.5):
-            use SSSSS_Title("Done", color=SSSSS.Colors.success)
+            use URPS_Title("Done", color=URPS.Colors.success)
 
     # Dialog footer
     hbox:
         xfill True
         yfill True
 
-        style_prefix "SSSSS_dialog_action_buttons"
+        style_prefix "URPS_dialog_action_buttons"
 
         vbox:
             # Close
             hbox:
                 if viewModel.return_on_success:
-                    use sssss_iconButton(icon="", text="OK", action=SSSSS.SavesListViewModel.ClearSuccessAction(viewModel))
+                    use URPS_IconButton(icon="", text="OK", action=URPS.SavesListViewModel.ClearSuccessAction(viewModel))
                 else:
-                    use sssss_iconButton(icon="", text="OK", action=Hide("SSSSS_SavesList"))
+                    use URPS_IconButton(icon="", text="OK", action=Hide("URPS_SavesList"))
