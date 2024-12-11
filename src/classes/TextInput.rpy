@@ -214,9 +214,7 @@ init 1 python in URPS:
 
             raw_text = None
 
-            if pygame.key.get_mods() & pygame.KMOD_LCTRL:
-                raise renpy.display.core.IgnoreEvent()
-            elif renpy.map_event(ev, "input_backspace"):
+            if renpy.map_event(ev, "input_backspace"):
 
                 if self.content and self.controller.caret_pos > 0:
                     content = self.content[0:self.controller.caret_pos - 1] + self.content[self.controller.caret_pos:l]
@@ -277,22 +275,7 @@ init 1 python in URPS:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_up"):
-                # Split the content into lines, preserving the line endings
-                lines = self.content.splitlines(1)
-
-                # Calculate the caret's current line and column
-                char_count = 0
-                current_line_idx = 0
-                current_column = 0
-
-                for i, line in enumerate(lines):
-                    current_line_idx = i
-                    current_column = self.controller.caret_pos - char_count
-
-                    if char_count + len(line) > self.controller.caret_pos:
-                        break
-
-                    char_count += len(line)
+                lines, current_line_idx, current_column = self.__get_caret_info()
 
                 # If already on the first line, no movement is possible
                 if current_line_idx == 0:
@@ -317,22 +300,7 @@ init 1 python in URPS:
                 raise renpy.display.core.IgnoreEvent()
             
             elif renpy.map_event(ev, "input_down"):
-                # Split the content into lines, preserving the line endings 
-                lines = self.content.splitlines(1)
-
-                # Calculate the caret's current line and column
-                char_count = 0
-                current_line_idx = 0
-                current_column = 0
-
-                for i, line in enumerate(lines):
-                    current_line_idx = i
-                    current_column = self.controller.caret_pos - char_count
-
-                    if char_count + len(line) > self.controller.caret_pos:
-                        break
-
-                    char_count += len(line)
+                lines, current_line_idx, current_column = self.__get_caret_info()
 
                 # If already on the last line, no movement is possible
                 if current_line_idx == len(lines) - 1:
@@ -387,14 +355,28 @@ init 1 python in URPS:
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
-            elif renpy.map_event(ev, "input_home"):
+            elif renpy.map_event(ev, "input_content_start"):
                 self.controller.caret_pos = 0
                 self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
-            elif renpy.map_event(ev, "input_end"):
+            elif renpy.map_event(ev, "input_content_end"):
                 self.controller.caret_pos = l
+                self.update_text(self.content)
+                renpy.display.render.redraw(self, 0)
+                raise renpy.display.core.IgnoreEvent()
+
+            elif renpy.map_event(ev, "input_home"):
+                lines, current_line_idx, current_column = self.__get_caret_info()
+                self.controller.caret_pos = self.controller.caret_pos - current_column
+                self.update_text(self.content)
+                renpy.display.render.redraw(self, 0)
+                raise renpy.display.core.IgnoreEvent()
+
+            elif renpy.map_event(ev, "input_end"):
+                lines, current_line_idx, current_column = self.__get_caret_info()
+                self.controller.caret_pos = self.controller.caret_pos - current_column + len(lines[current_line_idx]) - 1
                 self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
@@ -530,6 +512,26 @@ init 1 python in URPS:
                     self.controller.disable()
 
             return None
+
+        def __get_caret_info(self):
+            # Split the content into lines, preserving the line endings
+            lines = self.content.splitlines(1)
+
+            # Calculate the caret's current line and column
+            char_count = 0
+            current_line_idx = 0
+            current_column = 0
+
+            for i, line in enumerate(lines):
+                current_line_idx = i
+                current_column = self.controller.caret_pos - char_count
+
+                if char_count + len(line) > self.controller.caret_pos:
+                    break
+
+                char_count += len(line)
+
+            return lines, current_line_idx, current_column
 
         def update_text(self, new_content, check_size=False):
             editable = self.controller.editable
