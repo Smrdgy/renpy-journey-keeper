@@ -263,7 +263,6 @@ init -2000 python in URPS:
                 i += 1
             
             # Join list back into a string
-            print(''.join(result))
             return ''.join(result)
 
         @staticmethod
