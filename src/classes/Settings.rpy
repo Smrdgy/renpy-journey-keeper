@@ -62,6 +62,7 @@ init -1000 python in URPS:
             self.autoUpdateWithoutPrompt = data.get("autoUpdateWithoutPrompt", False)
             self.globalizedSettings = data.get("globalizedSettings", [])
             self.autosaveOnSingletonChoice = data.get("autosaveOnSingletonChoice", True)
+            self.playthroughTemplate = data.get("playthroughTemplate", None)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -92,6 +93,7 @@ init -1000 python in URPS:
                 'pageFollowsQuickSave': self.pageFollowsQuickSave,
                 'pageFollowsAutoSave': self.pageFollowsAutoSave,
                 'autosaveOnSingletonChoice': self.autosaveOnSingletonChoice,
+                'playthroughTemplate': self.playthroughTemplate,
             })
 
         def getGlobalSettingsAsJson(self):
@@ -382,6 +384,16 @@ init -1000 python in URPS:
         class ToggleAutosaveOnSingletonChoiceEnabled(renpy.ui.Action):
             def __call__(self):
                 Settings.autosaveOnSingletonChoice = not Settings.autosaveOnSingletonChoice
+
+                Settings.save()
+                renpy.restart_interaction()
+
+        class SaveDefaultPlaythroughTemplate(renpy.ui.Action):
+            def __init__(self, playthrough_template, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations):#MODIFY HERE
+                self.template = playthrough_template.edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName, enabledSaveLocations=enabledSaveLocations)#MODIFY HERE
+
+            def __call__(self):
+                Settings.playthroughTemplate = self.template.serializable_for_template()
 
                 Settings.save()
                 renpy.restart_interaction()

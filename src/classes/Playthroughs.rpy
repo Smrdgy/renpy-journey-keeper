@@ -79,6 +79,12 @@ init 1 python in URPS:
         def createPlaythroughFromSerialization(self, data):
             return PlaythroughsClass.PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
 
+        def get_instance_for_edit(self):
+            playthrough = self.createPlaythroughFromSerialization(Settings.playthroughTemplate) if Settings.playthroughTemplate else Playthroughs.PlaythroughClass()
+            playthrough.directory = None
+
+            return playthrough
+
         class PlaythroughClass(x52NonPicklable):
             def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False, enabledSaveLocations=None):#MODIFY HERE
                 self.id = id or int(time.time())
@@ -147,6 +153,17 @@ init 1 python in URPS:
                     'autosaveOnChoices': self.autosaveOnChoices,
                     'selectedPage': self.selectedPage,
                     'filePageName': self.filePageName,
+                    'useChoiceLabelAsSaveName': self.useChoiceLabelAsSaveName,
+                    'enabledSaveLocations': self.enabledSaveLocations,
+                    #MODIFY HERE
+                }
+
+            def serializable_for_template(self):
+                return {
+                    'name': self.name,
+                    'description': self.description,
+                    'storeChoices': self.storeChoices,
+                    'autosaveOnChoices': self.autosaveOnChoices,
                     'useChoiceLabelAsSaveName': self.useChoiceLabelAsSaveName,
                     'enabledSaveLocations': self.enabledSaveLocations,
                     #MODIFY HERE
@@ -378,7 +395,7 @@ init 1 python in URPS:
             renpy.store.persistent.URPS_lastActivePlaythrough = playthrough.id if playthrough != None else None
             self._activePlaythrough = playthrough
 
-            renpy.store.persistent._file_page = str(playthrough.selectedPage)
+            renpy.store.persistent._file_page = str(playthrough.selectedPage or 1)
             renpy.store.persistent._file_page_name = playthrough.filePageName or {}
 
             self.saveToPersistent()

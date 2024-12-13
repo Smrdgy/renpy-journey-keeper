@@ -1,9 +1,9 @@
-screen URPS_EditPlaythrough(playthrough, isEdit=False):
+screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
     layer "URPS_Overlay"
     style_prefix 'URPS'
     modal True
 
-    $ playthrough = playthrough or URPS.Playthroughs.PlaythroughClass()
+    $ playthrough = playthrough or URPS.Playthroughs.get_instance_for_edit()
 
     default name = playthrough.name or ''
     default originalname = name
@@ -19,15 +19,21 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False):
     default description_input = URPS.TextInput("description", multiline=True)
 
     python:
-        submitAction = [
-            URPS.Playthroughs.AddOrEdit(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory),#MODIFY HERE
-            Hide('URPS_EditPlaythrough')
-        ]
+        if editing_template:
+            submitAction = [
+                URPS.Settings.SaveDefaultPlaythroughTemplate(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations),#MODIFY HERE
+                Hide('URPS_EditPlaythrough')
+            ]
+        else:
+            submitAction = [
+                URPS.Playthroughs.AddOrEdit(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory),#MODIFY HERE
+                Hide('URPS_EditPlaythrough')
+            ]
 
     key 'ctrl_K_s' action submitAction
     key 'ctrl_K_DELETE' action Show("URPS_RemovePlaythroughConfirm", playthrough=playthrough)
 
-    use URPS_Dialog(title=("Edit playthrough" if isEdit else "New playthrough"), closeAction=Hide("URPS_EditPlaythrough")):
+    use URPS_Dialog(title=("Edit default template" if editing_template else ("Edit playthrough" if isEdit else "New playthrough")), closeAction=Hide("URPS_EditPlaythrough")):
         style_prefix "URPS"
 
         viewport:
@@ -45,7 +51,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False):
                 if(name != originalname and not URPS.Playthroughs.isValidName(name)):
                     text "Are you sure? This name already exists." color URPS.Colors.warning offset adjustable((15, 2), minValue=1)
 
-                if(playthrough.id != 1):
+                if(playthrough.id != 1 and not editing_template):
                     python:
                         computedDirectory = playthrough.directory if (playthrough.directory != None) else (URPS.Utils.name_to_directory_name(name) if name else None) or ""
 
@@ -176,6 +182,11 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False):
 
             style_prefix "URPS_dialog_action_buttons"
 
+            if not isEdit and not editing_template:
+                vbox xalign 0.0:
+                    hbox:
+                        use URPS_IconButton(icon="\uead3", text="Edit default values", action=Show("URPS_EditPlaythrough", playthrough=None, editing_template=True), tt="Click here to edit the default values for new playthroughs")
+
             vbox:
                 if(isEdit and playthrough.id != 1):
                     # Remove
@@ -184,7 +195,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False):
 
                 # Save
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0)
+                    use URPS_IconButton(icon="\ue161", text="{u}S{/u}ave" + (" template" if editing_template else ""), action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0)
 
                 # Close
                 hbox:
