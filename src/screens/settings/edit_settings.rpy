@@ -62,6 +62,11 @@ screen URPS_Settings():
                             use URPS_Checkbox(checked=URPS.Settings.pageFollowsAutoSave, text="Change page based on the auto-saved slot", action=URPS.Settings.TogglePageFollowsAutoSaveEnabled())
                             use URPS_ToggleSettingGlobalizationButton("pageFollowsAutoSave")
                         
+                        hbox:
+                            use URPS_Checkbox(checked=URPS.Settings.autosaveOnSingletonChoice, text="Perform autosave even when only one choice is available.", action=URPS.Settings.ToggleAutosaveOnSingletonChoiceEnabled())
+                            use URPS_Helper("When enabled, an autosave will be created even when there is only one choice is displayed.")
+                            use URPS_ToggleSettingGlobalizationButton("autosaveOnSingletonChoice")
+
                         use URPS_YSpacer(2)
 
                         hbox:

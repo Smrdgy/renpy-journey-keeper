@@ -211,6 +211,25 @@ init -2000 python in URPS:
                 return False
 
         @staticmethod
+        def isDisplayingMultipleChoices():
+            try:
+                current = renpy.game.context().current
+                script = renpy.game.script.lookup(current)
+                if isinstance(script, renpy.ast.Menu):
+                    available_count = 0
+                    for item in script.items:
+                        if len(item) > 2 and item[2]:
+                            if eval(item[1], renpy.store.__dict__):
+                                available_count += 1
+
+                            if available_count > 1:
+                                return True
+
+                    return False
+            except:
+                return False
+
+        @staticmethod
         def isDisplayingChoicesInAnyContext():
             try:
                 for context in renpy.game.contexts:

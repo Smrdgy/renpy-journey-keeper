@@ -61,6 +61,7 @@ init -1000 python in URPS:
             self.updaterEnabled = data.get("updaterEnabled", True)
             self.autoUpdateWithoutPrompt = data.get("autoUpdateWithoutPrompt", False)
             self.globalizedSettings = data.get("globalizedSettings", [])
+            self.autosaveOnSingletonChoice = data.get("autosaveOnSingletonChoice", True)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -90,6 +91,7 @@ init -1000 python in URPS:
                 'debugEnabled': self.debugEnabled,
                 'pageFollowsQuickSave': self.pageFollowsQuickSave,
                 'pageFollowsAutoSave': self.pageFollowsAutoSave,
+                'autosaveOnSingletonChoice': self.autosaveOnSingletonChoice,
             })
 
         def getGlobalSettingsAsJson(self):
@@ -373,6 +375,13 @@ init -1000 python in URPS:
                     Settings.globalizedSettings.remove(self.setting_name)
                 else:
                     Settings.globalizedSettings.append(self.setting_name)
+
+                Settings.save()
+                renpy.restart_interaction()
+
+        class ToggleAutosaveOnSingletonChoiceEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.autosaveOnSingletonChoice = not Settings.autosaveOnSingletonChoice
 
                 Settings.save()
                 renpy.restart_interaction()
