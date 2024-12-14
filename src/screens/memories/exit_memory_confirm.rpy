@@ -8,7 +8,6 @@ screen URPS_ExitMemoryConfirm():
     use URPS_Dialog(title="Exit memory", closeAction=Return()):
         key 'K_RETURN' action returnAction
         key 'K_KP_ENTER' action returnAction
-        key 'K_e' action returnAction
     
         vbox:
             hbox:
@@ -25,7 +24,7 @@ screen URPS_ExitMemoryConfirm():
                 vbox:
                     # Save
                     hbox:
-                        use URPS_IconButton(icon="\ue9ba", text="{u}E{/u}xit memory", action=returnAction)
+                        use URPS_IconButton(icon="\ue9ba", text="Exit memory", action=returnAction, key="ctrl_K_e")
 
                     # Close
                     hbox:

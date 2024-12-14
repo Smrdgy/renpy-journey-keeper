@@ -11,8 +11,6 @@ screen URPS_SaveMemory():
             Hide('URPS_SaveMemory')
         ]
 
-    key 'ctrl_K_s' action submitAction
-
     use URPS_Dialog(title="Save memory", closeAction=Hide("URPS_SaveMemory")):
         style_prefix "URPS"
 
@@ -29,7 +27,7 @@ screen URPS_SaveMemory():
             vbox:
                 # Save
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction, disabled=not name)
+                    use URPS_IconButton(icon="\ue161", text="Save", action=submitAction, disabled=not name, key="ctrl_K_s")
 
                 # Close
                 hbox:

@@ -12,8 +12,6 @@ screen URPS_DuplicatePlaythrough(playthrough):
     python:
         submitAction = URPS.Playthroughs.DuplicatePlaythroughAction(playthrough=playthrough, name=name, description=description)
 
-    key 'ctrl_K_s' action submitAction
-
     use URPS_Dialog(title="Duplicate \"" + playthrough.name + "\"", closeAction=Hide("URPS_DuplicatePlaythrough")):
         style_prefix "URPS"
 
@@ -48,7 +46,7 @@ screen URPS_DuplicatePlaythrough(playthrough):
             vbox:
                 # Save
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="{u}S{/u}ave", action=submitAction)
+                    use URPS_IconButton(icon="\ue161", text="Save", action=submitAction, key="ctrl_K_s")
                 # Close
                 hbox:
                     use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_DuplicatePlaythrough"))

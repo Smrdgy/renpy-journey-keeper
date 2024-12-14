@@ -1,4 +1,4 @@
-screen URPS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="{u}Y{/u}es", noText="{u}N{/u}o", yesIcon=None, noIcon="\ue5cd", yesColor=None, noColor=None):
+screen URPS_Confirm(title=None, message=None, yes=None, no=None, yesText=None, noText=None, yesIcon=None, noIcon=None, yesColor=None, noColor=None):
     layer "URPS_Overlay"
     style_prefix "URPS"
 
@@ -13,12 +13,6 @@ screen URPS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="{
     key 'K_RETURN' action yesAction
     key 'K_KP_ENTER' action yesAction
 
-    if yesText == "Yes":
-        key 'K_y' action yesAction
-
-    if noText == "No":
-        key 'K_n' action noAction
-
     use URPS_Dialog(title=title, message=message, closeAction=noAction):
         hbox:
             xfill True
@@ -28,11 +22,11 @@ screen URPS_Confirm(title="Confirm", message=None, yes=None, no=None, yesText="{
 
             vbox:
                 hbox:
-                    use URPS_IconButton(icon=yesIcon, text=yesText, action=yesAction, color=yesColor)
+                    use URPS_IconButton(icon=yesIcon, text=yesText, action=yesAction, color=yesColor, key="K_y")
 
                 hbox:
-                    use URPS_IconButton(icon=noIcon, text=noText, action=noAction, color=noColor)
+                    use URPS_IconButton(icon=noIcon, text=noText, action=noAction, color=noColor, key="K_n")
 
 init python in URPS:
-    def showConfirm(title="", message=None, yes=None, no=None, yesText="{u}Y{/u}es", noText="{u}N{/u}o", yesIcon="\ue876", noIcon="\ue5cd", yesColor=None, noColor=None):
-        renpy.run(renpy.store.Show("URPS_Confirm", title=title, message=message, yes=yes, no=no, yesText=yesText, noText=noText, yesIcon=yesIcon, noIcon=noIcon, yesColor=yesColor, noColor=noColor))
+    def showConfirm(title="Confirm", message=None, yes=None, no=None, yesText="Yes", noText="No", yesIcon="\ue876", noIcon="\ue5cd", yesColor=None, noColor=None):
+        renpy.show_screen("URPS_Confirm", title, message, yes, no, yesText, noText, yesIcon, noIcon, yesColor, noColor)

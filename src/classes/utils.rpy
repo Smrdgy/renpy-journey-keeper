@@ -338,6 +338,25 @@ init -2000 python in URPS:
             
             return False
 
+        @staticmethod
+        def add_key_underline(string, keybind):
+            # Extract the actual key character from the keybind
+            match = re.match(r".*_(.)$", keybind)
+            if not match:
+                return string
+
+            key_char = match.group(1).lower()
+
+            # Use regex to replace the first occurrence of the key character (case-insensitive)
+            # with the underlined version
+            def replace_match(m):
+                return "{u}" + m.group(0) + "{/u}"
+
+            # Perform the substitution
+            result = re.sub(re.escape(key_char), replace_match, string, count=1, flags=re.IGNORECASE)
+
+            return result
+
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):
             super(MultiLocation, self).__init__()

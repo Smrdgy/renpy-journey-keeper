@@ -143,7 +143,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
             vbox xalign 1.0:
                 # Delete all saves
                 hbox:
-                    use URPS_IconButton(icon="\ue92b", text="{u}D{/u}elete all saves", action=[URPS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("URPS_SavesList")], color=URPS.Colors.danger)
+                    use URPS_IconButton(icon="\ue92b", text="Delete all saves", action=[URPS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("URPS_SavesList")], color=URPS.Colors.danger, key="ctrl_K_d")
 
                 # Close
                 hbox:

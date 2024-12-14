@@ -30,7 +30,6 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 Hide('URPS_EditPlaythrough')
             ]
 
-    key 'ctrl_K_s' action submitAction
     key 'ctrl_K_DELETE' action Show("URPS_RemovePlaythroughConfirm", playthrough=playthrough)
 
     use URPS_Dialog(title=("Edit default template" if editing_template else ("Edit playthrough" if isEdit else "New playthrough")), closeAction=Hide("URPS_EditPlaythrough")):
@@ -191,11 +190,11 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 if(isEdit and playthrough.id != 1):
                     # Remove
                     hbox:
-                        use URPS_IconButton(icon="\ue92b", text="{u}R{/u}emove", action=Show("URPS_RemovePlaythroughConfirm", playthrough=playthrough), color=URPS.Colors.danger)
+                        use URPS_IconButton(icon="\ue92b", text="Remove", action=Show("URPS_RemovePlaythroughConfirm", playthrough=playthrough), color=URPS.Colors.danger, key="ctrl_K_r")
 
                 # Save
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="{u}S{/u}ave" + (" template" if editing_template else ""), action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0)
+                    use URPS_IconButton(icon="\ue161", text="Save" + (" template" if editing_template else ""), action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0, key="ctrl_K_s")
 
                 # Close
                 hbox:

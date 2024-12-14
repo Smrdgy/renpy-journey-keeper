@@ -10,11 +10,6 @@ screen URPS_PlaythroughActions(playthrough):
         MoveCopySavesAction = [Show("URPS_MoveCopySaves", playthrough=playthrough), Hide("URPS_PlaythroughActions")]
         duplicatePlaythroughAction = [Show("URPS_DuplicatePlaythrough", playthrough=playthrough), Hide("URPS_PlaythroughActions")]
 
-    key 'K_e' action listSavesAction
-    key 'K_s' action sequentializeSavesAction
-    key 'K_t' action constructTimelineAction
-    key 'K_m' action MoveCopySavesAction
-
     use URPS_Dialog(title="Playthrough actions", closeAction=Hide("URPS_PlaythroughActions")):
         style_prefix "URPS"
 
@@ -27,23 +22,23 @@ screen URPS_PlaythroughActions(playthrough):
             vbox:
                 # Duplicate playthrough
                 hbox:
-                    use URPS_IconButton(icon="\uebbd", text="{u}D{/u}uplicate playthrough", action=duplicatePlaythroughAction)
+                    use URPS_IconButton(icon="\uebbd", text="Duplicate playthrough", action=duplicatePlaythroughAction, key="ctrl_K_d")
 
                 # List all saves
                 hbox:
-                    use URPS_IconButton(icon="\ue617", text="Manag{u}e{/u} saves", action=listSavesAction)
+                    use URPS_IconButton(icon="\ue617", text="Manage saves", action=listSavesAction, key="ctrl_K_e")
 
                 # Sequentialize saves
                 hbox:
-                    use URPS_IconButton(icon="\ue089", text="{u}S{/u}equentialize saves", action=sequentializeSavesAction, disabled=not URPS.Utils.hasColsAndRowsConfiguration())
+                    use URPS_IconButton(icon="\ue089", text="Sequentialize saves", action=sequentializeSavesAction, disabled=not URPS.Utils.hasColsAndRowsConfiguration(), key="ctrl_K_s")
                 
                 # Show choices timeline
                 hbox:
-                    use URPS_IconButton(icon="\uf184", text="Show choice {u}t{/u}imeline", action=constructTimelineAction)
+                    use URPS_IconButton(icon="\uf184", text="Show choice Timeline", action=constructTimelineAction, key="ctrl_K_t")
 
                 # Move/copy saves
                 hbox:
-                    use URPS_IconButton(icon="\ueb7d", text="{u}M{/u}ove/copy saves", action=MoveCopySavesAction)
+                    use URPS_IconButton(icon="\ueb7d", text="Move/copy saves", action=MoveCopySavesAction, key="ctrl_K_m")
                 
                 # Close
                 hbox:

@@ -18,7 +18,6 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
         exportAction = URPS.ChoicesTimelineViewModel.ExportTimelineToFile(viewModel)
 
     if hasTimelineEntry:
-        key 'K_e' action exportAction
         key 'ctrl_K_f' action URPS.TextInput.SetActiveAction("search")
         if URPS.TextInput.is_active("search"):
             key 'K_ESCAPE' action URPS.TextInput.SetActiveAction(None)
@@ -38,7 +37,7 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                 hbox:
                     xalign 0.5
 
-                    use URPS_IconButton('\uf0fb', text="{u}E{/u}xport to file", action=exportAction)
+                    use URPS_IconButton('\uf0fb', text="Export to file", action=exportAction, key="ctrl_K_e")
 
                 use URPS_YSpacer(offset=3)
 
