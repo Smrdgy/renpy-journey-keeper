@@ -73,7 +73,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                     hbox:
                         use URPS_Checkbox(checked=enabledSaveLocations != False, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', allSaveLocations, False))
-                        use URPS_Helper("Here, you can manage where saves are stored. By default, Ren'Py saves are kept in two locations: the game folder and the user directory. If you want to disable one of these locations, for example, to save storage space, you can do that here.")
+                        use URPS_Helper("Here, you can manage where saves are stored. By default, Ren'Py saves are kept in two locations: the game directory and the user directory. If you want to disable one of these locations, for example, to save storage space, you can do that here.")
 
                     if enabledSaveLocations != False:
                         hbox:
@@ -195,6 +195,10 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 # Save
                 hbox:
                     use URPS_IconButton(icon="\ue161", text="Save" + (" template" if editing_template else ""), action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0, key="ctrl_K_s")
+
+                if not isEdit:
+                    hbox:
+                        use URPS_IconButton(icon="\uebbd", text="Create from existing directory", action=Show("URPS_SelectExistingDirectoryForNewPlaythrough"), tt="You can use already existing directory to create a playthrough. It will fill out the name and set the directory for you.", ttSide="left")
 
                 # Close
                 hbox:

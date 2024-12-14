@@ -85,6 +85,17 @@ init 1 python in URPS:
 
             return playthrough
 
+        def list_available_directories_to_create_playthrough_from(self):
+            directories = Utils.list_save_directories()
+            playthrough_dirnames = [playthrough.directory for playthrough in Playthroughs.playthroughs]
+
+            relevant_directories = set()
+            for dirname, path in directories:
+                if dirname not in playthrough_dirnames:
+                    relevant_directories.add(dirname)
+
+            return relevant_directories
+
         class PlaythroughClass(x52NonPicklable):
             def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False, enabledSaveLocations=None):#MODIFY HERE
                 self.id = id or int(time.time())
@@ -566,3 +577,14 @@ init 1 python in URPS:
                 renpy.restart_interaction()
 
                 renpy.hide_screen("URPS_DuplicatePlaythrough")
+        
+        class ShowCreatePlaythroughFromDirname(renpy.ui.Action):
+            def __init__(self, dirname):
+                self.dirname = dirname
+
+            def __call__(self):
+                playthrough = Playthroughs.get_instance_for_edit()
+                playthrough.name = self.dirname
+                playthrough.directory = self.dirname
+
+                renpy.show_screen("URPS_EditPlaythrough", playthrough)

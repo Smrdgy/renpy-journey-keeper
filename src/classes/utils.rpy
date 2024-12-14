@@ -357,6 +357,22 @@ init -2000 python in URPS:
 
             return result
 
+        @staticmethod
+        def list_save_directories():
+            dir_names = set()
+            directories = set()
+
+            for location in renpy.loadsave.location.nativeLocations:
+                for item_name in os.listdir(location.directory):
+                    if item_name not in dir_names:
+                        path = os.path.join(location.directory, item_name)
+
+                        if os.path.isdir(path):
+                            directories.add((item_name, path))
+                            dir_names.add(item_name)
+
+            return directories
+
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):
             super(MultiLocation, self).__init__()
