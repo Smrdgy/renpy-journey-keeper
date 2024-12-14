@@ -42,7 +42,7 @@ screen URPS_Settings():
 
                                 hbox xsize 5
 
-                                text "T" size adjustable(30) yalign 1.0
+                                text "T" size URPS.adjustable(30) yalign 1.0
 
                     if originalSizeAdjustment != URPS.Settings.sizeAdjustment:
                         text "To properly display all changes of this value, a restart of the game is required." color URPS.Colors.warning
@@ -175,7 +175,7 @@ screen URPS_Settings():
 
                                             use URPS_IconButton(icon="\ue145", action=URPS.Settings.IncrementCustomGridY())
 
-                                grid URPS.Settings.customGridX URPS.Settings.customGridY spacing adjustable(5, minValue=1) offset (100, 0) yalign 0.5:
+                                grid URPS.Settings.customGridX URPS.Settings.customGridY spacing URPS.adjustable(5, minValue=1) offset (100, 0) yalign 0.5:
                                     for x in range(0, URPS.Settings.customGridX):
                                         for y in range(0, URPS.Settings.customGridY):
                                             frame style "URPS_default" xysize (10, 10) background URPS.Colors.theme

@@ -11,7 +11,7 @@ screen URPS_SettingsLoadSaveScreensStandalone():
 
         frame:
             background "#000000fc"
-            padding adjustable((20, 20, 20, 20))
+            padding URPS.adjustable((20, 20, 20, 20))
 
             vbox:
                 use URPS_SettingsLoadSaveScreens(update_at_runtime=True)

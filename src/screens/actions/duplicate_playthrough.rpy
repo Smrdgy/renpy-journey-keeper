@@ -30,7 +30,7 @@ screen URPS_DuplicatePlaythrough(playthrough):
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
                 if(not URPS.Playthroughs.isValidName(name)):
-                    vbox offset adjustable((15, 2), minValue=1):
+                    vbox offset URPS.adjustable((15, 2), minValue=1):
                         text "Are you sure? This name already exists." color URPS.Colors.warning
                         use URPS_InfoBox("All existing saves of \"" + name + "\" will be deleted. This action {u}{color=[URPS.Colors.error]}is irreversible{/color}{/u}!")
 

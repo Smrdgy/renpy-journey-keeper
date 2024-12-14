@@ -1,4 +1,4 @@
-screen URPS_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=adjustable(20), clamp=False):
+screen URPS_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=URPS.adjustable(20), clamp=False):
     layer "URPS_Overlay"
     style_prefix 'URPS_dialog'
     zorder 99999
@@ -39,8 +39,8 @@ screen URPS_TooltipDialog(title=None, icon=None, message=None, pos=None, interac
 
         if clamp:
             draggable_pos = (
-                min(max(draggable_pos[0], 0), renpy.config.screen_width - adjustable(200 + distance)),
-                min(max(draggable_pos[1], 0), renpy.config.screen_height - adjustable(200 + distance)),
+                min(max(draggable_pos[0], 0), renpy.config.screen_width - URPS.adjustable(200 + distance)),
+                min(max(draggable_pos[1], 0), renpy.config.screen_height - URPS.adjustable(200 + distance)),
             )
 
         closeAction = Hide("URPS_TooltipDialog")

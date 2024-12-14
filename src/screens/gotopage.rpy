@@ -25,6 +25,6 @@ screen URPS_GoToPage():
 
     use URPS_TooltipDialog():
         frame style "URPS_default":
-            xysize adjustable((90, 25))
+            xysize URPS.adjustable((90, 25))
 
             add page_input.displayable(placeholder=renpy.store.persistent._file_page)

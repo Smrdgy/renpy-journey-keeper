@@ -59,7 +59,7 @@ screen URPS_MoveCopySavesOverwriteConfirm(save, viewModel):
                     else:
                         add ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
-                    text "→" size adjustable(40) align (0.5, 0.5)
+                    text "→" size URPS.adjustable(40) align (0.5, 0.5)
 
                     if target_screenshot:
                         add target_screenshot size URPS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5

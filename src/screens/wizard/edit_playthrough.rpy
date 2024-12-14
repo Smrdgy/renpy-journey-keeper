@@ -49,7 +49,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
                 if(name != originalname and not URPS.Playthroughs.isValidName(name)):
-                    text "Are you sure? This name already exists." color URPS.Colors.warning offset adjustable((15, 2), minValue=1)
+                    text "Are you sure? This name already exists." color URPS.Colors.warning offset URPS.adjustable((15, 2), minValue=1)
 
                 if(playthrough.id != 1 and not editing_template):
                     python:
@@ -57,7 +57,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                     use URPS_Title("Directory", 2)
                     hbox:
-                        offset adjustable((15, 0), minValue=1)
+                        offset URPS.adjustable((15, 0), minValue=1)
 
                         text "saves/" color '#e5e5e5'
                         text "[computedDirectory]" color URPS.Colors.theme
@@ -114,7 +114,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                                 if len(enabledSaveLocations) == 0:
                                     use URPS_YSpacer(3)
 
-                                    text "At least one location must be enabled!" color URPS.Colors.error xoffset adjustable(10)
+                                    text "At least one location must be enabled!" color URPS.Colors.error xoffset URPS.adjustable(10)
 
                 use URPS_YSpacer()
 
@@ -132,19 +132,19 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                             use URPS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not URPS.Utils.hasColsAndRowsConfiguration())
                             use URPS_Helper("This system automatically saves your progress (not to be confused with Ren'Py's autosave) right before you make a choice in the game, making it easier to back up and track your progress.")
                         if not URPS.Utils.hasColsAndRowsConfiguration():
-                            text "{size=-7}{color=[URPS.Colors.error]}This game uses an unconventional save configuration, so the autosave feature requires a manual adjustment to be enabled.{/color}" offset adjustable((35, -10), minValue=1)
-                            hbox offset adjustable((35, -10), minValue=1):
+                            text "{size=-7}{color=[URPS.Colors.error]}This game uses an unconventional save configuration, so the autosave feature requires a manual adjustment to be enabled.{/color}" offset URPS.adjustable((35, -10), minValue=1)
+                            hbox offset URPS.adjustable((35, -10), minValue=1):
                                 button style "URPS_default":
                                     action None
 
                                     use URPS_Icon('\ue88e', color = URPS.Colors.info, size=13)
 
-                                hbox xsize adjustable(5)
+                                hbox xsize URPS.adjustable(5)
 
                                 text "{size=-7}{color=[URPS.Colors.info]}For manual adjustment, count the number of columns and rows, then go to the settings and find {color=[URPS.Colors.theme]}\"Custom slots grid\"{/color}. There, enter the numbers accordingly.{/color}{/size}"
 
                         hbox:
-                            offset adjustable((15, 0), minValue=1)
+                            offset URPS.adjustable((15, 0), minValue=1)
 
                             use URPS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system enabled above){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not URPS.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
 
@@ -154,10 +154,10 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                     use URPS_Title("Thumbnail")
                     hbox:
                         frame:
-                            xysize adjustable((160, 160))
+                            xysize URPS.adjustable((160, 160))
 
                             if playthrough.hasThumbnail():
-                                add playthrough.getThumbnail(width=adjustable(150), maxHeight=adjustable(150))
+                                add playthrough.getThumbnail(width=URPS.adjustable(150), maxHeight=URPS.adjustable(150))
                             else:
                                 button:
                                     style_prefix ""

@@ -637,14 +637,13 @@ init -2000 python in URPS:
                 renpy.show_screen("URPS_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side)
                 renpy.restart_interaction()
 
-init -1000 python:
     def adjustable(value, minValue=5): 
         # if URPS.Settings.sizeAdjustment == 0:
-        #     return value
+    #     return value
 
         # Helper function to apply adjustment only to integers
         def adjust_number(value):
-            return int(value * (renpy.config.screen_height / 1080.0)) + URPS.Settings.sizeAdjustment
+            return int(value * (renpy.config.screen_height / 1080.0)) + Settings.sizeAdjustment
         
         # If the value is a tuple, apply adjustment to each element
         if isinstance(value, tuple):

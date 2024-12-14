@@ -1,4 +1,4 @@
-init 1 python:
+init 1 python in URPS:
     _constant = True
 
     import pygame_sdl2 as pygame
@@ -335,7 +335,7 @@ init 1 python:
 screen URPS_KeyInput(assignment=None, action=NullAction, disabled=False):
     vbox:
         hbox:
-            add KeyInput(assignment=assignment, action=action, disabled=disabled)
+            add URPS.KeyInput(assignment=assignment, action=action, disabled=disabled)
 
             use URPS_Checkbox(checked="shift_" in (assignment or ""), text="Shift", action=action(assignment, shift=True), disabled=disabled or assignment == None)
             use URPS_Checkbox(checked="ctrl_" in (assignment or ""), text="Ctrl", action=action(assignment, ctrl=True), disabled=disabled or assignment == None)

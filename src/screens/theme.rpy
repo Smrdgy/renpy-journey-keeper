@@ -14,7 +14,7 @@ style URPS_default is default:
 
 style URPS_text is URPS_default:
     color URPS.Colors.text_primary
-    size adjustable(20)
+    size URPS.adjustable(20)
     text_align 0.0
     outlines []
     alt ''
@@ -26,7 +26,7 @@ style URPS_label_text is URPS_text:
 
 style textinput is URPS_text:
     color "#959595"
-    offset adjustable((10, 1), minValue=1)
+    offset URPS.adjustable((10, 1), minValue=1)
 
 style textinput_caret is textinput
 
@@ -34,12 +34,12 @@ style URPS_vscrollbar:
     base_bar "#00000072"
     thumb '#fff'
     hover_thumb URPS.Colors.hover
-    xsize adjustable(18)
+    xsize URPS.adjustable(18)
     # base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", Borders(6, 10, 6, 10), tile=False)
     # thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", Borders(6, 10, 6, 10), tile=False)
 
 style URPS_frame is URPS_default:
-    padding adjustable((15, 15), minValue=1)
+    padding URPS.adjustable((15, 15), minValue=1)
 
 style URPS_vbox is URPS_default
 style URPS_hbox is URPS_default
@@ -54,12 +54,12 @@ style URPS_dialog_overlay:
     background '#000000ff'
 
 style URPS_dialog_title is URPS_text:
-    padding adjustable((40, 40, 40, 0), minValue=1)
-    size adjustable(40)
+    padding URPS.adjustable((40, 40, 40, 0), minValue=1)
+    size URPS.adjustable(40)
     xfill True
 
 style URPS_dialog_content:
-    padding adjustable((40, 0, 40, 40), minValue=1)
+    padding URPS.adjustable((40, 0, 40, 40), minValue=1)
    
 style URPS_dialog_vbox is URPS_vbox
 style URPS_dialog_hbox is URPS_hbox
@@ -92,7 +92,7 @@ style URPS_dialog_action_buttons_hbox is URPS_hbox:
 ##################
 
 style URPS_button is URPS_default:
-    padding adjustable((5, 5), minValue=1)
+    padding URPS.adjustable((5, 5), minValue=1)
 
 style URPS_Icon_button is URPS_button
 
@@ -114,7 +114,7 @@ style URPS_pagination_textbutton:
 style URPS_pagination_textbutton_text is URPS_text:
     color '#cdcdcd'
     hover_color URPS.Colors.hover
-    size adjustable(25)
+    size URPS.adjustable(25)
     text_align 0.5
 
 style URPS_pagination_textbutton_active is URPS_pagination_textbutton
@@ -146,10 +146,10 @@ style URPS_playthrough_button is URPS_button:
 
 style keyinput is URPS_button:
     background "#ffffff22"
-    xminimum adjustable(100)
+    xminimum URPS.adjustable(100)
 
 style keyinput_text is URPS_text:
-    size adjustable(25)
+    size URPS.adjustable(25)
     color URPS.Colors.theme
 
 style keyinput_text_placeholder is keyinput_text:
@@ -178,7 +178,7 @@ style URPS_Icon is URPS_text:
     font 'fonts/MaterialIconsOutlined-Regular.otf'
     hover_font 'fonts/MaterialIcons-Regular.ttf'
     hover_color URPS.Colors.hover
-    size adjustable(30)
+    size URPS.adjustable(30)
 
 ##################
 #     Titles     #
@@ -188,39 +188,39 @@ style URPS_title is URPS_text:
     color URPS.Colors.theme
 
 style URPS_title_1 is URPS_title:
-    size adjustable(30)
+    size URPS.adjustable(30)
     bold True
 
 style URPS_title_2 is URPS_title:
-    size adjustable(25)
+    size URPS.adjustable(25)
 
 style URPS_title_3 is URPS_title:
-    size adjustable(20)
+    size URPS.adjustable(20)
 
 style URPS_spacer_x_1:
-    xsize adjustable(20)
+    xsize URPS.adjustable(20)
 
 style URPS_spacer_x_2:
-    xsize adjustable(20)
+    xsize URPS.adjustable(20)
 
 style URPS_spacer_x_3:
-    xsize adjustable(10)
+    xsize URPS.adjustable(10)
 
 style URPS_spacer_y_1:
-    ysize adjustable(40)
+    ysize URPS.adjustable(40)
 
 style URPS_spacer_y_2:
-    ysize adjustable(20)
+    ysize URPS.adjustable(20)
 
 style URPS_spacer_y_3:
-    ysize adjustable(10)
+    ysize URPS.adjustable(10)
 
 ##################
 #     Toolbar    #
 ##################
 
 style URPS_toolbar:
-    padding adjustable((20, 0, 20, 0))
+    padding URPS.adjustable((20, 0, 20, 0))
 
 style URPS_toolbar_active is URPS_toolbar:
     background "#2b4047"

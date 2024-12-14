@@ -30,7 +30,7 @@ screen URPS_IconButton(icon, text=None, action=None, size=None, sensitive=None, 
                     if text_color:
                         color text_color
                     if size:
-                        size adjustable(size)
+                        size URPS.adjustable(size)
                     if hover_color:
                         hover_color hover_color
 

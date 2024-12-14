@@ -1,6 +1,6 @@
 screen URPS_Sidepanel():
     style_prefix 'URPS'
-    default estimatedPanelSize = adjustable((80, 350))
+    default estimatedPanelSize = URPS.adjustable((80, 350))
 
     python:
         _constant = True

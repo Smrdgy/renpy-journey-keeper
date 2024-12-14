@@ -82,22 +82,22 @@ init 51 python in URPS:
 
             renpy.restart_interaction()
 
-init 999 python:
+init 999 python in URPS:
     renpy.config.search_prefixes.append("URPS/src/assets/") # Provides discoverability for assets that are used in URPS
 
     if not 'w_s_e_s_w' in renpy.config.gestures:
-        renpy.config.gestures['w_s_e_s_w'] = URPS.Settings.changeSidepanelVisibilityKey
+        renpy.config.gestures['w_s_e_s_w'] = Settings.changeSidepanelVisibilityKey
 
     if not "URPS_Sidepanel" in renpy.config.layers:
         renpy.add_layer("URPS_Sidepanel", above="overlay")
-        config.context_clear_layers.append("URPS_Sidepanel")
+        renpy.config.context_clear_layers.append("URPS_Sidepanel")
     
     if not "URPS_Overlay" in renpy.config.layers:
         renpy.add_layer("URPS_Overlay", above="URPS_Sidepanel")
-        config.context_clear_layers.append("URPS_Overlay")
+        renpy.config.context_clear_layers.append("URPS_Overlay")
 
-    renpy.config.after_load_callbacks.append(URPS.afterLoadCallback)
-    renpy.config.start_interact_callbacks.append(URPS.startInteractCallback)
+    renpy.config.after_load_callbacks.append(afterLoadCallback)
+    renpy.config.start_interact_callbacks.append(startInteractCallback)
 
     # Input.
     renpy.config.keymap.update({

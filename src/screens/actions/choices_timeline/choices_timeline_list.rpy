@@ -51,7 +51,7 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                     # Seach box
                     hbox yalign 0.0 xpos 1.0 xanchor 1.0:
                         frame style "URPS_frame":
-                            xysize adjustable((300, 50))
+                            xysize URPS.adjustable((300, 50))
 
                             button:
                                 key_events True
@@ -64,7 +64,7 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
 
                                         add search_input.displayable(placeholder="Search for choice")
 
-                                    frame style "URPS_default" background "#ffffff22" hover_background URPS.Colors.hover ysize 2 offset adjustable((0, 2))
+                                    frame style "URPS_default" background "#ffffff22" hover_background URPS.Colors.hover ysize 2 offset URPS.adjustable((0, 2))
 
                         use URPS_XSpacer(offset=2)
 

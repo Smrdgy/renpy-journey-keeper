@@ -13,7 +13,7 @@ screen URPS_Dialog(title=None, message=None, closeAction=None, icon=None):
                 xfill True
 
                 frame:
-                    padding adjustable((20, 20, 20, 20))
+                    padding URPS.adjustable((20, 20, 20, 20))
 
                     use URPS_IconButton(icon=None, action=None)
 
@@ -30,7 +30,7 @@ screen URPS_Dialog(title=None, message=None, closeAction=None, icon=None):
                 frame:
                     xalign 1.0
                     yalign 0.5
-                    padding adjustable((20, 20, 20, 20))
+                    padding URPS.adjustable((20, 20, 20, 20))
 
                     use URPS_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 

@@ -10,5 +10,5 @@ screen URPS_Icon(icon, color=None, hover_color=None, size=None):
                     if hover_color:
                         hover_color hover_color
                     if size:
-                        size adjustable(size)
+                        size URPS.adjustable(size)
             transclude

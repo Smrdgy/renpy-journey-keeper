@@ -10,7 +10,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
 
     key "ctrl_K_a" action URPS.SavesListViewModel.SelectAllAction(viewModel, selection_mode)
 
-    hbox ysize adjustable(42):
+    hbox ysize URPS.adjustable(42):
         xfill True
 
         frame style ("URPS_toolbar" if selected_length == 0 else "URPS_toolbar_active"):
@@ -61,7 +61,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                         xsize col_size
 
                         hbox:
-                            text location.directory size adjustable(10) yalign 0.5
+                            text location.directory size URPS.adjustable(10) yalign 0.5
 
                             use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
 
@@ -74,7 +74,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
 
                             if save in saves:
                                 button:
-                                    ysize adjustable(row_height)
+                                    ysize URPS.adjustable(row_height)
                                     xsize 1.0
                                     style ("URPS_row_button" if i % 2 == 0 else "URPS_row_odd_button") selected id in viewModel.selection
 
@@ -90,7 +90,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                                         hbox:
                                             xfill True
 
-                                            hbox xysize adjustable((42, 42)) yalign 0.5:
+                                            hbox xysize URPS.adjustable((42, 42)) yalign 0.5:
                                                 if hovered_button == id and (directory_index == 0 if selection_mode == "PER_SAVE" else True):
                                                     hbox yalign 0.5:
                                                         use URPS_Checkbox(checked=id in viewModel.selection, text="", action=ToggleSetMembership(viewModel.selection, id))
@@ -118,8 +118,8 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                                                         # Delete
                                                         use URPS_IconButton(icon="\ue872", action=URPS.SavesListViewModel.DeleteSingleConfirmAction(viewModel, (save, location)), tt="Delete save")
                             else:
-                                hbox ysize adjustable(row_height):
-                                    hbox xysize adjustable((42, 42))
+                                hbox ysize URPS.adjustable(row_height):
+                                    hbox xysize URPS.adjustable((42, 42))
 
                                     text "N/A" yalign 0.5 color URPS.Colors.disabled
 
