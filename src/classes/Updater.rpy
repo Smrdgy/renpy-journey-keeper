@@ -95,13 +95,13 @@ init 1 python in URPS:
                 return data
             except _urllib_error.HTTPError as e:
                 print("HTTP error occurred: ", e)
-                self.error = "A HTTP error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A HTTP error occurred: {color=[URPS.Colors.error]}" + SmrdgyLib.text.replace_reserved_characters(str(e)) + "{/color}"
             except _urllib_error.URLError as e:
                 print("URL error occurred: ", e)
-                self.error = "A URL error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A URL error occurred: {color=[URPS.Colors.error]}" + SmrdgyLib.text.replace_reserved_characters(str(e)) + "{/color}"
             except Exception as e:
                 print("An error occurred: ", e)
-                self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + SmrdgyLib.text.replace_reserved_characters(str(e)) + "{/color}"
 
             self.loading = False
             renpy.restart_interaction()
@@ -132,7 +132,7 @@ init 1 python in URPS:
                     return True
                 except Exception as e:
                     print("Error moving file: ", e)
-                    self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                    self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + SmrdgyLib.text.replace_reserved_characters(str(e)) + "{/color}"
 
             self.installing = False
             renpy.restart_interaction()
@@ -160,13 +160,13 @@ init 1 python in URPS:
                 return True
             except _urllib_error.HTTPError as e:
                 print("HTTP error occurred: ", e)
-                self.error = "A HTTP error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A HTTP error occurred: {color=[URPS.Colors.error]}" + SmrdgyLib.text.replace_reserved_characters(str(e)) + "{/color}"
             except _urllib_error.URLError as e:
                 print("URL error occurred: ", e)
-                self.error = "A URL error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A URL error occurred: {color=[URPS.Colors.error]}" + SmrdgyLib.text.replace_reserved_characters(str(e)) + "{/color}"
             except Exception as e:
                 print("An error occurred: ", e)
-                self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "An unexpected error occurred: {color=[URPS.Colors.error]}" + SmrdgyLib.text.replace_reserved_characters(str(e)) + "{/color}"
 
             self.downloading = False
             renpy.restart_interaction()
@@ -191,7 +191,7 @@ init 1 python in URPS:
             # Block code
             text = re.sub(r'```(.*?)```', r'\1', text, flags=re.DOTALL)
             # Interpolation [...]
-            text = Utils.replaceReservedCharacters(text)
+            text = SmrdgyLib.text.replace_reserved_characters(text)
             # Headers
             text = re.sub(r'^# (.*?)$', r'{color=[URPS.Colors.theme]}{b}\1{/b}{/color}', text, flags=re.MULTILINE)
             text = re.sub(r'^## (.*?)$', r'{color=[URPS.Colors.theme]}{i}\1{/i}{/color}', text, flags=re.MULTILINE)

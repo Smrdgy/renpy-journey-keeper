@@ -1,4 +1,11 @@
 init -1000 python in URPS:
+    _constant = True
+
+    SmrdgyLib = renpy.exports.store.SmrdgyLib
+
+init -1000 python in URPS:
+    _constant = True
+
     Settings = SettingsClass()
 
 init 51 python in URPS:

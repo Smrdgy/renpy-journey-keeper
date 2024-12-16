@@ -86,35 +86,13 @@ init 1 python in URPS:
             }
 
         def getThumbnail(self, width=None, height=None, maxWidth=None, maxHeight=None):
-            defWidth = 150
-            defHeight = 150
-
-            if(self.thumbnail == None):
-                return ImagePlaceholder(width or defWidth, height or defHeight)
-
-            import io
-
-            try:
-                # Decode the base64 string to bytes
-                decoded_bytes = base64.b64decode(self.thumbnail)
-                # Create a BytesIO object from the decoded bytes
-                sio = io.BytesIO(decoded_bytes)
-                # Load the image using Ren'Py's load_image function
-                rv = renpy.display.pgrender.load_image(sio, "image.png")
-
-                # Return the Image object with specified dimensions
-                return Image(rv, width=width or maxWidth or defWidth, height=height or maxHeight or defHeight, fitAfterResize=maxWidth or maxHeight)
-            except Exception:
-                return ImagePlaceholder(width or defWidth, height or defHeight)
+            return SmrdgyLib.image.get_b64_thumbnail_displayable(self.thumbnail, width, height, maxWidth or 150, maxHeight or 150)
 
         def hasThumbnail(self):
             return self.thumbnail != None
 
         def makeThumbnail(self):
-            # Get the screenshot
-            screenshot = renpy.game.interface.get_screenshot()
-            # Encode it to a base64 string, the important word here is "string" because Python 3 would return b'' from base64.b64encode()...
-            self.thumbnail = base64.b64encode(screenshot).decode('utf-8')
+            self.thumbnail = SmrdgyLib.image.make_b64_thumbnail()
 
         def removeThumbnail(self):
             self.thumbnail = None
@@ -127,7 +105,7 @@ init 1 python in URPS:
             instance = SaveSystem.getPlaythroughSaveInstance(self.id)
             instance.location.scan()
 
-            slots = Utils.getSortedSaves()
+            slots = SmrdgyLib.save.sorted_saves()
 
             for slot in slots:
                 if(renpy.loadsave.can_load(slot)):

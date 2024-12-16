@@ -62,9 +62,9 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                         text "[computedDirectory]" color URPS.Colors.theme
 
                         if isEdit:
-                            use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", ttSide="right")
+                            use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", ttSide="right")
                         else:
-                            use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", ttSide="right")
+                            use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", ttSide="right")
 
                     $ allSaveLocations = URPS.SaveSystem.getAllNativeSaveLocationsForOptions()
 
@@ -106,9 +106,9 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                                             yanchor 0.5
 
                                             if isEdit:
-                                                use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=fullPath), size=15, color="#818181", tt="Open directory", hover_color=URPS.Colors.hover)
+                                                use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=fullPath), size=15, color="#818181", tt="Open directory", hover_color=URPS.Colors.hover)
                                             else:
-                                                use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=path), size=15, color="#818181", tt="Open directory", hover_color=URPS.Colors.hover)
+                                                use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=path), size=15, color="#818181", tt="Open directory", hover_color=URPS.Colors.hover)
 
                                 if len(enabledSaveLocations) == 0:
                                     use URPS_YSpacer(3)

@@ -147,7 +147,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                             # Source
                             hbox yalign 0.5:
                                 if show_thumbnails:
-                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size SmrdgyLib.image.get_limited_image_size_with_aspect_ratio(100, 80)
 
                                 use URPS_XSpacer()
 
@@ -170,7 +170,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                                 use URPS_XSpacer()
 
                                 if show_thumbnails:
-                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size SmrdgyLib.image.get_limited_image_size_with_aspect_ratio(100, 80)
 
                             hbox yalign 0.5:
                                 text "Conflict!" color (URPS.Colors.warning if save in other_saves else "#ffffff00")

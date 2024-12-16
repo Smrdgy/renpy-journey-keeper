@@ -63,12 +63,12 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                         hbox:
                             text location.directory size URPS.adjustable(10) yalign 0.5
 
-                            use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
+                            use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
 
                         $ i = 0
                         for save in viewModel.all_saves:
                             python:
-                                page, slot = URPS.Utils.splitSavename(save)
+                                page, slot = SmrdgyLib.save.split_save_name(save)
                                 id = (save, None) if selection_mode == "PER_SAVE" else (save, location)
                                 i += 1
 
@@ -101,7 +101,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
 
                                                 hbox yalign 0.5:
                                                     if show_thumbnails:
-                                                        image location.screenshot(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80) yalign 0.5
+                                                        image location.screenshot(save) size SmrdgyLib.image.get_limited_image_size_with_aspect_ratio(100, 80) yalign 0.5
 
                                                         use URPS_XSpacer(offset=2)
 
