@@ -55,15 +55,15 @@ screen URPS_Settings():
                     use URPS_Title("Autosave")
                     vbox:
                         hbox:
-                            use URPS_Checkbox(checked=URPS.Settings.autosaveNotificationEnabled, text="Show notification when autosave is performed", action=URPS.Settings.ToggleAutosaveNotificationEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.autosaveNotificationEnabled, text="Show notification when autosave is performed", action=URPS.Settings.ToggleAutosaveNotificationEnabled())
                             use URPS_ToggleSettingGlobalizationButton("autosaveNotificationEnabled")
 
                         hbox:
-                            use URPS_Checkbox(checked=URPS.Settings.pageFollowsAutoSave, text="Change page based on the auto-saved slot", action=URPS.Settings.TogglePageFollowsAutoSaveEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.pageFollowsAutoSave, text="Change page based on the auto-saved slot", action=URPS.Settings.TogglePageFollowsAutoSaveEnabled())
                             use URPS_ToggleSettingGlobalizationButton("pageFollowsAutoSave")
                         
                         hbox:
-                            use URPS_Checkbox(checked=URPS.Settings.autosaveOnSingletonChoice, text="Perform autosave even when only one choice is available.", action=URPS.Settings.ToggleAutosaveOnSingletonChoiceEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.autosaveOnSingletonChoice, text="Perform autosave even when only one choice is available.", action=URPS.Settings.ToggleAutosaveOnSingletonChoiceEnabled())
                             use URPS_Helper("When enabled, an autosave will be created even when there is only one choice is displayed.")
                             use URPS_ToggleSettingGlobalizationButton("autosaveOnSingletonChoice")
 
@@ -81,7 +81,7 @@ screen URPS_Settings():
                     use URPS_Title("Quick save")
                     vbox:
                         hbox:
-                            use URPS_Checkbox(checked=URPS.Settings.quickSaveEnabled, text="Enabled", action=URPS.Settings.ToggleQuickSaveEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.quickSaveEnabled, text="Enabled", action=URPS.Settings.ToggleQuickSaveEnabled())
                             use URPS_ToggleSettingGlobalizationButton("quickSaveEnabled")
 
                         if URPS.Settings.quickSaveEnabled:
@@ -90,11 +90,11 @@ screen URPS_Settings():
 
                                 vbox:
                                     hbox:
-                                        use URPS_Checkbox(checked=URPS.Settings.quickSaveNotificationEnabled, text="Show notification when quick save is performed", action=URPS.Settings.ToggleQuickSaveNotificationEnabled(), disabled=not URPS.Settings.quickSaveEnabled)
+                                        use SmrdgyLib_Checkbox(checked=URPS.Settings.quickSaveNotificationEnabled, text="Show notification when quick save is performed", action=URPS.Settings.ToggleQuickSaveNotificationEnabled(), disabled=not URPS.Settings.quickSaveEnabled)
                                         use URPS_ToggleSettingGlobalizationButton("quickSaveNotificationEnabled")
 
                                     hbox:
-                                        use URPS_Checkbox(checked=URPS.Settings.pageFollowsQuickSave, text="Change page based on the quick-saved slot", action=URPS.Settings.TogglePageFollowsQuickSaveEnabled())
+                                        use SmrdgyLib_Checkbox(checked=URPS.Settings.pageFollowsQuickSave, text="Change page based on the quick-saved slot", action=URPS.Settings.TogglePageFollowsQuickSaveEnabled())
                                         use URPS_ToggleSettingGlobalizationButton("pageFollowsQuickSave")
 
                                     use URPS_YSpacer(2)
@@ -123,7 +123,7 @@ screen URPS_Settings():
                 vbox:
                     use URPS_Title("Memories")
                     vbox:
-                        use URPS_Checkbox(checked=URPS.Settings.memoriesEnabled, text="Enabled", action=URPS.Settings.ToggleMemoriesEnabled())
+                        use SmrdgyLib_Checkbox(checked=URPS.Settings.memoriesEnabled, text="Enabled", action=URPS.Settings.ToggleMemoriesEnabled())
 
                         if URPS.Settings.memoriesEnabled:
                             use URPS_YSpacer(2)
@@ -145,7 +145,7 @@ screen URPS_Settings():
                     use URPS_Title("Save/Load")
                     vbox:
                         hbox:
-                            use URPS_Checkbox(checked=URPS.Settings.customGridEnabled, text="Custom slots grid", action=URPS.Settings.ToggleCustomGridEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.customGridEnabled, text="Custom slots grid", action=URPS.Settings.ToggleCustomGridEnabled())
                             use URPS_Helper("When enabled, two new options will appear where you can enter the number of columns and rows for the save slots in the game's save/load menu. This is needed because some games use custom save systems that the mod's autosave/quicksave system can't handle automatically.")
 
                         if URPS.Settings.customGridEnabled:
@@ -183,12 +183,12 @@ screen URPS_Settings():
                             use URPS_YSpacer(2)
 
                         hbox:
-                            use URPS_Checkbox(checked=URPS.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=URPS.Settings.ToggleOffsetSlotAfterManualSaveIsLoadedEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=URPS.Settings.ToggleOffsetSlotAfterManualSaveIsLoadedEnabled())
                             use URPS_Helper("If enabled, loading a save will shift the save slot by 1, ensuring the next autosave or quicksave does not overwrite the manual save.")
                             use URPS_ToggleSettingGlobalizationButton("offsetSlotAfterManualSaveIsLoaded")
 
                         hbox:
-                            use URPS_Checkbox(checked=URPS.Settings.offsetSlotAfterManualSave, text="Offset the slot after a manual save is performed", action=URPS.Settings.ToggleOffsetSlotAfterManualSaveEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.offsetSlotAfterManualSave, text="Offset the slot after a manual save is performed", action=URPS.Settings.ToggleOffsetSlotAfterManualSaveEnabled())
                             use URPS_Helper("If enabled, creating a manual save will shift the save slot by 1, preventing the next autosave or quicksave from overwriting it.")
                             use URPS_ToggleSettingGlobalizationButton("offsetSlotAfterManualSave")
 
@@ -232,14 +232,14 @@ screen URPS_Settings():
 
                                 use URPS_IconButton("\ue5d5", text="Refresh", action=URPS.Updater.CheckForUpdateAction())
 
-                            use URPS_Checkbox(checked=URPS.Settings.updaterEnabled, text="Check for an update every time the game launches", action=URPS.Settings.ToggleUpdaterEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.updaterEnabled, text="Check for an update every time the game launches", action=URPS.Settings.ToggleUpdaterEnabled())
 
                             if URPS.Settings.updaterEnabled:
                                 hbox:
                                     use URPS_XSpacer()
 
                                     vbox:
-                                        use URPS_Checkbox(checked=URPS.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=URPS.Settings.ToggleAutoUpdatesWithoutPromptEnabled())
+                                        use SmrdgyLib_Checkbox(checked=URPS.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=URPS.Settings.ToggleAutoUpdatesWithoutPromptEnabled())
 
                 if renpy.config.developer:
                     use URPS_YSpacer()
@@ -247,7 +247,7 @@ screen URPS_Settings():
                     vbox:
                         use URPS_Title("Debug", color=URPS.Colors.danger)
                         vbox:
-                            use URPS_Checkbox(checked=URPS.Settings.debugEnabled, text="Debug mode", action=URPS.Settings.ToggleDebugEnabled())
+                            use SmrdgyLib_Checkbox(checked=URPS.Settings.debugEnabled, text="Debug mode", action=URPS.Settings.ToggleDebugEnabled())
 
                 use URPS_YSpacer()
 

@@ -116,7 +116,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                 xfill True
 
                 vbox xalign 1.0:
-                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use SmrdgyLib_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
             vbox:
                 spacing 2
@@ -128,7 +128,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
 
                     hbox:
                         xfill True
-                        use URPS_Checkbox(checked=None if len(saves_to_process) != len(source_saves) and len(saves_to_process) > 0 else len(saves_to_process) == len(source_saves), text="")
+                        use SmrdgyLib_Checkbox(checked=None if len(saves_to_process) != len(source_saves) and len(saves_to_process) > 0 else len(saves_to_process) == len(source_saves), text="")
 
                         text str(len(saves_to_process)) + " selected" yalign 0.5
 
@@ -142,7 +142,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
 
                         grid 5 1:
                             xfill True
-                            use URPS_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
+                            use SmrdgyLib_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
 
                             # Source
                             hbox yalign 0.5:

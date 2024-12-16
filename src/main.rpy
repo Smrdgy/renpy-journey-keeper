@@ -90,7 +90,7 @@ init 51 python in URPS:
             renpy.restart_interaction()
 
 init 999 python in URPS:
-    renpy.config.search_prefixes.append("URPS/src/assets/") # Provides discoverability for assets that are used in URPS
+    renpy.config.search_prefixes.append("URPS/lib/SmrdgyLib/src/assets/") # Provides discoverability for assets that are used in URPS
 
     if not 'w_s_e_s_w' in renpy.config.gestures:
         renpy.config.gestures['w_s_e_s_w'] = Settings.changeSidepanelVisibilityKey

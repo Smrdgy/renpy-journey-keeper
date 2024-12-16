@@ -76,7 +76,7 @@ screen URPS_MoveCopySavesOverwriteConfirm(save, viewModel):
             style_prefix "URPS_dialog_action_buttons"
 
             vbox:
-                use URPS_Checkbox(checked=apply_to_all, text="Perform for all remaining conflicts", action=ToggleScreenVariable("apply_to_all", True, False))
+                use SmrdgyLib_Checkbox(checked=apply_to_all, text="Perform for all remaining conflicts", action=ToggleScreenVariable("apply_to_all", True, False))
 
                 hbox:
                     use URPS_IconButton(icon="\ue89c", text="Overwrite", action=overwriteAction, color=URPS.Colors.danger)

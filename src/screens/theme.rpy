@@ -20,6 +20,9 @@ style URPS_text is URPS_default:
     alt ''
     font 'DejaVuSans.ttf'
 
+style URPS_text_insensitive is URPS_text:
+    color URPS.Colors.disabled
+
 style URPS_label is URPS_default
 style URPS_label_text is URPS_text:
     bold True
@@ -99,14 +102,16 @@ style URPS_Icon_button is URPS_button
 style URPS_Icon_button_text is URPS_text:
     hover_color URPS.Colors.hover
 
-style URPS_checkbox is URPS_button
-style URPS_checkbox_text is URPS_Icon_button_text
-style URPS_checkbox_button is URPS_button
+style SmrdgyLib_Checkbox_text is URPS_text:
+    hover_color URPS.Colors.hover
 
-style URPS_radio is URPS_button
-style URPS_radio_text is URPS_Icon_button_text
-style URPS_radio_button is URPS_button
-   
+style SmrdgyLib_Checkbox_button_insensitive is URPS_text_insensitive
+
+style SmrdgyLib_Radio_text is URPS_text:
+    hover_color URPS.Colors.hover
+
+style SmrdgyLib_Radio_button_insensitive is URPS_text_insensitive
+
 style URPS_pagination_textbutton:
     background None
     yalign 0.5
@@ -179,6 +184,8 @@ style URPS_Icon is URPS_text:
     hover_font 'fonts/MaterialIcons-Regular.ttf'
     hover_color URPS.Colors.hover
     size URPS.adjustable(30)
+
+style SmrdgyLib_Icon_text is URPS_Icon
 
 ##################
 #     Titles     #

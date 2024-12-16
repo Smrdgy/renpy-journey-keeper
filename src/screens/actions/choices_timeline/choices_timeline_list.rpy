@@ -45,7 +45,7 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                     xfill True
 
                     # Toggle thumbnails
-                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use SmrdgyLib_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
                     # Seach box
                     hbox yalign 0.0 xpos 1.0 xanchor 1.0:

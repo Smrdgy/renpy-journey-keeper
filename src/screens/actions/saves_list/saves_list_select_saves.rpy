@@ -48,7 +48,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
 
                 hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
                     # Toggle thumbnails
-                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use SmrdgyLib_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
                     use URPS_XSpacer(offset=2)
 
@@ -93,7 +93,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                                             hbox xysize URPS.adjustable((42, 42)) yalign 0.5:
                                                 if hovered_button == id and (directory_index == 0 if selection_mode == "PER_SAVE" else True):
                                                     hbox yalign 0.5:
-                                                        use URPS_Checkbox(checked=id in viewModel.selection, text="", action=ToggleSetMembership(viewModel.selection, id))
+                                                        use SmrdgyLib_Checkbox(checked=id in viewModel.selection, text="", action=ToggleSetMembership(viewModel.selection, id))
 
                                             hbox:
                                                 yalign 0.5
