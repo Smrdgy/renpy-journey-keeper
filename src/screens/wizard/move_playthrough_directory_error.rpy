@@ -29,9 +29,9 @@ screen URPS_MovePlaythroughDirectoryError(errors=[]):
 
                     hbox:
                         textbutton error[0]:
-                            action SmrdgyLib.path.OpenDirectoryAction(path=error[0])
+                            action URPS.OpenDirectoryAction(path=error[0])
 
-                        use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=error[0]))
+                        use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=error[0]))
 
                         textbutton " - "
                         textbutton errorText:

@@ -18,7 +18,7 @@ screen URPS_RemovePlaythroughConfirm(playthrough):
             xalign 0.5
             padding (0, 10, 0, 0)
 
-            use SmrdgyLib_Checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
+            use URPS_Checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
 
         frame:
             background None

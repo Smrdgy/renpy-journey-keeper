@@ -45,7 +45,7 @@ init 1 python in URPS:
                 return
 
         def loadSaves(self):
-            self.source_saves = SmrdgyLib.save.sort_saves(SaveSystem.listAllSavesForPlaythrough(self.source_playthrough))
+            self.source_saves = Utils.sortSaves(SaveSystem.listAllSavesForPlaythrough(self.source_playthrough))
             self.destination_saves = SaveSystem.listAllSavesForPlaythrough(self.destination_playthrough)
 
         def process_saves(self, saves, mode="COPY"):

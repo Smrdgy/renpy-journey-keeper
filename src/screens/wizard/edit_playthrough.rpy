@@ -62,17 +62,17 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                         text "[computedDirectory]" color URPS.Colors.theme
 
                         if isEdit:
-                            use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", ttSide="right")
+                            use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", ttSide="right")
                         else:
-                            use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", ttSide="right")
+                            use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", ttSide="right")
 
                     $ allSaveLocations = URPS.SaveSystem.getAllNativeSaveLocationsForOptions()
 
                     if(isEdit and playthrough.id > 1 and name != originalname and URPS.Playthroughs.isValidName(name)):
-                        use SmrdgyLib_Checkbox(checked=moveSaveDirectory, text="Rename the directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False), disabled=not URPS.Playthroughs.isValidName(name))
+                        use URPS_Checkbox(checked=moveSaveDirectory, text="Rename the directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False), disabled=not URPS.Playthroughs.isValidName(name))
 
                     hbox:
-                        use SmrdgyLib_Checkbox(checked=enabledSaveLocations != False, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', allSaveLocations, False))
+                        use URPS_Checkbox(checked=enabledSaveLocations != False, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', allSaveLocations, False))
                         use URPS_Helper("Here, you can manage where saves are stored. By default, Ren'Py saves are kept in two locations: the game directory and the user directory. If you want to disable one of these locations, for example, to save storage space, you can do that here.")
 
                     if enabledSaveLocations != False:
@@ -97,7 +97,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                                         fullPath = os.path.join(path, computedDirectory)
 
                                     hbox:
-                                        use SmrdgyLib_Checkbox(checked=location in enabledSaveLocations, text=locationType + " - {color=#818181}{size=-5}" + fullPath + "{/size}{/c}", action=ToggleSetMembership(enabledSaveLocations, location))
+                                        use URPS_Checkbox(checked=location in enabledSaveLocations, text=locationType + " - {color=#818181}{size=-5}" + fullPath + "{/size}{/c}", action=ToggleSetMembership(enabledSaveLocations, location))
 
                                         hbox:
                                             xpos 0.5
@@ -106,9 +106,9 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                                             yanchor 0.5
 
                                             if isEdit:
-                                                use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=fullPath), size=15, color="#818181", tt="Open directory", hover_color=URPS.Colors.hover)
+                                                use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=fullPath), size=15, color="#818181", tt="Open directory", hover_color=URPS.Colors.hover)
                                             else:
-                                                use URPS_IconButton(icon="\ue2c8", action=SmrdgyLib.path.OpenDirectoryAction(path=path), size=15, color="#818181", tt="Open directory", hover_color=URPS.Colors.hover)
+                                                use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=path), size=15, color="#818181", tt="Open directory", hover_color=URPS.Colors.hover)
 
                                 if len(enabledSaveLocations) == 0:
                                     use URPS_YSpacer(3)
@@ -128,7 +128,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                     vbox:
                         hbox:
-                            use SmrdgyLib_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not URPS.Utils.hasColsAndRowsConfiguration())
+                            use URPS_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not URPS.Utils.hasColsAndRowsConfiguration())
                             use URPS_Helper("This system automatically saves your progress (not to be confused with Ren'Py's autosave) right before you make a choice in the game, making it easier to back up and track your progress.")
                         if not URPS.Utils.hasColsAndRowsConfiguration():
                             text "{size=-7}{color=[URPS.Colors.error]}This game uses an unconventional save configuration, so the autosave feature requires a manual adjustment to be enabled.{/color}" offset URPS.adjustable((35, -10), minValue=1)
@@ -145,7 +145,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                         hbox:
                             offset URPS.adjustable((15, 0), minValue=1)
 
-                            use SmrdgyLib_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system enabled above){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not URPS.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
+                            use URPS_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system enabled above){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not URPS.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
 
                 use URPS_YSpacer()
 

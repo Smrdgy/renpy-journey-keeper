@@ -40,7 +40,7 @@ init 1 python in URPS:
             self.locations = []
             self.saves_length = 0
             for location in instance.location.active_locations():
-                saves = SmrdgyLib.save.sort_saves(location.list())
+                saves = Utils.sortSaves(location.list())
 
                 all_saves.update(saves)
                 self.locations.append((location, saves))
@@ -49,7 +49,7 @@ init 1 python in URPS:
                 if current_len > self.saves_length:
                     self.saves_length = current_len
 
-            self.all_saves = SmrdgyLib.save.sort_saves(all_saves)
+            self.all_saves = Utils.sortSaves(all_saves)
 
             renpy.restart_interaction()
 

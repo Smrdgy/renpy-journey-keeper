@@ -38,10 +38,10 @@ screen URPS_SettingsLoadSaveScreens(update_at_runtime=False):
     vbox:
         use URPS_Title("Save page", 3)
         for screen in relevantSaveScreens:
-            use SmrdgyLib_Checkbox(checked=screen in URPS.Settings.saveScreenName, text=("\"save\" (default)" if screen == "save" else "\"" + screen + "\""), action=URPS.Settings.SetSaveScreenName(screen), disabled=screen == "save")
+            use URPS_Checkbox(checked=screen in URPS.Settings.saveScreenName, text=("\"save\" (default)" if screen == "save" else "\"" + screen + "\""), action=URPS.Settings.SetSaveScreenName(screen), disabled=screen == "save")
 
         use URPS_YSpacer(2)
 
         use URPS_Title("Load page", 3)
         for screen in relevantLoadScreens:
-            use SmrdgyLib_Checkbox(checked=screen in URPS.Settings.loadScreenName, text=("\"load\" (default)" if screen == "load" else "\"" + screen + "\""), action=URPS.Settings.SetLoadScreenName(screen), disabled=screen == "load")
+            use URPS_Checkbox(checked=screen in URPS.Settings.loadScreenName, text=("\"load\" (default)" if screen == "load" else "\"" + screen + "\""), action=URPS.Settings.SetLoadScreenName(screen), disabled=screen == "load")

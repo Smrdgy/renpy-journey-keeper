@@ -55,16 +55,16 @@ screen URPS_MoveCopySavesOverwriteConfirm(save, viewModel):
             hbox xalign 0.5:
                 grid 3 1:
                     if source_screenshot:
-                        add source_screenshot size SmrdgyLib.image.get_limited_image_size_with_aspect_ratio(thumbnail_width, thumbnail_height) yalign 0.5
+                        add source_screenshot size URPS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
                     else:
-                        add SmrdgyLib.image.ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
+                        add ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
                     text "→" size URPS.adjustable(40) align (0.5, 0.5)
 
                     if target_screenshot:
-                        add target_screenshot size SmrdgyLib.image.get_limited_image_size_with_aspect_ratio(thumbnail_width, thumbnail_height) yalign 0.5
+                        add target_screenshot size URPS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
                     else:
-                        add SmrdgyLib.image.ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
+                        add ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
             use URPS_YSpacer()
 
@@ -76,7 +76,7 @@ screen URPS_MoveCopySavesOverwriteConfirm(save, viewModel):
             style_prefix "URPS_dialog_action_buttons"
 
             vbox:
-                use SmrdgyLib_Checkbox(checked=apply_to_all, text="Perform for all remaining conflicts", action=ToggleScreenVariable("apply_to_all", True, False))
+                use URPS_Checkbox(checked=apply_to_all, text="Perform for all remaining conflicts", action=ToggleScreenVariable("apply_to_all", True, False))
 
                 hbox:
                     use URPS_IconButton(icon="\ue89c", text="Overwrite", action=overwriteAction, color=URPS.Colors.danger)

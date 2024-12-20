@@ -153,4 +153,4 @@ init 1 python in URPS:
             if screenshot is not None:
                 return screenshot
 
-            return SmrdgyLib.image.ImagePlaceholder(width=renpy.config.thumbnail_width, height=renpy.config.thumbnail_height)
+            return ImagePlaceholder(width=renpy.config.thumbnail_width, height=renpy.config.thumbnail_height)

@@ -116,7 +116,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                 xfill True
 
                 vbox xalign 1.0:
-                    use SmrdgyLib_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
             vbox:
                 spacing 2
@@ -128,7 +128,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
 
                     hbox:
                         xfill True
-                        use SmrdgyLib_Checkbox(checked=None if len(saves_to_process) != len(source_saves) and len(saves_to_process) > 0 else len(saves_to_process) == len(source_saves), text="")
+                        use URPS_Checkbox(checked=None if len(saves_to_process) != len(source_saves) and len(saves_to_process) > 0 else len(saves_to_process) == len(source_saves), text="")
 
                         text str(len(saves_to_process)) + " selected" yalign 0.5
 
@@ -142,12 +142,12 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
 
                         grid 5 1:
                             xfill True
-                            use SmrdgyLib_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
+                            use URPS_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
 
                             # Source
                             hbox yalign 0.5:
                                 if show_thumbnails:
-                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size SmrdgyLib.image.get_limited_image_size_with_aspect_ratio(100, 80)
+                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
 
                                 use URPS_XSpacer()
 
@@ -170,7 +170,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                                 use URPS_XSpacer()
 
                                 if show_thumbnails:
-                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size SmrdgyLib.image.get_limited_image_size_with_aspect_ratio(100, 80)
+                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
 
                             hbox yalign 0.5:
                                 text "Conflict!" color (URPS.Colors.warning if save in other_saves else "#ffffff00")

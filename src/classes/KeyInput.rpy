@@ -337,9 +337,9 @@ screen URPS_KeyInput(assignment=None, action=NullAction, disabled=False):
         hbox:
             add URPS.KeyInput(assignment=assignment, action=action, disabled=disabled)
 
-            use SmrdgyLib_Checkbox(checked="shift_" in (assignment or ""), text="Shift", action=action(assignment, shift=True), disabled=disabled or assignment == None)
-            use SmrdgyLib_Checkbox(checked="ctrl_" in (assignment or ""), text="Ctrl", action=action(assignment, ctrl=True), disabled=disabled or assignment == None)
-            use SmrdgyLib_Checkbox(checked="alt_" in (assignment or ""), text="Alt", action=action(assignment, alt=True), disabled=disabled or assignment == None)
+            use URPS_Checkbox(checked="shift_" in (assignment or ""), text="Shift", action=action(assignment, shift=True), disabled=disabled or assignment == None)
+            use URPS_Checkbox(checked="ctrl_" in (assignment or ""), text="Ctrl", action=action(assignment, ctrl=True), disabled=disabled or assignment == None)
+            use URPS_Checkbox(checked="alt_" in (assignment or ""), text="Alt", action=action(assignment, alt=True), disabled=disabled or assignment == None)
 
             use URPS_XSpacer(offset=2)
 

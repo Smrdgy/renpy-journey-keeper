@@ -27,7 +27,7 @@ init 1 python in URPS:
             instance = SaveSystem.getPlaythroughSaveInstance(self.playthrough.id)
             instance.location.scan()
 
-            self.slots = SmrdgyLib.save.sorted_saves()
+            self.slots = Utils.getSortedSaves()
             self.to_load = len(self.slots)
 
             renpy.restart_interaction()
@@ -94,7 +94,7 @@ init 1 python in URPS:
                 showConfirm(
                     title="Timeline exported into the game files",
                     message="You can find the file in " + path,
-                    yes=SmrdgyLib.path.OpenDirectoryAction(path=dirPath),
+                    yes=OpenDirectoryAction(path=dirPath),
                     yesText="Open location",
                     yesIcon='\ue2c8',
                     noText="Close",

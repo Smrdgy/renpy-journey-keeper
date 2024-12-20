@@ -26,7 +26,7 @@ init -999 python in URPS:
             return Utils.getSlotsPerPage()
 
         def setActiveSlot(self, slotname):
-            page, slot = SmrdgyLib.save.split_save_name(slotname)
+            page, slot = Utils.splitSavename(slotname)
 
             #Last resort check to counter forced autosaves screwing up the counter (e.g. $ renpy.save("auto-1") somewhere in the dialog)
             if page != 0 and slot != 0:
@@ -34,7 +34,7 @@ init -999 python in URPS:
                 renpy.store.URPS_ActiveSlot = slotname
 
         def getNextSlot(self):
-            page, slot = SmrdgyLib.save.split_save_name(renpy.store.URPS_ActiveSlot)
+            page, slot = Utils.splitSavename(renpy.store.URPS_ActiveSlot)
 
             slot += 1
 
@@ -48,12 +48,12 @@ init -999 python in URPS:
 
         def getCurrentSlot(self):
             slotString = renpy.store.URPS_ActiveSlot
-            page, slot = SmrdgyLib.save.split_save_name(slotString)
+            page, slot = Utils.splitSavename(slotString)
 
             return page, slot, slotString
 
         def getPreviousSlot(self):
-            page, slot = SmrdgyLib.save.split_save_name(renpy.store.URPS_ActiveSlot)
+            page, slot = Utils.splitSavename(renpy.store.URPS_ActiveSlot)
 
             slot -= 1
 
@@ -90,7 +90,7 @@ init -999 python in URPS:
 
             # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
             textComponent = renpy.ui.text(choice.label)
-            choiceText = SmrdgyLib.text.replace_reserved_characters(' '.join(textComponent.text))
+            choiceText = Utils.replaceReservedCharacters(' '.join(textComponent.text))
 
             Autosaver.lastChoice = choiceText
 

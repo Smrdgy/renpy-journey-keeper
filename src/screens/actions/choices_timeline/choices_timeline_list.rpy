@@ -45,7 +45,7 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                     xfill True
 
                     # Toggle thumbnails
-                    use SmrdgyLib_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
                     # Seach box
                     hbox yalign 0.0 xpos 1.0 xanchor 1.0:
@@ -73,14 +73,14 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                     spacing (3 if show_thumbnails else 0)
 
                     for entry in timeline:
-                        $ page, slot = SmrdgyLib.save.split_save_name(entry[2])
+                        $ page, slot = URPS.Utils.splitSavename(entry[2])
 
                         button style "URPS_text":
                             action [FileLoad(slot, confirm=True, page=page), Hide("URPS_ChoicesTimeline")]
 
                             hbox:
                                 if show_thumbnails:
-                                    image renpy.slot_screenshot(entry[2]) size URPS.Utils.SmrdgyLib.image.resize_dimensions_to_limits((renpy.config.thumbnail_width, renpy.config.thumbnail_height), (100, 100))
+                                    image renpy.slot_screenshot(entry[2]) size URPS.Utils.resizeDimensionsToLimits((renpy.config.thumbnail_width, renpy.config.thumbnail_height), (100, 100))
 
                                     use URPS_XSpacer(offset=3)
 
@@ -93,7 +93,7 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                                     if entry[1] is None:
                                         text "??????" color URPS.Colors.na hover_color URPS.Colors.hover
                                     else:
-                                        text SmrdgyLib.text.replace_reserved_characters(entry[1]) hover_color URPS.Colors.hover
+                                        text URPS.Utils.replaceReservedCharacters(entry[1]) hover_color URPS.Colors.hover
 
                                     use URPS_XSpacer(offset=3)
 

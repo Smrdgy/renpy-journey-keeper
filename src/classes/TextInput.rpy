@@ -96,12 +96,12 @@ init 1 python in URPS:
             if self.value:
                 return self.value.get_text()
             elif self.variableName:
-                return SmrdgyLib.screen.get_variable(self.variableName)
+                return Utils.getScreenVariable(self.variableName)
             return None
 
         @staticmethod
         def is_active(id):
-            return SmrdgyLib.screen.get_variable(TextInput.activeTextInputScreenVariableName) == id
+            return Utils.getScreenVariable(TextInput.activeTextInputScreenVariableName) == id
 
         @staticmethod
         def set_active(id):
@@ -396,7 +396,7 @@ init 1 python in URPS:
 
             # elif renpy.map_event(ev, 'input_next_input'):
             #     if self.id:
-            #         inputIDs = SmrdgyLib.screen.get_variable(self.availableTextInputsScreenVariableName) or []
+            #         inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
             #         print(inputIDs)
             #         i = inputIDs.index(self.id) + 1
 
@@ -411,7 +411,7 @@ init 1 python in URPS:
 
             # elif renpy.map_event(ev, 'input_prev_input'):
             #     if self.id:
-            #         inputIDs = SmrdgyLib.screen.get_variable(self.availableTextInputsScreenVariableName) or []
+            #         inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
             #         i = inputIDs.index(self.id) - 1
 
             #         if i == -1:

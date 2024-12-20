@@ -28,7 +28,7 @@ screen URPS_IconButton(icon, text=None, action=None, size=None, sensitive=None, 
             if text:
                 python:
                     if key:
-                        text = SmrdgyLib.text.add_key_underline(text, key)
+                        text = URPS.Utils.add_key_underline(text, key)
 
                 text text yalign .5:
                     if text_color:

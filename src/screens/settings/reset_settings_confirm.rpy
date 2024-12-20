@@ -17,7 +17,7 @@ screen URPS_ResetSettingsConfirm():
             use URPS_YSpacer(offset=2)
 
             hbox xalign 0.5:
-                use SmrdgyLib_Checkbox(checked=include_global, text="Include global settings", action=ToggleScreenVariable('include_global', True, False))
+                use URPS_Checkbox(checked=include_global, text="Include global settings", action=ToggleScreenVariable('include_global', True, False))
 
         hbox:
             xfill True
