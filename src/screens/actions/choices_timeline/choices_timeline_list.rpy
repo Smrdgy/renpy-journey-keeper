@@ -97,7 +97,7 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
 
                                     use URPS_XSpacer(offset=3)
 
-                                    text "([entry[2]])" size 18 color "#4b4b4b" hover_color URPS.Colors.hover
+                                    text "{size=-5}([entry[2]]){/size}" color "#4b4b4b" hover_color URPS.Colors.hover yalign 0.5
     else:
         vbox:
             hbox:

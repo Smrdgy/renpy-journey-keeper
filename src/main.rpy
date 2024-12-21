@@ -47,6 +47,11 @@ init 51 python in URPS:
         if Settings.updaterEnabled and not Updater.checked_for_update:
             renpy.invoke_in_thread(Updater.check_for_update)
 
+    def saveJsonCallback(json):
+        print("saveJsonCallback", Autosaver.pendingSave)
+        if Autosaver.pendingSave:
+            json["_URPS_choice"] = Autosaver.pendingSave.choice
+
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):
             if not hasattr(renpy.config, "URPS_sidepanelVisibilityMode") or renpy.config.URPS_sidepanelVisibilityMode == None:
@@ -98,6 +103,7 @@ init 999 python in URPS:
 
     renpy.config.after_load_callbacks.append(afterLoadCallback)
     renpy.config.start_interact_callbacks.append(startInteractCallback)
+    renpy.config.save_json_callbacks.append(saveJsonCallback)
 
     # Input.
     renpy.config.keymap.update({

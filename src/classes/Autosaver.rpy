@@ -92,9 +92,7 @@ init -999 python in URPS:
             textComponent = renpy.ui.text(choice.label)
             choiceText = Utils.replaceReservedCharacters(' '.join(textComponent.text))
 
-            Autosaver.lastChoice = choiceText
-
-            if(Playthroughs.activePlaythrough.autosaveOnChoices):
+            if Playthroughs.activePlaythrough.autosaveOnChoices:
                 self.createPendingSave(choiceText)
                 self.pendingSave.takeAndSaveScreenshot()
                 self.trySavePendingSave()

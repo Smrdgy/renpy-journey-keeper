@@ -38,39 +38,23 @@ init 1 python in URPS:
             self.load_thread.start()
 
         def process_loading_start(self, instance):
-            try:
-                i = 0
-                for slot in self.slots:
-                    location = instance.location.newest(slot)
+            i = 0
+            renpy.restart_interaction()
 
-                    if not location:
-                        self.timeline.append((i, None, slot))
-                    else:
-                        path = location.filename(slot)
+            time.sleep(0.1)
 
-                        zf = zipfile.ZipFile(path, 'r', zipfile.ZIP_DEFLATED)
+            for slot in self.slots:
+                json = instance.location.json(slot)
+                print(json)
 
-                        try:
-                            choice = zf.read("choice")
-                            self.timeline.append((i, choice.decode("UTF-8"), slot))
-                        except Exception:
-                            self.timeline.append((i, None, slot))
+                self.timeline.append((i, json.get("_URPS_choice", None), slot))
 
-                        zf.close()
-
-                        self.loaded += 1
-                        renpy.restart_interaction()
-
-                        i += 1
-
-                        time.sleep(0.005)
-
-            except Exception as e:
-                print(e)
-                self.loading = False
-                self.error = "An error occurred while reading saves:\n{color=[URPS.Colors.error]}" + str(e) + "{/color}"
+                self.loaded += 1
                 renpy.restart_interaction()
-                return
+
+                i += 1
+
+                time.sleep(0.005)
 
             self.loading = False
             renpy.restart_interaction()
