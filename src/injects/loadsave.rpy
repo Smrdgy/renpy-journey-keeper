@@ -37,16 +37,3 @@ init -99 python in URPS:
 
     renpy.load = load_partial(renpy.load)
     renpy.save = save_partial(renpy.save)
-
-    def write_file_partial(func, *args, **kwargs):#TODO: Remove
-        def new_funct(*new_args, **new_kwargs):
-            new_kwargs.update(kwargs.copy())
-
-            print(args, new_args, new_kwargs)
-
-            fn = func(*(args + new_args), **new_kwargs)
-
-            return fn
-        return new_funct
-
-    renpy.loadsave.SaveRecord.write_file = write_file_partial(renpy.loadsave.SaveRecord.write_file)#TODO: Remove
