@@ -68,6 +68,8 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                     self.last_selected_save = last_selected_save
 
                 def __call__(self):
+                    import pygame_sdl2 as pygame
+
                     if pygame.key.get_mods() & pygame.KMOD_SHIFT:
                         start_index = self.viewModel.source_saves.index(self.last_selected_save)
                         end_index = self.viewModel.source_saves.index(self.save)
