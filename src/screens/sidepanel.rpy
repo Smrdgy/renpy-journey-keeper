@@ -10,6 +10,7 @@ screen URPS_Sidepanel():
         autosave_on_choices_enabled = playthrough and playthrough.autosaveOnChoices
         custom_pagination_enabled = renpy.store.persistent.URPS_ShowPagination
         sidepanelPos = store.persistent.URPS_sidepanelPos or (int(renpy.config.screen_width - estimatedPanelSize[0] - 15), int(renpy.config.screen_height / 2 - estimatedPanelSize[1] / 2))
+        tooltip_side = "left" if sidepanelPos[0] > renpy.config.screen_width / 2 else "right"
 
         def sidepanel_dragged(drags, drop):
             renpy.store.persistent.URPS_sidepanelPos = (drags[0].x, drags[0].y)
@@ -33,20 +34,24 @@ screen URPS_Sidepanel():
             background "#000000cc"
 
             vbox:
-                use URPS_IconButton('\ueb73', tt="Select playthrough", ttSide="left", action=Show("URPS_PlaythroughsPicker"))
-                use URPS_IconButton('\uea20', tt="New playthrough", ttSide="left", action=Show("URPS_EditPlaythrough", playthrough=None))
-                use URPS_IconButton('\ue02c', tt="Open memories", ttSide="left", action=Show("URPS_MemoriesLibrary"), disabled=not URPS.Settings.memoriesEnabled)
+                use URPS_IconButton('\ueb73', tt="Select playthrough", ttSide=tooltip_side, action=Show("URPS_PlaythroughsPicker")):
+                    frame xysize (0, 0) offset URPS.adjustable((2, -5)) style "URPS_default":
+                        if len(URPS.Playthroughs.playthroughs) > 2:
+                            text str(len(URPS.Playthroughs.playthroughs)) size URPS.adjustable(15) outlines [(3, "#000000", 0, 0)]
+
+                use URPS_IconButton('\uea20', tt="New playthrough", ttSide=tooltip_side, action=Show("URPS_EditPlaythrough", playthrough=None))
+                use URPS_IconButton('\ue02c', tt="Open memories", ttSide=tooltip_side, action=Show("URPS_MemoriesLibrary"), disabled=not URPS.Settings.memoriesEnabled)
 
                 use URPS_Divider(sizeX=40)
 
-                use URPS_IconButton('\ue3c9', tt="Edit playthrough", ttSide="left", action=Show("URPS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
-                use URPS_IconButton('\ue4f9', toggled=playthrough and playthrough.autosaveOnChoices, toggledIcon='\ue167', tt=("Disable autosave on choices" if autosave_on_choices_enabled else "Enable autosave on choices"), ttSide="left", action=URPS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not URPS.Utils.hasColsAndRowsConfiguration(), toggled=autosave_on_choices_enabled, toggledColor=URPS.Colors.selected)
-                use URPS_IconButton('\ue2e6', tt="Playthrough actions", ttSide="left", action=Show("URPS_PlaythroughActions", playthrough=playthrough))
+                use URPS_IconButton('\ue3c9', tt="Edit playthrough", ttSide=tooltip_side, action=Show("URPS_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
+                use URPS_IconButton('\ue4f9', toggled=autosave_on_choices_enabled, toggledIcon='\ue167', tt=("Disable autosave on choices" if autosave_on_choices_enabled else "Enable autosave on choices"), ttSide=tooltip_side, action=URPS.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not URPS.Utils.hasColsAndRowsConfiguration(), toggledColor=URPS.Colors.selected)
+                use URPS_IconButton('\ue2e6', tt="Playthrough actions", ttSide=tooltip_side, action=Show("URPS_PlaythroughActions", playthrough=playthrough))
 
                 use URPS_Divider(sizeX=40)
 
-                use URPS_IconButton('\ue666', tt=("Hide custom pagination" if custom_pagination_enabled else "Show custom pagination"), ttSide="left", action=URPS.Pagination.TogglePagination(), toggled=custom_pagination_enabled, toggledColor=URPS.Colors.selected)
-                use URPS_IconButton('\ue8b8', tt="Open settings", ttSide="left", action=Show("URPS_Settings"))
+                use URPS_IconButton('\ue666', tt=("Hide custom pagination" if custom_pagination_enabled else "Show custom pagination"), ttSide=tooltip_side, action=URPS.Pagination.TogglePagination(), toggled=custom_pagination_enabled, toggledColor=URPS.Colors.selected)
+                use URPS_IconButton('\ue8b8', tt="Open settings", ttSide=tooltip_side, action=Show("URPS_Settings"))
 
 
 screen URPS_SidepanelHolder():
