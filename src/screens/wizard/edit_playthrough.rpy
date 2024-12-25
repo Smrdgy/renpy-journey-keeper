@@ -196,7 +196,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 hbox:
                     use URPS_IconButton(icon="\ue161", text="Save" + (" template" if editing_template else ""), action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0, key="ctrl_K_s")
 
-                if not isEdit:
+                if not isEdit and not editing_template:
                     hbox:
                         use URPS_IconButton(icon="\uebbd", text="Create from existing directory", action=Show("URPS_SelectExistingDirectoryForNewPlaythrough"), tt="You can use already existing directory to create a playthrough. It will fill out the name and set the directory for you.", ttSide="left")
 
