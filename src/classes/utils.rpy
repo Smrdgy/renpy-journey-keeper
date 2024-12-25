@@ -104,7 +104,7 @@ init -2000 python in URPS:
             if page == 0 and slot == 0:
                 return save_name, ""
 
-            return str(page), str(slot)
+            return page, slot
 
         @staticmethod
         def name_to_directory_name(title):

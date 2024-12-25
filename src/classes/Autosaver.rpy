@@ -92,12 +92,8 @@ init -999 python in URPS:
             textComponent = renpy.ui.text(choice.label)
             choiceText = Utils.replaceReservedCharacters(' '.join(textComponent.text))
 
-            Autosaver.lastChoice = choiceText
-
-            if(Playthroughs.activePlaythrough.autosaveOnChoices):
+            if Playthroughs.activePlaythrough.autosaveOnChoices:
                 self.createPendingSave(choiceText)
-                self.pendingSave.takeAndSaveScreenshot()
-                self.trySavePendingSave()
 
         # The URPS_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
         # However when a manual save is loaded it might not be a choice screen.
@@ -131,32 +127,25 @@ init -999 python in URPS:
         def createPendingSave(self, choice):
             self.pendingSave = AutosaverClass.PendingSaveClass(choice)
 
+            # This function must be delayed due to how the choice is being propagated into the save file via renpy.config.save_json_callbacks.
+            # Otherwise the choice label will always lag behind by one.
+            # It also can't be performed asynchronously because the log might change, as the thread is being executed, possibly creating a loadable position after the choices, not before as intended.
+            self.pendingSave.save()
+
         class PendingSaveClass(x52NonPicklable):
             def __init__(self, choice):
-                self.saveRecord = None
                 self.choice = choice
 
-                self.createSaveSnapshot()
-
-            def createSaveSnapshot(self, extra_info=None):
-                if(Playthroughs.activePlaythrough.useChoiceLabelAsSaveName):
-                    extra_info = extra_info or self.choice
-
-                self.saveRecord = Utils.createSaveRecord(extra_info)
-                self.saveRecord.choice = self.choice
-
-            def takeAndSaveScreenshot(self):
                 renpy.take_screenshot()
 
-                self.saveRecord.screenshot = renpy.game.interface.get_screenshot()
-
-            # If this becomes laggy, check the ren'py's autosave system and its threading
             def save(self):
                 slotname = renpy.store.URPS_ActiveSlot
 
-                renpy.loadsave.location.save(slotname, self.saveRecord)
-                renpy.loadsave.location.scan()
-                renpy.loadsave.clear_slot(slotname)
+                extra_info = ''
+                if Playthroughs.activePlaythrough.useChoiceLabelAsSaveName:
+                    extra_info = self.choice
+
+                renpy.save(slotname, extra_info)
 
                 if Settings.autosaveNotificationEnabled:
                     renpy.notify("Autosave created at {}".format(slotname))

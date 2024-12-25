@@ -2,13 +2,10 @@ init -99 python in URPS:
     _constant = True
     
     def before_load(slotname):
-        Autosaver.lastChoice = None
         Autosaver.activeSlotPending = slotname
         Autosaver.suppressAutosaveConfirm = False
     
     def before_save(slotname):
-        Autosaver.lastChoice = None
-
         if Settings.offsetSlotAfterManualSave:
             Autosaver.setActiveSlot(slotname)
 
@@ -40,25 +37,3 @@ init -99 python in URPS:
 
     renpy.load = load_partial(renpy.load)
     renpy.save = save_partial(renpy.save)
-
-    def write_file_partial(func, *args, **kwargs):
-        def new_funct(*new_args, **new_kwargs):
-            new_kwargs.update(kwargs.copy())
-
-            fn = func(*(args + new_args), **new_kwargs)
-
-            if(Autosaver.lastChoice != None):
-                import zipfile
-
-                filename = new_args[1]
-
-                zf = zipfile.ZipFile(filename, "a", zipfile.ZIP_DEFLATED)
-                zf.writestr("choice", Autosaver.lastChoice.encode("utf-8"))
-                zf.close()
-
-                Autosaver.lastChoice = None
-
-            return fn
-        return new_funct
-
-    renpy.loadsave.SaveRecord.write_file = write_file_partial(renpy.loadsave.SaveRecord.write_file)
