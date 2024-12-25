@@ -17,7 +17,8 @@ init 51 python in URPS:
 
     if Playthroughs.activePlaythroughOrNone == None and renpy.store.persistent.URPS_lastActivePlaythrough != None:
         Playthroughs.activateByID(renpy.store.persistent.URPS_lastActivePlaythrough)
-    else:
+    
+    if Playthroughs.activePlaythroughOrNone is None:
         Playthroughs.activateNative()
 
     def afterLoadCallback():
@@ -36,9 +37,6 @@ init 51 python in URPS:
 
         if(not renpy.get_screen('URPS_SidepanelHolder')):
             renpy.show_screen('URPS_SidepanelHolder')
-
-            if(renpy.store.persistent.URPS_Playthroughs != None and renpy.store.persistent.URPS_lastActivePlaythrough != None):
-                Playthroughs.activateByID(renpy.store.persistent.URPS_lastActivePlaythrough)
 
         if(not renpy.get_screen('URPS_Overlay')):
             renpy.show_screen('URPS_Overlay')
@@ -91,8 +89,8 @@ init 51 python in URPS:
 init 999 python in URPS:
     renpy.config.search_prefixes.append("URPS/src/assets/") # Provides discoverability for assets that are used in URPS
 
-    if not 'w_s_e_s_w' in renpy.config.gestures:
-        renpy.config.gestures['w_s_e_s_w'] = Settings.changeSidepanelVisibilityKey
+    if not 'n_e_s_w' in renpy.config.gestures:
+        renpy.config.gestures['n_e_s_w'] = Settings.changeSidepanelVisibilityKey
 
     if not "URPS_Sidepanel" in renpy.config.layers:
         renpy.config.layers.append("URPS_Sidepanel")

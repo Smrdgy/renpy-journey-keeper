@@ -253,14 +253,16 @@ init 1 python in URPS:
             return errors
 
         def __setActivePlaythrough(self, playthrough=None):
-            if(self.activePlaythrough != None):
+            prev_playthrough = self.activePlaythroughOrNone
+            if prev_playthrough:
                 self.activePlaythrough.beforeDeactivation()
 
             renpy.store.persistent.URPS_lastActivePlaythrough = playthrough.id if playthrough != None else None
             self._activePlaythrough = playthrough
 
-            renpy.store.persistent._file_page = str(playthrough.selectedPage or 1)
-            renpy.store.persistent._file_page_name = playthrough.filePageName or {}
+            if prev_playthrough:
+                renpy.store.persistent._file_page = str(playthrough.selectedPage or 1)
+                renpy.store.persistent._file_page_name = playthrough.filePageName or {}
 
             self.saveToPersistent()
 
