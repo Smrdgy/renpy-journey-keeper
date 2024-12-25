@@ -71,6 +71,10 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                                 page, slot = URPS.Utils.splitSavename(save)
                                 id = (save, None) if selection_mode == "PER_SAVE" else (save, location)
                                 i += 1
+                                file_page_name = renpy.store.persistent._file_page_name.get(str(page), None) or renpy.store.persistent._file_page_name.get(page, None)
+
+                            if file_page_name and slot == 1:
+                                use URPS_Title(file_page_name, size=2)
 
                             if save in saves:
                                 button:
