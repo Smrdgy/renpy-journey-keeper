@@ -8,6 +8,8 @@ init -2000 python in URPS:
     disk_lock = threading.RLock()
     import unicodedata
     import sys
+    import time
+    import locale
 
     class x52NonPicklable(python_object):
         def __setstate__(self, d):
@@ -537,6 +539,16 @@ init -2000 python in URPS:
                 return "Game"
 
             return self.directory
+
+        def mtime_as_date(self, slotname):
+            # Set locale to the user's default settings
+            locale.setlocale(locale.LC_TIME, '')
+
+            mtime = self.mtime(slotname)
+            if mtime:
+                return time.strftime('%c', time.localtime(mtime))
+
+            return None
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):

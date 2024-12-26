@@ -111,6 +111,10 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
 
                                                     text "[save]" yalign 0.5
 
+                                                    use URPS_XSpacer(2)
+
+                                                    text "{size=-7}" + (location.mtime_as_date(save) or '') + "{/size}" yalign 0.5 xalign 1.0 color URPS.Colors.text_light
+
                                                 hbox:
                                                     xalign 1.0
                                                     yalign 0.5
