@@ -16,7 +16,6 @@ init -1000 python in URPS:
             settings.update(self.loadFromUserDir())
             settings.update(self.loadFromPersistent())
 
-            print(settings.get("globalizedSettings", []))
             # Apply globalized settings again in case some local setting is overwriting it
             for setting in settings.get("globalizedSettings", []):
                 if global_settings.get(setting):

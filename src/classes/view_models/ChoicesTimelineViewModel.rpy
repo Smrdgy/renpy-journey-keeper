@@ -45,7 +45,6 @@ init 1 python in URPS:
 
             for slot in self.slots:
                 json = instance.location.json(slot)
-                print(json)
 
                 self.timeline.append((i, json.get("_URPS_choice", None), slot))
 
