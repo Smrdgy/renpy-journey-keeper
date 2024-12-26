@@ -11,6 +11,7 @@ screen URPS_Sidepanel():
         custom_pagination_enabled = renpy.store.persistent.URPS_ShowPagination
         sidepanelPos = store.persistent.URPS_sidepanelPos or (int(renpy.config.screen_width - estimatedPanelSize[0] - 15), int(renpy.config.screen_height / 2 - estimatedPanelSize[1] / 2))
         tooltip_side = "left" if sidepanelPos[0] > renpy.config.screen_width / 2 else "right"
+        amount_of_playthroughs = len(URPS.Playthroughs.playthroughs) - 1
 
         def sidepanel_dragged(drags, drop):
             renpy.store.persistent.URPS_sidepanelPos = (drags[0].x, drags[0].y)
@@ -35,9 +36,9 @@ screen URPS_Sidepanel():
 
             vbox:
                 use URPS_IconButton('\ueb73', tt="Select playthrough", ttSide=tooltip_side, action=Show("URPS_PlaythroughsPicker")):
-                    frame xysize (0, 0) offset URPS.adjustable((2, -5)) style "URPS_default":
-                        if len(URPS.Playthroughs.playthroughs) > 2:
-                            text str(len(URPS.Playthroughs.playthroughs)) size URPS.adjustable(15) outlines [(3, "#000000", 0, 0)]
+                    frame xysize (0, 0) offset URPS.adjustable((-10, -5)) style "URPS_default":
+                        if amount_of_playthroughs > 1:
+                            text "{b}[amount_of_playthroughs]{/b}" size URPS.adjustable(15) outlines [(5, "#000000", 0, 0)] color URPS.Colors.theme
 
                 use URPS_IconButton('\uea20', tt="New playthrough", ttSide=tooltip_side, action=Show("URPS_EditPlaythrough", playthrough=None))
                 use URPS_IconButton('\ue02c', tt="Open memories", ttSide=tooltip_side, action=Show("URPS_MemoriesLibrary"), disabled=not URPS.Settings.memoriesEnabled)
