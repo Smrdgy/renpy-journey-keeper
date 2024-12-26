@@ -6,7 +6,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
     $ playthrough = playthrough or URPS.Playthroughs.get_instance_for_edit()
 
     default name = playthrough.name or ''
-    default originalname = name
+    default originalname = name if isEdit else ''
     default description = playthrough.description or ''
     default storeChoices = playthrough.storeChoices
     default autosaveOnChoices = playthrough.autosaveOnChoices
@@ -47,7 +47,7 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
-                if(name != originalname and not URPS.Playthroughs.isValidName(name)):
+                if(not editing_template and name != originalname and not URPS.Playthroughs.isValidName(name)):
                     text "Are you sure? This name already exists." color URPS.Colors.warning offset URPS.adjustable((15, 2), minValue=1)
 
                 if(playthrough.id != 1 and not editing_template):
