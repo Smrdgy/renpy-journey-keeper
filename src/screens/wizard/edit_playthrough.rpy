@@ -194,7 +194,10 @@ screen URPS_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                 # Save
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="Save" + (" template" if editing_template else ""), action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0, key="ctrl_K_s")
+                    if editing_template:
+                        use URPS_IconButton(icon="\ue161", text="Save template", action=submitAction, key="ctrl_K_s")
+                    else:
+                        use URPS_IconButton(icon="\ue161", text="Save", action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0, key="ctrl_K_s")
 
                 if not isEdit and not editing_template:
                     hbox:
