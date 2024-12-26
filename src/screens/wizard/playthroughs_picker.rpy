@@ -64,6 +64,10 @@ screen URPS_PlaythroughsPicker():
 
                                             use URPS_Icon(icon="\ue3f4", color="#333", size=50)
 
+                                if playthrough.description:
+                                    hbox xalign 1.0 yalign 0.0:
+                                        use URPS_IconButton(icon="\uef42", tt=playthrough.description, ttSide="bottom")
+
                             hbox ysize 5
 
                             vbox:
