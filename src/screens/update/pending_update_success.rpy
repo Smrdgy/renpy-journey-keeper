@@ -21,7 +21,7 @@ screen URPS_PendingUpdateSuccess():
         vbox:
             # Quit game
             hbox:
-                use URPS_IconButton(icon="\ue9ba", text="Quit game", action=Quit())
+                use URPS_IconButton(icon="\ue9ba", text="Quit game", action=Quit(confirm=False))
 
             # Close
             hbox:
