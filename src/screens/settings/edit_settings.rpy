@@ -20,7 +20,7 @@ screen URPS_Settings():
                 vbox:
                     use URPS_Title("Accessibility")
                     vbox:
-                        use URPS_Title("Size adjustment {size=-15}{color=#f00}(EXPERIMENTAL!){/c}{/size}", 2)
+                        use URPS_Title("Size adjustment", 2)
 
                         hbox:
                             hbox:
@@ -45,8 +45,9 @@ screen URPS_Settings():
                                 text "T" size URPS.adjustable(30) yalign 1.0
 
                     if originalSizeAdjustment != URPS.Settings.sizeAdjustment:
-                        text "To properly display all changes of this value, a restart of the game is required." color URPS.Colors.warning
-                        use URPS_InfoBox("If anything goes wrong, you can revert the value via confirm dialog, waiting 60 seconds, or manually, by simultaneously holding {u}CTRL + SHIFT + ALT + P{/u}.")
+                        use URPS_InfoBox("If anything goes wrong, you can revert the value via confirm dialog / waiting for 60 seconds / manually, by simultaneously pressing {b}CTRL + SHIFT + ALT + P{/b}.")
+
+                        use URPS_IconButton(icon="\ue86c", text="Click here to apply the new size\n{size=-7}{color=[URPS.Colors.warning]}This will rebuild all the styles of the game, so don't be scared if it takes a few seconds.{/color}{/size}", action=[URPS.Settings.ApplySizeAdjustment(), SetScreenVariable("originalSizeAdjustment", URPS.Settings.sizeAdjustment)])
 
                 use URPS_YSpacer()
 

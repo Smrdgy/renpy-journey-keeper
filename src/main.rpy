@@ -41,7 +41,7 @@ init 51 python in URPS:
         if(not renpy.get_screen('URPS_Overlay')):
             renpy.show_screen('URPS_Overlay')
 
-        if renpy.store.persistent.URPS_SizeAdjustmentRollbackValue != None:
+        if renpy.store.persistent.URPS_SizeAdjustmentRollbackValue != None and renpy.get_screen("URPS_ConfirmSizeAdjustment") is None:
             renpy.show_screen('URPS_ConfirmSizeAdjustment')
 
         if Settings.updaterEnabled and not Updater.checked_for_update:

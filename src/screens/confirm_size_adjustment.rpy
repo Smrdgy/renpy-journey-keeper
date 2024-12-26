@@ -1,5 +1,6 @@
 screen URPS_ConfirmSizeAdjustment():
     layer 'URPS_Overlay'
+    zorder 99999
 
     default time = 60
 
@@ -9,7 +10,8 @@ screen URPS_ConfirmSizeAdjustment():
                 URPS.Settings.SetSizeAdjustment(value=renpy.store.persistent.URPS_SizeAdjustmentRollbackValue, store_rollback_value=False)()
                 renpy.store.persistent.URPS_SizeAdjustmentRollbackValue = None
                 renpy.save_persistent()
-                renpy.notify("Previous size applied. Restart the game to see the changes.")
+                renpy.store.gui.rebuild()
+                renpy.notify("Previous size applied.")
 
         class ConfirmSizeAdjustment(renpy.ui.Action):
             def __call__(self):
@@ -26,24 +28,28 @@ screen URPS_ConfirmSizeAdjustment():
         droppable False
 
         frame style "URPS_default":
-            background "#000000cc"
-            padding (10, 10, 10, 10)
+            background "#f00"
+            padding (2, 2, 2, 2)
 
-            vbox:
-                text "Adjustment confirmation" color URPS.Colors.theme xalign 0.5
+            frame style "URPS_default":
+                background "#000"
+                padding (10, 10, 10, 10)
 
-                vbox ysize 5
+                vbox:
+                    text "Adjustment confirmation" color URPS.Colors.theme xalign 0.5
 
-                text "{size=-10}After 60 seconds, the previous size will be applied.{/size}" xalign 0.5
+                    vbox ysize 5
 
-                vbox ysize 20
+                    text "{size=-10}After 60 seconds, the previous size will be applied.{/size}" xalign 0.5
 
-                text "[time]s" xalign 0.5 color (URPS.Colors.error if time < 5 else "#fff")
+                    vbox ysize 20
 
-                hbox xalign 0.5:
-                    textbutton "Revert" action [RevertSizeAdjustmentValue(), Hide('URPS_ConfirmSizeAdjustment')] text_color URPS.Colors.error text_hover_color URPS.Colors.hover
+                    text "[time]s" xalign 0.5 color (URPS.Colors.error if time < 5 else "#fff")
 
-                    hbox xsize 100
+                    hbox xalign 0.5:
+                        textbutton "Revert" action [RevertSizeAdjustmentValue(), Hide('URPS_ConfirmSizeAdjustment')] text_color URPS.Colors.error text_hover_color URPS.Colors.hover
 
-                    textbutton "Confirm" action [ConfirmSizeAdjustment(), Hide('URPS_ConfirmSizeAdjustment')] text_color URPS.Colors.success text_hover_color URPS.Colors.hover
+                        hbox xsize 100
+
+                        textbutton "Confirm" action [ConfirmSizeAdjustment(), Hide('URPS_ConfirmSizeAdjustment')] text_color URPS.Colors.success text_hover_color URPS.Colors.hover
 

@@ -128,6 +128,10 @@ init -1000 python in URPS:
             renpy.save_persistent()
 
         def reset(self, include_global):
+            rebuild_ui = False
+            if self.sizeAdjustment != 0:
+                rebuild_ui = True
+
             renpy.store.persistent.URPS_Settings = None
             UserDir.removeSettings()
 
@@ -137,6 +141,9 @@ init -1000 python in URPS:
             self.setSettings({})
 
             renpy.save_persistent()
+
+            if rebuild_ui:
+                renpy.store.gui.rebuild()
 
         class ConfirmReset(renpy.ui.Action):
             def __init__(self, include_global=False):
@@ -281,6 +288,13 @@ init -1000 python in URPS:
 
                 if renpy.store.persistent.URPS_SizeAdjustmentRollbackValue == Settings.sizeAdjustment or Settings.sizeAdjustment == 0:
                     renpy.store.persistent.URPS_SizeAdjustmentRollbackValue = None
+
+        class ApplySizeAdjustment(renpy.ui.Action):
+            def __call__(self):
+                renpy.store.gui.rebuild()
+
+                if renpy.store.persistent.URPS_SizeAdjustmentRollbackValue is not None:
+                    renpy.show_screen("URPS_ConfirmSizeAdjustment")
 
         class SetSizeAdjustment(renpy.ui.Action):
             def __init__(self, value, store_rollback_value=True):
