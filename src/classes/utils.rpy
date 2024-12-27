@@ -103,10 +103,26 @@ init -2000 python in URPS:
         def __custom_saves_sort(save_name):
             page, slot = Utils.splitSavename(save_name)
 
+            def make_comparable(value):
+                """
+                Forces value into string and separates numeric components from non-numeric parts.
+                Returns a list of tuples (is_digit, value) for comparison.
+                """
+                value = str(value)  # Ensure the value is treated as a string
+                components = re.findall(r'\d+|\D+', value)  # Split into numbers and non-numbers
+                comparable = []
+                for comp in components:
+                    if comp.isdigit():
+                        comparable.append((True, int(comp)))  # Convert numeric parts to integers
+                    else:
+                        comparable.append((False, comp))  # Keep non-numeric parts as strings
+                return comparable
+
             if page == 0 and slot == 0:
                 return save_name, ""
 
-            return page, slot
+            # Use the comparable function to prepare page and slot
+            return make_comparable(page), make_comparable(slot)
 
         @staticmethod
         def name_to_directory_name(title):
