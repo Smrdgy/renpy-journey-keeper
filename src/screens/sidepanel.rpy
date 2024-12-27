@@ -38,7 +38,7 @@ screen URPS_Sidepanel():
                 use URPS_IconButton('\ueb73', tt="Select playthrough", ttSide=tooltip_side, action=Show("URPS_PlaythroughsPicker")):
                     frame xysize (0, 0) offset URPS.adjustable((-10, -5)) style "URPS_default":
                         if amount_of_playthroughs > 1:
-                            text "{b}[amount_of_playthroughs]{/b}" size URPS.adjustable(15) outlines [(5, "#000000", 0, 0)] color URPS.Colors.theme
+                            text "{b}[amount_of_playthroughs]{/b}" size URPS.adjustable(15) outlines [(URPS.adjustable(5), "#000000", 0, 0)] color URPS.Colors.theme
 
                 use URPS_IconButton('\uea20', tt="New playthrough", ttSide=tooltip_side, action=Show("URPS_EditPlaythrough", playthrough=None))
                 use URPS_IconButton('\ue02c', tt="Open memories", ttSide=tooltip_side, action=Show("URPS_MemoriesLibrary"), disabled=not URPS.Settings.memoriesEnabled)
