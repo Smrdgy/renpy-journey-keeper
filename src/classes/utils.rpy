@@ -101,28 +101,17 @@ init -2000 python in URPS:
         
         @staticmethod
         def __custom_saves_sort(save_name):
-            page, slot = Utils.splitSavename(save_name)
+            value = str(save_name)  # Ensure the value is treated as a string
+            components = re.findall(r'\d+|\D+', value)  # Split into numbers and non-numbers
+            comparable = []
+            for comp in components:
+                # https://stackoverflow.com/a/49829913
+                if comp.isdigit():
+                    comparable.append((False, int(comp)))  # Convert numeric parts to integers
+                else:
+                    comparable.append((True, comp))  # Keep non-numeric parts as strings
 
-            def make_comparable(value):
-                """
-                Forces value into string and separates numeric components from non-numeric parts.
-                Returns a list of tuples (is_digit, value) for comparison.
-                """
-                value = str(value)  # Ensure the value is treated as a string
-                components = re.findall(r'\d+|\D+', value)  # Split into numbers and non-numbers
-                comparable = []
-                for comp in components:
-                    if comp.isdigit():
-                        comparable.append((True, int(comp)))  # Convert numeric parts to integers
-                    else:
-                        comparable.append((False, comp))  # Keep non-numeric parts as strings
-                return comparable
-
-            if page == 0 and slot == 0:
-                return save_name, ""
-
-            # Use the comparable function to prepare page and slot
-            return make_comparable(page), make_comparable(slot)
+            return comparable
 
         @staticmethod
         def name_to_directory_name(title):
@@ -434,8 +423,8 @@ init -2000 python in URPS:
             for l in self.locations:
                 slot_mtime = l.mtime(slotname)
 
-                if slot_mtime > mtime:
-                    mtime = slot_mtime
+                if slot_mtime or 0 > mtime or 0:
+                    mtime = slot_mtime or 0
                     location = l
 
             return location

@@ -104,13 +104,9 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
 
                 hbox # Dummy
 
-                textbutton viewModel.source_playthrough.name text_color URPS.Colors.theme:
-                    action ClearSourcePlaythroughAction()
-
-                textbutton "→" action FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough) hovered URPS.OpenTooltipAction(message="Swap playthroughs") unhovered Hide("URPS_TooltipDialog")
-
-                textbutton viewModel.destination_playthrough.name text_color URPS.Colors.theme:
-                    action ClearDestinationPlaythroughAction()
+                use URPS_IconButton(text=viewModel.source_playthrough.name, action=ClearSourcePlaythroughAction(), tt="Change source playthrough", color=URPS.Colors.theme, size=30)
+                use URPS_IconButton(text="→", action=FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough), tt="Swap playthroughs", color=URPS.Colors.theme, size=30)
+                use URPS_IconButton(text=viewModel.destination_playthrough.name, action=ClearDestinationPlaythroughAction(), tt="Change target playthrough", color=URPS.Colors.theme, size=30)
 
                 hbox # Dummy
 

@@ -1,4 +1,4 @@
-screen URPS_IconButton(icon, text=None, action=None, size=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=None, disabled=False, color=None, textColor=None, iconColor=None, toggledColor=None, hovered=None, unhovered=None, hover_color=None, disabled_color=URPS.Colors.disabled, key=None):
+screen URPS_IconButton(icon=None, text=None, action=None, size=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=None, disabled=False, color=None, textColor=None, iconColor=None, toggledColor=None, hovered=None, unhovered=None, hover_color=None, disabled_color=URPS.Colors.disabled, key=None):
     style_prefix "URPS"
 
     python:
