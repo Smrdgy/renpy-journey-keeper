@@ -34,6 +34,7 @@ init 51 python in URPS:
 
     def startInteractCallback():
         SaveSystem.overrideNativeLocation()
+        SaveSystem.multilocation.scan()
 
         if(not renpy.get_screen('URPS_SidepanelHolder')):
             renpy.show_screen('URPS_SidepanelHolder')

@@ -421,10 +421,10 @@ init -2000 python in URPS:
             location = None
 
             for l in self.locations:
-                slot_mtime = l.mtime(slotname)
+                slot_mtime = l.mtime(slotname) or -1
 
-                if slot_mtime or 0 > mtime or 0:
-                    mtime = slot_mtime or 0
+                if slot_mtime > mtime:
+                    mtime = slot_mtime
                     location = l
 
             return location

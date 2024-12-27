@@ -57,14 +57,14 @@ screen URPS_MoveCopySavesOverwriteConfirm(save, viewModel):
                     if source_screenshot:
                         add source_screenshot size URPS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
                     else:
-                        add ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
+                        add URPS.ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
                     text "→" size URPS.adjustable(40) align (0.5, 0.5)
 
                     if target_screenshot:
                         add target_screenshot size URPS.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
                     else:
-                        add ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
+                        add URPS.ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
             use URPS_YSpacer()
 
