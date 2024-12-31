@@ -28,11 +28,8 @@ screen URPS_MemoriesLibrary():
                 spacing 20
 
                 for slotname in memories:
-                    button:
-                        key_events True
-                        xmaximum renpy.config.screen_width
-                        ymaximum renpy.config.screen_height
-                        background URPS.Colors.block_background
+                    button style "URPS_playthrough_button":
+                        xmaximum renpy.config.thumbnail_width
                         action [Hide("URPS_MemoriesLibrary"), URPS.Memories.LoadMemoryWithConfirm(slotname)]
 
                         vbox:
@@ -43,9 +40,9 @@ screen URPS_MemoriesLibrary():
 
                             add URPS.Memories.GetScreenshot(slotname) xalign 0.5
 
-                            text slotname
+                            text URPS.Memories.saveInstance.location.save_name(slotname) xalign 0.5 text_align 0.5
 
-                            key "save_delete" action FileDelete(slotname)
+                            key "save_delete" action URPS.Memories.DeleteMemoryConfirm(slotname)
 
                 for _ in range(0, spotsToFill):
                     text ""

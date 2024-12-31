@@ -5,6 +5,8 @@ screen URPS_SaveMemory():
 
     default name = ''
 
+    default name_input = URPS.TextInput("name", auto_focus=True)
+
     python:
         submitAction = [
             URPS.Memories.CreateMemory(name=name),
@@ -16,7 +18,7 @@ screen URPS_SaveMemory():
 
         vbox:
             text "Name:"
-            add URPS.TextInput(variableName="name", editable=True)
+            add name_input.displayable(placeholder="Enter name or leave blank to generate one")
 
         hbox:
             xfill True
@@ -27,7 +29,7 @@ screen URPS_SaveMemory():
             vbox:
                 # Save
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="Save", action=submitAction, disabled=not name, key="ctrl_K_s")
+                    use URPS_IconButton(icon="\ue161", text="Save", action=submitAction, key="ctrl_K_s")
 
                 # Close
                 hbox:

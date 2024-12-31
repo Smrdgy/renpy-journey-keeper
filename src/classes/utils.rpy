@@ -115,8 +115,6 @@ init -2000 python in URPS:
 
         @staticmethod
         def name_to_directory_name(title):
-            import re
-
             # Define invalid characters and their replacements
             replacements = {
                 ':': '；',  # full-width semicolon
@@ -146,50 +144,6 @@ init -2000 python in URPS:
             # Additional platform-specific adjustments can be added here
 
             return directory_name
-
-        @staticmethod
-        def createSaveRecord(extra_info=None):
-            roots = renpy.game.log.freeze(None)
-
-            extra_info = extra_info or ""
-
-            if renpy.config.save_dump:
-                renpy.loadsave.save_dump(roots, renpy.game.log)
-
-            logf = io.BytesIO()
-
-            try:
-                renpy.loadsave.dump((roots, renpy.game.log), logf)
-            except:
-                t, e, tb = sys.exc_info()
-
-                try:
-                    bad = renpy.loadsave.find_bad_reduction(roots, renpy.game.log)
-                except:
-                    print("Autosave failure: ", t, e, tb)
-                    renpy.notify("Autosave failed. Check log.txt for more info.")
-                    return
-
-                if bad is None:
-                    print("Autosave failure: ", t, e, tb)
-                    renpy.notify("Autosave failed. Check log.txt for more info.")
-                    return
-
-                if e.args:
-                    e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
-
-                print("Autosave failure: ", t, e, tb)
-                renpy.notify("Autosave failed. Check log.txt for more info.")
-                return
-
-            json = { "_save_name" : extra_info, "_renpy_version" : list(renpy.version_tuple), "_version" : renpy.config.version }
-
-            for i in renpy.config.save_json_callbacks:
-                i(json)
-
-            json = json_dumps(json)
-
-            return renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
 
         @staticmethod
         def getSlotsPerPage():
@@ -511,6 +465,24 @@ init -2000 python in URPS:
                     multilocation.scan()
 
                 return True
+
+        def save_json(self, slotname, include_inactive=True):
+            if include_inactive:
+                l = self.newest_including_inactive(slotname)
+
+                if l is None:
+                    return None
+
+                return l.json(slotname)
+
+            return self.json(slotname)
+
+        def save_name(self, slotname, include_inactive=True):
+            save_json = self.save_json(slotname, include_inactive=include_inactive)
+            if save_json:
+                return save_json.get("_save_name", None)
+
+            return None
 
     class FileLocation(renpy.savelocation.FileLocation):
         def copy_into_other_directory(self, old, new, destination, scan=True):

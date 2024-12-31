@@ -30,3 +30,4 @@ screen URPS_Confirm(title=None, message=None, yes=None, no=None, yesText=None, n
 init python in URPS:
     def showConfirm(title="Confirm", message=None, yes=None, no=None, yesText="Yes", noText="No", yesIcon="\ue876", noIcon="\ue5cd", yesColor=None, noColor=None):
         renpy.show_screen("URPS_Confirm", title, message, yes, no, yesText, noText, yesIcon, noIcon, yesColor, noColor)
+        renpy.restart_interaction()

@@ -1,6 +1,8 @@
 init 1 python in URPS:
     _constant = True
 
+    import time
+
     class MemoriesClass(x52NonPicklable):
         def __init__(self):
             self.memoryInProgress = False
@@ -88,6 +90,54 @@ init 1 python in URPS:
             self.restoreStoreBackup = None
             self.restoreContext = None
 
+        @staticmethod
+        def createSaveRecord(extra_info=None, log=None):
+            log = log or renpy.game.log
+            roots = log.freeze(None)
+
+            extra_info = extra_info or ""
+
+            if renpy.config.save_dump:
+                renpy.loadsave.save_dump(roots, log)
+
+            logf = io.BytesIO()
+
+            try:
+                renpy.loadsave.dump((roots, log), logf)
+            except:
+                t, e, tb = sys.exc_info()
+
+                try:
+                    bad = renpy.loadsave.find_bad_reduction(roots, log)
+                except:
+                    print("Memory save failure:\n", t, e, tb)
+                    renpy.notify("Memory save failed. Check log.txt for more info.")
+                    return
+
+                if bad is None:
+                    print("Memory save failure:\n", t, e, tb)
+                    renpy.notify("Memory save failed. Check log.txt for more info.")
+                    return
+
+                if e.args:
+                    e.args = (e.args[0] + ' (perhaps {})'.format(bad),) + e.args[1:]
+
+                print("Memory save failure:\n", t, e, tb)
+                renpy.notify("Memory save failed. Check log.txt for more info.")
+                return
+
+            json = { "_save_name" : extra_info, "_renpy_version" : list(renpy.version_tuple), "_version" : renpy.config.version }
+
+            for i in renpy.config.save_json_callbacks:
+                i(json)
+
+            json = json_dumps(json)
+
+            save_record = renpy.loadsave.SaveRecord(None, extra_info, json, logf.getvalue())
+            save_record.screenshot = renpy.game.interface.get_screenshot()
+
+            return save_record
+
         class OpenSaveMemory(renpy.ui.Action):
             def __call__(self):
                 renpy.take_screenshot()
@@ -99,14 +149,11 @@ init 1 python in URPS:
                 self.name = name
 
             def __call__(self):
-                name = self.name if not callable(self.name) else self.name()
-
                 saveInstance = Memories.saveInstance
-                saveRecord = Utils.createSaveRecord()
-                saveRecord.screenshot = renpy.game.interface.get_screenshot()
-                
+                saveRecord = MemoriesClass.createSaveRecord(extra_info=self.name)
+
                 for location in saveInstance.location.locations:
-                    location.save(name, saveRecord)
+                    location.save(str(time.time())[:-3], saveRecord)
 
                 saveInstance.location.scan()
                 
@@ -154,3 +201,26 @@ init 1 python in URPS:
                 return screenshot
 
             return ImagePlaceholder(width=renpy.config.thumbnail_width, height=renpy.config.thumbnail_height)
+
+        class DeleteMemory(renpy.ui.Action):
+            def __init__(self, slotname):
+                self.slotname = slotname
+
+            def __call__(self):
+                Memories.saveInstance.location.unlink_save(self.slotname)
+                renpy.restart_interaction()
+
+        class DeleteMemoryConfirm(renpy.ui.Action):
+            def __init__(self, slotname):
+                self.slotname = slotname
+
+            def __call__(self):
+                name = Memories.saveInstance.location.save_name(self.slotname) or self.slotname
+
+                showConfirm(
+                    title="Delete memory \"{}\"".format(name),
+                    message="This action {u}{color=[URPS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    yes=Memories.DeleteMemory(self.slotname),
+                    yesIcon="\ue92b",
+                    yesColor=Colors.error
+                )
