@@ -26,7 +26,7 @@ init 1 python in URPS:
             saveInstance.location.deactivateLocations()
             return memories
 
-        def callCustomReplay(self, savename):
+        def callCustomReplay(self, slotname):
             self.saveInstance.location.activateLocations()
 
             # Backup current session
@@ -50,7 +50,7 @@ init 1 python in URPS:
 
             Memories.memoryInProgress = True
 
-            roots, log = renpy.loadsave.loads(self.saveInstance.location.load(savename))
+            roots, log = renpy.loadsave.loads(self.saveInstance.location.load(slotname))
             log.unfreeze(roots)
 
             # renpy.execution.run_context(False)
@@ -160,27 +160,27 @@ init 1 python in URPS:
                 renpy.restart_interaction()
 
         class LoadMemoryWithConfirm(renpy.ui.Action):
-            def __init__(self, savename):
-                self.savename = savename
+            def __init__(self, slotname):
+                self.slotname = slotname
 
             def __call__(self):
                 if renpy.context()._main_menu:
-                    Memories.callCustomReplay(self.savename)
+                    Memories.callCustomReplay(self.slotname)
                 else:
                     showConfirm(
                         title="Load memory",
                         message="Viewing a memory will quit your current session and your current progress will be lost.\nProceed?",
-                        yes=Memories.LoadMemory(self.savename),
+                        yes=Memories.LoadMemory(self.slotname),
                     )
 
                 renpy.restart_interaction()
 
         class LoadMemory(renpy.ui.Action):
-            def __init__(self, savename):
-                self.savename = savename
+            def __init__(self, slotname):
+                self.slotname = slotname
 
             def __call__(self):
-                Memories.callCustomReplay(self.savename)
+                Memories.callCustomReplay(self.slotname)
 
                 renpy.restart_interaction()
 

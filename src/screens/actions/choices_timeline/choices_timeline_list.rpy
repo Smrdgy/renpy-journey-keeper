@@ -73,7 +73,7 @@ screen URPS_ChoicesTimelineList(viewModel, show_thumbnails, search):
                     spacing (3 if show_thumbnails else 0)
 
                     for entry in timeline:
-                        $ page, slot = URPS.Utils.splitSavename(entry[2])
+                        $ page, slot = URPS.Utils.split_slotname(entry[2])
 
                         button style "URPS_text":
                             action [FileLoad(slot, confirm=True, page=page), Hide("URPS_ChoicesTimeline")]

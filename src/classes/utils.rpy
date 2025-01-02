@@ -75,19 +75,19 @@ init -2000 python in URPS:
 
     class Utils(x52NonPicklable):
         @staticmethod
-        def splitSavename(save_name):
+        def split_slotname(slotname):
             try:
-                page, slot = save_name.split('-')
+                page, slot = slotname.split('-')
 
                 if page.isdigit() and slot.isdigit():
                     return int(page), int(slot)
                 
                 if Settings.debugEnabled:
-                    print("Can't resolve save name ", save_name)
+                    print("Can't resolve slotname ", slotname)
                 return 0, 0
             except:
                 if Settings.debugEnabled:
-                    print("Can't resolve save name ", save_name)
+                    print("Can't resolve slotname ", slotname)
                 return 0, 0
 
         @staticmethod
@@ -100,8 +100,8 @@ init -2000 python in URPS:
             return sorted(saves_list, key=Utils.__custom_saves_sort)
         
         @staticmethod
-        def __custom_saves_sort(save_name):
-            value = str(save_name)  # Ensure the value is treated as a string
+        def __custom_saves_sort(slotname):
+            value = str(slotname)  # Ensure the value is treated as a string
             components = re.findall(r'\d+|\D+', value)  # Split into numbers and non-numbers
             comparable = []
             for comp in components:

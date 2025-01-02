@@ -68,7 +68,7 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                         $ i = 0
                         for save in viewModel.all_saves:
                             python:
-                                page, slot = URPS.Utils.splitSavename(save)
+                                page, slot = URPS.Utils.split_slotname(save)
                                 id = (save, None) if selection_mode == "PER_SAVE" else (save, location)
                                 i += 1
                                 file_page_name = renpy.store.persistent._file_page_name.get(str(page), None) or renpy.store.persistent._file_page_name.get(page, None)

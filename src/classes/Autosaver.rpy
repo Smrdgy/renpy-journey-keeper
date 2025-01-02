@@ -26,7 +26,7 @@ init -999 python in URPS:
             return Utils.getSlotsPerPage()
 
         def setActiveSlot(self, slotname):
-            page, slot = Utils.splitSavename(slotname)
+            page, slot = Utils.split_slotname(slotname)
 
             #Last resort check to counter forced autosaves screwing up the counter (e.g. $ renpy.save("auto-1") somewhere in the dialog)
             if page != 0 and slot != 0:
@@ -34,7 +34,7 @@ init -999 python in URPS:
                 renpy.store.URPS_ActiveSlot = slotname
 
         def getNextSlot(self):
-            page, slot = Utils.splitSavename(renpy.store.URPS_ActiveSlot)
+            page, slot = Utils.split_slotname(renpy.store.URPS_ActiveSlot)
 
             slot += 1
 
@@ -48,12 +48,12 @@ init -999 python in URPS:
 
         def getCurrentSlot(self):
             slotString = renpy.store.URPS_ActiveSlot
-            page, slot = Utils.splitSavename(slotString)
+            page, slot = Utils.split_slotname(slotString)
 
             return page, slot, slotString
 
         def getPreviousSlot(self):
-            page, slot = Utils.splitSavename(renpy.store.URPS_ActiveSlot)
+            page, slot = Utils.split_slotname(renpy.store.URPS_ActiveSlot)
 
             slot -= 1
 
