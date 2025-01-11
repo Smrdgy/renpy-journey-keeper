@@ -5,8 +5,8 @@ init -99 python in URPS:
         def new_funct(*new_args, **new_kwargs):
             new_kwargs.update(kwargs.copy())
         
-            # Prevent making any autosave actions when viewing a memory or a replay
-            if not Memories.memoryInProgress and not renpy.store._in_replay and (Settings.autosaveOnSingletonChoice or Utils.isDisplayingMultipleChoices()):
+            # Prevent making any autosave action when the game is not initialized yet or the player is viewing a memory or a replay
+            if not Autosaver.prevent_autosaving and not Memories.memoryInProgress and not renpy.store._in_replay and (Settings.autosaveOnSingletonChoice or Utils.isDisplayingMultipleChoices()):
                 Autosaver.handleChoiceSelection(new_args[0])
 
             fn = func(*(args + new_args), **new_kwargs)

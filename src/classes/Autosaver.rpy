@@ -20,6 +20,7 @@ init -999 python in URPS:
             self.afterLoadSavePositionPending = False
             self.lastChoice = None
             self.activeSlotPending = None
+            self.prevent_autosaving = Settings.preventAutosavingWhileNotInGame
 
         @property
         def slotsPerPage(self):

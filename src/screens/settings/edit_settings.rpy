@@ -75,6 +75,14 @@ screen URPS_Settings():
                             use URPS_ToggleSettingGlobalizationButton("autosaveKey")
                         use URPS_KeyInput(assignment=URPS.Settings.autosaveKey, action=URPS.Settings.SetAutosaveToggleKey)
 
+                        use URPS_YSpacer(2)
+
+                        use URPS_Title("Advanced", size=3, color=URPS.Colors.warning)
+
+                        hbox:
+                            use URPS_Checkbox(checked=URPS.Settings.preventAutosavingWhileNotInGame, text="Restict autosave to in-game only", action=URPS.Settings.TogglePreventAutosavingWhileNotInGameEnabled())
+                            use URPS_Helper("Some games might not properly indicate when the game starts, which could prevent autosave on choices from working. Disabling this setting {b}may{/b} allow autosave to function as intended.\n\nFor technically apt users: The mod waits for the {u}start{/u} label to allow autosaving to function.\n\n{color=[URPS.Colors.warning]}Warning! Disabling this might cause save(s) loss. For example, an 18+ age check might overwrite the 1-1 save slot, if it shows up before the main menu.{/color}")
+
                 use URPS_YSpacer()
 
                 # Quick save

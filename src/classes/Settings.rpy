@@ -62,6 +62,7 @@ init -1000 python in URPS:
             self.globalizedSettings = data.get("globalizedSettings", [])
             self.autosaveOnSingletonChoice = data.get("autosaveOnSingletonChoice", True)
             self.playthroughTemplate = data.get("playthroughTemplate", None)
+            self.preventAutosavingWhileNotInGame = data.get("preventAutosavingWhileNotInGame", True)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -93,6 +94,7 @@ init -1000 python in URPS:
                 'pageFollowsAutoSave': self.pageFollowsAutoSave,
                 'autosaveOnSingletonChoice': self.autosaveOnSingletonChoice,
                 'playthroughTemplate': self.playthroughTemplate,
+                'preventAutosavingWhileNotInGame': self.preventAutosavingWhileNotInGame,
             })
 
         def getGlobalSettingsAsJson(self):
@@ -407,6 +409,15 @@ init -1000 python in URPS:
 
             def __call__(self):
                 Settings.playthroughTemplate = self.template.serializable_for_template()
+
+                Settings.save()
+                renpy.restart_interaction()
+
+        class TogglePreventAutosavingWhileNotInGameEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.preventAutosavingWhileNotInGame = not Settings.preventAutosavingWhileNotInGame
+
+                Autosaver.prevent_autosaving = False
 
                 Settings.save()
                 renpy.restart_interaction()

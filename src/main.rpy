@@ -22,6 +22,8 @@ init 51 python in URPS:
         Playthroughs.activateNative()
 
     def afterLoadCallback():
+        Autosaver.prevent_autosaving = False
+
         if(Autosaver.activeSlotPending != None):
             Autosaver.suppressAutosaveConfirm = False
             Autosaver.setActiveSlot(Autosaver.activeSlotPending)
@@ -51,6 +53,14 @@ init 51 python in URPS:
     def saveJsonCallback(json):
         if Autosaver.pendingSave:
             json["_URPS_choice"] = Autosaver.pendingSave.choice
+
+    def wait_for_start_label_callback(statement):
+        if Autosaver.prevent_autosaving and statement == "label":
+            current = renpy.game.context().current
+            script = renpy.game.script.lookup(current)
+
+            if script.name == "start":
+                Autosaver.prevent_autosaving = False
 
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):
@@ -104,6 +114,7 @@ init 999 python in URPS:
     renpy.config.after_load_callbacks.append(afterLoadCallback)
     renpy.config.start_interact_callbacks.append(startInteractCallback)
     renpy.config.save_json_callbacks.append(saveJsonCallback)
+    renpy.config.statement_callbacks.append(wait_for_start_label_callback)
 
     # Input.
     renpy.config.keymap.update({
