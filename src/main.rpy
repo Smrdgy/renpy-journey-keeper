@@ -1,6 +1,8 @@
 init -1000 python in URPS:
     _constant = True
 
+    print("Initializing {} v{}".format(MOD_NAME, MOD_VERSION))
+
     Settings = SettingsClass()
 
 init 51 python in URPS:
@@ -138,3 +140,5 @@ init 999 python in URPS:
         # 'input_next_input': ['noshift_K_TAB'], #TODO: Finish prev/next input via TAB
         # 'input_prev_input': ['shift_K_TAB']
     })
+
+    print("{} is ready".format(MOD_NAME))
