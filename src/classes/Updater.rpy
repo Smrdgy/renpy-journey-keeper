@@ -227,6 +227,10 @@ init 1 python in URPS:
             def __call__(self):
                 Updater.check_for_update(ignore_blacklist=True, ignore_force_auto_update=True)
 
+        class RestartGame(renpy.ui.Action):
+            def __call__(self):
+                renpy.utter_restart()
+
     try:
         import urllib2 as _urllib_request
         import urllib2 as _urllib_error

@@ -19,9 +19,9 @@ screen URPS_PendingUpdateSuccess():
         style_prefix "URPS_dialog_action_buttons"
 
         vbox:
-            # Quit game
+            # Restart game
             hbox:
-                use URPS_IconButton(icon="\ue9ba", text="Quit game", action=Quit(confirm=False))
+                use URPS_IconButton(icon="\ue9ba", text="Restart the game", action=URPS.Updater.RestartGame())
 
             # Close
             hbox:
