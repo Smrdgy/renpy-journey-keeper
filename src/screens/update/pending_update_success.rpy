@@ -1,5 +1,5 @@
-screen URPS_PendingUpdateSuccess():
-    style_prefix 'URPS'
+screen JK_PendingUpdateSuccess():
+    style_prefix 'JK'
     modal True
 
     vbox:
@@ -8,21 +8,21 @@ screen URPS_PendingUpdateSuccess():
         ymaximum 0.85
 
         vbox align (0.5, 0.5):
-            use URPS_Title("Update installed successfully.", color=URPS.Colors.success)
-            use URPS_InfoBox("Restart the game to see the changes.")
+            use JK_Title("Update installed successfully.", color=JK.Colors.success)
+            use JK_InfoBox("Restart the game to see the changes.")
 
     # Dialog footer
     hbox:
         xfill True
         yfill True
 
-        style_prefix "URPS_dialog_action_buttons"
+        style_prefix "JK_dialog_action_buttons"
 
         vbox:
             # Restart game
             hbox:
-                use URPS_IconButton(icon="\ue9ba", text="Restart the game", action=URPS.Updater.RestartGame())
+                use JK_IconButton(icon="\ue9ba", text="Restart the game", action=JK.Updater.RestartGame())
 
             # Close
             hbox:
-                use URPS_IconButton(icon="", text="OK", action=Hide("URPS_PendingUpdate"))
+                use JK_IconButton(icon="", text="OK", action=Hide("JK_PendingUpdate"))

@@ -1,11 +1,11 @@
-screen URPS_MovePlaythroughDirectoryError(errors=[]):
-    layer "URPS_Overlay"
-    style_prefix "URPS"
+screen JK_MovePlaythroughDirectoryError(errors=[]):
+    layer "JK_Overlay"
+    style_prefix "JK"
     modal True
 
     $ errorsLen = len(errors)
 
-    use URPS_Dialog(title="Failed to rename directories", closeAction=Hide("URPS_MovePlaythroughDirectoryError")):
+    use JK_Dialog(title="Failed to rename directories", closeAction=Hide("JK_MovePlaythroughDirectoryError")):
         viewport:
             mousewheel True
             draggable True
@@ -14,9 +14,9 @@ screen URPS_MovePlaythroughDirectoryError(errors=[]):
             ymaximum 0.85
 
             vbox:
-                text "{b}{color=[URPS.Colors.theme]}[errorsLen]{/c}{/b} directory(s) failed to move:"
+                text "{b}{color=[JK.Colors.theme]}[errorsLen]{/c}{/b} directory(s) failed to move:"
 
-                use URPS_YSpacer(offset=3)
+                use JK_YSpacer(offset=3)
 
                 for error in errors:
                     python:
@@ -29,23 +29,23 @@ screen URPS_MovePlaythroughDirectoryError(errors=[]):
 
                     hbox:
                         textbutton error[0]:
-                            action URPS.OpenDirectoryAction(path=error[0])
+                            action JK.OpenDirectoryAction(path=error[0])
 
-                        use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=error[0]))
+                        use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=error[0]))
 
                         textbutton " - "
                         textbutton errorText:
-                            text_color URPS.Colors.error
+                            text_color JK.Colors.error
 
         hbox:
             xfill True
             yfill True
 
-            style_prefix "URPS_dialog_action_buttons"
+            style_prefix "JK_dialog_action_buttons"
 
             vbox:
                 # Close
                 hbox:
-                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_MovePlaythroughDirectoryError"))
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_MovePlaythroughDirectoryError"))
 
         

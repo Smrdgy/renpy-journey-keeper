@@ -1,5 +1,5 @@
-screen URPS_MoveCopySavesSuccess():
-    style_prefix 'URPS'
+screen JK_MoveCopySavesSuccess():
+    style_prefix 'JK'
     modal True
 
     vbox:
@@ -8,16 +8,16 @@ screen URPS_MoveCopySavesSuccess():
         ymaximum 0.85
 
         vbox align (0.5, 0.5):
-            use URPS_Title("Done", color=URPS.Colors.success)
+            use JK_Title("Done", color=JK.Colors.success)
 
     # Dialog footer
     hbox:
         xfill True
         yfill True
 
-        style_prefix "URPS_dialog_action_buttons"
+        style_prefix "JK_dialog_action_buttons"
 
         vbox:
             # Close
             hbox:
-                use URPS_IconButton(icon="", text="OK", action=Hide("URPS_MoveCopySaves"))
+                use JK_IconButton(icon="", text="OK", action=Hide("JK_MoveCopySaves"))

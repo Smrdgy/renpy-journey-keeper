@@ -1,20 +1,20 @@
-screen URPS_SaveMemory():
-    layer "URPS_Overlay"
-    style_prefix 'URPS'
+screen JK_SaveMemory():
+    layer "JK_Overlay"
+    style_prefix 'JK'
     modal True
 
     default name = ''
 
-    default name_input = URPS.TextInput("name", auto_focus=True)
+    default name_input = JK.TextInput("name", auto_focus=True)
 
     python:
         submitAction = [
-            URPS.Memories.CreateMemory(name=name),
-            Hide('URPS_SaveMemory')
+            JK.Memories.CreateMemory(name=name),
+            Hide('JK_SaveMemory')
         ]
 
-    use URPS_Dialog(title="Save memory", closeAction=Hide("URPS_SaveMemory")):
-        style_prefix "URPS"
+    use JK_Dialog(title="Save memory", closeAction=Hide("JK_SaveMemory")):
+        style_prefix "JK"
 
         vbox:
             text "Name:"
@@ -24,13 +24,13 @@ screen URPS_SaveMemory():
             xfill True
             yfill True
 
-            style_prefix "URPS_dialog_action_buttons"
+            style_prefix "JK_dialog_action_buttons"
 
             vbox:
                 # Save
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="Save", action=submitAction, key="ctrl_K_s")
+                    use JK_IconButton(icon="\ue161", text="Save", action=submitAction, key="ctrl_K_s")
 
                 # Close
                 hbox:
-                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_SaveMemory"))
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SaveMemory"))

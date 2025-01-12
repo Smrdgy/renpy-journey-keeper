@@ -1,5 +1,5 @@
-screen URPS_PendingUpdateError(error):
-    style_prefix 'URPS'
+screen JK_PendingUpdateError(error):
+    style_prefix 'JK'
     modal True
 
     vbox:
@@ -9,30 +9,30 @@ screen URPS_PendingUpdateError(error):
 
         vbox align (0.5, 0.5):
             hbox xalign 0.5:
-                use URPS_Title("Error", color=URPS.Colors.danger)
+                use JK_Title("Error", color=JK.Colors.danger)
 
-            use URPS_YSpacer(offset=2)
+            use JK_YSpacer(offset=2)
 
             vbox xalign 0.5:
                 text error xalign 0.5 text_align 0.5
 
-                use URPS_YSpacer(offset=2)
+                use JK_YSpacer(offset=2)
 
                 text "For more information check log.txt" xalign 0.5 text_align 0.5
-                text "If this isn't a user error (e.g. incorrect permissions), please report it at {a=https://github.com/[URPS.MOD_GITHUB_OWNER]/[URPS.MOD_GITHUB_REPO]/issues}https://github.com/[URPS.MOD_GITHUB_OWNER]/[URPS.MOD_GITHUB_REPO]/issues{/a}" xalign 0.5 text_align 0.5
+                text "If this isn't a user error (e.g. incorrect permissions), please report it at {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues}https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues{/a}" xalign 0.5 text_align 0.5
 
     # Dialog footer
     hbox:
         xfill True
         yfill True
 
-        style_prefix "URPS_dialog_action_buttons"
+        style_prefix "JK_dialog_action_buttons"
 
         vbox:
             # OK
             hbox:
-                use URPS_IconButton(icon="\ue5d5", text="Retry", action=URPS.Updater.InstallUpdateAction())
+                use JK_IconButton(icon="\ue5d5", text="Retry", action=JK.Updater.InstallUpdateAction())
 
             # Close
             hbox:
-                use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_PendingUpdate"))
+                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_PendingUpdate"))

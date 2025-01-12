@@ -1,5 +1,5 @@
-screen URPS_SavesListProcessing(viewModel):
-    style_prefix 'URPS'
+screen JK_SavesListProcessing(viewModel):
+    style_prefix 'JK'
     modal True
 
     python:
@@ -23,9 +23,9 @@ screen URPS_SavesListProcessing(viewModel):
             xmaximum 0.85
 
             hbox xalign 0.5:
-                use URPS_Title("Removing saves...")
+                use JK_Title("Removing saves...")
 
-            use URPS_YSpacer()
+            use JK_YSpacer()
 
             text "[processed]/[to_process]" xalign 0.5
             bar value processed range to_process
@@ -35,12 +35,12 @@ screen URPS_SavesListProcessing(viewModel):
         xfill True
         yfill True
 
-        style_prefix "URPS_dialog_action_buttons"
+        style_prefix "JK_dialog_action_buttons"
 
         vbox:
             hbox:
-                use URPS_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=URPS.Colors.danger)
+                use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=JK.Colors.danger)
 
             # Close
             hbox:
-                use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_SavesList"))
+                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SavesList"))

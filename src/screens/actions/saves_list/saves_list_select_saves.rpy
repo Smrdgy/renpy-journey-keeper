@@ -1,5 +1,5 @@
-screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_selected_save, selection_mode, show_thumbnails):
-    style_prefix 'URPS'
+screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_selected_save, selection_mode, show_thumbnails):
+    style_prefix 'JK'
     modal True
 
     python:
@@ -8,12 +8,12 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
         row_height = 80 if show_thumbnails else 50
         col_size = 1.0 / len(viewModel.locations) - 0.01
 
-    key "ctrl_K_a" action URPS.SavesListViewModel.SelectAllAction(viewModel, selection_mode)
+    key "ctrl_K_a" action JK.SavesListViewModel.SelectAllAction(viewModel, selection_mode)
 
-    hbox ysize URPS.adjustable(42):
+    hbox ysize JK.adjustable(42):
         xfill True
 
-        frame style ("URPS_toolbar" if selected_length == 0 else "URPS_toolbar_active"):
+        frame style ("JK_toolbar" if selected_length == 0 else "JK_toolbar_active"):
             hbox yalign 0.5:
                 hbox yalign 0.5:
                     if selected_length == 0:
@@ -22,16 +22,16 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                         text "[selected_length] item(s) selected"
 
                 if selected_length == 0:
-                    use URPS_IconButton(icon="\ue5d5", action=URPS.SavesListViewModel.RefreshSavesAction(viewModel), tt="Rescan saves")
+                    use JK_IconButton(icon="\ue5d5", action=JK.SavesListViewModel.RefreshSavesAction(viewModel), tt="Rescan saves")
 
             hbox xalign 0.5 yalign 0.5:
-                use URPS_IconButton(icon="\ue8fe", text="Per save selection", action=URPS.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggledColor=URPS.Colors.selected)
-                use URPS_IconButton(icon="\ue949", text="Per directory selection", action=URPS.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_DIRECTORY"), toggled=selection_mode == "PER_DIRECTORY", toggledColor=URPS.Colors.selected)
+                use JK_IconButton(icon="\ue8fe", text="Per save selection", action=JK.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggledColor=JK.Colors.selected)
+                use JK_IconButton(icon="\ue949", text="Per directory selection", action=JK.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_DIRECTORY"), toggled=selection_mode == "PER_DIRECTORY", toggledColor=JK.Colors.selected)
 
             if selected_length > 0:
                 hbox xpos 1.0 xanchor 1.0:
                     # Delete selection
-                    use URPS_IconButton(icon="\ue872", action=URPS.SavesListViewModel.MassDeleteConfirmAction(viewModel), tt="Delete {} save(s)".format(selected_length), ttSide="left")
+                    use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.MassDeleteConfirmAction(viewModel), tt="Delete {} save(s)".format(selected_length), ttSide="left")
 
     viewport:
         mousewheel True
@@ -41,16 +41,16 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
         ymaximum 0.85
 
         vbox:
-            use URPS_YSpacer()
+            use JK_YSpacer()
 
             hbox xalign 1.0:
                 xfill True
 
                 hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
                     # Toggle thumbnails
-                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use JK_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
-                    use URPS_XSpacer(offset=2)
+                    use JK_XSpacer(offset=2)
 
             grid len(viewModel.locations) 1:
                 spacing (1 if selection_mode == "PER_SAVE" else 5)
@@ -61,43 +61,43 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
                         xsize col_size
 
                         hbox:
-                            text location.directory size URPS.adjustable(10) yalign 0.5
+                            text location.directory size JK.adjustable(10) yalign 0.5
 
-                            use URPS_IconButton(icon="\ue2c8", action=URPS.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
+                            use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
 
                         $ i = 0
                         for save in viewModel.all_saves:
                             python:
-                                page, slot = URPS.Utils.split_slotname(save)
+                                page, slot = JK.Utils.split_slotname(save)
                                 id = (save, None) if selection_mode == "PER_SAVE" else (save, location)
                                 i += 1
                                 file_page_name = renpy.store.persistent._file_page_name.get(str(page), None) or renpy.store.persistent._file_page_name.get(page, None)
 
                             if file_page_name and slot == 1:
-                                use URPS_Title(file_page_name, size=2)
+                                use JK_Title(file_page_name, size=2)
 
                             if save in saves:
                                 button:
-                                    ysize URPS.adjustable(row_height)
+                                    ysize JK.adjustable(row_height)
                                     xsize 1.0
-                                    style ("URPS_row_button" if i % 2 == 0 else "URPS_row_odd_button") selected id in viewModel.selection
+                                    style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button") selected id in viewModel.selection
 
                                     key_events True
-                                    action URPS.SavesListViewModel.SelectionAction(viewModel, id, saves, last_selected_save)
+                                    action JK.SavesListViewModel.SelectionAction(viewModel, id, saves, last_selected_save)
 
                                     if hovered_button != id:
                                         hovered SetScreenVariable('hovered_button', id)
 
-                                    frame style "URPS_default":
+                                    frame style "JK_default":
                                         xsize 1.0
 
                                         hbox:
                                             xfill True
 
-                                            hbox xysize URPS.adjustable((42, 42)) yalign 0.5:
+                                            hbox xysize JK.adjustable((42, 42)) yalign 0.5:
                                                 if hovered_button == id and (directory_index == 0 if selection_mode == "PER_SAVE" else True):
                                                     hbox yalign 0.5:
-                                                        use URPS_Checkbox(checked=id in viewModel.selection, text="", action=ToggleSetMembership(viewModel.selection, id))
+                                                        use JK_Checkbox(checked=id in viewModel.selection, text="", action=ToggleSetMembership(viewModel.selection, id))
 
                                             hbox:
                                                 yalign 0.5
@@ -105,15 +105,15 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
 
                                                 hbox yalign 0.5:
                                                     if show_thumbnails:
-                                                        image location.screenshot(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80) yalign 0.5
+                                                        image location.screenshot(save) size JK.Utils.getLimitedImageSizeWithAspectRatio(100, 80) yalign 0.5
 
-                                                        use URPS_XSpacer(offset=2)
+                                                        use JK_XSpacer(offset=2)
 
                                                     text "[save]" yalign 0.5
 
-                                                    use URPS_XSpacer(2)
+                                                    use JK_XSpacer(2)
 
-                                                    text "{size=-7}" + (location.mtime_as_date(save) or '') + "{/size}" yalign 0.5 xalign 1.0 color URPS.Colors.text_light
+                                                    text "{size=-7}" + (location.mtime_as_date(save) or '') + "{/size}" yalign 0.5 xalign 1.0 color JK.Colors.text_light
 
                                                 hbox:
                                                     xalign 1.0
@@ -121,15 +121,15 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
 
                                                     if hovered_button == id:
                                                         # Load
-                                                        use URPS_IconButton(icon="\ue1c4", action=FileLoad(slot, confirm=True, page=page), tt="Load save")
+                                                        use JK_IconButton(icon="\ue1c4", action=FileLoad(slot, confirm=True, page=page), tt="Load save")
 
                                                         # Delete
-                                                        use URPS_IconButton(icon="\ue872", action=URPS.SavesListViewModel.DeleteSingleConfirmAction(viewModel, (save, location)), tt="Delete save")
+                                                        use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.DeleteSingleConfirmAction(viewModel, (save, location)), tt="Delete save")
                             else:
-                                hbox ysize URPS.adjustable(row_height):
-                                    hbox xysize URPS.adjustable((42, 42))
+                                hbox ysize JK.adjustable(row_height):
+                                    hbox xysize JK.adjustable((42, 42))
 
-                                    text "N/A" yalign 0.5 color URPS.Colors.disabled
+                                    text "N/A" yalign 0.5 color JK.Colors.disabled
 
                         $ directory_index += 1
     
@@ -139,20 +139,20 @@ screen URPS_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_se
         yfill True
 
         vbox:
-            use URPS_YSpacer(offset=2)
+            use JK_YSpacer(offset=2)
 
             text "{color=#abe9ff}click{/color} to select only one"
             text "{color=#abe9ff}shift + click{/color} to select multiple"
             text "{color=#abe9ff}ctrl + click{/color} or {color=#abe9ff}click the checkbox{/color} to select/deselect one"
 
         vbox:
-            style_prefix "URPS_dialog_action_buttons"
+            style_prefix "JK_dialog_action_buttons"
 
             vbox xalign 1.0:
                 # Delete all saves
                 hbox:
-                    use URPS_IconButton(icon="\ue92b", text="Delete all saves", action=[URPS.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("URPS_SavesList")], color=URPS.Colors.danger, key="ctrl_K_d")
+                    use JK_IconButton(icon="\ue92b", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="ctrl_K_d")
 
                 # Close
                 hbox:
-                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_SavesList"))
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SavesList"))

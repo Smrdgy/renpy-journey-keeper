@@ -1,11 +1,11 @@
-init -1001 python in URPS:
+init -1001 python in JK:
     _constant = True
 
     import io
     import os
     import __main__
 
-    savedir = "URPS"
+    savedir = "JK"
 
     class UserDir(x52NonPicklable):
         @staticmethod

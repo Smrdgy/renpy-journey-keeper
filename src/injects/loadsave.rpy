@@ -1,4 +1,4 @@
-init -99 python in URPS:
+init -99 python in JK:
     _constant = True
     
     def before_load(slotname):

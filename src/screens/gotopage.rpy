@@ -1,6 +1,6 @@
-screen URPS_GoToPage():
-    layer "URPS_Overlay"
-    style_prefix 'URPS'
+screen JK_GoToPage():
+    layer "JK_Overlay"
+    style_prefix 'JK'
 
     python:
         class Value(InputValue):
@@ -21,10 +21,10 @@ screen URPS_GoToPage():
 
                         renpy.restart_interaction()
 
-    default page_input = URPS.TextInput("page", value=Value(), auto_focus=True, allowed_characters="0123456789", max_length=6)
+    default page_input = JK.TextInput("page", value=Value(), auto_focus=True, allowed_characters="0123456789", max_length=6)
 
-    use URPS_TooltipDialog():
-        frame style "URPS_default":
-            xysize URPS.adjustable((90, 25))
+    use JK_TooltipDialog():
+        frame style "JK_default":
+            xysize JK.adjustable((90, 25))
 
             add page_input.displayable(placeholder=renpy.store.persistent._file_page)

@@ -1,11 +1,11 @@
-init -1000 python in URPS:
+init -1000 python in JK:
     _constant = True
 
     print("Initializing {} v{}".format(MOD_NAME, MOD_VERSION))
 
     Settings = SettingsClass()
 
-init 51 python in URPS:
+init 51 python in JK:
     _constant = True
 
     Updater = UpdaterClass()
@@ -17,8 +17,8 @@ init 51 python in URPS:
 
     SaveSystem.setupLocations()
 
-    if Playthroughs.activePlaythroughOrNone == None and renpy.store.persistent.URPS_lastActivePlaythrough != None:
-        Playthroughs.activateByID(renpy.store.persistent.URPS_lastActivePlaythrough)
+    if Playthroughs.activePlaythroughOrNone == None and renpy.store.persistent.JK_ActivePlaythrough != None:
+        Playthroughs.activateByID(renpy.store.persistent.JK_ActivePlaythrough)
     
     if Playthroughs.activePlaythroughOrNone is None:
         Playthroughs.activateNative()
@@ -40,21 +40,21 @@ init 51 python in URPS:
         SaveSystem.overrideNativeLocation()
         SaveSystem.multilocation.scan()
 
-        if(not renpy.get_screen('URPS_SidepanelHolder')):
-            renpy.show_screen('URPS_SidepanelHolder')
+        if(not renpy.get_screen('JK_SidepanelHolder')):
+            renpy.show_screen('JK_SidepanelHolder')
 
-        if(not renpy.get_screen('URPS_Overlay')):
-            renpy.show_screen('URPS_Overlay')
+        if(not renpy.get_screen('JK_Overlay')):
+            renpy.show_screen('JK_Overlay')
 
-        if renpy.store.persistent.URPS_SizeAdjustmentRollbackValue != None and renpy.get_screen("URPS_ConfirmSizeAdjustment") is None:
-            renpy.show_screen('URPS_ConfirmSizeAdjustment')
+        if renpy.store.persistent.JK_SizeAdjustmentRollbackValue != None and renpy.get_screen("JK_ConfirmSizeAdjustment") is None:
+            renpy.show_screen('JK_ConfirmSizeAdjustment')
 
         if Settings.updaterEnabled and not Updater.checked_for_update:
             renpy.invoke_in_thread(Updater.check_for_update)
 
     def saveJsonCallback(json):
         if Autosaver.pendingSave:
-            json["_URPS_choice"] = Autosaver.pendingSave.choice
+            json["_JK_choice"] = Autosaver.pendingSave.choice
 
     def wait_for_start_label_callback(statement):
         if Autosaver.prevent_autosaving and statement == "label":
@@ -66,13 +66,13 @@ init 51 python in URPS:
 
     class ToggleSidepanel(renpy.ui.Action):
         def __call__(self):
-            if not hasattr(renpy.config, "URPS_sidepanelVisibilityMode") or renpy.config.URPS_sidepanelVisibilityMode == None:
+            if not hasattr(renpy.config, "JK_sidepanelVisibilityMode") or renpy.config.JK_sidepanelVisibilityMode == None:
                 # Visible at all times
                 SetSidepanelVisibilityAction(visibility=True)()
-            elif renpy.config.URPS_sidepanelVisibilityMode == True:
+            elif renpy.config.JK_sidepanelVisibilityMode == True:
                 # Hidden at all times
                 SetSidepanelVisibilityAction(visibility=False)()
-            elif renpy.config.URPS_sidepanelVisibilityMode == False:
+            elif renpy.config.JK_sidepanelVisibilityMode == False:
                 # Visible only in save/load screen
                 SetSidepanelVisibilityAction(visibility=None)()
             else:
@@ -86,32 +86,32 @@ init 51 python in URPS:
             self.visibility = visibility # True/False/None
 
         def __call__(self):
-            renpy.config.URPS_sidepanelVisibilityMode = self.visibility
+            renpy.config.JK_sidepanelVisibilityMode = self.visibility
 
-            if renpy.config.URPS_sidepanelVisibilityMode == True:
+            if renpy.config.JK_sidepanelVisibilityMode == True:
                 renpy.notify("Sidepanel is now visible at all times")
-            elif renpy.config.URPS_sidepanelVisibilityMode == False:
+            elif renpy.config.JK_sidepanelVisibilityMode == False:
                 renpy.notify("Sidepanel is now hidden at all times")
-            elif renpy.config.URPS_sidepanelVisibilityMode == None:
+            elif renpy.config.JK_sidepanelVisibilityMode == None:
                 renpy.notify("Sidepanel is now visible only on the save/load screen")
             else:
                 renpy.notify("Sidepanel is now visible at all times")
 
             renpy.restart_interaction()
 
-init 999 python in URPS:
-    renpy.config.search_prefixes.append("URPS/src/assets/") # Provides discoverability for assets that are used in URPS
+init 999 python in JK:
+    renpy.config.search_prefixes.append("JK/src/assets/") # Provides discoverability for assets that are used in JK
 
     if not 'n_e_s_w' in renpy.config.gestures:
         renpy.config.gestures['n_e_s_w'] = Settings.changeSidepanelVisibilityKey
 
-    if not "URPS_Sidepanel" in renpy.config.layers:
-        renpy.config.layers.append("URPS_Sidepanel")
-        renpy.config.context_clear_layers.append("URPS_Sidepanel")
+    if not "JK_Sidepanel" in renpy.config.layers:
+        renpy.config.layers.append("JK_Sidepanel")
+        renpy.config.context_clear_layers.append("JK_Sidepanel")
     
-    if not "URPS_Overlay" in renpy.config.layers:
-        renpy.add_layer("URPS_Overlay", above="URPS_Sidepanel")
-        renpy.config.context_clear_layers.append("URPS_Overlay")
+    if not "JK_Overlay" in renpy.config.layers:
+        renpy.add_layer("JK_Overlay", above="JK_Sidepanel")
+        renpy.config.context_clear_layers.append("JK_Overlay")
 
     renpy.config.after_load_callbacks.append(afterLoadCallback)
     renpy.config.start_interact_callbacks.append(startInteractCallback)

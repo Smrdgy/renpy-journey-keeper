@@ -1,4 +1,4 @@
-init 1 python in URPS:
+init 1 python in JK:
     _constant = True
 
     import pygame_sdl2 as pygame

@@ -1,5 +1,5 @@
-screen URPS_SavesListNoSaves():
-    style_prefix 'URPS'
+screen JK_SavesListNoSaves():
+    style_prefix 'JK'
     modal True
 
     vbox:
@@ -8,16 +8,16 @@ screen URPS_SavesListNoSaves():
         ymaximum 0.85
 
         vbox align (0.5, 0.5):
-            use URPS_Title("No saves", color=URPS.Colors.error)
+            use JK_Title("No saves", color=JK.Colors.error)
 
     # Dialog footer
     hbox:
         xfill True
         yfill True
 
-        style_prefix "URPS_dialog_action_buttons"
+        style_prefix "JK_dialog_action_buttons"
 
         vbox:
             # Close
             hbox:
-                use URPS_IconButton(icon="", text="OK", action=Hide("URPS_SavesList"))
+                use JK_IconButton(icon="", text="OK", action=Hide("JK_SavesList"))

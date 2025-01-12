@@ -1,10 +1,10 @@
-screen URPS_InfoBox(text):
+screen JK_InfoBox(text):
     button: # Prevent any hover effects
         action None
 
         hbox:
-            use URPS_Icon('\ue88e', color = URPS.Colors.info)
+            use JK_Icon('\ue88e', color = JK.Colors.info)
 
             hbox xsize 10
 
-            text text color URPS.Colors.info yalign 0.5
+            text text color JK.Colors.info yalign 0.5

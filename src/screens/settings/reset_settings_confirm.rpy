@@ -1,12 +1,12 @@
-screen URPS_ResetSettingsConfirm():
-    layer "URPS_Overlay"
-    style_prefix 'URPS'
+screen JK_ResetSettingsConfirm():
+    layer "JK_Overlay"
+    style_prefix 'JK'
     modal True
 
     default include_global = False
 
-    use URPS_Dialog(title="Reset settings", closeAction=Hide("URPS_Settings")):
-        style_prefix "URPS"
+    use JK_Dialog(title="Reset settings", closeAction=Hide("JK_Settings")):
+        style_prefix "JK"
 
         vbox xalign 0.5 yalign 0.5:
             if include_global:
@@ -14,22 +14,22 @@ screen URPS_ResetSettingsConfirm():
             else:
                 text "Do you really wish to reset all local settings into their default configuration?"
 
-            use URPS_YSpacer(offset=2)
+            use JK_YSpacer(offset=2)
 
             hbox xalign 0.5:
-                use URPS_Checkbox(checked=include_global, text="Include global settings", action=ToggleScreenVariable('include_global', True, False))
+                use JK_Checkbox(checked=include_global, text="Include global settings", action=ToggleScreenVariable('include_global', True, False))
 
         hbox:
             xfill True
             yfill True
 
-            style_prefix "URPS_dialog_action_buttons"
+            style_prefix "JK_dialog_action_buttons"
 
             vbox:
                 # Reset
                 hbox:
-                    use URPS_IconButton(icon="\ue8ba", text="Reset all" if include_global else "Reset", action=[URPS.Settings.Reset(include_global), Hide("URPS_ResetSettingsConfirm")], color=URPS.Colors.danger)
+                    use JK_IconButton(icon="\ue8ba", text="Reset all" if include_global else "Reset", action=[JK.Settings.Reset(include_global), Hide("JK_ResetSettingsConfirm")], color=JK.Colors.danger)
 
                 # Close
                 hbox:
-                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_ResetSettingsConfirm"))
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_ResetSettingsConfirm"))

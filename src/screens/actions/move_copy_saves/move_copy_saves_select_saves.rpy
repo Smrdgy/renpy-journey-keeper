@@ -1,5 +1,5 @@
-screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save):
-    style_prefix 'URPS'
+screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save):
+    style_prefix 'JK'
     modal True
 
     viewport:
@@ -104,9 +104,9 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
 
                 hbox # Dummy
 
-                use URPS_IconButton(text=viewModel.source_playthrough.name, action=ClearSourcePlaythroughAction(), tt="Change source playthrough", color=URPS.Colors.theme, size=30)
-                use URPS_IconButton(text="→", action=FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough), tt="Swap playthroughs", color=URPS.Colors.theme, size=30)
-                use URPS_IconButton(text=viewModel.destination_playthrough.name, action=ClearDestinationPlaythroughAction(), tt="Change target playthrough", color=URPS.Colors.theme, size=30)
+                use JK_IconButton(text=viewModel.source_playthrough.name, action=ClearSourcePlaythroughAction(), tt="Change source playthrough", color=JK.Colors.theme, size=30)
+                use JK_IconButton(text="→", action=FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough), tt="Swap playthroughs", color=JK.Colors.theme, size=30)
+                use JK_IconButton(text=viewModel.destination_playthrough.name, action=ClearDestinationPlaythroughAction(), tt="Change target playthrough", color=JK.Colors.theme, size=30)
 
                 hbox # Dummy
 
@@ -114,7 +114,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                 xfill True
 
                 vbox xalign 1.0:
-                    use URPS_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+                    use JK_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
 
             vbox:
                 spacing 2
@@ -126,7 +126,7 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
 
                     hbox:
                         xfill True
-                        use URPS_Checkbox(checked=None if len(saves_to_process) != len(source_saves) and len(saves_to_process) > 0 else len(saves_to_process) == len(source_saves), text="")
+                        use JK_Checkbox(checked=None if len(saves_to_process) != len(source_saves) and len(saves_to_process) > 0 else len(saves_to_process) == len(source_saves), text="")
 
                         text str(len(saves_to_process)) + " selected" yalign 0.5
 
@@ -134,26 +134,26 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                 for save in source_saves:
                     $ i += 1
 
-                    button style ("URPS_row_button" if i % 2 == 0 else "URPS_row_odd_button") selected save in saves_to_process:
+                    button style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button") selected save in saves_to_process:
                         xfill True
                         action [SaveSelectedAction(saves_to_process, save, viewModel, last_selected_save)]
 
                         grid 5 1:
                             xfill True
-                            use URPS_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
+                            use JK_Checkbox(checked=save in saves_to_process, text="", action=ToggleSetMembership(saves_to_process, save))
 
                             # Source
                             hbox yalign 0.5:
                                 if show_thumbnails:
-                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size JK.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
 
-                                use URPS_XSpacer()
+                                use JK_XSpacer()
 
                                 hbox yalign 0.5:
                                     if save in source_saves:
                                         text save
                                     else:
-                                        text "N/A" color URPS.Colors.na
+                                        text "N/A" color JK.Colors.na
 
                             text "→" yalign 0.5 xsize 40
 
@@ -163,15 +163,15 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
                                     if save in other_saves:
                                         text save
                                     else:
-                                        text "N/A" color URPS.Colors.na
+                                        text "N/A" color JK.Colors.na
 
-                                use URPS_XSpacer()
+                                use JK_XSpacer()
 
                                 if show_thumbnails:
-                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size URPS.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size JK.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
 
                             hbox yalign 0.5:
-                                text "Conflict!" color (URPS.Colors.warning if save in other_saves else "#ffffff00")
+                                text "Conflict!" color (JK.Colors.warning if save in other_saves else "#ffffff00")
         
     # Dialog footer
     hbox:
@@ -184,16 +184,16 @@ screen URPS_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnail
             text "{color=#abe9ff}ctrl + click{/color} or {color=#abe9ff}click the checkbox{/color} to select/deselect one"
 
         vbox:
-            style_prefix "URPS_dialog_action_buttons"
+            style_prefix "JK_dialog_action_buttons"
             vbox xalign 1.0:
                 # Move
                 hbox:
-                    use URPS_IconButton(icon="\ue675", text="Move", action=URPS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process, mode="MOVE"), disabled=len(saves_to_process) == 0)
+                    use JK_IconButton(icon="\ue675", text="Move", action=JK.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process, mode="MOVE"), disabled=len(saves_to_process) == 0)
 
                 # Copy
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="Copy", action=URPS.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process), disabled=len(saves_to_process) == 0)
+                    use JK_IconButton(icon="\ue161", text="Copy", action=JK.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process), disabled=len(saves_to_process) == 0)
 
                 # Close
                 hbox:
-                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_MoveCopySaves"))
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_MoveCopySaves"))

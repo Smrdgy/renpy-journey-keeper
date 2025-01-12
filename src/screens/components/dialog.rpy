@@ -1,6 +1,6 @@
-screen URPS_Dialog(title=None, message=None, closeAction=None, icon=None):
+screen JK_Dialog(title=None, message=None, closeAction=None, icon=None):
     layer "overlay"
-    style_prefix 'URPS_dialog'
+    style_prefix 'JK_dialog'
     modal True
 
     if closeAction:
@@ -13,16 +13,16 @@ screen URPS_Dialog(title=None, message=None, closeAction=None, icon=None):
                 xfill True
 
                 frame:
-                    padding URPS.adjustable((20, 20, 20, 20))
+                    padding JK.adjustable((20, 20, 20, 20))
 
-                    use URPS_IconButton(icon=None, action=None)
+                    use JK_IconButton(icon=None, action=None)
 
                 hbox:
                     xalign 0.5
                     yalign 0.5
 
                     if icon:
-                        use URPS_Icon(icon)
+                        use JK_Icon(icon)
 
                     if title:
                         text title style_suffix "title" yalign .5 text_align 0.5
@@ -30,9 +30,9 @@ screen URPS_Dialog(title=None, message=None, closeAction=None, icon=None):
                 frame:
                     xalign 1.0
                     yalign 0.5
-                    padding URPS.adjustable((20, 20, 20, 20))
+                    padding JK.adjustable((20, 20, 20, 20))
 
-                    use URPS_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
+                    use JK_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 
             button:
                 style_suffix "content"
@@ -41,6 +41,6 @@ screen URPS_Dialog(title=None, message=None, closeAction=None, icon=None):
                 has vbox
 
                 if(message):
-                    text message style "URPS_text" xalign 0.5 text_align 0.5
+                    text message style "JK_text" xalign 0.5 text_align 0.5
 
                 transclude

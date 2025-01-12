@@ -1,4 +1,4 @@
-init 1 python in URPS:
+init 1 python in JK:
     _constant = True
 
     import json
@@ -13,14 +13,18 @@ init 1 python in URPS:
         def __init__(self):
             # Legacy conversion #TODO: Remove at some point
             if renpy.store.persistent.SSSSS_playthroughs:
-                renpy.store.persistent.URPS_Playthroughs = renpy.store.persistent.SSSSS_playthroughs
-                renpy.store.persistent.URPS_PlaythroughsMtime = int(time.time())
+                renpy.store.persistent.JK_Playthroughs = renpy.store.persistent.SSSSS_playthroughs
+                renpy.store.persistent.JK_PlaythroughsMtime = int(time.time())
                 renpy.store.persistent.SSSSS_playthroughs = None
+            if renpy.store.persistent.URPS_Playthroughs:
+                renpy.store.persistent.JK_Playthroughs = renpy.store.persistent.URPS_Playthroughs
+                renpy.store.persistent.JK_PlaythroughsMtime = int(time.time())
+                renpy.store.persistent.URPS_Playthroughs = None
 
             # For some reason the __init__ is called twice in Ren'Py 7.0.0.196.
             # When that happens the playthroughs are loaded twice which led to a buildup of playthroughs when saved. This if should mitigate that.
-            if hasattr(renpy.config, "URPS_Playthroughs_initialized"): return
-            renpy.config.URPS_Playthroughs_initialized = True
+            if hasattr(renpy.config, "JK_Playthroughs_initialized"): return
+            renpy.config.JK_Playthroughs_initialized = True
 
             hasNative = False
             hasMemories = False
@@ -29,7 +33,7 @@ init 1 python in URPS:
             persistent_playthroughs = self.loadFromPersistent()
 
             userdir_mtime = UserDir.playthroughsMtime()
-            persistent_mtime = renpy.store.persistent.URPS_PlaythroughsMtime or 0
+            persistent_mtime = renpy.store.persistent.JK_PlaythroughsMtime or 0
 
             playthroughs = None
             if userdir_mtime > persistent_mtime:
@@ -71,8 +75,8 @@ init 1 python in URPS:
             return None
 
         def loadFromPersistent(self):
-            if renpy.store.persistent.URPS_Playthroughs:
-                return json.loads(renpy.store.persistent.URPS_Playthroughs)
+            if renpy.store.persistent.JK_Playthroughs:
+                return json.loads(renpy.store.persistent.JK_Playthroughs)
 
             return []
 
@@ -150,7 +154,7 @@ init 1 python in URPS:
                     result = self.renameSaveDirectory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name))
 
                     if result != True:
-                        renpy.show_screen("URPS_MovePlaythroughDirectoryError", errors=result)
+                        renpy.show_screen("JK_MovePlaythroughDirectoryError", errors=result)
                         return None
 
                 rv = self.edit(playthrough, sourcePlaythrough, moveSaveDirectory=moveSaveDirectory)
@@ -210,8 +214,8 @@ init 1 python in URPS:
             UserDir.savePlaythroughs(self.getPlaythroughsAsJson())
 
         def saveToPersistent(self):
-            renpy.store.persistent.URPS_Playthroughs = self.getPlaythroughsAsJson()
-            renpy.store.persistent.URPS_PlaythroughsMtime = int(time.time())
+            renpy.store.persistent.JK_Playthroughs = self.getPlaythroughsAsJson()
+            renpy.store.persistent.JK_PlaythroughsMtime = int(time.time())
 
             renpy.save_persistent()
 
@@ -257,7 +261,7 @@ init 1 python in URPS:
             if prev_playthrough:
                 self.activePlaythrough.beforeDeactivation()
 
-            renpy.store.persistent.URPS_lastActivePlaythrough = playthrough.id if playthrough != None else None
+            renpy.store.persistent.JK_ActivePlaythrough = playthrough.id if playthrough != None else None
             self._activePlaythrough = playthrough
 
             if prev_playthrough:
@@ -360,7 +364,7 @@ init 1 python in URPS:
 
                 showConfirm(
                     title="Sequentialize playthrough",
-                    message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[URPS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Playthroughs.SequentializeSaves(playthrough),
                     yesIcon="\ue089",
                     yesColor=Colors.error
@@ -398,7 +402,7 @@ init 1 python in URPS:
 
                 showConfirm(
                     title="Remove all saves",
-                    message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=[URPS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Playthroughs.DeleteAllSaves(self.playthrough),
                     yesIcon="\ue92b",
                     yesColor=Colors.error
@@ -432,7 +436,7 @@ init 1 python in URPS:
 
                 renpy.restart_interaction()
 
-                renpy.hide_screen("URPS_DuplicatePlaythrough")
+                renpy.hide_screen("JK_DuplicatePlaythrough")
         
         class ShowCreatePlaythroughFromDirname(renpy.ui.Action):
             def __init__(self, dirname):
@@ -443,4 +447,4 @@ init 1 python in URPS:
                 playthrough.name = self.dirname
                 playthrough.directory = self.dirname
 
-                renpy.show_screen("URPS_EditPlaythrough", playthrough)
+                renpy.show_screen("JK_EditPlaythrough", playthrough)

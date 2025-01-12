@@ -1,4 +1,4 @@
-init 1 python in URPS:
+init 1 python in JK:
     _constant = True
 
     import time
@@ -141,7 +141,7 @@ init 1 python in URPS:
         class OpenSaveMemory(renpy.ui.Action):
             def __call__(self):
                 renpy.take_screenshot()
-                renpy.show_screen("URPS_SaveMemory")
+                renpy.show_screen("JK_SaveMemory")
                 renpy.restart_interaction()
 
         class CreateMemory(renpy.ui.Action):
@@ -219,7 +219,7 @@ init 1 python in URPS:
 
                 showConfirm(
                     title="Delete memory \"{}\"".format(name),
-                    message="This action {u}{color=[URPS.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
+                    message="This action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Memories.DeleteMemory(self.slotname),
                     yesIcon="\ue92b",
                     yesColor=Colors.error

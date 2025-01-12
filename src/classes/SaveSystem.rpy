@@ -1,4 +1,4 @@
-init 1 python in URPS:
+init 1 python in JK:
     _constant = True
 
     import os
@@ -81,7 +81,7 @@ init 1 python in URPS:
 
                 renpy.loadsave.clear_cache()
                 SaveSystem.multilocation.scan()
-                renpy.store.persistent.URPS_lastActivePlaythrough = self.playthrough.id
+                renpy.store.persistent.JK_ActivePlaythrough = self.playthrough.id
                 SaveSystem._activePlaythroughSave = self
 
             def deactivate(self):

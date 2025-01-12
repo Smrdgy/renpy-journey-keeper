@@ -1,24 +1,24 @@
-screen URPS_Overlay():
+screen JK_Overlay():
     layer "screens"
-    style_prefix "URPS"
+    style_prefix "JK"
 
-    if URPS.Settings.autosaveKey:
-        key URPS.Settings.autosaveKey action URPS.Playthroughs.ToggleAutosaveOnChoicesOnActive()
+    if JK.Settings.autosaveKey:
+        key JK.Settings.autosaveKey action JK.Playthroughs.ToggleAutosaveOnChoicesOnActive()
 
-    if not URPS.Memories.memoryInProgress and not renpy.store._in_replay and URPS.Settings.quickSaveEnabled and URPS.Settings.quickSaveKey:
-        key URPS.Settings.quickSaveKey action URPS.Playthroughs.QuickSave()
+    if not JK.Memories.memoryInProgress and not renpy.store._in_replay and JK.Settings.quickSaveEnabled and JK.Settings.quickSaveKey:
+        key JK.Settings.quickSaveKey action JK.Playthroughs.QuickSave()
 
-    if not renpy.store._in_replay and URPS.Settings.memoriesEnabled and URPS.Settings.memoriesKey:
-        key URPS.Settings.memoriesKey action URPS.Memories.OpenSaveMemory()
+    if not renpy.store._in_replay and JK.Settings.memoriesEnabled and JK.Settings.memoriesKey:
+        key JK.Settings.memoriesKey action JK.Memories.OpenSaveMemory()
 
-    if URPS.Playthroughs.activePlaythrough.autosaveOnChoices:
-        if URPS.Autosaver.afterLoadSavePositionPending:
-            $ URPS.Autosaver.processSlotAfterLoad()
+    if JK.Playthroughs.activePlaythrough.autosaveOnChoices:
+        if JK.Autosaver.afterLoadSavePositionPending:
+            $ JK.Autosaver.processSlotAfterLoad()
 
-    key "ctrl_alt_shift_K_p" action URPS.Settings.ResetSizeAdjustment()
+    key "ctrl_alt_shift_K_p" action JK.Settings.ResetSizeAdjustment()
 
     python:
-        isSaveLoadScreen = URPS.Utils.is_save_load_screen()
+        isSaveLoadScreen = JK.Utils.is_save_load_screen()
 
-    if isSaveLoadScreen and URPS.Memories.memoryInProgress:
-        use URPS_ExitMemoryConfirm()
+    if isSaveLoadScreen and JK.Memories.memoryInProgress:
+        use JK_ExitMemoryConfirm()

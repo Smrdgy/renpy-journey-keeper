@@ -1,4 +1,4 @@
-screen URPS_MoveCopySavesProcessing(viewModel):
+screen JK_MoveCopySavesProcessing(viewModel):
     python:
         processed = viewModel.processed
         to_process = len(viewModel.saves_to_process)
@@ -20,9 +20,9 @@ screen URPS_MoveCopySavesProcessing(viewModel):
             xmaximum 0.85
 
             hbox xalign 0.5:
-                use URPS_Title("Copying saves..." if viewModel.stage == "COPY" else "Removing old saves...")
+                use JK_Title("Copying saves..." if viewModel.stage == "COPY" else "Removing old saves...")
 
-            use URPS_YSpacer()
+            use JK_YSpacer()
 
             text "[processed]/[to_process]" xalign 0.5
             bar value processed range to_process
@@ -32,12 +32,12 @@ screen URPS_MoveCopySavesProcessing(viewModel):
         xfill True
         yfill True
 
-        style_prefix "URPS_dialog_action_buttons"
+        style_prefix "JK_dialog_action_buttons"
 
         vbox:
             hbox:
-                use URPS_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=URPS.Colors.danger)
+                use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=JK.Colors.danger)
 
             # Close
             hbox:
-                use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_MoveCopySaves"))
+                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_MoveCopySaves"))
