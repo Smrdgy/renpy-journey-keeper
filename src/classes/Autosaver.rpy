@@ -140,7 +140,7 @@ init -999 python in URPS:
                 renpy.take_screenshot()
 
             def save(self):
-                slotname = renpy.store.URPS_ActiveSlot
+                slotname = Utils.format_slotname(renpy.store.URPS_ActiveSlot)
 
                 extra_info = ''
                 if Playthroughs.activePlaythrough.useChoiceLabelAsSaveName:

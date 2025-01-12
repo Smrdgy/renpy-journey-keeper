@@ -334,6 +334,17 @@ init -2000 python in URPS:
 
             return directories
 
+        @staticmethod
+        def format_slotname(slotname):
+            page, name = Utils.split_slotname(slotname)
+            page = str(page)
+            name = str(name)
+
+            if hasattr(renpy.config, "file_slotname_callback") and renpy.config.file_slotname_callback is not None:
+                return renpy.config.file_slotname_callback(page, name)
+            else:
+                return page + "-" + name
+
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):
             super(MultiLocation, self).__init__()

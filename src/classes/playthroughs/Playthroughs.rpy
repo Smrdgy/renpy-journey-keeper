@@ -337,6 +337,7 @@ init 1 python in URPS:
         class QuickSave(renpy.ui.Action):
             def __call__(self):
                 page, _, slotString = Autosaver.getCurrentSlot()
+                slotString = Utils.format_slotname(slotString)
 
                 renpy.take_screenshot()
                 renpy.save(slotString)
