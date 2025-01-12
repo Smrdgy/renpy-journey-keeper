@@ -6,6 +6,10 @@ init -99 python in URPS:
         Autosaver.suppressAutosaveConfirm = False
     
     def before_save(slotname):
+        #Ignore temporary save
+        if AutosaverClass.PendingSaveClass.temp_save_slotname in slotname:
+            return
+
         if Settings.offsetSlotAfterManualSave:
             Autosaver.setActiveSlot(slotname)
 

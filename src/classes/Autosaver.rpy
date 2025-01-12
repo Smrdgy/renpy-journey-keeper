@@ -21,6 +21,7 @@ init -999 python in URPS:
             self.lastChoice = None
             self.activeSlotPending = None
             self.prevent_autosaving = Settings.preventAutosavingWhileNotInGame
+            self.loaded_manual_save_without_choices = False
 
         @property
         def slotsPerPage(self):
@@ -77,7 +78,7 @@ init -999 python in URPS:
         def trySavePendingSave(self):
             if(self.pendingSave != None):
                 # If the save slot is not bigger than the very last one, do once a confirm whether to disable autosaving
-                if renpy.scan_saved_game(renpy.store.URPS_ActiveSlot) and not self.suppressAutosaveConfirm and not renpy.store.URPS_ActiveSlot == self.prevActiveSlot:
+                if renpy.scan_saved_game(Utils.format_slotname(renpy.store.URPS_ActiveSlot)) and not self.suppressAutosaveConfirm and (self.loaded_manual_save_without_choices or renpy.store.URPS_ActiveSlot != self.prevActiveSlot):
                     self.confirmDialogOpened = True
                     renpy.show_screen("URPS_AutosaveOverwriteConfirm")
                     return
@@ -100,8 +101,13 @@ init -999 python in URPS:
         # However when a manual save is loaded it might not be a choice screen.
         # If so, the save slot needs to move further as to not override the manual slot with the next autosave.
         def processSlotAfterLoad(self):
-            if(not Utils.isDisplayingChoices() and Settings.offsetSlotAfterManualSave):
-                self.setNextSlot()
+            self.loaded_manual_save_without_choices = False
+
+            if not Utils.isDisplayingChoices():
+                if Settings.offsetSlotAfterManualSave:
+                    self.setNextSlot()
+                else:
+                    self.loaded_manual_save_without_choices = True
 
             self.afterLoadSavePositionPending = False
 
@@ -127,31 +133,34 @@ init -999 python in URPS:
 
         def createPendingSave(self, choice):
             self.pendingSave = AutosaverClass.PendingSaveClass(choice)
-
-            # This function must be delayed due to how the choice is being propagated into the save file via renpy.config.save_json_callbacks.
-            # Otherwise the choice label will always lag behind by one.
-            # It also can't be performed asynchronously because the log might change, as the thread is being executed, possibly creating a loadable position after the choices, not before as intended.
-            self.pendingSave.save()
+            self.trySavePendingSave()
 
         class PendingSaveClass(x52NonPicklable):
+            temp_save_slotname = "URPS-temp"
+
             def __init__(self, choice):
                 self.choice = choice
 
-                renpy.take_screenshot()
+                self.early_save()
 
-            def save(self):
-                slotname = Utils.format_slotname(renpy.store.URPS_ActiveSlot)
-
+            def early_save(self):
                 extra_info = ''
                 if Playthroughs.activePlaythrough.useChoiceLabelAsSaveName:
                     extra_info = self.choice
 
-                renpy.save(slotname, extra_info)
+                renpy.take_screenshot()
+                renpy.save(self.temp_save_slotname, extra_info)
+
+            def save(self):
+                slotname = Utils.format_slotname(renpy.store.URPS_ActiveSlot)
+
+                renpy.rename_save(self.temp_save_slotname, slotname)
 
                 if Settings.autosaveNotificationEnabled:
                     renpy.notify("Autosave created at {}".format(slotname))
 
                 Autosaver.pendingSave = None
+                Autosaver.loaded_manual_save_without_choices = False
 
                 if Settings.pageFollowsAutoSave:
                     page, _, _ = Autosaver.getCurrentSlot()
