@@ -1,7 +1,7 @@
-screen URPS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_playthrough):
+screen JK_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_playthrough):
     python:
         thumbnailSize = (150, 100)
-        playthroughs = [p for p in URPS.Playthroughs.playthroughs if p.id != 2 and p != source_playthrough and p != destination_playthrough] # Get all playthroughs except memories, source/destination playthroughs
+        playthroughs = [p for p in JK.Playthroughs.playthroughs if p.id != 2 and p != source_playthrough and p != destination_playthrough] # Get all playthroughs except memories, source/destination playthroughs
 
     viewport:
         mousewheel True
@@ -16,7 +16,7 @@ screen URPS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_
 
             $ i = 0
             for playthrough in playthroughs:
-                button style ("URPS_row_button" if i % 2 == 0 else "URPS_row_odd_button"):
+                button style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button"):
                     xfill True
                     action SetScreenVariable("destination_playthrough" if source_playthrough else "source_playthrough", playthrough)
 
@@ -38,9 +38,9 @@ screen URPS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_
                                         xalign 0.5
                                         yalign 0.5
 
-                                        use URPS_Icon(icon="\ue3f4", color="#333", size=50)
+                                        use JK_Icon(icon="\ue3f4", color="#333", size=50)
 
-                        use URPS_XSpacer(2)
+                        use JK_XSpacer(2)
 
                         text "[playthrough.name]" yalign 0.5
 
@@ -51,9 +51,9 @@ screen URPS_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_
         xfill True
         yfill True
 
-        style_prefix "URPS_dialog_action_buttons"
+        style_prefix "JK_dialog_action_buttons"
 
         vbox:
             # Close
             hbox:
-                use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_MoveCopySaves"))
+                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_MoveCopySaves"))

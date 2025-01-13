@@ -1,6 +1,6 @@
-screen URPS_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=URPS.adjustable(20), clamp=False):
-    layer "URPS_Overlay"
-    style_prefix 'URPS_dialog'
+screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=JK.adjustable(20), clamp=False):
+    layer "JK_Overlay"
+    style_prefix 'JK_dialog'
     zorder 99999
     
     default mouse_position = renpy.get_mouse_pos()
@@ -39,11 +39,11 @@ screen URPS_TooltipDialog(title=None, icon=None, message=None, pos=None, interac
 
         if clamp:
             draggable_pos = (
-                min(max(draggable_pos[0], 0), renpy.config.screen_width - URPS.adjustable(200 + distance)),
-                min(max(draggable_pos[1], 0), renpy.config.screen_height - URPS.adjustable(200 + distance)),
+                min(max(draggable_pos[0], 0), renpy.config.screen_width - JK.adjustable(200 + distance)),
+                min(max(draggable_pos[1], 0), renpy.config.screen_height - JK.adjustable(200 + distance)),
             )
 
-        closeAction = Hide("URPS_TooltipDialog")
+        closeAction = Hide("JK_TooltipDialog")
 
     if closeAction:
         key 'K_ESCAPE' action closeAction
@@ -60,7 +60,7 @@ screen URPS_TooltipDialog(title=None, icon=None, message=None, pos=None, interac
         yanchor yanchor
         droppable False
 
-        frame style "URPS_default":
+        frame style "JK_default":
             background "#0c0c0cfc"
             padding (10, 10, 10, 10)
             xmaximum int(renpy.config.screen_width / 4)
@@ -69,23 +69,23 @@ screen URPS_TooltipDialog(title=None, icon=None, message=None, pos=None, interac
                 if title or icon or interactive:
                     hbox:
                         if interactive:
-                            use URPS_IconButton(icon=None, action=None)
+                            use JK_IconButton(icon=None, action=None)
 
                         hbox:
                             xalign 0.5
                             yalign 0.5
 
                             if icon:
-                                use URPS_Icon(icon)
+                                use JK_Icon(icon)
 
                             if title:
                                 hbox xalign 0.5:
-                                    use URPS_Title(title)
+                                    use JK_Title(title)
 
                         if interactive:
                             hbox xpos 1.0 xanchor 1.0:
-                                use URPS_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
+                                use JK_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 
                 if message:
-                    text message style "URPS_text" xalign 0.5
+                    text message style "JK_text" xalign 0.5
                 transclude

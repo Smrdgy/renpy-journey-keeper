@@ -1,5 +1,5 @@
-screen URPS_IconButton(icon=None, text=None, action=None, size=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=None, disabled=False, color=None, textColor=None, iconColor=None, toggledColor=None, hovered=None, unhovered=None, hover_color=None, disabled_color=URPS.Colors.disabled, key=None):
-    style_prefix "URPS"
+screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=None, disabled=False, color=None, textColor=None, iconColor=None, toggledColor=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None):
+    style_prefix "JK"
 
     python:
         text_color = (disabled_color if disabled else ((toggledColor or textColor or color) if toggled else (textColor or color)))
@@ -10,31 +10,31 @@ screen URPS_IconButton(icon=None, text=None, action=None, size=None, sensitive=N
         sensitive sensitive
         key_events True
 
-        hovered [URPS.OpenTooltipAction(message=tt, side=ttSide), hovered]
-        unhovered [Hide("URPS_TooltipDialog"), unhovered]
+        hovered [JK.OpenTooltipAction(message=tt, side=ttSide), hovered]
+        unhovered [Hide("JK_TooltipDialog"), unhovered]
         selected toggled
 
         if(not disabled):
-            action [Hide("URPS_TooltipDialog"), action]
+            action [Hide("JK_TooltipDialog"), action]
 
         hbox:
-            style_prefix "URPS_Icon_button"
+            style_prefix "JK_Icon_button"
 
             if key:
-                key key action [Hide("URPS_TooltipDialog"), action]
+                key key action [Hide("JK_TooltipDialog"), action]
 
-            use URPS_Icon(toggled_icon if toggled else icon, color=icon_color, size=size, hover_color=hover_color)
+            use JK_Icon(toggled_icon if toggled else icon, color=icon_color, size=size, hover_color=hover_color)
 
             if text:
                 python:
                     if key:
-                        text = URPS.Utils.add_key_underline(text, key)
+                        text = JK.Utils.add_key_underline(text, key)
 
                 text text yalign .5:
                     if text_color:
                         color text_color
                     if size:
-                        size URPS.adjustable(size)
+                        size JK.adjustable(size)
                     if hover_color:
                         hover_color hover_color
 

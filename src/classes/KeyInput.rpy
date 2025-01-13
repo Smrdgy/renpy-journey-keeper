@@ -1,4 +1,4 @@
-init 1 python in URPS:
+init 1 python in JK:
     _constant = True
 
     import pygame_sdl2 as pygame
@@ -332,20 +332,20 @@ init 1 python in URPS:
         return KeyInputButton(assignment=assignment, action=action, style="keyinput_disabled" if disabled else style, **properties)
 
 # Screen
-screen URPS_KeyInput(assignment=None, action=NullAction, disabled=False):
+screen JK_KeyInput(assignment=None, action=NullAction, disabled=False):
     vbox:
         hbox:
-            add URPS.KeyInput(assignment=assignment, action=action, disabled=disabled)
+            add JK.KeyInput(assignment=assignment, action=action, disabled=disabled)
 
-            use URPS_Checkbox(checked="shift_" in (assignment or ""), text="Shift", action=action(assignment, shift=True), disabled=disabled or assignment == None)
-            use URPS_Checkbox(checked="ctrl_" in (assignment or ""), text="Ctrl", action=action(assignment, ctrl=True), disabled=disabled or assignment == None)
-            use URPS_Checkbox(checked="alt_" in (assignment or ""), text="Alt", action=action(assignment, alt=True), disabled=disabled or assignment == None)
+            use JK_Checkbox(checked="shift_" in (assignment or ""), text="Shift", action=action(assignment, shift=True), disabled=disabled or assignment == None)
+            use JK_Checkbox(checked="ctrl_" in (assignment or ""), text="Ctrl", action=action(assignment, ctrl=True), disabled=disabled or assignment == None)
+            use JK_Checkbox(checked="alt_" in (assignment or ""), text="Alt", action=action(assignment, alt=True), disabled=disabled or assignment == None)
 
-            use URPS_XSpacer(offset=2)
+            use JK_XSpacer(offset=2)
 
-            use URPS_IconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color=URPS.Colors.reset)
+            use JK_IconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color=JK.Colors.reset)
 
-        use URPS_KeyAssignmentCheck(assignment)
+        use JK_KeyAssignmentCheck(assignment)
 
         if "ctrl_" in (assignment or ""):
-            text "Please be advised, while CTRL is allowed, it will most likely conflict with skip action." color URPS.Colors.warning
+            text "Please be advised, while CTRL is allowed, it will most likely conflict with skip action." color JK.Colors.warning

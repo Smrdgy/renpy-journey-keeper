@@ -1,4 +1,4 @@
-init 1 python in URPS:
+init 1 python in JK:
     _constant = True
 
     import threading
@@ -46,7 +46,7 @@ init 1 python in URPS:
             for slot in self.slots:
                 json = instance.location.json(slot)
 
-                self.timeline.append((i, json.get("_URPS_choice", None), slot))
+                self.timeline.append((i, json.get("_JK_choice", None), slot))
 
                 self.loaded += 1
                 renpy.restart_interaction()

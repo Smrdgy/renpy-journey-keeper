@@ -1,4 +1,4 @@
-init -999 python in URPS:
+init -999 python in JK:
     _constant = True
 
     class Colors:

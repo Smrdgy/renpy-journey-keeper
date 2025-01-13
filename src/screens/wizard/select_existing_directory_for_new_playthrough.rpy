@@ -1,12 +1,12 @@
-screen URPS_SelectExistingDirectoryForNewPlaythrough():
-    layer "URPS_Overlay"
-    style_prefix 'URPS'
+screen JK_SelectExistingDirectoryForNewPlaythrough():
+    layer "JK_Overlay"
+    style_prefix 'JK'
     modal True
 
-    default directories = URPS.Playthroughs.list_available_directories_to_create_playthrough_from()
+    default directories = JK.Playthroughs.list_available_directories_to_create_playthrough_from()
 
-    use URPS_Dialog(title="Select directory", closeAction=Hide("URPS_SelectExistingDirectoryForNewPlaythrough")):
-        style_prefix "URPS"
+    use JK_Dialog(title="Select directory", closeAction=Hide("JK_SelectExistingDirectoryForNewPlaythrough")):
+        style_prefix "JK"
 
         if len(directories) > 0:
             viewport:
@@ -21,10 +21,10 @@ screen URPS_SelectExistingDirectoryForNewPlaythrough():
                     for dirname in directories:
                         $ i += 1
 
-                        button style ("URPS_row_button" if i % 2 == 0 else "URPS_row_odd_button"):
+                        button style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button"):
                             xfill True
 
-                            action [Hide("URPS_SelectExistingDirectoryForNewPlaythrough"), URPS.Playthroughs.ShowCreatePlaythroughFromDirname(dirname)]
+                            action [Hide("JK_SelectExistingDirectoryForNewPlaythrough"), JK.Playthroughs.ShowCreatePlaythroughFromDirname(dirname)]
 
                             text dirname
 
@@ -34,4 +34,4 @@ screen URPS_SelectExistingDirectoryForNewPlaythrough():
                 yfill True
             
                 hbox xalign 0.5 yalign 0.5:
-                    use URPS_Title("No directories found.", color=URPS.Colors.error)
+                    use JK_Title("No directories found.", color=JK.Colors.error)

@@ -1,16 +1,16 @@
-screen URPS_PendingUpdate(version, changelog):
-    layer "URPS_Overlay"
-    style_prefix 'URPS'
+screen JK_PendingUpdate(version, changelog):
+    layer "JK_Overlay"
+    style_prefix 'JK'
     modal True
 
-    use URPS_Dialog(title="[URPS.MOD_NAME] - Update found", message="{color=[URPS.Colors.theme]}{b}v" + version + "{/b}{/color}\n{size=-7}{color=[URPS.Colors.text_light]}(current: [URPS.MOD_VERSION]){/color}{/size}", closeAction=Hide("URPS_PendingUpdate")):
-        if URPS.Updater.downloading:
-            use URPS_PendingUpdateDownloading()
-        elif URPS.Updater.installing:
-            use URPS_PendingUpdateInstalling()
-        elif URPS.Updater.error:
-            use URPS_PendingUpdateError(URPS.Updater.error)
-        elif URPS.Updater.installed:
-            use URPS_PendingUpdateSuccess()
+    use JK_Dialog(title="[JK.MOD_NAME] - Update found", message="{color=[JK.Colors.theme]}{b}v" + version + "{/b}{/color}\n{size=-7}{color=[JK.Colors.text_light]}(current: [JK.MOD_VERSION]){/color}{/size}", closeAction=Hide("JK_PendingUpdate")):
+        if JK.Updater.downloading:
+            use JK_PendingUpdateDownloading()
+        elif JK.Updater.installing:
+            use JK_PendingUpdateInstalling()
+        elif JK.Updater.error:
+            use JK_PendingUpdateError(JK.Updater.error)
+        elif JK.Updater.installed:
+            use JK_PendingUpdateSuccess()
         else:
-            use URPS_PendingUpdateChangelog(version, changelog)
+            use JK_PendingUpdateChangelog(version, changelog)

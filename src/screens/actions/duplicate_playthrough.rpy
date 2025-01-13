@@ -1,19 +1,19 @@
-screen URPS_DuplicatePlaythrough(playthrough):
-    layer "URPS_Overlay"
-    style_prefix 'URPS'
+screen JK_DuplicatePlaythrough(playthrough):
+    layer "JK_Overlay"
+    style_prefix 'JK'
     modal True
 
     default name = ""
     default description = playthrough.description
     
-    default name_input = URPS.TextInput("name", auto_focus=True)
-    default description_input = URPS.TextInput("description", multiline=True)
+    default name_input = JK.TextInput("name", auto_focus=True)
+    default description_input = JK.TextInput("description", multiline=True)
 
     python:
-        submitAction = URPS.Playthroughs.DuplicatePlaythroughAction(playthrough=playthrough, name=name, description=description)
+        submitAction = JK.Playthroughs.DuplicatePlaythroughAction(playthrough=playthrough, name=name, description=description)
 
-    use URPS_Dialog(title="Duplicate \"" + playthrough.name + "\"", closeAction=Hide("URPS_DuplicatePlaythrough")):
-        style_prefix "URPS"
+    use JK_Dialog(title="Duplicate \"" + playthrough.name + "\"", closeAction=Hide("JK_DuplicatePlaythrough")):
+        style_prefix "JK"
 
         viewport:
             mousewheel True
@@ -23,30 +23,30 @@ screen URPS_DuplicatePlaythrough(playthrough):
             ymaximum 0.85
 
             vbox:
-                use URPS_Title("Name")
+                use JK_Title("Name")
 
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
-                if(not URPS.Playthroughs.isValidName(name)):
-                    vbox offset URPS.adjustable((15, 2), minValue=1):
-                        text "Are you sure? This name already exists." color URPS.Colors.warning
-                        use URPS_InfoBox("All existing saves of \"" + name + "\" will be deleted. This action {u}{color=[URPS.Colors.error]}is irreversible{/color}{/u}!")
+                if(not JK.Playthroughs.isValidName(name)):
+                    vbox offset JK.adjustable((15, 2), minValue=1):
+                        text "Are you sure? This name already exists." color JK.Colors.warning
+                        use JK_InfoBox("All existing saves of \"" + name + "\" will be deleted. This action {u}{color=[JK.Colors.error]}is irreversible{/color}{/u}!")
 
-                use URPS_YSpacer()
+                use JK_YSpacer()
 
-                use URPS_Title("Description")
+                use JK_Title("Description")
                 add description_input.displayable(placeholder="Click here to start writing the description")
 
         hbox:
             xfill True
             yfill True
 
-            style_prefix "URPS_dialog_action_buttons"
+            style_prefix "JK_dialog_action_buttons"
 
             vbox:
                 # Save
                 hbox:
-                    use URPS_IconButton(icon="\ue161", text="Save", action=submitAction, key="ctrl_K_s")
+                    use JK_IconButton(icon="\ue161", text="Save", action=submitAction, key="ctrl_K_s")
                 # Close
                 hbox:
-                    use URPS_IconButton(icon="\ue5cd", text="Close", action=Hide("URPS_DuplicatePlaythrough"))
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_DuplicatePlaythrough"))

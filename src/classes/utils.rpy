@@ -1,4 +1,4 @@
-init -2000 python in URPS:
+init -2000 python in JK:
     _constant = True
 
     import re
@@ -669,11 +669,11 @@ init -2000 python in URPS:
 
         def __call__(self):
             if self.message:
-                renpy.show_screen("URPS_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side)
+                renpy.show_screen("JK_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side)
                 renpy.restart_interaction()
 
     def adjustable(value, minValue=5): 
-        # if URPS.Settings.sizeAdjustment == 0:
+        # if JK.Settings.sizeAdjustment == 0:
     #     return value
 
         # Helper function to apply adjustment only to integers
