@@ -9,11 +9,15 @@ screen JK_SettingsLoadSaveScreensStandalone():
         ypos 20
         droppable False
 
-        frame:
-            background "#000000fc"
-            padding JK.adjustable((20, 20, 20, 20))
+        frame style "JK_default":
+            background "#f00"
+            padding (2, 2, 2, 2)
 
-            vbox:
-                use JK_SettingsLoadSaveScreens(update_at_runtime=True)
+            frame style "JK_default":
+                background "#000"
+                padding (10, 10, 10, 10)
 
-                use JK_IconButton("\ue5c4", text="Return to the settings", action=[Hide("JK_SettingsLoadSaveScreensStandalone"), Show("JK_Settings")])
+                vbox:
+                    use JK_SettingsLoadSaveScreens(update_at_runtime=True)
+
+                    use JK_IconButton("\ue5c4", text="Return to the settings", action=[Hide("JK_SettingsLoadSaveScreensStandalone"), Show("JK_Settings")])

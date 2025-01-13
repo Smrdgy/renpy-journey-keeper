@@ -20,7 +20,7 @@ screen JK_SettingsLoadSaveScreens(update_at_runtime=False):
                             #TODO: Improve
                             # get_screen() isn't very efficient here since the loops above are doing pretty much the same,
                             # but I'm missing something to check if the screen is valid, or visible, or something and I couldn't be bothered to do it now.
-                            if not "JK_" in name and renpy.get_screen(name):
+                            if not ("JK_" in name or "notify" == name) and renpy.get_screen(name):
                                 screens.append(name)
 
             return screens
