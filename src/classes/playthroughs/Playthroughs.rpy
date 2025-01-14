@@ -50,11 +50,13 @@ init 1 python in JK:
 
                     self._playthroughs.append(self.createPlaythroughFromSerialization(playthrough))
 
+            native, memories = PlaythroughsClass.get_default_playthroughs()
+
             if(not hasNative):
-                self._playthroughs.insert(0, PlaythroughClass(id=1, directory="", name="Native", autosaveOnChoices=False, useChoiceLabelAsSaveName=False))#MODIFY HERE
+                self._playthroughs.insert(0, native)
 
             if not hasMemories and Settings.memoriesEnabled:
-                self._playthroughs.insert(1, PlaythroughClass(id=2, directory="_memories", name="Memories", autosaveOnChoices=False, useChoiceLabelAsSaveName=False))#MODIFY HERE
+                self._playthroughs.insert(1, memories)
 
         @property
         def playthroughs(self):
@@ -79,6 +81,13 @@ init 1 python in JK:
                 return json.loads(renpy.store.persistent.JK_Playthroughs)
 
             return []
+
+        @staticmethod
+        def get_default_playthroughs():
+            return (
+                PlaythroughClass(id=1, directory="", name="Native", autosaveOnChoices=False, useChoiceLabelAsSaveName=False),#MODIFY HERE
+                PlaythroughClass(id=2, directory="_memories", name="Memories", autosaveOnChoices=False, useChoiceLabelAsSaveName=False)#MODIFY HERE
+            )
 
         def createPlaythroughFromSerialization(self, data):
             return PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
@@ -206,12 +215,21 @@ init 1 python in JK:
         def getPlaythroughsAsJson(self):
             arr = []
             for playthrough in self.playthroughs:
-                arr.append(playthrough.serializable())
+                if playthrough.id != 2:
+                    arr.append(playthrough.serializable())
 
             return json.dumps(arr)
 
         def saveToUserDir(self):
-            UserDir.savePlaythroughs(self.getPlaythroughsAsJson())
+            save_to_userdir = UserDir.hasPlaythroughs()
+            if len(self.playthroughs) <= 2:
+                if self.getByID(1).serializable() != PlaythroughsClass.get_default_playthroughs()[0].serializable():
+                    save_to_userdir = True
+            else:
+                save_to_userdir = True
+
+            if save_to_userdir:
+                UserDir.savePlaythroughs(self.getPlaythroughsAsJson())
 
         def saveToPersistent(self):
             renpy.store.persistent.JK_Playthroughs = self.getPlaythroughsAsJson()

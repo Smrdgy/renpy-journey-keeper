@@ -65,6 +65,10 @@ init -1001 python in JK:
             return UserDir.saveJson(UserDir.playthroughs_path(), data)
 
         @staticmethod
+        def hasPlaythroughs():
+            return UserDir.playthroughsMtime() > 0
+
+        @staticmethod
         def playthroughsMtime():
             path = UserDir.playthroughs_path()
 
