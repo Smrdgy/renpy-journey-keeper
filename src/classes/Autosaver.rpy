@@ -106,8 +106,8 @@ init -999 python in JK:
             if not Utils.isDisplayingChoices():
                 if Settings.offsetSlotAfterManualSave:
                     self.setNextSlot()
-                else:
-                    self.loaded_manual_save_without_choices = True
+
+                self.loaded_manual_save_without_choices = True
 
             self.afterLoadSavePositionPending = False
 
