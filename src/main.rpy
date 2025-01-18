@@ -1,11 +1,11 @@
-init -1000 python in JK:
+init -1 python in JK:
     _constant = True
 
     print("Initializing {} v{}".format(MOD_NAME, MOD_VERSION))
 
     Settings = SettingsClass()
 
-init 51 python in JK:
+init python in JK:
     _constant = True
 
     Updater = UpdaterClass()
@@ -99,7 +99,7 @@ init 51 python in JK:
 
             renpy.restart_interaction()
 
-init 999 python in JK:
+init 9999 python in JK:
     renpy.config.search_prefixes.append("JK/src/assets/") # Provides discoverability for assets that are used in JK
 
     if not 'n_e_s_w' in renpy.config.gestures:

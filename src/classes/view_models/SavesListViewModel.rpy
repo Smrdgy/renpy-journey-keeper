@@ -1,4 +1,4 @@
-init 1 python in JK:
+init python in JK:
     _constant = True
     import threading
     import time

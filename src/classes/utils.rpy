@@ -1,4 +1,4 @@
-init -2000 python in JK:
+init -9999 python in JK:
     _constant = True
 
     import re

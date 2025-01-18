@@ -1,4 +1,4 @@
-init -999 python in JK:
+init python in JK:
     _constant = True
 
     class Colors:

@@ -1,4 +1,4 @@
-init -1001 python in JK:
+init -2 python in JK:
     _constant = True
 
     import io

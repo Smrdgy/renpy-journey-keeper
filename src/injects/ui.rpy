@@ -1,4 +1,4 @@
-init -99 python in JK:
+init 9999 python in JK:
     _constant = True
 
     def my_partial(func, *args, **kwargs):

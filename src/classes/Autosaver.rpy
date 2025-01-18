@@ -2,7 +2,7 @@
 # especially when a manual save is made somewhere in between and then a rollback occurs.
 default JK_ActiveSlot = "1-1"
 
-init -999 python in JK:
+init python in JK:
     _constant = True
 
     import time
