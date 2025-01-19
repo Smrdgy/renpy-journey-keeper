@@ -63,6 +63,7 @@ init -1 python in JK:
             self.autosaveOnSingletonChoice = data.get("autosaveOnSingletonChoice", True)
             self.playthroughTemplate = data.get("playthroughTemplate", None)
             self.preventAutosavingWhileNotInGame = data.get("preventAutosavingWhileNotInGame", True)
+            self.seamlessPagination = data.get("seamlessPagination", False)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -95,6 +96,7 @@ init -1 python in JK:
                 'autosaveOnSingletonChoice': self.autosaveOnSingletonChoice,
                 'playthroughTemplate': self.playthroughTemplate,
                 'preventAutosavingWhileNotInGame': self.preventAutosavingWhileNotInGame,
+                'seamlessPagination': self.seamlessPagination,
             })
 
         def getGlobalSettingsAsJson(self):
@@ -165,6 +167,27 @@ init -1 python in JK:
 
             def __call__(self):
                 Settings.reset(self.include_global)
+                renpy.restart_interaction()
+
+        class ToggleEnabled(renpy.ui.Action):
+            def __init__(self, attr_name):
+                self.attr_name = attr_name
+
+            def __call__(self):
+                setattr(Settings, self.attr_name, not getattr(Settings, self.attr_name))
+
+                Settings.save()
+                renpy.restart_interaction()
+
+        class Set(renpy.ui.Action):
+            def __init__(self, attr_name, value):
+                self.attr_name = attr_name
+                self.value = value
+
+            def __call__(self):
+                setattr(Settings, self.attr_name, self.value)
+
+                Settings.save()
                 renpy.restart_interaction()
 
         class SetAutosaveToggleKey(SetKey):

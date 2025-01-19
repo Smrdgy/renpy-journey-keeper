@@ -1,21 +1,17 @@
 screen JK_Pagination():
     style_prefix 'JK'
 
-    default estimatedPaginationSize = (950, 80)
+    default estimatedPaginationSize = (880, 80)
 
     python:
-        import math
-
         try:
             currentPage = persistent._file_page
             if(currentPage == "quick" or currentPage == "auto"):
                 currentPage = 0
 
             currentPage = int(currentPage)
-            pageOffset = math.floor(currentPage / 10)
         except:
             currentPage = 1
-            pageOffset = 0
 
         paginationPos = store.persistent.JK_PaginationPos or (int(renpy.config.screen_width / 2 - estimatedPaginationSize[0] / 2), int(renpy.config.screen_height - estimatedPaginationSize[1] - 15))
 
@@ -23,6 +19,19 @@ screen JK_Pagination():
             renpy.store.persistent.JK_PaginationPos = (drags[0].x, drags[0].y)
 
         pagination_button_size = renpy.style.Style("JK_PaginationButton_text").size
+
+        def paginate(selected_page, visible_pages=10):
+            offset = selected_page // visible_pages
+
+            return list(range(offset * visible_pages, offset * visible_pages + visible_pages))
+
+        def paginate_seamlessly(selected_page, visible_pages=9):
+            half_visible = visible_pages // 2
+
+            start_page = max(1, selected_page - half_visible)
+            end_page = start_page + visible_pages - 1
+
+            return list(range(start_page, end_page + 1))
 
     if JK.Settings.debugEnabled:
         frame:
@@ -59,7 +68,7 @@ screen JK_Pagination():
                     use JK_IconButton(icon="\ue5cb", action=FilePage(max(currentPage - 1, 1)), disabled=currentPage < 2)
 
                 hbox yalign 0.5:
-                    for page in range(int(pageOffset * 10), int(pageOffset * 10 + 10)):
+                    for page in (paginate_seamlessly(currentPage) if JK.Settings.seamlessPagination else paginate(currentPage)):
                         button:
                             style_prefix ("JK_PaginationButton_active" if page == currentPage else "JK_PaginationButton")
                             text (str(page) if page > 0 else "")
@@ -69,4 +78,6 @@ screen JK_Pagination():
 
                 hbox yalign 0.5:
                     use JK_IconButton(icon="\ue5cc", action=FilePageNext())
-                    use JK_IconButton(icon="\ueac9", action=FilePage(currentPage + 10), tt=str(currentPage + 10))
+
+                    $ next_jump_page = currentPage + (10 if currentPage > 1 else 9)
+                    use JK_IconButton(icon="\ueac9", action=FilePage(next_jump_page), tt=str(next_jump_page))

@@ -215,9 +215,23 @@ screen JK_Settings():
                                     vbox:
                                         use JK_SettingsLoadSaveScreens()
 
+                                        use JK_YSpacer(2)
+
                                         hbox:
                                             use JK_IconButton("\ue8fb", text="Detach from settings", action=[Show("JK_SettingsLoadSaveScreensStandalone"), JK.SetSidepanelVisibilityAction(None), Hide("JK_Settings")])
                                             use JK_Helper("Click to isolate the 'Screens' section, hiding other settings for a focused view. Monitor real-time updates on currently displayed screens to easily choose the correct screen names, with immediate visual feedback on changes.")
+
+                                use JK_YSpacer(2)
+
+                                use JK_Title("Pagination", 2)
+
+                                hbox:
+                                    use JK_XSpacer()
+
+                                    vbox:
+                                        hbox:
+                                            use JK_Checkbox(checked=JK.Settings.seamlessPagination, text="Use seamless pagination", action=JK.Settings.ToggleEnabled("seamlessPagination"))
+                                            use JK_Helper("When enabled, the active page number stays centered, making it easier to navigate through many pages. However, the page numbers may shift, which could feel a bit disorienting at first.\n\n{b}{color=[JK.Colors.theme]}Example{/color}{/b}\n\n{b}Normal:{/b}\nCurrent page = 7\nPages = {b}1 2 3 4 5 6 {color=[JK.Colors.selected]}7{/color} 8 9{/b}\n\n{b}Seamless:{/b}\nCurrent page = 7\nPages = {b}3 4 5 6 {color=[JK.Colors.selected]}7{/color} 8 9 10 11{/b}")
 
                 # Updates
                 if not JK.Updater.unavailable:
