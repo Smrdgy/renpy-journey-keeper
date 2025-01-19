@@ -23,7 +23,7 @@ screen JK_GoToPage():
 
     default page_input = JK.TextInput("page", value=Value(), auto_focus=True, allowed_characters="0123456789", max_length=6)
 
-    use JK_TooltipDialog():
+    use JK_TooltipDialog(follow_mouse=False):
         frame style "JK_default":
             xysize JK.adjustable((90, 25))
 

@@ -1,68 +1,28 @@
-screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=JK.adjustable(20), clamp=False):
+screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=JK.adjustable(20), follow_mouse=True):
     layer "JK_Overlay"
     style_prefix 'JK_dialog'
     zorder 99999
-    
-    default mouse_position = renpy.get_mouse_pos()
 
-    python:
-        pos = pos or mouse_position
-        
-        if side == "top":
-            xanchor = 0.5
-            yanchor = 1.0
-            draggable_pos = (
-                pos[0],
-                pos[1] - distance,
-            )
-        elif side == "bottom":
-            xanchor = 0.5
-            yanchor = 0.0
-            draggable_pos = (
-                pos[0],
-                pos[1] + distance,
-            )
-        elif side == "left":
-            xanchor = 1.0
-            yanchor = 0.5
-            draggable_pos = (
-                pos[0] - distance,
-                pos[1],
-            )
-        elif side == "right":
-            xanchor = 0.0
-            yanchor = 0.5
-            draggable_pos = (
-                pos[0] + distance,
-                pos[1],
-            )
-
-        if clamp:
-            draggable_pos = (
-                min(max(draggable_pos[0], 0), renpy.config.screen_width - JK.adjustable(200 + distance)),
-                min(max(draggable_pos[1], 0), renpy.config.screen_height - JK.adjustable(200 + distance)),
-            )
-
-        closeAction = Hide("JK_TooltipDialog")
-
+    $ closeAction = Hide("JK_TooltipDialog")
     if closeAction:
         key 'K_ESCAPE' action closeAction
         key 'mouseup_3' action closeAction
 
-    timer 0.05 repeat True action [SetScreenVariable("mouse_position", renpy.get_mouse_pos())]
+    if not interactive:
+        timer 0.01 repeat follow_mouse action JK.UpdateTooltipPositionAction(side, distance, pos)
 
     drag:
-        draggable True
+        id "JK_TooltipDialog"
+        draggable interactive
         drag_handle (0, 0, 1.0, 1.0)
-        xpos draggable_pos[0]
-        ypos draggable_pos[1]
-        xanchor xanchor
-        yanchor yanchor
+        xpos 2.0
+        ypos 2.0
         droppable False
 
         frame style "JK_default":
+            id "JK_TooltipDialog_Window"
             background "#0c0c0cfc"
-            padding (10, 10, 10, 10)
+            padding JK.adjustable((10, 10, 10, 10))
             xmaximum int(renpy.config.screen_width / 4)
 
             vbox:

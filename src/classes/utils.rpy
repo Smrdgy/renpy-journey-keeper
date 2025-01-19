@@ -672,6 +672,53 @@ init -9999 python in JK:
                 renpy.show_screen("JK_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side)
                 renpy.restart_interaction()
 
+    class UpdateTooltipPositionAction(renpy.ui.Action):
+        def __init__(self, side="top", distance=0, pos=None, allow_offscreen=False):
+            self.side = side
+            self.distance = distance
+            self.pos = pos
+            self.allow_offscreen = allow_offscreen
+
+        def __call__(self):
+            drag = renpy.display.screen.get_widget(None, "JK_TooltipDialog")
+            window = renpy.display.screen.get_widget(None, "JK_TooltipDialog_Window")
+            if not drag or not window:
+                return
+
+            mouse_pos = renpy.get_mouse_pos()
+            pos = self.pos or mouse_pos
+            draggable_pos = pos
+            window_size = window.window_size #Window displayable that is part of the frame, not the game window
+
+            if self.side == "top":
+                draggable_pos = (
+                    pos[0] - window_size[0] / 2,
+                    pos[1] - self.distance - window_size[1],
+                )
+            elif self.side == "bottom":
+                draggable_pos = (
+                    pos[0] - window_size[0] / 2,
+                    pos[1] + self.distance + window_size[1],
+                )
+            elif self.side == "left":
+                draggable_pos = (
+                    pos[0] - self.distance - window_size[0],
+                    pos[1] - window_size[1] / 2,
+                )
+            elif self.side == "right":
+                draggable_pos = (
+                    pos[0] + self.distance + window_size[0],
+                    pos[1] - window_size[1] / 2,
+                )
+
+            if not self.allow_offscreen:
+                new_x = max(draggable_pos[0], 0)
+                new_x = min(new_x, int(renpy.config.screen_width - window_size[0]))
+                new_y = max(draggable_pos[1], 0)
+                new_y = min(new_y, int(renpy.config.screen_height - window_size[1]))
+
+            drag.snap(int(new_x), int(new_y))
+
     def adjustable(value, minValue=5): 
         # if JK.Settings.sizeAdjustment == 0:
     #     return value
