@@ -10,7 +10,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
 
     key "ctrl_K_a" action JK.SavesListViewModel.SelectAllAction(viewModel, selection_mode)
 
-    hbox ysize JK.adjustable(42):
+    hbox ysize JK.scaled(42):
         xfill True
 
         frame style ("JK_toolbar" if selected_length == 0 else "JK_toolbar_active"):
@@ -61,7 +61,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                         xsize col_size
 
                         hbox:
-                            text location.directory size JK.adjustable(10) yalign 0.5
+                            text location.directory size JK.scaled(10) yalign 0.5
 
                             use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
 
@@ -78,7 +78,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
 
                             if save in saves:
                                 button:
-                                    ysize JK.adjustable(row_height)
+                                    ysize JK.scaled(row_height)
                                     xsize 1.0
                                     style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button") selected id in viewModel.selection
 
@@ -94,7 +94,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                                         hbox:
                                             xfill True
 
-                                            hbox xysize JK.adjustable((42, 42)) yalign 0.5:
+                                            hbox xysize JK.scaled((42, 42)) yalign 0.5:
                                                 if hovered_button == id and (directory_index == 0 if selection_mode == "PER_SAVE" else True):
                                                     hbox yalign 0.5:
                                                         use JK_Checkbox(checked=id in viewModel.selection, text="", action=ToggleSetMembership(viewModel.selection, id))
@@ -126,8 +126,8 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                                                         # Delete
                                                         use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.DeleteSingleConfirmAction(viewModel, (save, location)), tt="Delete save")
                             else:
-                                hbox ysize JK.adjustable(row_height):
-                                    hbox xysize JK.adjustable((42, 42))
+                                hbox ysize JK.scaled(row_height):
+                                    hbox xysize JK.scaled((42, 42))
 
                                     text "N/A" yalign 0.5 color JK.Colors.disabled
 

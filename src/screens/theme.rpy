@@ -14,7 +14,7 @@ style JK_default is default:
 
 style JK_text is JK_default:
     color JK.Colors.text_primary
-    size JK.adjustable(20)
+    size JK.scaled(20)
     text_align 0.0
     outlines []
     alt ''
@@ -26,7 +26,7 @@ style JK_label_text is JK_text:
 
 style textinput is JK_text:
     color "#959595"
-    offset JK.adjustable((10, 1), minValue=1)
+    offset JK.scaled((10, 1))
 
 style textinput_caret is textinput
 
@@ -34,12 +34,12 @@ style JK_vscrollbar:
     base_bar "#00000072"
     thumb '#fff'
     hover_thumb JK.Colors.hover
-    xsize JK.adjustable(18)
+    xsize JK.scaled(18)
     # base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", Borders(6, 10, 6, 10), tile=False)
     # thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", Borders(6, 10, 6, 10), tile=False)
 
 style JK_frame is JK_default:
-    padding JK.adjustable((15, 15), minValue=1)
+    padding JK.scaled((15, 15))
 
 style JK_vbox is JK_default
 style JK_hbox is JK_default
@@ -54,12 +54,12 @@ style JK_dialog_overlay:
     background '#000000ff'
 
 style JK_dialog_title is JK_text:
-    padding JK.adjustable((40, 40, 40, 0), minValue=1)
-    size JK.adjustable(40)
+    padding JK.scaled((40, 40, 40, 0))
+    size JK.scaled(40)
     xfill True
 
 style JK_dialog_content:
-    padding JK.adjustable((40, 0, 40, 40), minValue=1)
+    padding JK.scaled((40, 0, 40, 40))
    
 style JK_dialog_vbox is JK_vbox
 style JK_dialog_hbox is JK_hbox
@@ -92,7 +92,7 @@ style JK_dialog_action_buttons_hbox is JK_hbox:
 ##################
 
 style JK_button is JK_default:
-    padding JK.adjustable((5, 5), minValue=1)
+    padding JK.scaled((5, 5))
 
 style JK_Icon_button is JK_button
 
@@ -114,7 +114,7 @@ style JK_pagination_textbutton:
 style JK_pagination_textbutton_text is JK_text:
     color '#cdcdcd'
     hover_color JK.Colors.hover
-    size JK.adjustable(25)
+    size JK.scaled(25)
     text_align 0.5
 
 style JK_pagination_textbutton_active is JK_pagination_textbutton
@@ -146,10 +146,10 @@ style JK_playthrough_button is JK_button:
 
 style keyinput is JK_button:
     background "#ffffff22"
-    xminimum JK.adjustable(100)
+    xminimum JK.scaled(100)
 
 style keyinput_text is JK_text:
-    size JK.adjustable(25)
+    size JK.scaled(25)
     color JK.Colors.theme
 
 style keyinput_text_placeholder is keyinput_text:
@@ -178,7 +178,7 @@ style JK_Icon is JK_text:
     font 'fonts/MaterialIconsOutlined-Regular.otf'
     hover_font 'fonts/MaterialIcons-Regular.ttf'
     hover_color JK.Colors.hover
-    size JK.adjustable(30)
+    size JK.scaled(30)
 
 ##################
 #     Titles     #
@@ -188,39 +188,39 @@ style JK_title is JK_text:
     color JK.Colors.theme
 
 style JK_title_1 is JK_title:
-    size JK.adjustable(30)
+    size JK.scaled(30)
     bold True
 
 style JK_title_2 is JK_title:
-    size JK.adjustable(25)
+    size JK.scaled(25)
 
 style JK_title_3 is JK_title:
-    size JK.adjustable(20)
+    size JK.scaled(20)
 
 style JK_spacer_x_1:
-    xsize JK.adjustable(20)
+    xsize JK.scaled(20)
 
 style JK_spacer_x_2:
-    xsize JK.adjustable(20)
+    xsize JK.scaled(20)
 
 style JK_spacer_x_3:
-    xsize JK.adjustable(10)
+    xsize JK.scaled(10)
 
 style JK_spacer_y_1:
-    ysize JK.adjustable(40)
+    ysize JK.scaled(40)
 
 style JK_spacer_y_2:
-    ysize JK.adjustable(20)
+    ysize JK.scaled(20)
 
 style JK_spacer_y_3:
-    ysize JK.adjustable(10)
+    ysize JK.scaled(10)
 
 ##################
 #     Toolbar    #
 ##################
 
 style JK_toolbar:
-    padding JK.adjustable((20, 0, 20, 0))
+    padding JK.scaled((20, 0, 20, 0))
 
 style JK_toolbar_active is JK_toolbar:
     background "#2b4047"

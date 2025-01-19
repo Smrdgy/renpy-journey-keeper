@@ -25,6 +25,6 @@ screen JK_GoToPage():
 
     use JK_TooltipDialog(follow_mouse=False):
         frame style "JK_default":
-            xysize JK.adjustable((90, 25))
+            xysize JK.scaled((90, 25))
 
             add page_input.displayable(placeholder=renpy.store.persistent._file_page)

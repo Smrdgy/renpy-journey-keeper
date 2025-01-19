@@ -1,6 +1,6 @@
 screen JK_Sidepanel():
     style_prefix 'JK'
-    default estimatedPanelSize = JK.adjustable((80, 350))
+    default estimatedPanelSize = JK.scaled((80, 350))
 
     python:
         _constant = True
@@ -36,9 +36,9 @@ screen JK_Sidepanel():
 
             vbox:
                 use JK_IconButton('\ueb73', tt="Select playthrough", ttSide=tooltip_side, action=Show("JK_PlaythroughsPicker")):
-                    frame xysize (0, 0) offset JK.adjustable((-10, -5)) style "JK_default":
+                    frame xysize (0, 0) offset JK.scaled((-10, -5)) style "JK_default":
                         if amount_of_playthroughs > 1:
-                            text "{b}[amount_of_playthroughs]{/b}" size JK.adjustable(15) outlines [(JK.adjustable(5), "#000000", 0, 0)] color JK.Colors.theme
+                            text "{b}[amount_of_playthroughs]{/b}" size JK.scaled(15) outlines [(JK.scaled(5), "#000000", 0, 0)] color JK.Colors.theme
 
                 use JK_IconButton('\uea20', tt="New playthrough", ttSide=tooltip_side, action=Show("JK_EditPlaythrough", playthrough=None))
                 use JK_IconButton('\ue02c', tt="Open memories", ttSide=tooltip_side, action=Show("JK_MemoriesLibrary"), disabled=not JK.Settings.memoriesEnabled)

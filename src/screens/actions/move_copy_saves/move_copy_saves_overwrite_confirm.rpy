@@ -59,7 +59,7 @@ screen JK_MoveCopySavesOverwriteConfirm(save, viewModel):
                     else:
                         add JK.ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
-                    text "→" size JK.adjustable(40) align (0.5, 0.5)
+                    text "→" size JK.scaled(40) align (0.5, 0.5)
 
                     if target_screenshot:
                         add target_screenshot size JK.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5

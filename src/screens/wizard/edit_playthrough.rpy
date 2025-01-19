@@ -48,7 +48,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
                 if(not editing_template and name != originalname and not JK.Playthroughs.isValidName(name)):
-                    text "Are you sure? This name already exists." color JK.Colors.warning offset JK.adjustable((15, 2), minValue=1)
+                    text "Are you sure? This name already exists." color JK.Colors.warning offset JK.scaled((15, 2))
 
                 if(playthrough.id != 1 and not editing_template):
                     python:
@@ -56,7 +56,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                     use JK_Title("Directory", 2)
                     hbox:
-                        offset JK.adjustable((15, 0), minValue=1)
+                        offset JK.scaled((15, 0))
 
                         text "saves/" color '#e5e5e5'
                         text "[computedDirectory]" color JK.Colors.theme
@@ -113,7 +113,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                                 if len(enabledSaveLocations) == 0:
                                     use JK_YSpacer(3)
 
-                                    text "At least one location must be enabled!" color JK.Colors.error xoffset JK.adjustable(10)
+                                    text "At least one location must be enabled!" color JK.Colors.error xoffset JK.scaled(10)
 
                 use JK_YSpacer()
 
@@ -131,19 +131,19 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                             use JK_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not JK.Utils.hasColsAndRowsConfiguration())
                             use JK_Helper("This system automatically saves your progress (not to be confused with Ren'Py's autosave) right before you make a choice in the game, making it easier to back up and track your progress.")
                         if not JK.Utils.hasColsAndRowsConfiguration():
-                            text "{size=-7}{color=[JK.Colors.error]}This game uses an unconventional save configuration, so the autosave feature requires a manual adjustment to be enabled.{/color}" offset JK.adjustable((35, -10), minValue=1)
-                            hbox offset JK.adjustable((35, -10), minValue=1):
+                            text "{size=-7}{color=[JK.Colors.error]}This game uses an unconventional save configuration, so the autosave feature requires a manual adjustment to be enabled.{/color}" offset JK.scaled((35, -10))
+                            hbox offset JK.scaled((35, -10)):
                                 button style "JK_default":
                                     action None
 
                                     use JK_Icon('\ue88e', color = JK.Colors.info, size=13)
 
-                                hbox xsize JK.adjustable(5)
+                                hbox xsize JK.scaled(5)
 
                                 text "{size=-7}{color=[JK.Colors.info]}For manual adjustment, count the number of columns and rows, then go to the settings and find {color=[JK.Colors.theme]}\"Custom slots grid\"{/color}. There, enter the numbers accordingly.{/color}{/size}"
 
                         hbox:
-                            offset JK.adjustable((15, 0), minValue=1)
+                            offset JK.scaled((15, 0))
 
                             use JK_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system enabled above){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not JK.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
 
@@ -153,10 +153,10 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                     use JK_Title("Thumbnail")
                     hbox:
                         frame:
-                            xysize JK.adjustable((160, 160))
+                            xysize JK.scaled((160, 160))
 
                             if playthrough.hasThumbnail():
-                                add playthrough.getThumbnail(width=JK.adjustable(150), maxHeight=JK.adjustable(150))
+                                add playthrough.getThumbnail(width=JK.scaled(150), maxHeight=JK.scaled(150))
                             else:
                                 button:
                                     style_prefix ""

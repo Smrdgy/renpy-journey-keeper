@@ -28,7 +28,7 @@ screen JK_DuplicatePlaythrough(playthrough):
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
                 if(not JK.Playthroughs.isValidName(name)):
-                    vbox offset JK.adjustable((15, 2), minValue=1):
+                    vbox offset JK.scaled((15, 2)):
                         text "Are you sure? This name already exists." color JK.Colors.warning
                         use JK_InfoBox("All existing saves of \"" + name + "\" will be deleted. This action {u}{color=[JK.Colors.error]}is irreversible{/color}{/u}!")
 

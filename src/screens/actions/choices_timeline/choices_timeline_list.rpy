@@ -50,7 +50,7 @@ screen JK_ChoicesTimelineList(viewModel, show_thumbnails, search):
                     # Seach box
                     hbox yalign 0.0 xpos 1.0 xanchor 1.0:
                         frame style "JK_frame":
-                            xysize JK.adjustable((300, 50))
+                            xysize JK.scaled((300, 50))
 
                             button:
                                 key_events True
@@ -63,7 +63,7 @@ screen JK_ChoicesTimelineList(viewModel, show_thumbnails, search):
 
                                         add search_input.displayable(placeholder="Search for choice")
 
-                                    frame style "JK_default" background "#ffffff22" hover_background JK.Colors.hover ysize 2 offset JK.adjustable((0, 2))
+                                    frame style "JK_default" background "#ffffff22" hover_background JK.Colors.hover ysize 2 offset JK.scaled((0, 2))
 
                         use JK_XSpacer(offset=2)
 

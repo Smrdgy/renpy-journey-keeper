@@ -42,7 +42,7 @@ screen JK_Settings():
 
                                 hbox xsize 5
 
-                                text "T" size JK.adjustable(30) yalign 1.0
+                                text "T" size JK.scaled(30) yalign 1.0
 
                     if originalSizeAdjustment != JK.Settings.sizeAdjustment:
                         use JK_InfoBox("If anything goes wrong, you can revert the value via confirm dialog / waiting for 60 seconds / manually, by simultaneously pressing {b}CTRL + SHIFT + ALT + P{/b}.")
@@ -184,10 +184,10 @@ screen JK_Settings():
 
                                             use JK_IconButton(icon="\ue145", action=JK.Settings.IncrementCustomGridY())
 
-                                grid JK.Settings.customGridX JK.Settings.customGridY spacing JK.adjustable(5, minValue=1) offset (100, 0) yalign 0.5:
+                                grid JK.Settings.customGridX JK.Settings.customGridY spacing JK.scaled(5) offset JK.scaled((100, 0)) yalign 0.5:
                                     for x in range(0, JK.Settings.customGridX):
                                         for y in range(0, JK.Settings.customGridY):
-                                            frame style "JK_default" xysize (10, 10) background JK.Colors.theme
+                                            frame style "JK_default" xysize JK.scaled((10, 10)) background JK.Colors.theme
 
                             use JK_YSpacer(2)
 

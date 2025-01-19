@@ -10,5 +10,5 @@ screen JK_Icon(icon, color=None, hover_color=None, size=None):
                     if hover_color:
                         hover_color hover_color
                     if size:
-                        size JK.adjustable(size)
+                        size JK.scaled(size)
             transclude

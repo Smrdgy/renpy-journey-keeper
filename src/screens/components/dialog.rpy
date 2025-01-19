@@ -13,7 +13,7 @@ screen JK_Dialog(title=None, message=None, closeAction=None, icon=None):
                 xfill True
 
                 frame:
-                    padding JK.adjustable((20, 20, 20, 20))
+                    padding JK.scaled((20, 20, 20, 20))
 
                     use JK_IconButton(icon=None, action=None)
 
@@ -30,7 +30,7 @@ screen JK_Dialog(title=None, message=None, closeAction=None, icon=None):
                 frame:
                     xalign 1.0
                     yalign 0.5
-                    padding JK.adjustable((20, 20, 20, 20))
+                    padding JK.scaled((20, 20, 20, 20))
 
                     use JK_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 

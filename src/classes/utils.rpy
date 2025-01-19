@@ -719,10 +719,7 @@ init -9999 python in JK:
 
             drag.snap(int(new_x), int(new_y))
 
-    def adjustable(value, minValue=5): 
-        # if JK.Settings.sizeAdjustment == 0:
-    #     return value
-
+    def scaled(value): 
         # Helper function to apply adjustment only to integers
         def adjust_number(value):
             return int(value * (renpy.config.screen_height / 1080.0)) + Settings.sizeAdjustment

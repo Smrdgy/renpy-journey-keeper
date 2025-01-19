@@ -1,4 +1,4 @@
-screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=JK.adjustable(20), follow_mouse=True):
+screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=JK.scaled(20), follow_mouse=True):
     layer "JK_Overlay"
     style_prefix 'JK_dialog'
     zorder 99999
@@ -22,7 +22,7 @@ screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interacti
         frame style "JK_default":
             id "JK_TooltipDialog_Window"
             background "#0c0c0cfc"
-            padding JK.adjustable((10, 10, 10, 10))
+            padding JK.scaled((10, 10, 10, 10))
             xmaximum int(renpy.config.screen_width / 4)
 
             vbox:

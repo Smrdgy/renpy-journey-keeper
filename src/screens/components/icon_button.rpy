@@ -34,7 +34,7 @@ screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=Non
                     if text_color:
                         color text_color
                     if size:
-                        size JK.adjustable(size)
+                        size JK.scaled(size)
                     if hover_color:
                         hover_color hover_color
 
