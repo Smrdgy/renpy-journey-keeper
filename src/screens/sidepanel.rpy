@@ -51,7 +51,7 @@ screen JK_Sidepanel():
 
                 use JK_Divider(sizeX=40)
 
-                use JK_IconButton('\ue666', tt=("Hide custom pagination" if custom_pagination_enabled else "Show custom pagination"), ttSide=tooltip_side, action=JK.Pagination.TogglePagination(), toggled=custom_pagination_enabled, toggledColor=JK.Colors.selected)
+                use JK_IconButton('\uf045', tt=("Hide custom pagination" if custom_pagination_enabled else "Show custom pagination"), ttSide=tooltip_side, action=JK.Pagination.TogglePagination(), toggled=custom_pagination_enabled, toggledColor=JK.Colors.selected)
                 use JK_IconButton('\ue8b8', tt="Open settings", ttSide=tooltip_side, action=Show("JK_Settings"))
 
 
