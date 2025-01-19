@@ -2,9 +2,7 @@
 
 # Journey Keeper (JK)
 
-**Journey Keeper (JK)** is a universal Ren'Py mod designed to manage saves across multiple playthroughs.
-
----
+**Journey Keeper (JK)** is a Ren'Py mod designed to manage saves across multiple playthroughs.
 
 # Table of Contents
 1. [Install](#install)
@@ -17,11 +15,9 @@
 Copy `JK.rpa` into the `/game` directory of the game you want to play.
 
 *Tip for Windows*:
-If you plan to use this mod for multiple games, consider using [Link Shell Extension](https://schinagl.priv.at/nt/hardlinkshellext/linkshellextension.html).  
+If you plan to use this mod for multiple games, consider using [Link Shell Extension](https://schinagl.priv.at/nt/hardlinkshellext/linkshellextension.html#download).  
 By dragging the `.rpa` file with the right mouse button and selecting `Drop Here > Hardlink` from the context menu, you can store the mod anywhere on your PC and reference it as if it were located in the game's directory.  
-This approach allows you to reuse the mod across games and update only once.
-
----
+This approach enables you to reuse the mod across multiple games, and in the event of an update, update it only once.
 
 # First-time orientation
 When you start the game, go to the load screen. You should see a black bar with buttons on the right side -- a sidepanel.
@@ -29,32 +25,30 @@ If the sidepanel doesn't appear, check the [Troubleshooting](#troubleshooting) s
 
 The sidepanel is the only element added to your field of view. From here, you can:
 - Select, edit, or create playthroughs.
-- View created memories (*WIP*).
-- Toggle autosaving quickly.
+- View and manage created memories (*WIP*).
+- Quickly toggle autosaving for the active playthrough.
 - Manage active playthrough via specific actions, like:
   - Duplicate playthrough.
   - Manage saves.
   - Show choices timeline.
 
-## Key shortcuts
+## Keyboard shortcuts
 - `ALT + P` or draw `P` → `Up + Right + Down + Left` on a touch screen
-  - Cycles between 3 modes of sidepanel visibility "visible only on save/load screens" → "Always visible" → "Always hidden"
+  - Cycles between 3 modes of sidepanel visibility "Visible only on save/load screens" → "Always visible" → "Always hidden"
 - `ALT + A`
   - Toggles autosave function (if it can be enabled)
 - `F5`
   - Makes a quick save
 - ` (Backtick)
-  - Saves memory
+  - Saves a memory
 - `CTRL + ALT + SHIFT + P`
-  - Resets text sizing and sidepanel and pagination position
+  - Resets text sizing as well as sidepanel and pagination position
 
-**Note**: All shortcuts can be remapped in the settings in case of conflicts with the game or another mod.
-Additionally, the mappings can be set global via the globe icon button, meaning, the mapping will apply to all other games as well.
-> For example, I'm not using the Ren'Py's native accessibility menu (`A`), so I unchecked ALT on the autosave mapping to simplify the shortcut.
+**Note**: All shortcuts can be remapped in the settings, in case of conflicts with the game or another mod.
+Additionally, the mappings can be set global via the globe icon button. Meaning, the mapping will apply to all other games as well.
+> For example: I'm not using the Ren'Py's native accessibility menu (`A`), so I unchecked ALT on the autosave mapping to simplify the shortcut.
 
 You can also unassign the mapping by clicking the circular red X button 
-
----
 
 # Features
 - Manage multiple playthroughs, each with its own name, thumbnail, and description—accessible from the save/load screen.
@@ -69,20 +63,16 @@ You can also unassign the mapping by clicking the circular red X button
 **Note:**  
 Memories are an experimental feature. Until I figure out how to store a sequence of events, a "memory" will be just a glorified save.
 
----
-
 ### Planned features *(or at least under consideration)*
 
 - Complete memories
 - Add custom save/load page
 
----
-
 # Troubleshooting
-Most of these issues stem from the vast diversity of how the games are programmed, so don't be surprised about the repeated pattern of the blame.
+Most of these issues arise from the wide diversity of how the games are programmed, so don't be surprised by the recurring pattern of blaming the other developers.
 
 ## I can't find the panel
-### Scenario A:
+### Scenario A: Wrong save/load names
 #### Solution:
 1. Press `ALT + P` (or draw `P` -> `Up + Right + Down + Left` on a touch screen) to cycle through the panel's visibility modes.
 2. Open settings (⚙️).
@@ -93,19 +83,15 @@ Most of these issues stem from the vast diversity of how the games are programme
 #### Reason:
 Some game developers rename save/load screens while customizing them, breaking the mod's detection system when it looks for "save"/"load" screen names.
 
----
-
-### Scenario B:
+### Scenario B: No independent screens
 #### Solution
-In extreme cases, were you are unable to find the save/load screen(s), you'll have to:
-1. Use `ALT + P` to toggle the sidepanel visibility to always visible. 
+In extreme cases were you are unable to find the save/load screen(s), follow these steps:
+1. Press `ALT + P` (or draw `P` -> `Up + Right + Down + Left` on a touch screen) to cycle the sidepanel visibility to "Always visible". 
 2. Do what you need to do.
-3. Use again `ALT + P` to hide the sidepanel.
+3. Press `ALT + P` (or the touch screen equivalent) again to hide the sidepanel. 
 
 #### Reason:
-So far, in all my tests, there have been only one game, where the dev decided to include the save/load screens directly into the game screen, which made them undetectable.
-
----
+So far, in all of my tests, there has only been one game where the developer integrated the save/load screens directly into the game screen, making them impossible to detect.
 
 ## UI is too big or too small
 The mod was developed with a 1080p resolution in mind. Older games, often using 720p resolution, may encounter sizing issues.
@@ -118,8 +104,6 @@ The mod was developed with a 1080p resolution in mind. Older games, often using 
    - Usually, adjustments in the range of -3 to +3 are sufficient.
 4. Click `Click here to apply the new size` to apply the changes.
 
----
-
 ## The 'A' button in the sidepanel is greyed out, or the `Autosave on choice` option is disabled
 ### Solution:
 1. Count the number of rows and columns in the save/load grid.
@@ -130,8 +114,6 @@ The mod was developed with a 1080p resolution in mind. Older games, often using 
 ### Reason:
 Custom save/load screens may not follow standard Ren'Py variables, such as `renpy.store.gui.file_slot_cols` and `renpy.store.gui.file_slot_rows`, which the mod uses for calculating the next save slot.
 
----
-
 ## Autosave is enabled, but it won’t save my choices
 
 ### Scenario A: No `start` label
@@ -141,9 +123,9 @@ Custom save/load screens may not follow standard Ren'Py variables, such as `renp
 2. Uncheck “Restrict autosave to in-game only” under `Advanced` in the `Autosave` section.
 
 #### Reason:
-The mod relies on a very specific moment in the game’s lifetime to avoid saving during menus or age verification prompts.
+The mod depends on a very specific moment in the game's lifecycle to prevent saving during menus or age verification prompts.
 
-For example, some games have an age check at the very start of the game and the yes/no buttons might overwrite save 1-1.
+For instance, some games feature an age check right at the beginning, and the "yes/no" buttons could potentially overwrite the save slot 1-1.
 
 ### Scenario B: Custom choice buttons
 
@@ -153,27 +135,38 @@ Cannot be fixed.
 #### Reason:
 The game uses custom buttons for choices, which the mod cannot detect.
 
----
+
+## The autosaves are disorganized
+
+### Scenario A: Manual saves performed by the game
+
+#### Solution:
+1. Perform a manual save to correct the slot counter and continue from there, until another manual save breaks it again.
+
+#### Reason:
+Some games force manual saves during gameplay, disrupting the autosave system. There is nothing that can be done about it, short of manually removing all the save function calls from the game’s code.
+
+### Scenario B: Incorrect save grid numbers
+
+#### Solution:
+1. Count the number of rows and columns in the save/load grid.
+2. Open settings (⚙️).
+3. Find `Custom slots grid` checkbox under `Save/Load` section.
+4. Use the `+` and `-` buttons to match the row and column numbers from step 1.
+
+#### Reason:
+Some games with custom save/load screens may encounter issues if two variables, `renpy.store.gui.file_slot_cols` and `renpy.store.gui.file_slot_rows`, are defined incorrectly. This misconfiguration can confuse the autosave counter, leading to saves either overflowing the grid or prematurely jumping to another page.
+
 
 # Known issues
 
 ## “Reload” button on the exception screen crashes the game
-This issue stems from `loadsave.rpy` and `ui.rpy` injections. Simply re-start the game manually.
-
----
+This issue stems from two file injections that are overwriting standard Ren'Py behavior, specifically: `loadsave.rpy` and `ui.rpy`. Simply re-start the game manually.
 
 ## Loss of progress
-There have been rare cases, so far only 2 out of ~100, where save values were not stored or loaded properly, causing loss of progress and/or exceptions.
+There have been rare cases, so far only 2 out of ~100 games, where save values were not stored or loaded properly, causing loss of progress and/or exceptions.
 
 **This issue should be resolved. If it persists, please report it.**
-
-----
-
-## The autosaves are disorganized
-Some games force manual saves during gameplay, disrupting the autosave system. There is nothing that can be done about it, short of manually removing all the save function calls from the game’s code.
-As a silver lining, when you come across this behavior, you can perform a manual save to correct the slot counter and continue from there, until another manual save breaks it agan.
-
----
 
 ## Game error
 ```
@@ -187,3 +180,8 @@ PicklingError: Can't pickle [some function]: it's not the same object as renpy.[
 This, or very similar error, is not necessarily related to this mod.
 Despite the trace, it only indicates that something has happened during saving/loading, which this mod "hijacks" in order to detect when user performed save/load.
 The issue is most likely with other mod or the game itself.
+
+# Known problematic games
+
+- Chasing Sunsets
+  - The game creates manual saves at specific points in the story, which disrupts the autosave counter, causing new saves to appear on page 99. Follow the troubleshooting "The autosaves are disorganized"
