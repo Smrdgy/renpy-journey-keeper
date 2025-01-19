@@ -107,19 +107,20 @@ style JK_radio is JK_button
 style JK_radio_text is JK_Icon_button_text
 style JK_radio_button is JK_button
    
-style JK_pagination_textbutton:
+style JK_PaginationButton_button:
     background None
-    yalign 0.5
+    xminimum JK.scaled(60)
 
-style JK_pagination_textbutton_text is JK_text:
+style JK_PaginationButton_text is JK_text:
     color '#cdcdcd'
     hover_color JK.Colors.hover
     size JK.scaled(25)
     text_align 0.5
+    xalign 0.5
 
-style JK_pagination_textbutton_active is JK_pagination_textbutton
+style JK_PaginationButton_active_button is JK_PaginationButton_button
 
-style JK_pagination_textbutton_active_text is JK_pagination_textbutton_text:
+style JK_PaginationButton_active_text is JK_PaginationButton_text:
     color JK.Colors.selected
     hover_color JK.Colors.hover
 

@@ -9,7 +9,7 @@ screen JK_Pagination():
         try:
             currentPage = persistent._file_page
             if(currentPage == "quick" or currentPage == "auto"):
-                currentPage = 1
+                currentPage = 0
 
             currentPage = int(currentPage)
             pageOffset = math.floor(currentPage / 10)
@@ -21,6 +21,8 @@ screen JK_Pagination():
 
         def pagination_dragged(drags, drop):
             renpy.store.persistent.JK_PaginationPos = (drags[0].x, drags[0].y)
+
+        pagination_button_size = renpy.style.Style("JK_PaginationButton_text").size
 
     if JK.Settings.debugEnabled:
         frame:
@@ -40,48 +42,31 @@ screen JK_Pagination():
         frame:
             background "#000000fc"
 
-            ## Buttons to access other pages.
-            hbox:
-                yalign 0.5
-                spacing 10
+            hbox yalign 0.5:
+                hbox yalign 0.5:
+                    use JK_IconButton('\ue8a0', tt="Go to page", action=JK.Pagination.ToggleGoToPage(), size=JK.scaled(30))
 
-                hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
-                    use JK_IconButton('\uf045', tt="Go to page", action=JK.Pagination.ToggleGoToPage())
+                use JK_XSpacer()
 
-                hbox:
-                    yalign 0.5
-                    spacing 10
+                hbox yalign 0.5:
+                    use JK_IconButton(text="A", action=FilePage("auto"), toggled=persistent._file_page == "auto", toggledColor=JK.Colors.selected, tt="Native autosaves", size=pagination_button_size)
+                    use JK_IconButton(text="Q", action=FilePage("quick"), toggled=persistent._file_page == "quick", toggledColor=JK.Colors.selected, tt="Quick saves", size=pagination_button_size)
 
-                    hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
-                        spacing 10
+                use JK_XSpacer()
 
-                        textbutton "<<" action FilePage(max(currentPage - 10, 1)) style "JK_pagination_textbutton"
-                        textbutton "<" action FilePage(max(currentPage - 1, 1)) style "JK_pagination_textbutton"
+                hbox yalign 0.5:
+                    use JK_IconButton(icon="\ueac3", action=FilePage(max(currentPage - 10, 1)), tt=str(max(currentPage - 10, 1)), disabled=currentPage < 2)
+                    use JK_IconButton(icon="\ue5cb", action=FilePage(max(currentPage - 1, 1)), disabled=currentPage < 2)
 
-                    grid 10 1 xpos 0.5 xanchor 0.5 ypos 1.0 yanchor 1.0:
-                        spacing 10
-                        
-                        if pageOffset == 0:
-                            hbox
+                hbox yalign 0.5:
+                    for page in range(int(pageOffset * 10), int(pageOffset * 10 + 10)):
+                        button:
+                            style_prefix ("JK_PaginationButton_active" if page == currentPage else "JK_PaginationButton")
+                            text (str(page) if page > 0 else "")
 
-                        for page in range(max(int(pageOffset * 10), 1), int(pageOffset * 10 + 10)):
-                            hbox:
-                                xsize 55
+                            if page > 0:
+                                action FilePage(page)
 
-                                textbutton "[page]":
-                                    action FilePage(page)
-                                    style ("JK_pagination_textbutton_active" if page == currentPage else "JK_pagination_textbutton")
-                                    xpos 0.5
-                                    xanchor 0.5
-                                    ypos 1.0
-                                    yanchor 1.0
-
-                    hbox:
-                        xpos 1.0
-                        xanchor 1.0
-                        ypos 1.0
-                        yanchor 1.0
-                        spacing 10
-
-                        textbutton ">" action FilePageNext() style "JK_pagination_textbutton"
-                        textbutton ">>" action FilePage(currentPage + 10) style "JK_pagination_textbutton"
+                hbox yalign 0.5:
+                    use JK_IconButton(icon="\ue5cc", action=FilePageNext())
+                    use JK_IconButton(icon="\ueac9", action=FilePage(currentPage + 10), tt=str(currentPage + 10))
