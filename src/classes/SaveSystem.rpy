@@ -7,21 +7,19 @@ init python in JK:
     class SaveSystemClass(x52NonPicklable):
         def __init__(self):
             self._playthroughSaves = OrderedDict()
-            self._activePlaythroughSave = None
             self.multilocation = MultiLocation()
 
             renpy.loadsave.location = self.multilocation
 
-        def setupLocations(self):
-            playthroughs = Playthroughs.playthroughs
-
-            for playthrough in playthroughs:
-                self.createPlaythroughSaveInstance(playthrough, noScan=True)
-
-            SaveSystem.multilocation.scan()
-
         def getPlaythroughSaveInstance(self, playthroughID):
             return self._playthroughSaves.get(playthroughID)
+
+        def getOrCreatePlaythroughSaveInstanceByID(self, playthroughID, autoActivate=True):
+            playthrough = Playthroughs.getByID(playthroughID)
+            if playthrough:
+                return self.getOrCreatePlaythroughSaveInstance(playthrough, autoActivate=autoActivate)
+
+            return None
 
         def overrideNativeLocation(self):
             renpy.loadsave.location = self.multilocation
@@ -81,8 +79,6 @@ init python in JK:
 
                 renpy.loadsave.clear_cache()
                 SaveSystem.multilocation.scan()
-                renpy.store.persistent.JK_ActivePlaythrough = self.playthrough.id
-                SaveSystem._activePlaythroughSave = self
 
             def deactivate(self):
                 self.location.deactivateLocations()

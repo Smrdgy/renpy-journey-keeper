@@ -10,20 +10,19 @@ init python in JK:
             self.restoreOldLog = None
             self.restoreStoreBackup = None
             self.restoreContext = None
+            self._save_instance = None
 
         @property
         def saveInstance(self):
-            return SaveSystem.getPlaythroughSaveInstance(2)
-
-        def createAutomaticMemory(self):
-            pass
+            self._save_instance = self._save_instance or SaveSystem.getOrCreatePlaythroughSaveInstanceByID(2, autoActivate=False)
+            return self._save_instance
 
         def getMemories(self):
-            saveInstance = self.saveInstance
-            saveInstance.location.activateLocations()
-            saveInstance.location.scan()
-            memories = saveInstance.location.list()
-            saveInstance.location.deactivateLocations()
+            save_location = self.saveInstance.location
+            save_location.activateLocations()
+            save_location.scan()
+            memories = save_location.list()
+            save_location.deactivateLocations()
             return memories
 
         def callCustomReplay(self, slotname):
@@ -149,13 +148,15 @@ init python in JK:
                 self.name = name
 
             def __call__(self):
-                saveInstance = Memories.saveInstance
+                save_location = Memories.saveInstance.location
+                save_location.activateLocations()
                 saveRecord = MemoriesClass.createSaveRecord(extra_info=self.name)
 
-                for location in saveInstance.location.locations:
+                for location in save_location.active_locations():
                     location.save(str(time.time())[:-3], saveRecord)
 
-                saveInstance.location.scan()
+                save_location.scan()
+                save_location.deactivateLocations()
                 
                 renpy.restart_interaction()
 

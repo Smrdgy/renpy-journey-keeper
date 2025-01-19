@@ -15,8 +15,6 @@ init python in JK:
     Pagination = PaginationClass()
     Memories = MemoriesClass()
 
-    SaveSystem.setupLocations()
-
     if Playthroughs.activePlaythroughOrNone == None and renpy.store.persistent.JK_ActivePlaythrough != None:
         Playthroughs.activateByID(renpy.store.persistent.JK_ActivePlaythrough)
     
