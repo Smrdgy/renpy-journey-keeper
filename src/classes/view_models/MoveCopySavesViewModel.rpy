@@ -30,14 +30,14 @@ init python in JK:
             self.cleanup_thread = None  # To track the cleanup thread
             self.skip_conflicts_thread = None  # To handle skip conflicts in background
 
-            self.source_instance = SaveSystem.getPlaythroughSaveInstance(self.source_playthrough.id)
+            self.source_instance = SaveSystem.getOrCreatePlaythroughSaveInstance(self.source_playthrough)
             if not self.source_instance:
                 self.error = "Couldn't find the source location."
                 self.processing = False
                 renpy.restart_interaction()
                 return
 
-            self.destination_instance = SaveSystem.getPlaythroughSaveInstance(self.destination_playthrough.id)
+            self.destination_instance = SaveSystem.getOrCreatePlaythroughSaveInstance(self.destination_playthrough)
             if not self.destination_instance:
                 self.error = "Couldn't find the destination location."
                 self.processing = False

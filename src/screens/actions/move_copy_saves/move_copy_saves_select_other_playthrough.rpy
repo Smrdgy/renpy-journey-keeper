@@ -1,6 +1,6 @@
 screen JK_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_playthrough):
     python:
-        thumbnailSize = (150, 100)
+        thumbnailSize = JK.scaled((150, 100))
         playthroughs = [p for p in JK.Playthroughs.playthroughs if p.id != 2 and p != source_playthrough and p != destination_playthrough] # Get all playthroughs except memories, source/destination playthroughs
 
     viewport:

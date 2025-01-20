@@ -4,7 +4,10 @@ screen JK_PlaythroughsPicker():
     modal True
 
     default columns = 4
-    default thumbnailSize = (int((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20), 200)
+    default thumbnailSize = (
+        int((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20),
+        JK.scaled(200)
+    )
 
     use JK_Dialog(title="Select a playthrough", closeAction=Hide("JK_PlaythroughsPicker")):
         style_prefix "JK"
