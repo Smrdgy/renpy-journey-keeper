@@ -80,6 +80,8 @@ init python in JK:
                 # If the save slot is not bigger than the very last one, do once a confirm whether to disable autosaving
                 if renpy.scan_saved_game(Utils.format_slotname(renpy.store.JK_ActiveSlot)) and not self.suppressAutosaveConfirm and (self.loaded_manual_save_without_choices or renpy.store.JK_ActiveSlot != self.prevActiveSlot):
                     self.confirmDialogOpened = True
+                    if renpy.get_skipping():
+                        renpy.skip(False)
                     renpy.show_screen("JK_AutosaveOverwriteConfirm")
                     return
 
