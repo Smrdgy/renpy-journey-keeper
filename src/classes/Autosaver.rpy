@@ -104,7 +104,7 @@ init python in JK:
             self.loaded_manual_save_without_choices = False
 
             if not Utils.isDisplayingChoices():
-                if Settings.offsetSlotAfterManualSave:
+                if Settings.offsetSlotAfterManualSaveIsLoaded:
                     self.setNextSlot()
 
                 self.loaded_manual_save_without_choices = True
