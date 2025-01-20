@@ -1,7 +1,7 @@
 screen JK_Pagination():
     style_prefix 'JK'
 
-    default estimatedPaginationSize = (880, 80)
+    default estimatedPaginationSize = JK.scaled((880, 80))
 
     python:
         try:
@@ -17,8 +17,6 @@ screen JK_Pagination():
 
         def pagination_dragged(drags, drop):
             renpy.store.persistent.JK_PaginationPos = (drags[0].x, drags[0].y)
-
-        pagination_button_size = renpy.style.Style("JK_PaginationButton_text").size
 
         def paginate(selected_page, visible_pages=10):
             offset = selected_page // visible_pages
@@ -53,13 +51,13 @@ screen JK_Pagination():
 
             hbox yalign 0.5:
                 hbox yalign 0.5:
-                    use JK_IconButton('\ue8a0', tt="Go to page", action=JK.Pagination.ToggleGoToPage(), size=JK.scaled(30))
+                    use JK_IconButton('\ue8a0', tt="Go to page", action=JK.Pagination.ToggleGoToPage(), size=30)
 
                 use JK_XSpacer()
 
                 hbox yalign 0.5:
-                    use JK_IconButton(text="A", action=FilePage("auto"), toggled=persistent._file_page == "auto", toggledColor=JK.Colors.selected, tt="Native autosaves", size=pagination_button_size)
-                    use JK_IconButton(text="Q", action=FilePage("quick"), toggled=persistent._file_page == "quick", toggledColor=JK.Colors.selected, tt="Quick saves", size=pagination_button_size)
+                    use JK_IconButton(text="A", action=FilePage("auto"), toggled=persistent._file_page == "auto", toggledColor=JK.Colors.selected, tt="Native autosaves", size=25)
+                    use JK_IconButton(text="Q", action=FilePage("quick"), toggled=persistent._file_page == "quick", toggledColor=JK.Colors.selected, tt="Quick saves", size=25)
 
                 use JK_XSpacer()
 

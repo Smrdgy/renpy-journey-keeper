@@ -343,7 +343,7 @@ screen JK_KeyInput(assignment=None, action=NullAction, disabled=False):
 
             use JK_XSpacer(offset=2)
 
-            use JK_IconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color=JK.Colors.reset)
+            use JK_IconButton(icon="\ue5c9", action=action(None), disabled=disabled or assignment == None, color=JK.Colors.reset, tt="Unassign")
 
         use JK_KeyAssignmentCheck(assignment)
 
