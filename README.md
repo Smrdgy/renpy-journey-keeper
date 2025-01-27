@@ -1,4 +1,4 @@
-# TODO: Add header image 
+![Journey Keeper](/banner.jpg)
 
 # Journey Keeper
 
