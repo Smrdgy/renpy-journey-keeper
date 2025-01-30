@@ -741,7 +741,7 @@ init -9999 python in JK:
             elif self.side == "bottom":
                 draggable_pos = (
                     pos[0] - window_size[0] / 2,
-                    pos[1] + self.distance + window_size[1],
+                    pos[1] + self.distance,
                 )
             elif self.side == "left":
                 draggable_pos = (
@@ -750,7 +750,7 @@ init -9999 python in JK:
                 )
             elif self.side == "right":
                 draggable_pos = (
-                    pos[0] + self.distance + window_size[0],
+                    pos[0] + self.distance,
                     pos[1] - window_size[1] / 2,
                 )
 
