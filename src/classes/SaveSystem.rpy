@@ -14,7 +14,7 @@ init python in JK:
         def getPlaythroughSaveInstance(self, playthroughID):
             return self._playthroughSaves.get(playthroughID)
 
-        def getOrCreatePlaythroughSaveInstanceByID(self, playthroughID, autoActivate=True):
+        def getOrCreatePlaythroughSaveInstanceByID(self, playthroughID, autoActivate=False):
             playthrough = Playthroughs.getByID(playthroughID)
             if playthrough:
                 return self.getOrCreatePlaythroughSaveInstance(playthrough, autoActivate=autoActivate)
@@ -89,9 +89,11 @@ init python in JK:
                 for location in self.location.locations:
                     shutil.rmtree(location.directory)
 
-            def deleteSaveFiles(self):
-                self.location.unlink_all()
-                SaveSystem.multilocation.scan()
+            def deleteSaveFiles(self, scan=True):
+                self.location.unlink_all(scan=False)
+
+                if scan:
+                    SaveSystem.multilocation.scan()
 
             def _addLocation(self, fileLocation):
                 fileLocation.active = False
@@ -106,37 +108,31 @@ init python in JK:
             
             return self._playthroughSaves.get(playthrough.id)
 
-        def getOrCreatePlaythroughSaveInstance(self, playthrough, autoActivate=True):
+        def getOrCreatePlaythroughSaveInstance(self, playthrough, autoActivate=False):
             instance = self.getPlaythroughSaveInstance(playthrough.id)
 
-            if(instance == None):
+            if instance == None:
                 instance = self.createPlaythroughSaveInstance(playthrough)
 
             if instance.playthrough.enabledSaveLocations != playthrough.enabledSaveLocations:
                 instance = self.createPlaythroughSaveInstance(playthrough)
 
-            if(autoActivate):
+            if autoActivate:
                 instance.activate()
 
             return instance
 
-        def removeFilesForPlaythrough(self, playthrough):
-            instance = self.getPlaythroughSaveInstance(playthrough.id)
-
-            if(instance == None):
+        def removeSaveFilesForPlaythrough(self, playthrough, remove_dir=False):
+            instance = self.getOrCreatePlaythroughSaveInstance(playthrough)
+            if instance == None:
                 return False
 
-            instance.deleteFiles()
+            instance.deleteSaveFiles(scan=False)
 
-            return True
+            if remove_dir:
+                instance.location.remove_dir()
 
-        def removeSaveFilesForPlaythrough(self, playthrough):
-            instance = self.getPlaythroughSaveInstance(playthrough.id)
-
-            if(instance == None):
-                return False
-
-            instance.deleteSaveFiles()
+            self.removeInstance(instance)
 
             return True
 
@@ -148,6 +144,11 @@ init python in JK:
         def removeInstance(self, instance):
             for location in instance.location.locations:
                 SaveSystem.multilocation.remove(location)
+
+            for playthrough_id in self._playthroughSaves:
+                if self._playthroughSaves[playthrough_id] == instance:
+                    del self._playthroughSaves[playthrough_id]
+                    break
 
         def regeneratePlaythroughSaveInstance(self, playthrough, noScan=False, autoActivate=True):
             self.removePlaythroughSaveInstance(playthrough)

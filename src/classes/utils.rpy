@@ -442,8 +442,8 @@ init -9999 python in JK:
             if scan:
                 self.scan()
 
-        def unlink_all(self, scan=True):
-            for l in self.active_locations():
+        def unlink_all(self, scan=True, include_inactive=False):
+            for l in (self.locations if include_inactive else self.active_locations()):
                 for save in l.list():
                     l.unlink_save(save, scan=False)
             
@@ -506,6 +506,10 @@ init -9999 python in JK:
                     error_locations.append((os.path.abspath(os.path.join(location.directory, "..", name)), "LOCATION_EXISTS"))
             
             return error_locations
+
+        def remove_dir(self):
+            for location in self.locations:
+                location.remove_dir()
 
     class FileLocation(renpy.savelocation.FileLocation):
         def copy_into_other_directory(self, old, new, destination, scan=True):
@@ -573,6 +577,9 @@ init -9999 python in JK:
 
             return True
 
+        def remove_dir(self):
+            if os.path.exists(self.directory):
+                os.rmdir(self.directory)
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):

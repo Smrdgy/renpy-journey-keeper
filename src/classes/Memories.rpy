@@ -14,7 +14,7 @@ init python in JK:
 
         @property
         def saveInstance(self):
-            self._save_instance = self._save_instance or SaveSystem.getOrCreatePlaythroughSaveInstanceByID(2, autoActivate=False)
+            self._save_instance = self._save_instance or SaveSystem.getOrCreatePlaythroughSaveInstanceByID(2)
             return self._save_instance
 
         def getMemories(self):

@@ -136,14 +136,14 @@ init python in JK:
             return self.get(name) or self.add(PlaythroughClass(name=name))
 
         def remove(self, playthroughID, deleteSaveFiles=False, keepActive=False):
-            for playthrough in self.playthroughs:
-                if(playthrough.id == playthroughID):
-                    if(deleteSaveFiles):
-                        SaveSystem.removeFilesForPlaythrough(playthrough)
+            playthrough = self.getByID(playthroughID)
+            if playthrough:
+                if deleteSaveFiles:
+                    SaveSystem.removeSaveFilesForPlaythrough(playthrough, remove_dir=True)
 
-                    self.playthroughs.remove(playthrough)
+                self.playthroughs.remove(playthrough)
 
-            if(keepActive == False):
+            if keepActive == False:
                 self.activateFirstOrNone()
 
             return True
