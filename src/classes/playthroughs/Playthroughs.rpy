@@ -156,14 +156,14 @@ init python in JK:
 
             return rv
 
-        def addOrEdit(self, playthrough, moveSaveDirectory=False):
+        def addOrEdit(self, playthrough, moveSaveDirectory=False, force=False):
             sourcePlaythrough = self.getByID(playthrough.id)
             if(sourcePlaythrough != None):
-                if moveSaveDirectory and sourcePlaythrough.name != playthrough.name and playthrough.id != 1:
-                    result = self.renameSaveDirectory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name))
+                if moveSaveDirectory and sourcePlaythrough.name != playthrough.name and playthrough.id != 1 and self.isValidName(playthrough.name):
+                    result = self.renameSaveDirectory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name), force=force)
 
                     if result != True:
-                        renpy.show_screen("JK_MovePlaythroughDirectoryError", errors=result)
+                        renpy.show_screen("JK_MovePlaythroughDirectoryError", playthrough=playthrough, errors=result)
                         return None
 
                 rv = self.edit(playthrough, sourcePlaythrough, moveSaveDirectory=moveSaveDirectory)
@@ -244,31 +244,15 @@ init python in JK:
 
             return True
 
-        def renameSaveDirectory(self, playthrough, newName):
-            import os
-
-            instance = SaveSystem.getPlaythroughSaveInstance(playthrough.id)
+        def renameSaveDirectory(self, playthrough, newName, force=False):
+            instance = SaveSystem.getOrCreatePlaythroughSaveInstance(playthrough)
 
             if instance:
-                errors = []
-                paths = []
-
-                for location in instance.location.locations:
-                    newPath = os.path.abspath(os.path.join(location.directory, "..", newName))
-
-                    if os.path.exists(newPath):
-                        errors.append((newPath, "LOCATION_EXISTS"))
-                    else:
-                        oldPath = os.path.abspath(location.directory)
-
-                        paths.append((oldPath, newPath))
+                errors = [] if force else instance.location.validate_locations_for_change_of_directory_name(newName)
 
                 if len(errors) == 0:
-                    for oldPath, newPath in paths:
-                        if os.path.exists(oldPath):
-                            os.rename(oldPath, newPath)
-                        else:
-                            os.mkdir(newPath)
+                    instance.location.change_locations_directory_name(newName, force=force)
+                    instance.location.scan()
 
                     return True
 
@@ -466,3 +450,10 @@ init python in JK:
                 playthrough.directory = self.dirname
 
                 renpy.show_screen("JK_EditPlaythrough", playthrough)
+
+        class ForceRenamePlaythrough(renpy.ui.Action):
+            def __init__(self, playthrough):
+                self.playthrough = playthrough
+
+            def __call__(self):
+                Playthroughs.addOrEdit(self.playthrough, moveSaveDirectory=True, force=True)

@@ -1,4 +1,4 @@
-screen JK_MovePlaythroughDirectoryError(errors=[]):
+screen JK_MovePlaythroughDirectoryError(playthrough, errors=[]):
     layer "JK_Overlay"
     style_prefix "JK"
     modal True
@@ -28,14 +28,17 @@ screen JK_MovePlaythroughDirectoryError(errors=[]):
                             errorText = error[1]
 
                     hbox:
-                        textbutton error[0]:
+                        button:
                             action JK.OpenDirectoryAction(path=error[0])
 
-                        use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=error[0]))
+                            hbox yalign 0.5:
+                                text error[0] yalign 0.5
 
-                        textbutton " - "
-                        textbutton errorText:
-                            text_color JK.Colors.error
+                                text "  "
+
+                                use JK_Icon(icon="\ue2c8")
+
+                        text " - " + errorText color JK.Colors.error yalign 0.5
 
         hbox:
             xfill True
@@ -44,6 +47,10 @@ screen JK_MovePlaythroughDirectoryError(errors=[]):
             style_prefix "JK_dialog_action_buttons"
 
             vbox:
+                # Overwrite
+                hbox:
+                    use JK_IconButton(icon="\ue15a", text="Overwrite", action=JK.ShowConfirmAction(title="Overwrite conflicting directories", message="Are you sure? This will delete any data stored in those directories.\n\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}.", yes=[Hide("JK_MovePlaythroughDirectoryError"), JK.Playthroughs.ForceRenamePlaythrough(playthrough)], yesColor=JK.Colors.danger), color=JK.Colors.danger, spacing=JK.scaled(5))
+
                 # Close
                 hbox:
                     use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_MovePlaythroughDirectoryError"))

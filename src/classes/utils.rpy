@@ -495,6 +495,18 @@ init -9999 python in JK:
 
             return None
 
+        def change_locations_directory_name(self, name, force=False):
+            for location in self.locations:
+                location.change_directory_name(name, force)
+
+        def validate_locations_for_change_of_directory_name(self, name):
+            error_locations = []
+            for location in self.locations:
+                if not location.can_change_directory_name(name):
+                    error_locations.append((os.path.abspath(os.path.join(location.directory, "..", name)), "LOCATION_EXISTS"))
+            
+            return error_locations
+
     class FileLocation(renpy.savelocation.FileLocation):
         def copy_into_other_directory(self, old, new, destination, scan=True):
             with disk_lock:
@@ -537,6 +549,30 @@ init -9999 python in JK:
                 return time.strftime('%c', time.localtime(mtime))
 
             return None
+
+        def change_directory_name(self, name, force=False):
+            self.change_directory(os.path.join(self.directory, "..", name), force)
+
+        def change_directory(self, new_directory, force=False):
+            if not force and not self.can_change_directory(new_directory):
+                raise Exception("LOCATION_EXISTS")
+
+            if os.path.exists(new_directory):
+                shutil.rmtree(new_directory)
+
+            shutil.move(self.directory, new_directory)
+
+            self.directory = new_directory
+
+        def can_change_directory_name(self, name):
+            return self.can_change_directory(os.path.join(self.directory, "..", name))
+
+        def can_change_directory(self, new_directory):
+            if os.path.exists(new_directory):
+                return len(os.listdir(new_directory)) == 0
+
+            return True
+
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):

@@ -30,6 +30,9 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 Hide('JK_EditPlaythrough')
             ]
 
+        name_conflicting = not editing_template and name != originalname and not JK.Playthroughs.isValidName(name)
+        name_invalid = name_conflicting or len(name) == 0
+
     key 'ctrl_K_DELETE' action Show("JK_RemovePlaythroughConfirm", playthrough=playthrough)
 
     use JK_Dialog(title=("Edit default template" if editing_template else ("Edit playthrough" if isEdit else "New playthrough")), closeAction=Hide("JK_EditPlaythrough")):
@@ -47,8 +50,9 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
-                if(not editing_template and name != originalname and not JK.Playthroughs.isValidName(name)):
-                    text "Are you sure? This name already exists." color JK.Colors.warning offset JK.scaled((15, 2))
+                text "{size=-5}This name already exists.{/size}" color (JK.Colors.error if name_conflicting else "#00000000") offset JK.scaled((10, 2))
+
+                use JK_YSpacer(2)
 
                 if(playthrough.id != 1 and not editing_template):
                     python:
@@ -68,8 +72,8 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                     $ allSaveLocations = JK.SaveSystem.getAllNativeSaveLocationsForOptions()
 
-                    if(isEdit and playthrough.id > 1 and name != originalname and JK.Playthroughs.isValidName(name)):
-                        use JK_Checkbox(checked=moveSaveDirectory, text="Rename the directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False), disabled=not JK.Playthroughs.isValidName(name))
+                    if isEdit and playthrough.id > 1 and name != originalname and not name_invalid:
+                        use JK_Checkbox(checked=moveSaveDirectory, text="Rename the directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False))
 
                     hbox:
                         use JK_Checkbox(checked=enabledSaveLocations != False, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', allSaveLocations, False))
@@ -197,7 +201,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                     if editing_template:
                         use JK_IconButton(icon="\ue161", text="Save template", action=submitAction, key="ctrl_K_s")
                     else:
-                        use JK_IconButton(icon="\ue161", text="Save", action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or len(name) == 0, key="ctrl_K_s")
+                        use JK_IconButton(icon="\ue161", text="Save", action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or name_invalid, key="ctrl_K_s")
 
                 if not isEdit and not editing_template:
                     hbox:

@@ -1,4 +1,4 @@
-screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=None, disabled=False, color=None, textColor=None, iconColor=None, toggledColor=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None):
+screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=None, tt=None, ttSide="top", toggled=False, toggledIcon=None, disabled=False, color=None, textColor=None, iconColor=None, toggledColor=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None, spacing=None):
     style_prefix "JK"
 
     python:
@@ -22,6 +22,9 @@ screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=Non
 
             if key:
                 key key action [Hide("JK_TooltipDialog"), action]
+
+            if spacing:
+                spacing spacing
 
             use JK_Icon(toggled_icon if toggled else icon, color=icon_color, size=size, hover_color=hover_color)
 
