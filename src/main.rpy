@@ -36,6 +36,7 @@ init python in JK:
 
     def startInteractCallback():
         SaveSystem.overrideNativeLocation()
+        renpy.loadsave.clear_cache()
         SaveSystem.multilocation.scan()
 
         if(not renpy.get_screen('JK_SidepanelHolder')):
