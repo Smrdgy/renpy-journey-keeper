@@ -762,6 +762,10 @@ init -9999 python in JK:
 
             drag.snap(int(new_x), int(new_y))
 
+    class OpenGameDirectoryAction(renpy.ui.Action):
+        def __call__(self):
+            OpenDirectoryAction(path=renpy.config.gamedir)()
+
     def scaled(value): 
         # Helper function to apply adjustment only to integers
         def adjust_number(value):

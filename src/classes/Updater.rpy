@@ -10,9 +10,10 @@ init python in JK:
 
     class UpdaterClass(x52NonPicklable):
         asset_name = "JK.rpa"
+        temp_asset_name = asset_name + ".temp"
 
         mod_path = os.path.join(renpy.config.gamedir, asset_name)
-        download_path = mod_path + ".temp"
+        download_path = os.path.join(renpy.config.gamedir, temp_asset_name)
 
         url = "https://api.github.com/repos/{}/{}/releases/latest".format(MOD_GITHUB_OWNER, MOD_GITHUB_REPO)
         download_url = "https://api.github.com/repos/{}/{}/releases/assets/".format(MOD_GITHUB_OWNER, MOD_GITHUB_REPO)
@@ -45,6 +46,17 @@ init python in JK:
             self.installed = False
             self.error = None
             self.latest = None
+            self.rpa_locked_exception = False
+            self.pending_utter_restart = False
+            self.reload_and_update = False
+
+            if os.path.exists(self.download_path):
+                if renpy.store.persistent.JK_TriedUtterRestart:
+                    print("Found temp update file \"{}\" even after attempted reload. This shouldn't happen. Either the file is locked by another program or there is a bug in the update system.".format(self.download_path))
+                else:
+                    print("Found temp update file \"{}\". Attempting to update...".format(self.download_path))
+                    self.install_update()
+                    self.pending_utter_restart = True
 
         def check_for_update(self, ignore_blacklist=False, ignore_force_auto_update=False):
             if self.loading or self.unavailable:
@@ -94,14 +106,14 @@ init python in JK:
  
                 return data
             except _urllib_error.HTTPError as e:
-                print("HTTP error occurred: ", e)
-                self.error = "A HTTP error occurred: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                print("HTTP error occurred while downloading update metadata: ", e)
+                self.error = "A HTTP error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except _urllib_error.URLError as e:
-                print("URL error occurred: ", e)
-                self.error = "A URL error occurred: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                print("URL error occurred while downloading update metadata: ", e)
+                self.error = "A URL error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except Exception as e:
-                print("An error occurred: ", e)
-                self.error = "An unexpected error occurred: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                print("An error occurred while downloading update metadata: ", e)
+                self.error = "An unexpected error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
 
             self.loading = False
             renpy.restart_interaction()
@@ -114,34 +126,49 @@ init python in JK:
                 self.installed = False
                 renpy.restart_interaction()
 
-                path = self.mod_path
+                self.install_update()
 
-                if os.path.islink(self.mod_path):
-                    # File is a simlink
+        def install_update(self):
+            path = self.mod_path
 
-                    try:
-                        path = os.path.realpath(self.mod_path)
-                    except Exception as e:
-                        print("Error resolving symlink: ", e)
-                
+            if os.path.islink(self.mod_path):
+                # File is a simlink
+
                 try:
-                    shutil.move(self.download_path, path)
-                    self.installing = False
-                    self.installed = True
-                    renpy.restart_interaction()
-                    return True
+                    path = os.path.realpath(self.mod_path)
                 except Exception as e:
+                    print("Error resolving symlink: ", e)
+
+            try:
+                shutil.move(self.download_path, path)
+                self.installing = False
+                self.installed = True
+                renpy.restart_interaction()
+                return
+            except Exception as e:
+                error_message = "{color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+
+                if e.args[0] == 13:
+                    print("Unable to replace the .rpa file, Ren'Py or other program is blocking the file.")
+                    renpy.store.persistent.JK_TriedUtterRestart = False
+                    self.rpa_locked_exception = True
+                    self.error = "Unable to replace the .rpa file, Ren'Py or other program is blocking the file: {}".format(error_message)
+                else:
                     print("Error moving file: ", e)
-                    self.error = "An unexpected error occurred: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                    self.error = "An unexpected error occurred: {}".format(error_message)
 
             self.installing = False
             renpy.restart_interaction()
-            
-            return False
+
+            renpy.notify("JK successfully updated to v" + MOD_VERSION)
 
         def download_asset(self):
             self.downloading = True
             self.error = None
+
+            if os.path.exists(self.download_path):
+                os.unlink(self.download_path)
+
             print("Downloadingn asset from: ", self.asset_id)
             try:
                 request = _urllib_request.Request(self.download_url + str(self.asset_id))
@@ -159,14 +186,14 @@ init python in JK:
 
                 return True
             except _urllib_error.HTTPError as e:
-                print("HTTP error occurred: ", e)
-                self.error = "A HTTP error occurred: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                print("HTTP error occurred downloading/writing the asset: ", e)
+                self.error = "A HTTP error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except _urllib_error.URLError as e:
-                print("URL error occurred: ", e)
-                self.error = "A URL error occurred: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                print("URL error occurred downloading/writing the asset: ", e)
+                self.error = "A URL error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
             except Exception as e:
-                print("An error occurred: ", e)
-                self.error = "An unexpected error occurred: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                print("An error occurred downloading/writing the asset: ", e)
+                self.error = "An unexpected error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
 
             self.downloading = False
             renpy.restart_interaction()
@@ -229,7 +256,8 @@ init python in JK:
 
         class RestartGame(renpy.ui.Action):
             def __call__(self):
-                renpy.utter_restart()
+                Updater.reload_and_update = True
+                renpy.restart_interaction()
 
     try:
         import urllib2 as _urllib_request

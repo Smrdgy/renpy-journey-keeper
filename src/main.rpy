@@ -35,6 +35,13 @@ init python in JK:
         Autosaver.afterLoadSavePositionPending = True
 
     def startInteractCallback():
+        # Perform utter restart due to pending update, but only once!
+        # If something were to break, a user might get stuck in infinite loop and that's obviously not good.
+        if Updater.pending_utter_restart and not renpy.store.persistent.JK_TriedUtterRestart:
+            renpy.store.persistent.JK_TriedUtterRestart = True
+            renpy.utter_restart()
+            return
+
         SaveSystem.overrideNativeLocation()
         renpy.loadsave.clear_cache()
         SaveSystem.multilocation.scan()
@@ -139,5 +146,12 @@ init 9999 python in JK:
         # 'input_next_input': ['noshift_K_TAB'], #TODO: Finish prev/next input via TAB
         # 'input_prev_input': ['shift_K_TAB']
     })
+
+    # Link handler to run any action on click: `text "{a=JK_Run:SomeAction()}Some clickable text{/a}"`
+    def __run(arg):
+        renpy.python.py_exec("renpy.run({})".format(arg))
+
+    renpy.config.hyperlink_handlers["JK_Run"] = __run
+
 
     print("{} is ready".format(MOD_NAME))
