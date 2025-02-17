@@ -8,6 +8,7 @@ screen JK_PlaythroughsPicker():
         int((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20),
         JK.scaled(200)
     )
+    default reorder_source = None
 
     use JK_Dialog(title="Select a playthrough", closeAction=Hide("JK_PlaythroughsPicker")):
         style_prefix "JK"
@@ -53,6 +54,7 @@ screen JK_PlaythroughsPicker():
                                 xmaximum thumbnailSize[0]
                                 ymaximum thumbnailSize[1]
 
+                                # Thumbnail
                                 if playthrough.hasThumbnail():
                                     add playthrough.getThumbnail(thumbnailSize[0], thumbnailSize[1])
                                 else:
@@ -67,18 +69,29 @@ screen JK_PlaythroughsPicker():
 
                                             use JK_Icon(icon="\ue3f4", color="#333", size=50)
 
+                                # Description
                                 if playthrough.description:
                                     hbox xalign 1.0 yalign 0.0:
                                         use JK_IconButton(icon="\uef42", tt=playthrough.description, ttSide="bottom")
+
+                                # Reorder
+                                hbox xalign 0.0 yalign 0.0:
+                                    if reorder_source == playthrough.id:
+                                        use JK_IconButton(icon="\ue5c9", action=SetScreenVariable("reorder_source", None), tt="Cancel", ttSide="bottom", hover_color=JK.Colors.error)
+                                    elif reorder_source:
+                                        use JK_IconButton(icon="\ue39e", action=[JK.Playthroughs.ReorderPlaythroughs(source=reorder_source, target=playthrough.id), SetScreenVariable("reorder_source", None)], tt="Move here", ttSide="bottom")
+                                    else:
+                                        use JK_IconButton(icon="\ue074", action=SetScreenVariable("reorder_source", playthrough.id), tt="Change order", ttSide="bottom", color=JK.Colors.text_light, hover_color=JK.Colors.hover)
 
                             hbox ysize 5
 
                             vbox:
                                 xsize thumbnailSize[0]
 
-                                text "[playthrough.name]":
-                                    xalign 0.5
+                                # Name
+                                text "[playthrough.name]" xalign 0.5 text_align 0.5
 
+                                # Action buttons
                                 hbox:
                                     xfill True
 
@@ -88,6 +101,7 @@ screen JK_PlaythroughsPicker():
                                     hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
                                         use JK_IconButton('\ue3c9', text="Edit", action=edit_action)
 
+                # New playthrough
                 button style "JK_playthrough_button":
                     action Show("JK_EditPlaythrough", playthrough=None)
 
@@ -121,5 +135,6 @@ screen JK_PlaythroughsPicker():
 
                             use JK_IconButton('smrdgy', text="")
 
+                # Placeholders
                 for _ in range(0, spotsToFill):
                     text ""

@@ -132,6 +132,16 @@ init python in JK:
 
             return None
 
+        def getIndexByID(self, id):
+            i = 0
+            for playthrough in self.playthroughs:
+                if playthrough.id == id:
+                    return i
+
+                i += 1
+
+            return -1
+
         def getOrAdd(self, name):
             return self.get(name) or self.add(PlaythroughClass(name=name))
 
@@ -457,3 +467,21 @@ init python in JK:
 
             def __call__(self):
                 Playthroughs.addOrEdit(self.playthrough, moveSaveDirectory=True, force=True)
+
+        class ReorderPlaythroughs(renpy.ui.Action):
+            def __init__(self, source, target):
+                self.source = source
+                self.target = target
+
+            def __call__(self):
+                source_index = Playthroughs.getIndexByID(self.source)
+                target_index = Playthroughs.getIndexByID(self.target)
+
+                if source_index > -1 and target_index > -1:
+                    if source_index > 0 or target_index + 1 == len(Playthroughs.playthroughs):
+                        Playthroughs.playthroughs.insert(target_index, Playthroughs.playthroughs.pop(source_index))
+                    else:
+                        Playthroughs.playthroughs.insert(target_index + 1, Playthroughs.playthroughs.pop(source_index))
+
+                    Playthroughs.save()
+                    renpy.restart_interaction()
