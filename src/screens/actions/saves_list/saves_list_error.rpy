@@ -27,8 +27,7 @@ screen JK_SavesListError(viewModel):
 
                 use JK_YSpacer(offset=2)
 
-                text "For more information check log.txt" xalign 0.5 text_align 0.5
-                text "If this isn't a user error (e.g. incorrect permissions, manually deleted files, etc.), please report it at {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues}https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues{/a}" xalign 0.5 text_align 0.5
+                use JK_ErrorFooter()
 
     # Dialog footer
     hbox:

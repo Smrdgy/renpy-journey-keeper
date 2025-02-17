@@ -25,13 +25,9 @@ screen JK_PendingUpdateError(error):
                     hbox ysize JK.scaled(5)
                     text "Alternatively, you can do this yourself by closing the game, navigating to the {a=JK_Run:JK.OpenGameDirectoryAction()}/game{/a} directory of this game and renaming the file {i}\"[JK.Updater.temp_asset_name]\"{/i} to {i}\"[JK.Updater.asset_name]\"{/i}." text_align 0.5 xalign 0.5
 
-                    use JK_YSpacer()
-                    text "If this isn't a user error (e.g. incorrect permissions) and the problem persists even after restarting the game, please report it at {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues}https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues{/a}" xalign 0.5 text_align 0.5
+                    use JK_ErrorFooter("PENDING_UPDATE_ERROR_RPY8_EXPECTED")
                 else:
-                    text "For more information check log.txt" xalign 0.5 text_align 0.5
-
-                    use JK_YSpacer()
-                    text "If this isn't a user error (e.g. incorrect permissions), please report it at {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues}https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues{/a}" xalign 0.5 text_align 0.5
+                    use JK_ErrorFooter()
 
     # Dialog footer
     hbox:

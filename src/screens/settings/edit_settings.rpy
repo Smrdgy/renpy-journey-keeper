@@ -286,8 +286,15 @@ screen JK_Settings():
                     vbox xalign 0.5:
                         hbox xalign 0.5:
                             use JK_Title(JK.MOD_NAME + " v" + JK.MOD_VERSION)
-                        text "{a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]}Click here to open the GitHub page.{/a}" xalign 0.5
-                        text "{a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues}Click here to view and/or submit issue(s).{/a}" xalign 0.5
+
+                        use JK_YSpacer(2)
+
+                        text "{a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]}Click here to open the GitHub page.{/a}" xalign 0.5 text_align 0.5
+
+                        hbox ysize JK.scaled(5)
+
+                        text "Encountered an issue?" xalign 0.5 text_align 0.5
+                        text "Visit our {a=[JK.DISCORD_URL]}Discord{/a} or check {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues}GitHub issues{/a}" xalign 0.5 text_align 0.5
 
         hbox:
             xfill True
