@@ -87,17 +87,75 @@ init python in JK:
 
                 self.pendingSave.save()
 
+        def __is_choice_question(self, choice):
+            try:
+                i = 0
+                menu_node = renpy.game.script.lookup(choice.location)
+                choice_item = menu_node.items[choice.value]
+                print("ci", choice_item)
+                if len(choice_item) > 2 and choice_item[2]:
+                    node = choice_item[2][0]
+                else:
+                    node = None
+
+                resolved_nodes = [menu_node]
+                
+                prediction_depth = 0
+                while node and prediction_depth < 2:
+                    if node in resolved_nodes:
+                        return True
+                    
+                    # Python usually indicates that something will happen with variables,
+                    # so even if the choice might be a question it is a question with a potential reward, thus save-worthy.
+                    if isinstance(node, renpy.ast.Python) and hasattr(node, 'code') and hasattr(node.code, 'source'):
+                        if not node.code.source.startswith('renpy.pause(') and not node.code.source.startswith('ui.'):
+                            if hasattr(node, "expression") and node.expression is not None:
+                                if bool(node.expression) == node.expression or renpy.python.py_eval(node.expression):
+                                    return False
+                            else:
+                                return False
+
+                    elif isinstance(node, renpy.ast.If):
+                        for condition, block in node.entries:
+                            if renpy.python.py_eval(condition):
+                                node = block[0]
+                                break
+
+                    elif isinstance(node, renpy.ast.Jump):
+                            prediction_depth += 1
+
+                            prediction = node.predict()
+                            if len(prediction) > 0:
+                                node = prediction[0]
+                            else:
+                                node = node.next
+                    else:
+                        node = node.next
+
+                    i += 1
+
+                    if i > 1000000:
+                        raise Exception("JK.Utils.find_next_label_from_current() infinite loop prevented. Or just reeeeeally long code stack...")
+            except Exception as e:
+                print(e)
+
+            return False
+
         def handleChoiceSelection(self, choice):
-            # Prevent making any autosave actions when viewing a memory or a replay
-            if Memories.memoryInProgress or renpy.store._in_replay:
+            # Prevent making any autosave actions when the feature is diabled or is viewing a memory or a replay
+            if not Playthroughs.activePlaythrough.autosaveOnChoices or Memories.memoryInProgress or renpy.store._in_replay:
                 return
+
+            # If autosave on question is disabled, make sure the jump at then end of the choice doesn't lead back to JK_LastLabel
+            if not Settings.autosaveOnQuestion:
+                if self.__is_choice_question(choice):
+                    return
 
             # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
             textComponent = renpy.ui.text(choice.label)
             choiceText = Utils.replaceReservedCharacters(' '.join(textComponent.text))
 
-            if Playthroughs.activePlaythrough.autosaveOnChoices:
-                self.createPendingSave(choiceText)
+            self.createPendingSave(choiceText)
 
         # The JK_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
         # However when a manual save is loaded it might not be a choice screen.

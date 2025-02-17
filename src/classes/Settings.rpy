@@ -64,6 +64,7 @@ init -1 python in JK:
             self.playthroughTemplate = data.get("playthroughTemplate", None)
             self.preventAutosavingWhileNotInGame = data.get("preventAutosavingWhileNotInGame", True)
             self.seamlessPagination = data.get("seamlessPagination", False)
+            self.autosaveOnQuestion = data.get("autosaveOnQuestion", True)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -97,6 +98,7 @@ init -1 python in JK:
                 'playthroughTemplate': self.playthroughTemplate,
                 'preventAutosavingWhileNotInGame': self.preventAutosavingWhileNotInGame,
                 'seamlessPagination': self.seamlessPagination,
+                'autosaveOnQuestion': self.autosaveOnQuestion,
             })
 
         def getGlobalSettingsAsJson(self):

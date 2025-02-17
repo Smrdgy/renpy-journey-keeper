@@ -64,9 +64,14 @@ screen JK_Settings():
                             use JK_ToggleSettingGlobalizationButton("pageFollowsAutoSave")
                         
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.autosaveOnSingletonChoice, text="Perform autosave even when only one choice is available.", action=JK.Settings.ToggleAutosaveOnSingletonChoiceEnabled())
+                            use JK_Checkbox(checked=JK.Settings.autosaveOnSingletonChoice, text="Perform autosave even when only one choice is available", action=JK.Settings.ToggleAutosaveOnSingletonChoiceEnabled())
                             use JK_Helper("When enabled, an autosave will be created even when there is only one choice is displayed.")
                             use JK_ToggleSettingGlobalizationButton("autosaveOnSingletonChoice")
+
+                        hbox:
+                            use JK_Checkbox(checked=JK.Settings.autosaveOnQuestion, text="Perform autosave on questions", action=JK.Settings.ToggleEnabled("autosaveOnQuestion"))
+                            use JK_Helper("When disabled, the autosave system will attempt to prevent saving choices that loop back to the menu where they were made. This typically occurs in \"question\" menus, where none of the choices have an actual impact on story beyond providing exposition.\n\n{color=[JK.Colors.info]}Note: Even with this setting disabled, the choice may still be saved if it contains code that alters any variables.\nThis will mostly occur in menus where choices disappear after being selected.{/color}")
+                            use JK_ToggleSettingGlobalizationButton("autosaveOnQuestion")
 
                         use JK_YSpacer(2)
 
