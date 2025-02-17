@@ -56,15 +56,15 @@ screen JK_Settings():
                     use JK_Title("Autosave")
                     vbox:
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.autosaveNotificationEnabled, text="Show notification when autosave is performed", action=JK.Settings.ToggleAutosaveNotificationEnabled())
+                            use JK_Checkbox(checked=JK.Settings.autosaveNotificationEnabled, text="Show notification when autosave is performed", action=JK.Settings.ToggleEnabled("autosaveNotificationEnabled"))
                             use JK_ToggleSettingGlobalizationButton("autosaveNotificationEnabled")
 
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.pageFollowsAutoSave, text="Change page based on the auto-saved slot", action=JK.Settings.TogglePageFollowsAutoSaveEnabled())
+                            use JK_Checkbox(checked=JK.Settings.pageFollowsAutoSave, text="Change page based on the auto-saved slot", action=JK.Settings.ToggleEnabled("pageFollowsAutoSave"))
                             use JK_ToggleSettingGlobalizationButton("pageFollowsAutoSave")
                         
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.autosaveOnSingletonChoice, text="Perform autosave even when only one choice is available", action=JK.Settings.ToggleAutosaveOnSingletonChoiceEnabled())
+                            use JK_Checkbox(checked=JK.Settings.autosaveOnSingletonChoice, text="Perform autosave even when only one choice is available", action=JK.Settings.ToggleEnabled("autosaveOnSingletonChoice"))
                             use JK_Helper("When enabled, an autosave will be created even when there is only one choice is displayed.")
                             use JK_ToggleSettingGlobalizationButton("autosaveOnSingletonChoice")
 
@@ -95,7 +95,7 @@ screen JK_Settings():
                     use JK_Title("Quick save")
                     vbox:
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.quickSaveEnabled, text="Enabled", action=JK.Settings.ToggleQuickSaveEnabled())
+                            use JK_Checkbox(checked=JK.Settings.quickSaveEnabled, text="Enabled", action=JK.Settings.ToggleEnabled("quickSaveEnabled"))
                             use JK_ToggleSettingGlobalizationButton("quickSaveEnabled")
 
                         if JK.Settings.quickSaveEnabled:
@@ -104,11 +104,11 @@ screen JK_Settings():
 
                                 vbox:
                                     hbox:
-                                        use JK_Checkbox(checked=JK.Settings.quickSaveNotificationEnabled, text="Show notification when quick save is performed", action=JK.Settings.ToggleQuickSaveNotificationEnabled(), disabled=not JK.Settings.quickSaveEnabled)
+                                        use JK_Checkbox(checked=JK.Settings.quickSaveNotificationEnabled, text="Show notification when quick save is performed", action=JK.Settings.ToggleEnabled("quickSaveNotificationEnabled"), disabled=not JK.Settings.quickSaveEnabled)
                                         use JK_ToggleSettingGlobalizationButton("quickSaveNotificationEnabled")
 
                                     hbox:
-                                        use JK_Checkbox(checked=JK.Settings.pageFollowsQuickSave, text="Change page based on the quick-saved slot", action=JK.Settings.TogglePageFollowsQuickSaveEnabled())
+                                        use JK_Checkbox(checked=JK.Settings.pageFollowsQuickSave, text="Change page based on the quick-saved slot", action=JK.Settings.ToggleEnabled("pageFollowsQuickSave"))
                                         use JK_ToggleSettingGlobalizationButton("pageFollowsQuickSave")
 
                                     use JK_YSpacer(2)
@@ -137,7 +137,7 @@ screen JK_Settings():
                 vbox:
                     use JK_Title("Memories")
                     vbox:
-                        use JK_Checkbox(checked=JK.Settings.memoriesEnabled, text="Enabled", action=JK.Settings.ToggleMemoriesEnabled())
+                        use JK_Checkbox(checked=JK.Settings.memoriesEnabled, text="Enabled", action=JK.Settings.ToggleEnabled("memoriesEnabled"))
 
                         if JK.Settings.memoriesEnabled:
                             use JK_YSpacer(2)
@@ -159,7 +159,7 @@ screen JK_Settings():
                     use JK_Title("Save/Load")
                     vbox:
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.customGridEnabled, text="Custom slots grid", action=JK.Settings.ToggleCustomGridEnabled())
+                            use JK_Checkbox(checked=JK.Settings.customGridEnabled, text="Custom slots grid", action=JK.Settings.ToggleEnabled("customGridEnabled"))
                             use JK_Helper("When enabled, two new options will appear where you can enter the number of columns and rows for the save slots in the game's save/load menu. This is needed because some games use custom save systems that the mod's autosave/quicksave system can't handle automatically.")
 
                         if JK.Settings.customGridEnabled:
@@ -197,12 +197,12 @@ screen JK_Settings():
                             use JK_YSpacer(2)
 
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=JK.Settings.ToggleOffsetSlotAfterManualSaveIsLoadedEnabled())
+                            use JK_Checkbox(checked=JK.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=JK.Settings.ToggleEnabled("offsetSlotAfterManualSaveIsLoaded"))
                             use JK_Helper("If enabled, loading a save will shift the save slot by 1, ensuring the next autosave or quicksave does not overwrite the manual save.")
                             use JK_ToggleSettingGlobalizationButton("offsetSlotAfterManualSaveIsLoaded")
 
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.offsetSlotAfterManualSave, text="Offset the slot after a manual save is performed", action=JK.Settings.ToggleOffsetSlotAfterManualSaveEnabled())
+                            use JK_Checkbox(checked=JK.Settings.offsetSlotAfterManualSave, text="Offset the slot after a manual save is performed", action=JK.Settings.ToggleEnabled("offsetSlotAfterManualSave"))
                             use JK_Helper("If enabled, creating a manual save will shift the save slot by 1, preventing the next autosave or quicksave from overwriting it.")
                             use JK_ToggleSettingGlobalizationButton("offsetSlotAfterManualSave")
 
@@ -261,14 +261,14 @@ screen JK_Settings():
 
                                 use JK_IconButton("\ue5d5", text="Refresh", action=JK.Updater.CheckForUpdateAction())
 
-                            use JK_Checkbox(checked=JK.Settings.updaterEnabled, text="Check for an update every time the game launches", action=JK.Settings.ToggleUpdaterEnabled())
+                            use JK_Checkbox(checked=JK.Settings.updaterEnabled, text="Check for an update every time the game launches", action=JK.Settings.ToggleEnabled("updaterEnabled"))
 
                             if JK.Settings.updaterEnabled:
                                 hbox:
                                     use JK_XSpacer()
 
                                     vbox:
-                                        use JK_Checkbox(checked=JK.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=JK.Settings.ToggleAutoUpdatesWithoutPromptEnabled())
+                                        use JK_Checkbox(checked=JK.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=JK.Settings.ToggleEnabled("autoUpdateWithoutPrompt"))
 
                 if renpy.config.developer:
                     use JK_YSpacer()
@@ -276,7 +276,7 @@ screen JK_Settings():
                     vbox:
                         use JK_Title("Debug", color=JK.Colors.danger)
                         vbox:
-                            use JK_Checkbox(checked=JK.Settings.debugEnabled, text="Debug mode", action=JK.Settings.ToggleDebugEnabled())
+                            use JK_Checkbox(checked=JK.Settings.debugEnabled, text="Debug mode", action=JK.Settings.ToggleEnabled("debugEnabled"))
 
                 use JK_YSpacer()
 

@@ -199,24 +199,6 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class ToggleAutosaveNotificationEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.autosaveNotificationEnabled = not Settings.autosaveNotificationEnabled
-                Settings.save()
-                renpy.restart_interaction()
-
-        class ToggleQuickSaveEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.quickSaveEnabled = not Settings.quickSaveEnabled
-                Settings.save()
-                renpy.restart_interaction()
-
-        class ToggleQuickSaveNotificationEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.quickSaveNotificationEnabled = not Settings.quickSaveNotificationEnabled
-                Settings.save()
-                renpy.restart_interaction()
-
         class SetQuickSaveKey(SetKey):
             def __call__(self):
                 Settings.quickSaveKey = self.resolveKey()
@@ -224,22 +206,10 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class ToggleMemoriesEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.memoriesEnabled = not Settings.memoriesEnabled
-                Settings.save()
-                renpy.restart_interaction()
-
         class SetCreateMemoryKey(SetKey):
             def __call__(self):
                 Settings.memoriesKey = self.resolveKey()
 
-                Settings.save()
-                renpy.restart_interaction()
-
-        class ToggleCustomGridEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.customGridEnabled = not Settings.customGridEnabled
                 Settings.save()
                 renpy.restart_interaction()
 
@@ -356,57 +326,6 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class ToggleDebugEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.debugEnabled = not Settings.debugEnabled
-
-                Settings.save()
-                renpy.restart_interaction()
-
-        class TogglePageFollowsQuickSaveEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.pageFollowsQuickSave = not Settings.pageFollowsQuickSave
-
-                Settings.save()
-                renpy.restart_interaction()
-
-        class TogglePageFollowsAutoSaveEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.pageFollowsAutoSave = not Settings.pageFollowsAutoSave
-
-                Settings.save()
-                renpy.restart_interaction()
-
-        class ToggleUpdaterEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.updaterEnabled = not Settings.updaterEnabled
-
-                Settings.save()
-                renpy.restart_interaction()
-                renpy.restart_interaction()
-
-        class ToggleAutoUpdatesWithoutPromptEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.autoUpdateWithoutPrompt = not Settings.autoUpdateWithoutPrompt
-
-                Settings.save()
-                renpy.restart_interaction()
-                renpy.restart_interaction()
-
-        class ToggleOffsetSlotAfterManualSaveIsLoadedEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.offsetSlotAfterManualSaveIsLoaded = not Settings.offsetSlotAfterManualSaveIsLoaded
-
-                Settings.save()
-                renpy.restart_interaction()
-                renpy.restart_interaction()
-
-        class ToggleOffsetSlotAfterManualSaveEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.offsetSlotAfterManualSave = not Settings.offsetSlotAfterManualSave
-
-                Settings.save()
-                renpy.restart_interaction()
         
         class ToggleGlobalizedSetting(renpy.ui.Action):
             def __init__(self, setting_name):
@@ -417,13 +336,6 @@ init -1 python in JK:
                     Settings.globalizedSettings.remove(self.setting_name)
                 else:
                     Settings.globalizedSettings.append(self.setting_name)
-
-                Settings.save()
-                renpy.restart_interaction()
-
-        class ToggleAutosaveOnSingletonChoiceEnabled(renpy.ui.Action):
-            def __call__(self):
-                Settings.autosaveOnSingletonChoice = not Settings.autosaveOnSingletonChoice
 
                 Settings.save()
                 renpy.restart_interaction()

@@ -245,7 +245,7 @@ init python in JK:
                 showConfirm(
                     title="Disable updates",
                     message="Do you really wish to disable automatic checking for the updates?\n{color=[JK.Colors.info]}You can re-enable it in the settings at any time.{/color}",
-                    yes=Settings.ToggleUpdaterEnabled(),
+                    yes=Settings.ToggleEnabled("updater"),
                     yesIcon="\ue888",
                     yesColor=Colors.error
                 )
