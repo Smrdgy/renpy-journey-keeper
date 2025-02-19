@@ -198,6 +198,9 @@ style JK_title_2 is JK_title:
 style JK_title_3 is JK_title:
     size JK.scaled(20)
 
+style JK_title_4 is JK_title:
+    size JK.scaled(18)
+
 style JK_spacer_x_1:
     xsize JK.scaled(20)
 

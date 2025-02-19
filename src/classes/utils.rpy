@@ -345,6 +345,23 @@ init -9999 python in JK:
             else:
                 return page + "-" + name
 
+        @staticmethod
+        def get_active_screens():
+            screens = []
+            for context in renpy.game.contexts:
+                for layer in context.scene_lists.layers:
+                    for sle in context.scene_lists.layers[layer]:
+                        if sle and sle.name:
+                            name = sle.name[0]
+
+                            #TODO: Improve
+                            # get_screen() isn't very efficient here since the loops above are doing pretty much the same,
+                            # but I'm missing something to check if the screen is valid, or visible, or something and I couldn't be bothered to do it now.
+                            if not ("JK_" in name or "notify" == name or "URM_" in name) and renpy.get_screen(name):
+                                screens.append(name)
+            
+            return screens
+
     class MultiLocation(renpy.savelocation.MultiLocation):
         def __init__(self):
             super(MultiLocation, self).__init__()
