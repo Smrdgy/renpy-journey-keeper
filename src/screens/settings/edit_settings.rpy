@@ -5,7 +5,15 @@ screen JK_Settings():
 
     default originalSizeAdjustment = JK.Settings.sizeAdjustment
 
-    use JK_Dialog(title="Settings", closeAction=Hide("JK_Settings")):
+    python:
+        reset_size_adjustment_hint = "If anything goes wrong, you can revert the value via:\n  a) confirm dialog\n  b) waiting for 60 seconds\n  c) manually, by simultaneously pressing {b}CTRL + SHIFT + ALT + P{/b}."
+
+        default_close_action = Hide("JK_Settings")
+        close_action = default_close_action
+        if originalSizeAdjustment != JK.Settings.sizeAdjustment:
+            close_action = [JK.ShowConfirmAction(title="You have unapplied size adjustment, would you like to apply it now?", message=reset_size_adjustment_hint, yes=[JK.Settings.ApplySizeAdjustment(), default_close_action], yesText="Apply now", yesColor=JK.Colors.success, noText="Back")]
+
+    use JK_Dialog(title="Settings", closeAction=close_action):
         style_prefix "JK"
 
         viewport:
@@ -38,14 +46,16 @@ screen JK_Settings():
                                 use JK_XSpacer()
 
                             hbox:
-                                text "T" size 30 yalign 1.0
+                                text "T" yalign 1.0
 
                                 hbox xsize 5
 
-                                text "T" size JK.scaled(30) yalign 1.0
+                                text "T" size JK.scaled(20) yalign 1.0
+
+                    text "The first 'T' represents the default text size, while the second 'T' reflects the applied scaling and any additional size adjustment"
 
                     if originalSizeAdjustment != JK.Settings.sizeAdjustment:
-                        use JK_InfoBox("If anything goes wrong, you can revert the value via confirm dialog / waiting for 60 seconds / manually, by simultaneously pressing {b}CTRL + SHIFT + ALT + P{/b}.")
+                        use JK_InfoBox(reset_size_adjustment_hint)
 
                         use JK_IconButton(icon="\ue86c", text="Click here to apply the new size\n{size=-7}{color=[JK.Colors.warning]}This will rebuild all the styles of the game, so don't be scared if it takes a few seconds.{/color}{/size}", action=[JK.Settings.ApplySizeAdjustment(), SetScreenVariable("originalSizeAdjustment", JK.Settings.sizeAdjustment)])
 
@@ -125,6 +135,14 @@ screen JK_Settings():
                 vbox:
                     use JK_Title("Sidepanel")
                     vbox:
+                        use JK_IconButton("\ue8ba", text="Reset position", action=JK.Settings.ResetSidepanelPosition())
+
+                        use JK_YSpacer(2)
+
+                        use JK_Checkbox(checked=JK.Settings.sidepanelHorizontal, text="Horizontal", action=JK.Settings.ToggleSidepanelHorizontalEnabled())
+
+                        use JK_YSpacer(2)
+
                         hbox:
                             text "Toggle visibility mode key" yalign 0.5
                             use JK_ToggleSettingGlobalizationButton("changeSidepanelVisibilityKey")
@@ -135,7 +153,7 @@ screen JK_Settings():
 
                 # Memories
                 vbox:
-                    use JK_Title("Memories")
+                    use JK_Title("Memories{size=-20}{color=[JK.Colors.danger]} WIP{/color}{/size}")
                     vbox:
                         use JK_Checkbox(checked=JK.Settings.memoriesEnabled, text="Enabled", action=JK.Settings.ToggleEnabled("memoriesEnabled"))
 
@@ -309,5 +327,5 @@ screen JK_Settings():
 
                 # Close
                 hbox:
-                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_Settings"))
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=close_action)
     

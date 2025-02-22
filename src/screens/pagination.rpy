@@ -56,8 +56,8 @@ screen JK_Pagination():
                 use JK_XSpacer()
 
                 hbox yalign 0.5:
-                    use JK_IconButton(text="A", action=FilePage("auto"), toggled=persistent._file_page == "auto", toggledColor=JK.Colors.selected, tt="Native autosaves", size=25)
-                    use JK_IconButton(text="Q", action=FilePage("quick"), toggled=persistent._file_page == "quick", toggledColor=JK.Colors.selected, tt="Quick saves", size=25)
+                    use JK_IconButton(text="A", action=FilePage("auto"), toggled=persistent._file_page == "auto", toggledColor=JK.Colors.selected, tt="Native automatic saves", size=25)
+                    use JK_IconButton(text="Q", action=FilePage("quick"), toggled=persistent._file_page == "quick", toggledColor=JK.Colors.selected, tt="Native quick saves", size=25)
 
                 use JK_XSpacer()
 

@@ -43,7 +43,7 @@ init -1 python in JK:
             self.quickSaveEnabled = data.get("quickSaveEnabled", True)
             self.quickSaveNotificationEnabled = data.get("quickSaveNotificationEnabled", True)
             self.quickSaveKey = data.get("quickSaveKey", "K_F5")
-            self.memoriesEnabled = data.get("memoriesEnabled", True)
+            self.memoriesEnabled = data.get("memoriesEnabled", False)
             self.memoriesKey = data.get("memoriesKey", "K_BACKQUOTE")
             self.customGridEnabled = data.get("customGridEnabled", False)
             self.customGridX = data.get("customGridX", 2)
@@ -65,6 +65,7 @@ init -1 python in JK:
             self.preventAutosavingWhileNotInGame = data.get("preventAutosavingWhileNotInGame", True)
             self.seamlessPagination = data.get("seamlessPagination", False)
             self.autosaveOnQuestion = data.get("autosaveOnQuestion", True)
+            self.sidepanelHorizontal = data.get("sidepanelHorizontal", False)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -99,6 +100,7 @@ init -1 python in JK:
                 'preventAutosavingWhileNotInGame': self.preventAutosavingWhileNotInGame,
                 'seamlessPagination': self.seamlessPagination,
                 'autosaveOnQuestion': self.autosaveOnQuestion,
+                'sidepanelHorizontal': self.sidepanelHorizontal,
             })
 
         def getGlobalSettingsAsJson(self):
@@ -357,4 +359,18 @@ init -1 python in JK:
                 Autosaver.prevent_autosaving = False
 
                 Settings.save()
+                renpy.restart_interaction()
+
+        class ToggleSidepanelHorizontalEnabled(renpy.ui.Action):
+            def __call__(self):
+                Settings.sidepanelHorizontal = not Settings.sidepanelHorizontal
+
+                Settings.save()
+
+                Settings.ResetSidepanelPosition()()
+
+        class ResetSidepanelPosition(renpy.ui.Action):
+            def __call__(self):
+                renpy.store.persistent.JK_SidepanelPos = None
+
                 renpy.restart_interaction()

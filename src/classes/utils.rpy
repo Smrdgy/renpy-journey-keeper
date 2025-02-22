@@ -783,10 +783,15 @@ init -9999 python in JK:
         def __call__(self):
             OpenDirectoryAction(path=renpy.config.gamedir)()
 
-    def scaled(value): 
+    def scaled(value, min_value=None):
         # Helper function to apply adjustment only to integers
         def adjust_number(value):
-            return int(value * (renpy.config.screen_height / 1080.0)) + Settings.sizeAdjustment
+            rv = int(value * (renpy.config.screen_height / 1080.0)) + Settings.sizeAdjustment
+
+            if min_value:
+                return max(min_value, rv)
+
+            return rv
         
         # If the value is a tuple, apply adjustment to each element
         if isinstance(value, tuple):

@@ -12,10 +12,7 @@ screen JK_Dialog(title=None, message=None, closeAction=None, icon=None):
             hbox:
                 xfill True
 
-                frame:
-                    padding JK.scaled((20, 20, 20, 20))
-
-                    use JK_IconButton(icon=None, action=None)
+                hbox # Alignment placeholder
 
                 hbox:
                     xalign 0.5
@@ -30,7 +27,6 @@ screen JK_Dialog(title=None, message=None, closeAction=None, icon=None):
                 frame:
                     xalign 1.0
                     yalign 0.5
-                    padding JK.scaled((20, 20, 20, 20))
 
                     use JK_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
 
