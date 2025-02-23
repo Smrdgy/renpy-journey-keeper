@@ -193,6 +193,7 @@ init python in JK:
 
         def createPendingSave(self, choice):
             self.pendingSave = AutosaverClass.PendingSaveClass(choice)
+            self.pendingSave.early_save()
             self.trySavePendingSave()
 
         class PendingSaveClass(x52NonPicklable):
@@ -201,7 +202,11 @@ init python in JK:
             def __init__(self, choice):
                 self.choice = choice
 
-                self.early_save()
+                # Never, EVER call any saving functions from here!!!!!!!!!!!!!!!!!!!!!!!!!
+                # I, an idiot, have made this mistake twice,
+                # leading to an hour of debugging why, in the ever-loving f***, Autosaver.pendingSave is None.
+                # (The instance is in the process of being constructed, including calling functions that were trying to access this instance, 
+                # and the assignment happens afterward...)
 
             def early_save(self):
                 extra_info = ''
