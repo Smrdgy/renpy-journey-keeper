@@ -66,6 +66,7 @@ init -1 python in JK:
             self.seamlessPagination = data.get("seamlessPagination", False)
             self.autosaveOnQuestion = data.get("autosaveOnQuestion", True)
             self.sidepanelHorizontal = data.get("sidepanelHorizontal", False)
+            self.searchPlaythroughKey = data.get("searchPlaythroughKey", "ctrl_K_f")
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -101,6 +102,7 @@ init -1 python in JK:
                 'seamlessPagination': self.seamlessPagination,
                 'autosaveOnQuestion': self.autosaveOnQuestion,
                 'sidepanelHorizontal': self.sidepanelHorizontal,
+                'searchPlaythroughKey': self.searchPlaythroughKey,
             })
 
         def getGlobalSettingsAsJson(self):
@@ -373,4 +375,11 @@ init -1 python in JK:
             def __call__(self):
                 renpy.store.persistent.JK_SidepanelPos = None
 
+                renpy.restart_interaction()
+
+        class SetSearchPlaythroughKey(SetKey):
+            def __call__(self):
+                Settings.searchPlaythroughKey = self.resolveKey()
+
+                Settings.save()
                 renpy.restart_interaction()

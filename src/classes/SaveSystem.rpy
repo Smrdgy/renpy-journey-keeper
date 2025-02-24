@@ -132,7 +132,9 @@ init python in JK:
             if remove_dir:
                 instance.location.remove_dir()
 
-            self.removeInstance(instance)
+                self.removeInstance(instance)
+            else:
+                instance.scan()
 
             return True
 

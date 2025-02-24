@@ -93,7 +93,8 @@ screen JK_AnyDirectionBox(horizontal=False):
 screen JK_SidepanelHolder():
     layer "JK_Sidepanel"
 
-    key JK.Settings.changeSidepanelVisibilityKey action JK.ToggleSidepanel()
+    if JK.Settings.changeSidepanelVisibilityKey:
+        key JK.Settings.changeSidepanelVisibilityKey action JK.ToggleSidepanel()
 
     python:
         isSaveLoadScreen = JK.Utils.is_save_load_screen()
@@ -104,6 +105,10 @@ screen JK_SidepanelHolder():
 
     if showSidepanel:
         use JK_Sidepanel()
+
+        # Allow search only inside save/load screens
+        if JK.Settings.searchPlaythroughKey and isSaveLoadScreen:
+            key JK.Settings.searchPlaythroughKey action Show("JK_SearchPlaythrough")
 
     if(showSidepanel and isSaveLoadScreen and JK.Pagination.isShowingPagination):
         use JK_Pagination()
