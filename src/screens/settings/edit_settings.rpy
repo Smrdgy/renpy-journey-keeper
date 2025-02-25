@@ -177,7 +177,8 @@ screen JK_Settings():
                     use JK_Title("Save/Load")
                     vbox:
                         hbox:
-                            use JK_Checkbox(checked=JK.Settings.customGridEnabled, text="Custom slots grid", action=JK.Settings.ToggleEnabled("customGridEnabled"))
+                            $ sub_text = "\n{color=[JK.Colors.text_light]}{size=-5}Config values: [renpy.store.gui.file_slot_cols], [renpy.store.gui.file_slot_rows]{/size}{/color}"
+                            use JK_Checkbox(checked=JK.Settings.customGridEnabled, text="Custom slots grid" + sub_text, action=JK.Settings.ToggleEnabled("customGridEnabled"))
                             use JK_Helper("When enabled, two new options will appear where you can enter the number of columns and rows for the save slots in the game's save/load menu. This is needed because some games use custom save systems that the mod's autosave/quicksave system can't handle automatically.")
 
                         if JK.Settings.customGridEnabled:

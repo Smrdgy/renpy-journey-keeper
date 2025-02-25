@@ -76,6 +76,27 @@ init -9999 python in JK:
     class Utils(x52NonPicklable):
         @staticmethod
         def split_slotname(slotname):
+            reg_page = "<page>"
+            reg_name = "<name>"
+
+            if hasattr(renpy.config, "file_slotname_callback") and renpy.config.file_slotname_callback and callable(renpy.config.file_slotname_callback):
+                sample_slotname = renpy.config.file_slotname_callback(reg_page, reg_name)
+            else:
+                sample_slotname = reg_page + "-" + reg_name
+
+            pattern = re.escape(sample_slotname)
+            pattern = pattern.replace(reg_page, r"(\d+)")
+            pattern = pattern.replace(reg_name, r"(\d+)")
+
+            # Match the actual slotname against the pattern
+            match = re.match(pattern, slotname)
+            if match:
+                page = match.group(1)
+                slot = match.group(2)
+
+                if page != None and slot != None and page.isdigit() and slot.isdigit():
+                    return int(page), int(slot)
+
             try:
                 page, slot = slotname.split('-')
 

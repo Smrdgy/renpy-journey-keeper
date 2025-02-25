@@ -66,8 +66,6 @@ init python in JK:
             self.caching = False
             renpy.restart_interaction()
 
-            print(self.save_names_cache, self.save_choices_cache)
-
             if self.search_after_cache_is_built:
                 self.search_after_cache_is_built = False
                 self._search()
