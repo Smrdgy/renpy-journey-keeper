@@ -42,6 +42,7 @@ init python in JK:
 
             cache_all_playthroughs = self.search_playthroughs
 
+            print("#", self.search_playthroughs)
             playthroughs = Playthroughs.playthroughs if self.search_playthroughs else [Playthroughs.activePlaythrough]
             for playthrough in playthroughs:
                 self.save_names_cache[playthrough.id] = {}
@@ -61,6 +62,9 @@ init python in JK:
                         choice = json.get("_JK_choice", None)
                         if choice:
                             self.save_choices_cache[playthrough.id][slotname] = choice
+
+
+            print(cache_all_playthroughs, self.save_names_cache, self.save_choices_cache)
 
             self.all_playthroughs_cached = cache_all_playthroughs
             self.caching = False
@@ -194,6 +198,9 @@ init python in JK:
 
             def __call__(self):
                 setattr(self.viewModel, self.key, not getattr(self.viewModel, self.key))
+
+                if self.key == "search_playthroughs" and self.viewModel.search_playthroughs and not self.viewModel.all_playthroughs_cached:
+                    renpy.invoke_in_thread(self.viewModel.cache_saves)
 
                 self.viewModel.search()
 
