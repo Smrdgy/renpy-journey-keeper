@@ -110,6 +110,9 @@ screen JK_SidepanelHolder():
         if JK.Settings.searchPlaythroughKey and isSaveLoadScreen:
             key JK.Settings.searchPlaythroughKey action Show("JK_SearchPlaythrough")
 
+        if JK.Settings.searchPlaythroughsKey and isSaveLoadScreen:
+            key JK.Settings.searchPlaythroughsKey action Show("JK_SearchPlaythrough", search_all=True)
+
     if(showSidepanel and isSaveLoadScreen and JK.Pagination.isShowingPagination):
         use JK_Pagination()
     else:

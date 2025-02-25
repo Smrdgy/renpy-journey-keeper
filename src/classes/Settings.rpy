@@ -67,6 +67,7 @@ init -1 python in JK:
             self.autosaveOnQuestion = data.get("autosaveOnQuestion", True)
             self.sidepanelHorizontal = data.get("sidepanelHorizontal", False)
             self.searchPlaythroughKey = data.get("searchPlaythroughKey", "ctrl_K_f")
+            self.searchPlaythroughsKey = data.get("searchPlaythroughsKey", "ctrl_shift_K_f")
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -103,6 +104,7 @@ init -1 python in JK:
                 'autosaveOnQuestion': self.autosaveOnQuestion,
                 'sidepanelHorizontal': self.sidepanelHorizontal,
                 'searchPlaythroughKey': self.searchPlaythroughKey,
+                'searchPlaythroughsKey': self.searchPlaythroughsKey,
             })
 
         def getGlobalSettingsAsJson(self):
@@ -380,6 +382,13 @@ init -1 python in JK:
         class SetSearchPlaythroughKey(SetKey):
             def __call__(self):
                 Settings.searchPlaythroughKey = self.resolveKey()
+
+                Settings.save()
+                renpy.restart_interaction()
+
+        class SetSearchPlaythroughsKey(SetKey):
+            def __call__(self):
+                Settings.searchPlaythroughsKey = self.resolveKey()
 
                 Settings.save()
                 renpy.restart_interaction()

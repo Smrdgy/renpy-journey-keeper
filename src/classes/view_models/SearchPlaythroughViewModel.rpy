@@ -6,15 +6,17 @@ init python in JK:
     import re
 
     class SearchPlaythroughViewModel(x52NonPicklable):
-        def __init__(self):
-            self.search_playthrough_names = False #TODO
-            self.search_playthrough_descriptions = False #TODO
+        def __init__(self, search_playthroughs=False):
+            self.search_playthroughs = search_playthroughs
+            self.search_playthrough_names = True
+            self.search_playthrough_descriptions = True
             self.search_page_names = True
             self.search_save_names = True
             self.search_choices = True
             self.search_text = ""
 
             self.caching = False
+            self.all_playthroughs_cached = False
             self.search_after_cache_is_built = False
             self.save_names_cache = {}
             self.save_choices_cache = {}
@@ -38,29 +40,45 @@ init python in JK:
             self.caching = True
             renpy.restart_interaction()
 
-            saves_list = SaveSystem.multilocation.list()
+            cache_all_playthroughs = self.search_playthroughs
 
-            for slotname in saves_list:
-                json = SaveSystem.multilocation.json(slotname)
+            playthroughs = Playthroughs.playthroughs if self.search_playthroughs else [Playthroughs.activePlaythrough]
+            for playthrough in playthroughs:
+                self.save_names_cache[playthrough.id] = {}
+                self.save_choices_cache[playthrough.id] = {}
 
-                name = json.get("_save_name", None)
-                if name:
-                    self.save_names_cache[slotname] = name
+                instance = SaveSystem.getOrCreatePlaythroughSaveInstanceByID(playthrough.id)
 
-                choice = json.get("_JK_choice", None)
-                if choice:
-                    self.save_choices_cache[slotname] = choice
+                saves_list = instance.location.list_including_inactive()
+                for slotname in saves_list:
+                    json = instance.location.save_json(slotname, include_inactive=True)
 
+                    if json:
+                        name = json.get("_save_name", None)
+                        if name:
+                            self.save_names_cache[playthrough.id][slotname] = name
+
+                        choice = json.get("_JK_choice", None)
+                        if choice:
+                            self.save_choices_cache[playthrough.id][slotname] = choice
+
+            self.all_playthroughs_cached = cache_all_playthroughs
             self.caching = False
             renpy.restart_interaction()
 
+            print(self.save_names_cache, self.save_choices_cache)
+
             if self.search_after_cache_is_built:
+                self.search_after_cache_is_built = False
                 self._search()
 
         def search(self):
             renpy.invoke_in_thread(self._search)
 
         def _search(self):
+            if self.search_after_cache_is_built:
+                return
+
             self.searched = True
             self.searching = True
             self.results = []
@@ -68,50 +86,54 @@ init python in JK:
 
             if self.caching:
                 self.search_after_cache_is_built = True
+                return
 
-            playthrough = Playthroughs.activePlaythrough
-
-            # Playthroughs names
-            # if self.search_playthrough_names:
-            #     is_match, rich_text = self.get_match(playthrough.name)
-            #     if is_match:
-            #         self.results.append(("PLAYTHROUGH_NAME", rich_text, playthrough))
-
-            # Playthroughs descriptions
-            # if self.search_playthrough_descriptions:
-            #     is_match, rich_text = self.get_match(playthrough.description)
-            #     if is_match:
-            #         self.results.append(("PLAYTHROUGH_DESCRIPTION", rich_text, playthrough))
-
-            # Page names
-            if self.search_page_names:
-                page_names = playthrough.filePageName
-                if playthrough.id == Playthroughs.activePlaythrough.id:
-                    page_names = renpy.store.persistent._file_page_name
-
-                for page, text in page_names.items():
-                    is_match, rich_text = self.get_match(text)
+            playthroughs = Playthroughs.playthroughs if self.search_playthroughs else [Playthroughs.activePlaythrough]
+            for playthrough in playthroughs:
+                # Playthrough names
+                if self.search_playthroughs and self.search_playthrough_names:
+                    is_match, rich_text = self.get_match(playthrough.name)
                     if is_match:
-                        self.results.append(("FILE_PAGE_NAME", rich_text, page, text))
+                        self.results.append(("PLAYTHROUGH_NAME", rich_text, playthrough))
 
-            # Save names
-            if self.search_save_names:
-                for slotname, name in self.save_names_cache.items():
-                    is_match, rich_text = self.get_match(name)
+                # Playthrough descriptions
+                if self.search_playthroughs and self.search_playthrough_descriptions:
+                    is_match, rich_text = self.get_match(playthrough.description)
                     if is_match:
-                        self.results.append(("SAVE_NAME", rich_text, slotname))
+                        self.results.append(("PLAYTHROUGH_DESCRIPTION", rich_text, playthrough))
 
-            # Choices
-            if self.search_choices:
-                for slotname, choice in self.save_choices_cache.items():
-                    is_match, rich_text = self.get_match(choice)
-                    if is_match:
-                        self.results.append(("SAVE_CHOICE", rich_text, slotname))
+                # Page names
+                if self.search_page_names:
+                    page_names = playthrough.filePageName
+                    if playthrough.id == Playthroughs.activePlaythrough.id:
+                        page_names = renpy.store.persistent._file_page_name
+
+                    for page, text in page_names.items():
+                        is_match, rich_text = self.get_match(text)
+                        if is_match:
+                            self.results.append(("FILE_PAGE_NAME", rich_text, playthrough, page, text))
+
+                # Save names
+                if self.search_save_names:
+                    for slotname, name in self.save_names_cache.get(playthrough.id, {}).items():
+                        is_match, rich_text = self.get_match(name)
+                        if is_match:
+                            self.results.append(("SAVE_NAME", rich_text, playthrough, slotname))
+
+                # Choices
+                if self.search_choices:
+                    for slotname, choice in self.save_choices_cache.get(playthrough.id, {}).items():
+                        is_match, rich_text = self.get_match(choice)
+                        if is_match:
+                            self.results.append(("SAVE_CHOICE", rich_text, playthrough, slotname))
 
             self.searching = False
             renpy.restart_interaction()
 
         def get_match(self, text):
+            if len(self.search_text) == 0 or text is None:
+                return False, ""
+
             return self.fuzzy_match(text, self.search_text)
 
         @staticmethod
@@ -174,6 +196,21 @@ init python in JK:
 
             def __call__(self):
                 setattr(self.viewModel, self.key, not getattr(self.viewModel, self.key))
+
+                self.viewModel.search()
+
+                renpy.restart_interaction()
+
+        class SetSearchAll(renpy.ui.Action):
+            def __init__(self, viewModel, enabled):
+                self.viewModel = viewModel
+                self.enabled = enabled
+
+            def __call__(self):
+                self.viewModel.search_playthroughs = self.enabled
+
+                if self.enabled and not self.viewModel.all_playthroughs_cached:
+                    renpy.invoke_in_thread(self.viewModel.cache_saves)
 
                 self.viewModel.search()
 
