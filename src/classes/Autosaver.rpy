@@ -92,7 +92,6 @@ init python in JK:
                 i = 0
                 menu_node = renpy.game.script.lookup(choice.location)
                 choice_item = menu_node.items[choice.value]
-                print("ci", choice_item)
                 if len(choice_item) > 2 and choice_item[2]:
                     node = choice_item[2][0]
                 else:

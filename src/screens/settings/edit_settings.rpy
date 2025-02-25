@@ -226,6 +226,21 @@ screen JK_Settings():
 
                         use JK_YSpacer(2)
 
+                        vbox:
+                            hbox:
+                                text "Search playthrough key" yalign 0.5
+                                use JK_ToggleSettingGlobalizationButton("searchPlaythroughKey")
+
+                            use JK_KeyInput(assignment=JK.Settings.searchPlaythroughKey, action=JK.Settings.SetSearchPlaythroughKey)
+
+                            hbox:
+                                text "Search all playthroughs key" yalign 0.5
+                                use JK_ToggleSettingGlobalizationButton("searchPlaythrougshKey")
+
+                            use JK_KeyInput(assignment=JK.Settings.searchPlaythroughsKey, action=JK.Settings.SetSearchPlaythroughsKey)
+
+                        use JK_YSpacer(2)
+
                         hbox:
                             use JK_XSpacer()
 

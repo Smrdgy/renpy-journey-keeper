@@ -20,6 +20,10 @@ screen JK_PlaythroughActions(playthrough):
             style_prefix "JK_dialog_action_buttons"
 
             vbox:
+                # Search playthrough
+                hbox:
+                    use JK_IconButton(icon="\ue8b6", text="Seach playthrough", action=[Show("JK_SearchPlaythrough"), Hide("JK_PlaythroughActions")], key="ctrl_K_f")
+
                 # Duplicate playthrough
                 hbox:
                     use JK_IconButton(icon="\uebbd", text="Duplicate playthrough", action=duplicatePlaythroughAction, key="ctrl_K_d")
