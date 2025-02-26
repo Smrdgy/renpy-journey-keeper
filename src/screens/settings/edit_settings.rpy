@@ -232,13 +232,13 @@ screen JK_Settings():
                                 text "Search playthrough key" yalign 0.5
                                 use JK_ToggleSettingGlobalizationButton("searchPlaythroughKey")
 
-                            use JK_KeyInput(assignment=JK.Settings.searchPlaythroughKey, action=JK.Settings.SetSearchPlaythroughKey)
+                            use JK_KeyInput(assignment=JK.Settings.searchPlaythroughKey, action=JK.Settings.SetSearchPlaythroughKey, supress_ctrl_warning=True)
 
                             hbox:
                                 text "Search all playthroughs key" yalign 0.5
                                 use JK_ToggleSettingGlobalizationButton("searchPlaythrougshKey")
 
-                            use JK_KeyInput(assignment=JK.Settings.searchPlaythroughsKey, action=JK.Settings.SetSearchPlaythroughsKey)
+                            use JK_KeyInput(assignment=JK.Settings.searchPlaythroughsKey, action=JK.Settings.SetSearchPlaythroughsKey, supress_ctrl_warning=True)
 
                         use JK_YSpacer(2)
 
@@ -311,37 +311,31 @@ screen JK_Settings():
                         use JK_Title("Debug", color=JK.Colors.danger)
                         vbox:
                             use JK_Checkbox(checked=JK.Settings.debugEnabled, text="Debug mode", action=JK.Settings.ToggleEnabled("debugEnabled"))
-
-                use JK_YSpacer()
-
-                hbox:
-                    xfill True
-
-                    vbox xalign 0.5:
-                        hbox xalign 0.5:
-                            use JK_Title(JK.MOD_NAME + " v" + JK.MOD_VERSION)
-
-                        use JK_YSpacer(2)
-
-                        text "{a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]}Click here to open the GitHub page.{/a}" xalign 0.5 text_align 0.5
-
-                        hbox ysize JK.scaled(5)
-
-                        text "Encountered an issue?" xalign 0.5 text_align 0.5
-                        text "Visit our {a=[JK.DISCORD_URL]}Discord{/a} or check {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]/issues}GitHub issues{/a}" xalign 0.5 text_align 0.5
+                            
 
         hbox:
             xfill True
             yfill True
 
-            style_prefix "JK_dialog_action_buttons"
-
             vbox:
-                # Reset
-                hbox:
-                    use JK_IconButton(icon="\ue8ba", text="Reset", action=Show("JK_ResetSettingsConfirm"), color=JK.Colors.danger)
+                yalign 1.0
 
-                # Close
-                hbox:
-                    use JK_IconButton(icon="\ue5cd", text="Close", action=close_action)
+                use JK_Title(JK.MOD_NAME + " v" + JK.MOD_VERSION)
+
+                use JK_YSpacer(2)
+
+                use JK_Title("Encountered an issue?", size=3, color=JK.Colors.error)
+                text "Visit our {a=[JK.DISCORD_URL]}Discord{/a} or check {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]}GitHub{/a}."
+
+            hbox:
+                style_prefix "JK_dialog_action_buttons"
+
+                vbox:
+                    # Reset
+                    hbox:
+                        use JK_IconButton(icon="\ue8ba", text="Reset", action=Show("JK_ResetSettingsConfirm"), color=JK.Colors.danger)
+
+                    # Close
+                    hbox:
+                        use JK_IconButton(icon="\ue5cd", text="Close", action=close_action)
     

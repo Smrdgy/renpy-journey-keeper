@@ -159,7 +159,7 @@ init python in JK:
         "K_RIGHTPAREN": ")",
         "K_ASTERISK": "*",
         "K_PLUS": "+",
-        "K_COMMA": "-",
+        "K_COMMA": ",",
         "K_MINUS": "-",
         "K_PERIOD": ".",
         "K_SLASH": "/",
@@ -302,6 +302,9 @@ init python in JK:
             else:
                 text = key_name[re.sub(r"(alt_)|(ctrl_)|(shift_)", "", assignment)]
 
+            if text == "[":
+                text = "[["
+
             self.text = renpy.text.text.Text(text, style=text_style)
 
         def setDetecting(self):
@@ -332,7 +335,7 @@ init python in JK:
         return KeyInputButton(assignment=assignment, action=action, style="keyinput_disabled" if disabled else style, **properties)
 
 # Screen
-screen JK_KeyInput(assignment=None, action=NullAction, disabled=False):
+screen JK_KeyInput(assignment=None, action=NullAction, disabled=False, supress_ctrl_warning=False, supress_no_mod_warning=False):
     vbox:
         hbox:
             add JK.KeyInput(assignment=assignment, action=action, disabled=disabled)
@@ -347,5 +350,9 @@ screen JK_KeyInput(assignment=None, action=NullAction, disabled=False):
 
         use JK_KeyAssignmentCheck(assignment)
 
-        if "ctrl_" in (assignment or ""):
-            text "Please be advised, while CTRL is allowed, it will most likely conflict with skip action." color JK.Colors.warning
+        if assignment:
+            if not supress_ctrl_warning and "ctrl_" in assignment:
+                text "Please note that while CTRL is allowed, it may conflict with the skip action during gameplay." color JK.Colors.warning
+
+            if not supress_no_mod_warning and len(assignment.split("_")) == 2:
+                text "Be aware, simple key shortcuts may trigger accidentally while renaming a page." color JK.Colors.warning
