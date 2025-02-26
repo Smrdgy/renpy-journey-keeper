@@ -20,4 +20,4 @@ screen JK_SettingsLoadSaveScreensStandalone():
                 vbox:
                     use JK_SettingsLoadSaveScreens(update_at_runtime=True)
 
-                    use JK_IconButton("\ue5c4", text="Return to the settings", action=[Hide("JK_SettingsLoadSaveScreensStandalone"), Show("JK_Settings")])
+                    use JK_IconButton("\ue5c4", text="Return to the settings", action=[Hide("JK_SettingsLoadSaveScreensStandalone"), Show("JK_Settings", section="SAVE_LOAD")])

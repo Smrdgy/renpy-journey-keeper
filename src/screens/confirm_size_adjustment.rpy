@@ -38,7 +38,7 @@ screen JK_ConfirmSizeAdjustment():
                 vbox:
                     text "Adjustment confirmation" color JK.Colors.theme xalign 0.5
 
-                    vbox ysize 5
+                    use JK_YSpacer(4)
 
                     text "{size=-10}After 60 seconds, the previous size will be applied.{/size}" xalign 0.5
 

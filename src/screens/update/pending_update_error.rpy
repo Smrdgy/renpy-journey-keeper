@@ -20,9 +20,9 @@ screen JK_PendingUpdateError(error):
 
                 if JK.Updater.rpa_locked_exception:
                     text "Ren'Py is keeping the old mod file open, which is preventing the update. This is unfortunately normal for Ren'Py 8+." text_align 0.5 xalign 0.5
-                    hbox ysize JK.scaled(5)
+                    use JK_YSpacer(4)
                     text "To try and fix it, click {a=JK_Run:JK.Updater.RestartGame()}Reload and update{/a}—this will reload the game, which might release the file. If the issue persists, something else may be holding the file open." text_align 0.5 xalign 0.5
-                    hbox ysize JK.scaled(5)
+                    use JK_YSpacer(4)
                     text "Alternatively, you can do this yourself by closing the game, navigating to the {a=JK_Run:JK.OpenGameDirectoryAction()}/game{/a} directory of this game and renaming the file {i}\"[JK.Updater.temp_asset_name]\"{/i} to {i}\"[JK.Updater.asset_name]\"{/i}." text_align 0.5 xalign 0.5
 
                     use JK_ErrorFooter("PENDING_UPDATE_ERROR_RPY8_EXPECTED")

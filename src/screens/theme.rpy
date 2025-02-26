@@ -210,6 +210,9 @@ style JK_spacer_x_2:
 style JK_spacer_x_3:
     xsize JK.scaled(10)
 
+style JK_spacer_y_3:
+    xsize JK.scaled(5)
+
 style JK_spacer_y_1:
     ysize JK.scaled(40)
 
@@ -218,6 +221,9 @@ style JK_spacer_y_2:
 
 style JK_spacer_y_3:
     ysize JK.scaled(10)
+
+style JK_spacer_y_4:
+    ysize JK.scaled(5)
 
 ##################
 #     Toolbar    #
@@ -228,3 +234,20 @@ style JK_toolbar:
 
 style JK_toolbar_active is JK_toolbar:
     background "#2b4047"
+
+##################
+#    Settings    #
+##################
+
+style JK_Settings_Tab_button is JK_button
+style JK_Settings_Tab_text is JK_Icon_button_text
+
+style JK_Settings_Tab_button is JK_button:
+    selected_background JK.Colors.selected_background
+    selected_hover_background JK.Colors.block_selected_hover_background
+
+style JK_Settings_Tab_button_text is JK_Icon_button_text:
+    selected_color JK.Colors.selected
+
+style JK_Settings_Tab_button_debug is JK_Settings_Tab_button:
+    selected_background JK.Colors.error

@@ -83,7 +83,7 @@ screen JK_PlaythroughsPicker():
                                     else:
                                         use JK_IconButton(icon="\ue074", action=SetScreenVariable("reorder_source", playthrough.id), tt="Change order", ttSide="bottom", color=JK.Colors.text_light, hover_color=JK.Colors.hover)
 
-                            hbox ysize 5
+                            use JK_YSpacer(4)
 
                             vbox:
                                 xsize thumbnailSize[0]
@@ -126,7 +126,7 @@ screen JK_PlaythroughsPicker():
 
                                     use JK_Icon(icon="\ue148", color="#333", hover_color="#fff", size=50)
 
-                        hbox ysize 5
+                        use JK_YSpacer(4)
 
                         vbox:
                             xsize thumbnailSize[0]
