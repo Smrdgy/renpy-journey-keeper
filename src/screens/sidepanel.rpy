@@ -58,7 +58,7 @@ screen JK_Sidepanel():
         dragged sidepanel_dragged
 
         frame:
-            background "#000000cc"
+            background "#000000{:02X}".format(int(JK.Settings.sidepanelOpacity * 255))
 
             use JK_AnyDirectionBox(horizontal):
                 use JK_IconButton('\ueb73', tt="Select playthrough", ttSide=tooltip_side, action=Show("JK_PlaythroughsPicker")):

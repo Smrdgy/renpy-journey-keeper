@@ -69,6 +69,9 @@ init -1 python in JK:
             self.searchPlaythroughKey = data.get("searchPlaythroughKey", "ctrl_K_f")
             self.searchPlaythroughsKey = data.get("searchPlaythroughsKey", "ctrl_shift_K_f")
             self.showConfirmOnLargePageJump = data.get("showConfirmOnLargePageJump", True)
+            self.dialogOpacity = data.get("dialogOpacity", 1)
+            self.sidepanelOpacity = data.get("sidepanelOpacity", 0.8)
+            self.paginationOpacity = data.get("paginationOpacity", 0.9)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -107,6 +110,9 @@ init -1 python in JK:
                 'searchPlaythroughKey': self.searchPlaythroughKey,
                 'searchPlaythroughsKey': self.searchPlaythroughsKey,
                 'showConfirmOnLargePageJump': self.showConfirmOnLargePageJump,
+                'dialogOpacity': self.dialogOpacity,
+                'sidepanelOpacity': self.sidepanelOpacity,
+                'paginationOpacity': self.paginationOpacity,
             })
 
         def getSettingsForReset(self, no_globals=False):
@@ -410,3 +416,9 @@ init -1 python in JK:
 
                 Settings.save()
                 renpy.restart_interaction()
+
+        class FieldValue(renpy.store.FieldValue):
+            def changed(self, value):
+                super(Settings.FieldValue, self).changed(value)
+
+                Settings.save()

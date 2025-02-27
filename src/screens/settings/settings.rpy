@@ -21,6 +21,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
             ("SIDEPANEL", "\ue8aa", "Sidepanel"),
             ("MEMORIES", "\ue02c", "Memories{size=-20}{color=[JK.Colors.danger]} WIP{/color}{/size}"),
             ("SAVE_LOAD", "\ue0e0", "Save/Load"),
+            ("CUSTOMIZATION", "\ue40a", "Customize"),
             ("UPDATES", "\ue62a", "Updates"),
         ]
 
@@ -84,6 +85,8 @@ screen JK_Settings(section="ACCESSIBILITY"):
                 use JK_Settings_LoadSave()
             elif active_section == "UPDATES":
                 use JK_Settings_Updater()
+            elif active_section == "CUSTOMIZATION":
+                use JK_Settings_Customization()
 
         hbox:
             xfill True

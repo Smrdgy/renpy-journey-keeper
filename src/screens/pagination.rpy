@@ -47,7 +47,7 @@ screen JK_Pagination():
         dragged pagination_dragged
 
         frame:
-            background "#000000fc"
+            background "#000000{:02X}".format(int(JK.Settings.paginationOpacity * 255))
 
             hbox yalign 0.5:
                 hbox yalign 0.5:

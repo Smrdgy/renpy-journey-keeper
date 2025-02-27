@@ -8,6 +8,8 @@ screen JK_Dialog(title=None, message=None, closeAction=None, icon=None):
         key 'mouseup_3' action closeAction
 
     frame style_suffix "overlay":
+        background "#000000{:02X}".format(int(JK.Settings.dialogOpacity * 255))
+
         vbox:
             hbox:
                 xfill True

@@ -51,7 +51,6 @@ style JK_hbox is JK_default
 style JK_dialog_overlay:
     xfill True
     yfill True
-    background '#000000ff'
 
 style JK_dialog_title is JK_text:
     padding JK.scaled((40, 40, 40, 0))
