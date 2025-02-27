@@ -76,12 +76,15 @@ init python in JK:
             self.setActiveSlot(slotString)
 
         def trySavePendingSave(self):
-            if(self.pendingSave != None):
+            if self.pendingSave:
                 # If the save slot is not bigger than the very last one, do once a confirm whether to disable autosaving
                 if renpy.scan_saved_game(Utils.format_slotname(renpy.store.JK_ActiveSlot)) and not self.suppressAutosaveConfirm and (self.loaded_manual_save_without_choices or renpy.store.JK_ActiveSlot != self.prevActiveSlot):
                     self.confirmDialogOpened = True
                     if renpy.get_skipping():
-                        renpy.skip(False)
+                        if hasattr(renpy, "stop_skipping"):
+                            renpy.stop_skipping()
+                        elif hasattr(renpy, "skip"):
+                            renpy.skip(False)
                     renpy.show_screen("JK_AutosaveOverwriteConfirm")
                     return
 
@@ -141,6 +144,10 @@ init python in JK:
             return False
 
         def handleChoiceSelection(self, choice):
+            # Prevent a single choice from saving multiple times (debouncer)
+            if self.pendingSave:
+                return
+
             # Prevent making any autosave actions when the feature is diabled or is viewing a memory or a replay
             if not Playthroughs.activePlaythrough.autosaveOnChoices or Memories.memoryInProgress or renpy.store._in_replay:
                 return
@@ -193,7 +200,21 @@ init python in JK:
         def createPendingSave(self, choice):
             self.pendingSave = AutosaverClass.PendingSaveClass(choice)
             self.pendingSave.early_save()
-            self.trySavePendingSave()
+
+            # Debouncer
+            # Some games, call the action twice, example:
+            # `action [SensitiveIf( i.action), SetVariable("timeout", 8), SetVariable("timeout_label", None), i.action]`
+            #
+            # This results in duplicate saves. By using multithreading and introducing a very short delay,  
+            # we ensure that the second call is ignored.
+            renpy.invoke_in_thread(self.delaySavePendingSave)
+
+        def delaySavePendingSave(self):
+            # Debouncer delay
+            renpy.time.sleep(0.01)
+
+            # Return to the main thread, otherwise the save isn't saved.
+            renpy.invoke_in_main_thread(self.trySavePendingSave)
 
         class PendingSaveClass(x52NonPicklable):
             temp_save_slotname = "JK-temp"

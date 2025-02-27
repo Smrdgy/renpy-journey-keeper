@@ -42,7 +42,6 @@ init python in JK:
 
             cache_all_playthroughs = self.search_playthroughs
 
-            print("#", self.search_playthroughs)
             playthroughs = Playthroughs.playthroughs if self.search_playthroughs else [Playthroughs.activePlaythrough]
             for playthrough in playthroughs:
                 self.save_names_cache[playthrough.id] = {}
