@@ -32,6 +32,7 @@ The sidepanel is the only element added to your field of view. From here, you ca
   - Duplicate playthrough.
   - Manage saves.
   - Show choices timeline.
+  - Search playthrough(s).
 
 ## Keyboard shortcuts
 - `ALT + P` or draw `P` → `Up + Right + Down + Left` on a touch screen
@@ -44,6 +45,10 @@ The sidepanel is the only element added to your field of view. From here, you ca
   - Saves a memory
 - `CTRL + ALT + SHIFT + P`
   - Resets text sizing as well as sidepanel and pagination position
+- `CTRL + F`
+  - Search in active playthrough
+- `CTRL + SHIFT + F`
+  - Search in all playthroughs
 
 **Note**: All shortcuts can be remapped in the settings, in case of conflicts with the game or another mod.
 Additionally, the mappings can be set global via the globe icon button. Meaning, the mapping will apply to all other games as well.
@@ -60,6 +65,7 @@ You can also unassign the mapping by clicking the circular red X button
   - Restructure saves into a sequence.
 - Use actually working pagination, with go-to a specific page feature
 - Create memories (*WIP*).
+- Search playthrough(s) and their save names and choices
 
 **Note:**  
 Memories are an experimental feature. Until I figure out how to store a sequence of events, a "memory" will be just a glorified save.
@@ -185,4 +191,5 @@ The issue is most likely with other mod or the game itself.
 # Known problematic games
 
 - Chasing Sunsets
-  - The game creates manual saves at specific points in the story, which disrupts the autosave counter, causing new saves to appear on page 99. Follow the troubleshooting "The autosaves are disorganized"
+  - The game creates manual saves at specific points in the story, which disrupts the autosave counter, causing new saves to appear on page 99.
+    - A system to counterract this behavior was implemented; whenever the game performs the hard-coded manual save on the page 99, a confirmation dialog will appear where you can revert the slot back to the correct value.
