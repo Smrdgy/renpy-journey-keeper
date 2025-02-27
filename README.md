@@ -192,4 +192,4 @@ The issue is most likely with other mod or the game itself.
 
 - Chasing Sunsets
   - The game creates manual saves at specific points in the story, which disrupts the autosave counter, causing new saves to appear on page 99.
-    - A system to counterract this behavior was implemented; whenever the game performs the hard-coded manual save on the page 99, a confirmation dialog will appear where you can revert the slot back to the correct value.
+    - A system to counteract this behavior was implemented; whenever the game performs the hard-coded manual save on the page 99, a confirmation dialog will appear where you can revert the slot back to the correct value.
