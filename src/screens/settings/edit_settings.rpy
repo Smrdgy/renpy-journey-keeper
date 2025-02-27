@@ -11,7 +11,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
 
         default_close_action = Hide("JK_Settings")
         close_action = default_close_action
-        if originalSizeAdjustment != JK.Settings.sizeAdjustment:
+        if originalSizeAdjustment != JK.Settings.sizeAdjustment and JK.Settings.sizeAdjustment != 0:
             close_action = [JK.ShowConfirmAction(title="You have unapplied size adjustment, would you like to apply it now?", message=reset_size_adjustment_hint, yes=[JK.Settings.ApplySizeAdjustment(), default_close_action], yesText="Apply now", yesColor=JK.Colors.success, noText="Back")]
 
         sections = [

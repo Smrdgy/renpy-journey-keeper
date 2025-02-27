@@ -107,6 +107,22 @@ init -1 python in JK:
                 'searchPlaythroughsKey': self.searchPlaythroughsKey,
             })
 
+        def getSettingsForReset(self, no_globals=False):
+            if no_globals:
+                return {}
+
+            new_settings = {
+                'updaterEnabled': self.updaterEnabled,
+                'autoUpdateWithoutPrompt': self.autoUpdateWithoutPrompt,
+                'globalizedSettings': self.globalizedSettings,
+            }
+
+            for setting_name in self.globalizedSettings:
+                if hasattr(self, setting_name):
+                    new_settings[setting_name] = getattr(self, setting_name)
+
+            return new_settings
+
         def getGlobalSettingsAsJson(self):
             settings = {
                 'updaterEnabled': self.updaterEnabled,
@@ -149,9 +165,9 @@ init -1 python in JK:
             if include_global:
                 UserDir.removeGlobalSettings()
             
-            self.setSettings({})
+            self.setSettings(self.getSettingsForReset(no_globals=include_global))
 
-            renpy.save_persistent()
+            self.save()
 
             if rebuild_ui:
                 renpy.store.gui.rebuild()
