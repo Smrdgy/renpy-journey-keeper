@@ -35,6 +35,11 @@ init python in JK:
                 self.prevActiveSlot = renpy.store.JK_ActiveSlot + "" # Copy the data, not just the pointer
                 renpy.store.JK_ActiveSlot = slotname
 
+                prev_page, _ = Utils.split_slotname(self.prevActiveSlot)
+
+                if prev_page > page + 1 or prev_page < page - 1:
+                    renpy.notify("Jumped from {} to {}".format(self.prevActiveSlot, renpy.store.JK_ActiveSlot))
+
         def getNextSlot(self):
             page, slot = Utils.split_slotname(renpy.store.JK_ActiveSlot)
 
@@ -202,19 +207,20 @@ init python in JK:
             self.pendingSave.early_save()
 
             # Debouncer
-            # Some games, call the action twice, example:
+            # Some games, call the choice action twice, example:
             # `action [SensitiveIf( i.action), SetVariable("timeout", 8), SetVariable("timeout_label", None), i.action]`
             #
             # This results in duplicate saves. By using multithreading and introducing a very short delay,  
             # we ensure that the second call is ignored.
-            renpy.invoke_in_thread(self.delaySavePendingSave)
 
-        def delaySavePendingSave(self):
-            # Debouncer delay
-            renpy.time.sleep(0.01)
+            callback = self.trySavePendingSave
 
-            # Return to the main thread, otherwise the save isn't saved.
-            renpy.invoke_in_main_thread(self.trySavePendingSave)
+            def worker():
+                time.sleep(0.01)
+                if callable(callback):
+                    callback()  # Call the function on the main thread
+
+            renpy.invoke_in_thread(worker)
 
         class PendingSaveClass(x52NonPicklable):
             temp_save_slotname = "JK-temp"
