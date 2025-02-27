@@ -3,6 +3,7 @@ init 9999 python in JK:
     
     def before_load(slotname):
         Autosaver.activeSlotPending = slotname
+        Autosaver.prevent_confirm_on_large_page_jump = True
         Autosaver.suppressAutosaveConfirm = False
     
     def before_save(slotname):

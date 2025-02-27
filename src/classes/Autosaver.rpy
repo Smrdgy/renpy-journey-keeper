@@ -35,10 +35,20 @@ init python in JK:
                 self.prevActiveSlot = renpy.store.JK_ActiveSlot + "" # Copy the data, not just the pointer
                 renpy.store.JK_ActiveSlot = slotname
 
-                prev_page, _ = Utils.split_slotname(self.prevActiveSlot)
+                if self.prevent_confirm_on_large_page_jump:
+                    self.prevent_confirm_on_large_page_jump = False
 
-                if prev_page > page + 1 or prev_page < page - 1:
-                    renpy.notify("Jumped from {} to {}".format(self.prevActiveSlot, renpy.store.JK_ActiveSlot))
+                else:
+                    prev_page, _ = Utils.split_slotname(self.prevActiveSlot)
+
+                    if Settings.showConfirmOnLargePageJump and not Utils.is_save_load_screen() and (prev_page > page + 1 or prev_page < page - 1):
+                        showConfirm(
+                            title="Page number jumped unexpectedly too far",
+                            message="The page jumped from {} to {}.\nIs this correct?".format(prev_page, page),
+                            yesText="Yes, keep the change",
+                            noText="No, revert it",
+                            no=Autosaver.RevertActiveSlot(self.prevActiveSlot)
+                        )
 
         def getNextSlot(self):
             page, slot = Utils.split_slotname(renpy.store.JK_ActiveSlot)
@@ -201,6 +211,18 @@ init python in JK:
             def __call__(self):
                 Autosaver.trySavePendingSave()
                 renpy.restart_interaction()
+
+        class RevertActiveSlot(renpy.ui.Action):
+            def __init__(self, prev_slot):
+                self.prev_slot = prev_slot
+
+            def __call__(self):
+                Autosaver.prevent_confirm_on_large_page_jump = True
+
+                new_slot = self.prev_slot
+
+                Autosaver.setActiveSlot(new_slot)
+                renpy.notify("Active slot reverted back to {}".format(new_slot))
 
         def createPendingSave(self, choice):
             self.pendingSave = AutosaverClass.PendingSaveClass(choice)

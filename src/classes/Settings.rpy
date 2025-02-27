@@ -68,6 +68,7 @@ init -1 python in JK:
             self.sidepanelHorizontal = data.get("sidepanelHorizontal", False)
             self.searchPlaythroughKey = data.get("searchPlaythroughKey", "ctrl_K_f")
             self.searchPlaythroughsKey = data.get("searchPlaythroughsKey", "ctrl_shift_K_f")
+            self.showConfirmOnLargePageJump = data.get("showConfirmOnLargePageJump", True)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -105,6 +106,7 @@ init -1 python in JK:
                 'sidepanelHorizontal': self.sidepanelHorizontal,
                 'searchPlaythroughKey': self.searchPlaythroughKey,
                 'searchPlaythroughsKey': self.searchPlaythroughsKey,
+                'showConfirmOnLargePageJump': self.showConfirmOnLargePageJump,
             })
 
         def getSettingsForReset(self, no_globals=False):

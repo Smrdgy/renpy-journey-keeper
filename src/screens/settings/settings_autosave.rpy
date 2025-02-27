@@ -18,6 +18,11 @@ screen JK_Settings_Autosave():
             use JK_Helper("When disabled, the autosave system will attempt to prevent saving choices that loop back to the menu where they were made. This typically occurs in \"question\" menus, where none of the choices have an actual impact on story beyond providing exposition.\n\n{color=[JK.Colors.info]}Note: Even with this setting disabled, the choice may still be saved if it contains code that alters any variables.\nThis will mostly occur in menus where choices disappear after being selected.{/color}")
             use JK_ToggleSettingGlobalizationButton("autosaveOnQuestion")
 
+        hbox:
+            use JK_Checkbox(checked=JK.Settings.showConfirmOnLargePageJump, text="Show confirmation on unexpected large page jump", action=JK.Settings.ToggleEnabled("showConfirmOnLargePageJump"))
+            use JK_Helper("When enabled, a confirmation prompt will appear if the page number jumps unexpectedly far during gameplay (by more than one page)")
+            use JK_ToggleSettingGlobalizationButton("showConfirmOnLargePageJump")
+
         use JK_YSpacer(2)
 
         hbox:
