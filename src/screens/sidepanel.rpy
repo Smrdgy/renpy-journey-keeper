@@ -28,7 +28,8 @@ screen JK_Sidepanel():
         noPlaythrough = playthrough == None
         autosave_on_choices_enabled = playthrough and playthrough.autosaveOnChoices
         custom_pagination_enabled = renpy.store.persistent.JK_ShowPagination
-        amount_of_playthroughs = len(JK.Playthroughs.playthroughs) - 1
+        amount_of_playthroughs = len([p for p in JK.Playthroughs.playthroughs if p.id != 2])
+        amount_of_custom_playthroughs = len([p for p in JK.Playthroughs.playthroughs if p.id > 2])
 
         if horizontal:
             estimatedPanelSize = JK.scaled((calculate_structure_size(structure), 70))
@@ -63,7 +64,7 @@ screen JK_Sidepanel():
             use JK_AnyDirectionBox(horizontal):
                 use JK_IconButton('\ueb73', tt="Select playthrough", ttSide=tooltip_side, action=Show("JK_PlaythroughsPicker")):
                     frame xysize (0, 0) offset JK.scaled((-10, -5)) style "JK_default":
-                        if amount_of_playthroughs > 1:
+                        if amount_of_custom_playthroughs > 0:
                             text "{b}[amount_of_playthroughs]{/b}" size JK.scaled(15) outlines [(JK.scaled(5), "#000000", 0, 0)] color JK.Colors.theme
 
                 use JK_IconButton('\uea20', tt="New playthrough", ttSide=tooltip_side, action=Show("JK_EditPlaythrough", playthrough=None))

@@ -32,6 +32,15 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                 hbox xpos 1.0 xanchor 1.0:
                     # Delete selection
                     use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.MassDeleteConfirmAction(viewModel), tt="Delete {} save(s)".format(selected_length), ttSide="left")
+   
+    hbox xalign 1.0:
+        xfill True
+
+        hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
+            # Toggle thumbnails
+            use JK_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
+
+            use JK_XSpacer(2)
 
     viewport:
         mousewheel True
@@ -42,15 +51,6 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
 
         vbox:
             use JK_YSpacer()
-
-            hbox xalign 1.0:
-                xfill True
-
-                hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
-                    # Toggle thumbnails
-                    use JK_Checkbox(checked=show_thumbnails, text="Show thumbnails\n{size=-5}(Might be laggy or outright crash){/size}", action=SetScreenVariable("show_thumbnails", not show_thumbnails))
-
-                    use JK_XSpacer(offset=2)
 
             grid len(viewModel.locations) 1:
                 spacing (1 if selection_mode == "PER_SAVE" else 5)
@@ -120,6 +120,9 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                                                     yalign 0.5
 
                                                     if hovered_button == id:
+                                                        # Edit
+                                                        use JK_IconButton(icon="\ue9a2", action=Show("JK_EditSave", slotname=save, location=location), tt="Edit name & choice text")
+
                                                         # Load
                                                         use JK_IconButton(icon="\ue1c4", action=FileLoad(slot, confirm=True, page=page), tt="Load save")
 

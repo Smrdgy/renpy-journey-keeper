@@ -9,7 +9,7 @@ screen JK_EditSave(slotname, location=None):
     default name = view_model.name
 
     default choice_input = JK.TextInput("choice")
-    default name_input = JK.TextInput("name")
+    default name_input = JK.TextInput("name", auto_focus=True)
 
     if JK.TextInput.is_active("choice") or JK.TextInput.is_active("name"):
         key 'K_ESCAPE' action JK.TextInput.SetActiveAction(None)
@@ -32,6 +32,15 @@ screen JK_EditSave(slotname, location=None):
                             text "Name"
                             add name_input.displayable(placeholder="Click here to start writing")
                             frame style "JK_default" background "#ffffff22" hover_background JK.Colors.hover ysize 2 offset JK.scaled((0, 2))
+
+                            hbox:
+                                xalign 1.0
+
+                                text str(len(name))
+
+                    use JK_InfoBox("For a standard save slot size, you can fit 2-3 lines, each containing approximately 30 characters.")
+
+                    use JK_YSpacer()
 
                     button:
                         action choice_input.get_enable_action()

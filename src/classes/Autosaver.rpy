@@ -22,6 +22,7 @@ init python in JK:
             self.activeSlotPending = None
             self.prevent_autosaving = Settings.preventAutosavingWhileNotInGame
             self.loaded_manual_save_without_choices = False
+            self.prevent_confirm_on_large_page_jump = False
 
         @property
         def slotsPerPage(self):

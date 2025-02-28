@@ -46,9 +46,14 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
             ymaximum 0.85
 
             vbox:
-                use JK_Title("Name")
+                button:
+                    action name_input.get_enable_action()
+                    key_events True
 
-                add name_input.displayable(placeholder="Click here to start writing the name")
+                    vbox:
+                        use JK_Title("Name")
+                        add name_input.displayable(placeholder="Click here to start writing")
+                        frame style "JK_default" background "#ffffff22" hover_background JK.Colors.hover ysize 2 offset JK.scaled((0, 2))
 
                 text "{size=-5}This name already exists.{/size}" color (JK.Colors.error if name_conflicting else "#00000000") offset JK.scaled((10, 2))
 
@@ -121,8 +126,14 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                 use JK_YSpacer()
 
-                use JK_Title("Description")
-                add description_input.displayable(placeholder="Click here to start writing the description")
+                button:
+                    action description_input.get_enable_action()
+                    key_events True
+
+                    vbox:
+                        use JK_Title("Description")
+                        add description_input.displayable(placeholder="Click here to start writing")
+                        frame style "JK_default" background "#ffffff22" hover_background JK.Colors.hover ysize 2 offset JK.scaled((0, 2))
 
                 use JK_YSpacer()
 

@@ -216,7 +216,7 @@ init python in JK:
                     title="Delete " + str(len(self.viewModel.selection)) + " save(s)",
                     message="Do you really wish to delete these saves?\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}.",
                     yes=SavesListViewModel.MassDeleteAction(self.viewModel),
-                    yesIcon="\ue089",
+                    yesIcon="\ue92b",
                     yesColor=Colors.error
                 )
 

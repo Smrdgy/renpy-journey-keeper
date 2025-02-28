@@ -63,8 +63,6 @@ init python in JK:
                             self.save_choices_cache[playthrough.id][slotname] = choice
 
 
-            print(cache_all_playthroughs, self.save_names_cache, self.save_choices_cache)
-
             self.all_playthroughs_cached = cache_all_playthroughs
             self.caching = False
             renpy.restart_interaction()
