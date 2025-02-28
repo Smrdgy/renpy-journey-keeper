@@ -10,6 +10,7 @@ init -9999 python in JK:
     import sys
     import time
     import locale
+    from json import dumps as json_dumps
 
     class x52NonPicklable(python_object):
         def __setstate__(self, d):
@@ -549,6 +550,13 @@ init -9999 python in JK:
             for location in self.locations:
                 location.remove_dir()
 
+        def edit_json(self, slotname, json, include_inactive=False, scan=True):
+            for location in (self.locations if include_inactive else self.active_locations()):
+                location.edit_json(slotname, json)
+            
+            if scan:
+                self.scan()
+
     class FileLocation(renpy.savelocation.FileLocation):
         def copy_into_other_directory(self, old, new, destination, scan=True):
             with disk_lock:
@@ -618,6 +626,30 @@ init -9999 python in JK:
         def remove_dir(self):
             if os.path.exists(self.directory):
                 os.rmdir(self.directory)
+
+        def edit_json(self, slotname, json):
+            with disk_lock:
+                try:
+                    filename = self.filename(slotname)
+                    filename_new = filename + ".new"
+                    with zipfile.ZipFile(filename, 'r') as zin:
+                        with zipfile.ZipFile(filename_new, 'w') as zout:
+                            for item in zin.infolist():
+                                if item.filename != "json":
+                                    zout.writestr(item, zin.read(item.filename))
+
+                            zout.writestr("json", json_dumps(json))
+
+                    os.remove(filename)
+                    os.rename(filename_new, filename)
+                except Exception as e:
+                    print(e)
+                    return False
+                finally:
+                    if zin:
+                        zin.close()
+                    if zout:
+                        zout.close()
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):

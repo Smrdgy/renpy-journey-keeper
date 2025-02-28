@@ -99,6 +99,26 @@ init python in JK:
                 return Utils.getScreenVariable(self.variableName)
             return None
 
+        def get_enable_action(self):
+            class Action(renpy.ui.Action):
+                def __init__(self, input):
+                    self.input = input
+
+                def __call__(self):
+                    self.input.enable()
+
+            return Action(self)
+
+        def get_disable_action(self):
+            class Action(renpy.ui.Action):
+                def __init__(self, input):
+                    self.input = input
+
+                def __call__(self):
+                    self.input.disable()
+
+            return Action(self)
+
         @staticmethod
         def is_active(id):
             return Utils.getScreenVariable(TextInput.activeTextInputScreenVariableName) == id
