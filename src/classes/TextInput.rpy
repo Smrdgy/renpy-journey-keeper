@@ -396,7 +396,7 @@ init python in JK:
 
             elif renpy.map_event(ev, "input_end"):
                 lines, current_line_idx, current_column = self.__get_caret_info()
-                self.controller.caret_pos = self.controller.caret_pos - current_column + len(lines[current_line_idx]) - 1
+                self.controller.caret_pos = self.controller.caret_pos - current_column + len(lines[current_line_idx]) - (0 if current_line_idx == len(lines) - 1 else 1)
                 self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
