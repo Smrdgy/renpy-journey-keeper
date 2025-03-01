@@ -143,6 +143,7 @@ init 9999 python in JK:
         'input_delete_full': [ 'repeat_meta_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_full') else renpy.config.keymap.input_delete_full,
         'input_content_start': [ 'shift_K_HOME' ],
         'input_content_end': [ 'shift_K_END' ],
+        'input_select_all': [ 'ctrl_K_a' ],
         # 'input_next_input': ['noshift_K_TAB'], #TODO: Finish prev/next input via TAB
         # 'input_prev_input': ['shift_K_TAB']
     })

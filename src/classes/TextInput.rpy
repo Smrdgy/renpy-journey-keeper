@@ -61,6 +61,7 @@ init python in JK:
             self.edit_text = None
             self.caret_pos = 0
             self.old_caret_pos = 0
+            self.selection_start = None
             self.multiline = multiline
             self.allowed_characters = allowed_characters
             self.excluded_characters = excluded_characters
@@ -118,6 +119,12 @@ init python in JK:
                     self.input.disable()
 
             return Action(self)
+
+        def get_selection_start_end(self):
+            start = min(self.selection_start, self.caret_pos)
+            end = max(self.selection_start, self.caret_pos)
+
+            return start, end
 
         @staticmethod
         def is_active(id):
@@ -235,8 +242,10 @@ init python in JK:
             raw_text = None
 
             if renpy.map_event(ev, "input_backspace"):
+                if self.controller.selection_start != None:
+                    self.update_text(self.__try_delete_selected_content())
 
-                if self.content and self.controller.caret_pos > 0:
+                elif self.content and self.controller.caret_pos > 0:
                     content = self.content[0:self.controller.caret_pos - 1] + self.content[self.controller.caret_pos:l]
                     self.controller.caret_pos -= 1
                     self.update_text(content)
@@ -245,6 +254,8 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif self.controller.multiline and renpy.map_event(ev, 'input_next_line'):
+                self.__try_set_selection_start()
+
                 content = self.content[:self.controller.caret_pos] + '\n' + self.content[self.controller.caret_pos:]
                 self.controller.caret_pos += 1
                 self.update_text(content)
@@ -253,6 +264,8 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_left"):
+                self.__try_set_selection_start()
+
                 if self.controller.caret_pos > 0:
                     self.controller.caret_pos -= 1
                     self.update_text(self.content)
@@ -261,6 +274,8 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_jump_word_left"):
+                self.__try_set_selection_start()
+
                 if self.controller.caret_pos > 0:
                     space_pos = 0
                     for item in re.finditer(r"\s+", self.content[:self.controller.caret_pos]):
@@ -274,6 +289,8 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_right"):
+                self.__try_set_selection_start()
+
                 if self.controller.caret_pos < l:
                     self.controller.caret_pos += 1
                     self.update_text(self.content)
@@ -282,6 +299,8 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_jump_word_right"):
+                self.__try_set_selection_start()
+
                 if self.controller.caret_pos < l:
                     space_pos = l
                     for item in re.finditer(r"\s+", self.content[self.controller.caret_pos + 1:]):
@@ -295,6 +314,8 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_up"):
+                self.__try_set_selection_start()
+
                 lines, current_line_idx, current_column = self.__get_caret_info()
 
                 # If already on the first line, no movement is possible
@@ -320,6 +341,8 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
             
             elif renpy.map_event(ev, "input_down"):
+                self.__try_set_selection_start()
+
                 lines, current_line_idx, current_column = self.__get_caret_info()
 
                 # If already on the last line, no movement is possible
@@ -345,7 +368,10 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
             
             elif renpy.map_event(ev, "input_delete"):
-                if self.controller.caret_pos < l:
+                if self.controller.selection_start != None:
+                    self.update_text(self.__try_delete_selected_content())
+
+                elif self.controller.caret_pos < l:
                     content = self.content[0:self.controller.caret_pos] + self.content[self.controller.caret_pos + 1:l]
                     self.update_text(content)
 
@@ -353,7 +379,10 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_delete_word"):
-                if self.controller.caret_pos <= l:
+                if self.controller.selection_start != None:
+                    self.update_text(self.__try_delete_selected_content())
+
+                elif self.controller.caret_pos <= l:
                     space_pos = 0
                     for item in re.finditer(r"\s+", self.content[:self.controller.caret_pos]):
                         start, end = item.span()
@@ -367,7 +396,10 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_delete_full"):
-                if self.controller.caret_pos <= l:
+                if self.controller.selection_start != None:
+                    self.update_text(self.__try_delete_selected_content())
+
+                elif self.controller.caret_pos <= l:
                     content = self.content[self.controller.caret_pos:l]
                     self.controller.caret_pos = 0
                     self.update_text(content)
@@ -376,18 +408,24 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_content_start"):
+                self.__try_set_selection_start()
+
                 self.controller.caret_pos = 0
                 self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_content_end"):
+                self.__try_set_selection_start()
+
                 self.controller.caret_pos = l
                 self.update_text(self.content)
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_home"):
+                self.__try_set_selection_start()
+
                 lines, current_line_idx, current_column = self.__get_caret_info()
                 self.controller.caret_pos = self.controller.caret_pos - current_column
                 self.update_text(self.content)
@@ -395,6 +433,8 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_end"):
+                self.__try_set_selection_start()
+
                 lines, current_line_idx, current_column = self.__get_caret_info()
                 self.controller.caret_pos = self.controller.caret_pos - current_column + len(lines[current_line_idx]) - (0 if current_line_idx == len(lines) - 1 else 1)
                 self.update_text(self.content)
@@ -402,7 +442,12 @@ init python in JK:
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_copy"):
-                text = self.content.encode("utf-8")
+                if self.controller.selection_start != None:
+                    start, end = self.controller.get_selection_start_end()
+                    text = self.content[0:start] + self.content[end:l]
+                else:
+                    text = self.content.encode("utf-8")
+
                 pygame.scrap.put(pygame.scrap.SCRAP_TEXT, text)
                 raise renpy.display.core.IgnoreEvent()
 
@@ -413,6 +458,15 @@ init python in JK:
                 for c in text:
                     if ord(c) >= 32:
                         raw_text += c
+            
+            elif renpy.map_event(ev, "input_select_all"):
+                self.controller.selection_start = 0
+                self.controller.caret_pos = l
+
+                self.update_text(self.content)
+                renpy.display.render.redraw(self, 0)
+
+                raise renpy.display.core.IgnoreEvent()
 
             # elif renpy.map_event(ev, 'input_next_input'):
             #     if self.id:
@@ -507,8 +561,8 @@ init python in JK:
                     text = text[:remaining]
 
                 if text:
-
-                    content = self.content[0:self.controller.caret_pos] + text + self.content[self.controller.caret_pos:l]
+                    content = self.__try_delete_selected_content() or self.content
+                    content = content[0:self.controller.caret_pos] + text + content[self.controller.caret_pos:l]
                     self.controller.caret_pos += len(text)
 
                     self.update_text(content, check_size=True)
@@ -552,6 +606,23 @@ init python in JK:
                 char_count += len(line)
 
             return lines, current_line_idx, current_column
+
+        def __try_set_selection_start(self):
+            if self.controller.selection_start is None:
+                if (pygame.key.get_mods() & pygame.K_LSHIFT or pygame.key.get_mods() & pygame.K_RSHIFT):
+                    self.controller.selection_start = 0 + self.controller.caret_pos
+            else:
+                if not (pygame.key.get_mods() & pygame.K_LSHIFT or pygame.key.get_mods() & pygame.K_RSHIFT):
+                    self.controller.selection_start = None
+
+        def __try_delete_selected_content(self):
+            if self.controller.selection_start != None:
+                start, end = self.controller.get_selection_start_end()
+
+                self.controller.caret_pos = start
+                self.controller.selection_start = None
+
+                return self.content[0:start] + self.content[end:len(self.content)]
 
         def update_text(self, new_content, check_size=False):
             editable = self.controller.editable
@@ -598,7 +669,26 @@ init python in JK:
 
                 if editable:
                     l = len(content)
-                    self.set_text([self.prefix, content[0:self.controller.caret_pos].replace("{", "{{"), edit_text, caret, content[self.controller.caret_pos:l].replace("{", "{{"), self.suffix])
+
+                    content = content.replace("{", "{{")
+
+                    selection_start = self.controller.selection_start
+                    caret_pos = self.controller.caret_pos
+
+                    if selection_start is None:
+                        selection_start = caret_pos
+
+                    start = min(selection_start, caret_pos)
+                    end = max(selection_start, caret_pos)
+
+                    selection_start_tag = "{color=#ff0}{u}"
+                    selection_end_tag = "{/color}{/u}"
+
+                    content_before_selection = content[0:start]
+                    selected_content = selection_start_tag + content[start:end] + selection_end_tag if selection_start != caret_pos else content[start:end]
+                    content_after_selection = content[end:l]
+
+                    self.set_text([self.prefix, content_before_selection, edit_text, selected_content, caret, content_after_selection, self.suffix])
                 else:
                     self.set_text([self.prefix, content.replace("{", "{{"), self.suffix ])
 
