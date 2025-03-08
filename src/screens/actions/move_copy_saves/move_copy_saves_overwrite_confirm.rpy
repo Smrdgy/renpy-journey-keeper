@@ -55,14 +55,14 @@ screen JK_MoveCopySavesOverwriteConfirm(save, viewModel):
             hbox xalign 0.5:
                 grid 3 1:
                     if source_screenshot:
-                        add source_screenshot size JK.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
+                        add source_screenshot size JK.Image.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
                     else:
                         add JK.ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 
                     text "→" size JK.scaled(40) align (0.5, 0.5)
 
                     if target_screenshot:
-                        add target_screenshot size JK.Utils.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
+                        add target_screenshot size JK.Image.getLimitedImageSizeWithAspectRatio(thumbnail_width, thumbnail_height) yalign 0.5
                     else:
                         add JK.ImagePlaceholder(width=thumbnail_width, height=thumbnail_height)
 

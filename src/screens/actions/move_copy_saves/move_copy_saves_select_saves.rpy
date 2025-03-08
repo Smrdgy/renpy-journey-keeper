@@ -145,7 +145,7 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
                             # Source
                             hbox yalign 0.5:
                                 if show_thumbnails:
-                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size JK.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size JK.Image.getLimitedImageSizeWithAspectRatio(100, 80)
 
                                 use JK_XSpacer()
 
@@ -168,7 +168,7 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
                                 use JK_XSpacer()
 
                                 if show_thumbnails:
-                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size JK.Utils.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size JK.Image.getLimitedImageSizeWithAspectRatio(100, 80)
 
                             hbox yalign 0.5:
                                 text "Conflict!" color (JK.Colors.warning if save in other_saves else "#ffffff00")

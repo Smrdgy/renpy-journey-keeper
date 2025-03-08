@@ -105,7 +105,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
 
                                                 hbox yalign 0.5:
                                                     if show_thumbnails:
-                                                        image location.screenshot(save) size JK.Utils.getLimitedImageSizeWithAspectRatio(100, 80) yalign 0.5
+                                                        image location.screenshot(save) size JK.Image.getLimitedImageSizeWithAspectRatio(100, 80) yalign 0.5
 
                                                         use JK_XSpacer(offset=2)
 
