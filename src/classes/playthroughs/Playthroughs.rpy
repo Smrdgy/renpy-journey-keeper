@@ -104,10 +104,10 @@ init python in JK:
 
             relevant_directories = set()
             for dirname, path in directories:
-                if dirname not in playthrough_dirnames and dirname != "_memories":
+                if dirname not in playthrough_dirnames and lower(dirname) not in ["_memories", "sync"]:
                     relevant_directories.add(dirname)
 
-            return relevant_directories                     
+            return relevant_directories
 
         def add(self, playthrough):
             self._playthroughs.append(playthrough)

@@ -52,6 +52,8 @@ screen JK_SearchPlaythrough(search_all=False):
         key JK.Settings.searchPlaythroughsKey action JK.SearchPlaythroughViewModel.SetSearchAll(viewModel, True)
 
     use JK_Dialog(title="Seach playthrough", closeAction=Hide("JK_SearchPlaythrough")):
+        style_prefix "JK"
+
         button:
             action NullAction()
             key_events True

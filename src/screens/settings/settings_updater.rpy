@@ -16,6 +16,9 @@ screen JK_Settings_Updater():
                 else:
                     text "Latest version: {color=[JK.Colors.na]}N/A{/color}"
 
+                if JK.Updater.latest and JK.Updater.latest_version == JK.MOD_VERSION:
+                    text "{size=-5} (You have the latest version.){/size}" color JK.Colors.success yalign 0.5
+
             use JK_IconButton("\ue5d5", text="Refresh", action=JK.Updater.CheckForUpdateAction())
 
         use JK_Checkbox(checked=JK.Settings.updaterEnabled, text="Check for an update every time the game launches", action=JK.Settings.ToggleEnabled("updaterEnabled"))
