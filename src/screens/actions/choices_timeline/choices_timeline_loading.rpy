@@ -1,17 +1,17 @@
-screen JK_ChoicesTimelineLoading(viewModel):
+screen JK_ChoicesTimelineLoading(view_model):
     style_prefix 'JK'
     modal True
 
     python:
-        loaded = viewModel.loaded
-        to_load = viewModel.to_load
+        loaded = view_model.loaded
+        to_load = view_model.to_load
 
         # class StopAction(renpy.ui.Action):
-        #     def __init__(self, viewModel):
-        #         self.viewModel = viewModel
+        #     def __init__(self, view_model):
+        #         self.view_model = view_model
 
         #     def __call__(self):
-        #         self.viewModel.process_stop()
+        #         self.view_model.process_stop()
 
     vbox:
         xfill True
@@ -39,7 +39,7 @@ screen JK_ChoicesTimelineLoading(viewModel):
 
         vbox:
             # hbox:
-            #     use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=JK.Colors.danger)
+            #     use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(view_model), color=JK.Colors.danger)
 
             # Close
             hbox:

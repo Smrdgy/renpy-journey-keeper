@@ -57,12 +57,12 @@ init -9999 python in JK:
                 return 0, 0
 
         @staticmethod
-        def getSortedSaves():
+        def get_sorted_saves():
             regexp = r'\d+' + '-' + r'\d+'
-            return Utils.sortSaves(renpy.list_slots(regexp=regexp))
+            return Utils.sort_saves(renpy.list_slots(regexp=regexp))
 
         @staticmethod
-        def sortSaves(saves_list):
+        def sort_saves(saves_list):
             return sorted(saves_list, key=Utils.__custom_saves_sort)
         
         @staticmethod
@@ -112,24 +112,24 @@ init -9999 python in JK:
             return directory_name
 
         @staticmethod
-        def getSlotsPerPage():
+        def get_slots_per_page():
             if Settings.customGridEnabled:
                 return Settings.customGridX * Settings.customGridY
 
-            if Utils.hasColsAndRowsConfiguration():
+            if Utils.has_cols_and_rows_configuration():
                 return renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
 
             return 4
 
         @staticmethod
-        def hasColsAndRowsConfiguration():
+        def has_cols_and_rows_configuration():
             if Settings.customGridEnabled:
                 return True
 
             return hasattr(renpy.store.gui, "file_slot_cols") and hasattr(renpy.store.gui, "file_slot_rows")
 
         @staticmethod
-        def isDisplayingChoices():
+        def is_displaying_choices():
             try:
                 current = renpy.game.context().current
                 script = renpy.game.script.lookup(current)
@@ -138,7 +138,7 @@ init -9999 python in JK:
                 return False
 
         @staticmethod
-        def isDisplayingMultipleChoices():
+        def is_displaying_multiple_choices():
             try:
                 current = renpy.game.context().current
                 script = renpy.game.script.lookup(current)
@@ -157,7 +157,7 @@ init -9999 python in JK:
                 return False
 
         @staticmethod
-        def isDisplayingChoicesInAnyContext():
+        def is_displaying_choices_in_any_context():
             try:
                 for context in renpy.game.contexts:
                     script = renpy.game.script.lookup(context.current)
@@ -170,7 +170,7 @@ init -9999 python in JK:
 
         # In built games `[ some text ]` it's not a problem, but if there ever is game with these and config.developer = True, it will throw an exception
         @staticmethod
-        def replaceReservedCharacters(text):
+        def escape_renpy_reserved_characters(text):
             result = []
             length = len(text)
             i = 0
@@ -193,7 +193,7 @@ init -9999 python in JK:
             return ''.join(result)
 
         @staticmethod
-        def getScreenVariable(variableName, dictionaryKey=None):
+        def get_screen_variable(variableName, dictionaryKey=None):
             cs = renpy.current_screen()
             
             if not cs or not variableName in cs.scope:
@@ -206,7 +206,7 @@ init -9999 python in JK:
                 return cs.scope[variableName]
 
         @staticmethod
-        def resizeDimensionsToLimits(original_size, desired_size):
+        def resize_dimensions_to_limits(original_size, desired_size):
             # Extract dimensions
             desired_width, desired_height = desired_size
             original_width, original_height = original_size
@@ -405,14 +405,14 @@ init -9999 python in JK:
 
     #         renpy.restart_interaction()
     
-    class SetKey(renpy.ui.Action):
+    class SetKeyAction(renpy.ui.Action):
         def __init__(self, key, shift=False, ctrl=False, alt=False):
             self.key = key
             self.shift = shift
             self.ctrl = ctrl
             self.alt = alt
 
-        def resolveKey(self):
+        def resolve_key(self):
             if self.key == None:
                 return None
 

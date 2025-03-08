@@ -21,11 +21,11 @@ screen JK_Settings_Updater():
 
             use JK_IconButton("\ue5d5", text="Refresh", action=JK.Updater.CheckForUpdateAction())
 
-        use JK_Checkbox(checked=JK.Settings.updaterEnabled, text="Check for an update every time the game launches", action=JK.Settings.ToggleEnabled("updaterEnabled"))
+        use JK_Checkbox(checked=JK.Settings.updaterEnabled, text="Check for an update every time the game launches", action=JK.Settings.ToggleEnabledAction("updaterEnabled"))
 
         if JK.Settings.updaterEnabled:
             hbox:
                 use JK_XSpacer()
 
                 vbox:
-                    use JK_Checkbox(checked=JK.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=JK.Settings.ToggleEnabled("autoUpdateWithoutPrompt"))
+                    use JK_Checkbox(checked=JK.Settings.autoUpdateWithoutPrompt, text="Perform automatic update without prompting", action=JK.Settings.ToggleEnabledAction("autoUpdateWithoutPrompt"))

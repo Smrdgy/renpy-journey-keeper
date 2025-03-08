@@ -13,7 +13,7 @@ screen JK_SaveMemory():
             Hide('JK_SaveMemory')
         ]
 
-    use JK_Dialog(title="Save memory", closeAction=Hide("JK_SaveMemory")):
+    use JK_Dialog(title="Save memory", close_action=Hide("JK_SaveMemory")):
         style_prefix "JK"
 
         vbox:

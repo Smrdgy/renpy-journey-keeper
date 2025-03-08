@@ -1,4 +1,4 @@
-screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails, last_selected_save):
+screen JK_MoveCopySavesSelectSaves(view_model, saves_to_process, show_thumbnails, last_selected_save):
     style_prefix 'JK'
     modal True
 
@@ -10,8 +10,8 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
         ymaximum 0.85
 
         python:
-            source_saves = viewModel.source_saves
-            other_saves = viewModel.destination_saves
+            source_saves = view_model.source_saves
+            other_saves = view_model.destination_saves
 
             class FlipPlaythroughsAction(renpy.ui.Action):
                 def __init__(self, source_playthrough, destination_playthrough):
@@ -27,7 +27,7 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
                     cs.scope["source_playthrough"] = self.destination_playthrough
                     cs.scope["destination_playthrough"] = self.source_playthrough
                     cs.scope["saves_to_process"] = []
-                    cs.scope["viewModel"] = None
+                    cs.scope["view_model"] = None
                     cs.scope["last_selected_save"] = None
 
                     renpy.restart_interaction()
@@ -39,7 +39,7 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
                     if cs is None:
                         return
 
-                    cs.scope["viewModel"] = None
+                    cs.scope["view_model"] = None
                     cs.scope["saves_to_process"] = []
                     cs.scope["source_playthrough"] = None
                     cs.scope["last_selected_save"] = None
@@ -53,7 +53,7 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
                     if cs is None:
                         return
 
-                    cs.scope["viewModel"] = None
+                    cs.scope["view_model"] = None
                     cs.scope["saves_to_process"] = []
                     cs.scope["destination_playthrough"] = None
                     cs.scope["last_selected_save"] = None
@@ -61,23 +61,23 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
                     renpy.restart_interaction()
 
             class SaveSelectedAction(renpy.ui.Action):
-                def __init__(self, saves, save, viewModel, last_selected_save):
+                def __init__(self, saves, save, view_model, last_selected_save):
                     self.saves = saves
                     self.save = save
-                    self.viewModel = viewModel
+                    self.view_model = view_model
                     self.last_selected_save = last_selected_save
 
                 def __call__(self):
                     import pygame_sdl2 as pygame
 
                     if pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                        start_index = self.viewModel.source_saves.index(self.last_selected_save)
-                        end_index = self.viewModel.source_saves.index(self.save)
+                        start_index = self.view_model.source_saves.index(self.last_selected_save)
+                        end_index = self.view_model.source_saves.index(self.save)
 
                         if start_index > -1 and end_index > -1:
                             new_saves = []
 
-                            for self.save in self.viewModel.source_saves[min(start_index, end_index):max(start_index, end_index) + 1]:
+                            for self.save in self.view_model.source_saves[min(start_index, end_index):max(start_index, end_index) + 1]:
                                 if self.save in new_saves:
                                     new_saves.remove(self.save)
                                 else:
@@ -104,9 +104,9 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
 
                 hbox # Dummy
 
-                use JK_IconButton(text=viewModel.source_playthrough.name, action=ClearSourcePlaythroughAction(), tt="Change source playthrough", color=JK.Colors.theme, size=30)
-                use JK_IconButton(text="→", action=FlipPlaythroughsAction(viewModel.source_playthrough, viewModel.destination_playthrough), tt="Swap playthroughs", color=JK.Colors.theme, size=30)
-                use JK_IconButton(text=viewModel.destination_playthrough.name, action=ClearDestinationPlaythroughAction(), tt="Change target playthrough", color=JK.Colors.theme, size=30)
+                use JK_IconButton(text=view_model.source_playthrough.name, action=ClearSourcePlaythroughAction(), tt="Change source playthrough", color=JK.Colors.theme, size=30)
+                use JK_IconButton(text="→", action=FlipPlaythroughsAction(view_model.source_playthrough, view_model.destination_playthrough), tt="Swap playthroughs", color=JK.Colors.theme, size=30)
+                use JK_IconButton(text=view_model.destination_playthrough.name, action=ClearDestinationPlaythroughAction(), tt="Change target playthrough", color=JK.Colors.theme, size=30)
 
                 hbox # Dummy
 
@@ -136,7 +136,7 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
 
                     button style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button") selected save in saves_to_process:
                         xfill True
-                        action [SaveSelectedAction(saves_to_process, save, viewModel, last_selected_save)]
+                        action [SaveSelectedAction(saves_to_process, save, view_model, last_selected_save)]
 
                         grid 5 1:
                             xfill True
@@ -145,7 +145,7 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
                             # Source
                             hbox yalign 0.5:
                                 if show_thumbnails:
-                                    image viewModel.source_instance.location.screenshot_including_inactive(save) size JK.Image.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image view_model.source_instance.location.screenshot_including_inactive(save) size JK.Image.get_limited_image_size_with_preserved_aspect_ratio(100, 80)
 
                                 use JK_XSpacer()
 
@@ -168,7 +168,7 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
                                 use JK_XSpacer()
 
                                 if show_thumbnails:
-                                    image viewModel.destination_instance.location.screenshot_including_inactive(save) size JK.Image.getLimitedImageSizeWithAspectRatio(100, 80)
+                                    image view_model.destination_instance.location.screenshot_including_inactive(save) size JK.Image.get_limited_image_size_with_preserved_aspect_ratio(100, 80)
 
                             hbox yalign 0.5:
                                 text "Conflict!" color (JK.Colors.warning if save in other_saves else "#ffffff00")
@@ -188,11 +188,11 @@ screen JK_MoveCopySavesSelectSaves(viewModel, saves_to_process, show_thumbnails,
             vbox xalign 1.0:
                 # Move
                 hbox:
-                    use JK_IconButton(icon="\ue675", text="Move", action=JK.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process, mode="MOVE"), disabled=len(saves_to_process) == 0)
+                    use JK_IconButton(icon="\ue675", text="Move", action=JK.MoveCopySavesViewModel.StartProcessAction(view_model, saves_to_process, mode="MOVE"), disabled=len(saves_to_process) == 0)
 
                 # Copy
                 hbox:
-                    use JK_IconButton(icon="\ue161", text="Copy", action=JK.MoveCopySavesViewModel.StartProcessAction(viewModel, saves_to_process), disabled=len(saves_to_process) == 0)
+                    use JK_IconButton(icon="\ue161", text="Copy", action=JK.MoveCopySavesViewModel.StartProcessAction(view_model, saves_to_process), disabled=len(saves_to_process) == 0)
 
                 # Close
                 hbox:

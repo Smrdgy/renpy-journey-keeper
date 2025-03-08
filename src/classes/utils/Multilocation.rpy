@@ -15,11 +15,11 @@ init -9999 python in JK:
         def add(self, location):
             self.locations.append(location)
 
-        def activateLocations(self):
+        def activate_locations(self):
             for location in self.locations:
                 location.active = True
 
-        def deactivateLocations(self):
+        def deactivate_locations(self):
             for location in self.locations:
                 location.active = False
 

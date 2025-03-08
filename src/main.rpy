@@ -15,24 +15,24 @@ init python in JK:
     Pagination = PaginationClass()
     Memories = MemoriesClass()
 
-    if Playthroughs.activePlaythroughOrNone == None and renpy.store.persistent.JK_ActivePlaythrough != None:
-        Playthroughs.activateByID(renpy.store.persistent.JK_ActivePlaythrough)
+    if Playthroughs.active_playthrough_or_none == None and renpy.store.persistent.JK_ActivePlaythrough != None:
+        Playthroughs.activate_by_id(renpy.store.persistent.JK_ActivePlaythrough)
     
-    if Playthroughs.activePlaythroughOrNone is None:
-        Playthroughs.activateNative()
+    if Playthroughs.active_playthrough_or_none is None:
+        Playthroughs.activate_native()
 
     def afterLoadCallback():
         Autosaver.prevent_autosaving = False
 
-        if(Autosaver.activeSlotPending != None):
-            Autosaver.suppressAutosaveConfirm = False
-            Autosaver.setActiveSlot(Autosaver.activeSlotPending)
-            Autosaver.activeSlotPending = None
+        if(Autosaver.active_slot_pending != None):
+            Autosaver.suppress_autosave_confirm = False
+            Autosaver.set_active_slot(Autosaver.active_slot_pending)
+            Autosaver.active_slot_pending = None
 
             if Settings.offsetSlotAfterManualSaveIsLoaded:
-                Autosaver.setNextSlot()
+                Autosaver.set_next_slot()
 
-        Autosaver.afterLoadSavePositionPending = True
+        Autosaver.after_load_save_position_pending = True
 
     def startInteractCallback():
         # Perform utter restart due to pending update, but only once!
@@ -42,7 +42,7 @@ init python in JK:
             renpy.utter_restart()
             return
 
-        SaveSystem.overrideNativeLocation()
+        SaveSystem.override_native_location()
         renpy.loadsave.clear_cache()
         SaveSystem.multilocation.scan()
 
@@ -59,8 +59,8 @@ init python in JK:
             renpy.invoke_in_thread(Updater.check_for_update)
 
     def saveJsonCallback(json):
-        if Autosaver.pendingSave:
-            json["_JK_choice"] = Autosaver.pendingSave.choice
+        if Autosaver.pending_save:
+            json["_JK_choice"] = Autosaver.pending_save.choice
 
     def wait_for_start_label_callback(statement):
         if Autosaver.prevent_autosaving and statement == "label":

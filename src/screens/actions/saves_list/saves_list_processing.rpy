@@ -1,17 +1,17 @@
-screen JK_SavesListProcessing(viewModel):
+screen JK_SavesListProcessing(view_model):
     style_prefix 'JK'
     modal True
 
     python:
-        processed = viewModel.processed
-        to_process = len(viewModel.selection)
+        processed = view_model.processed
+        to_process = len(view_model.selection)
 
         class StopAction(renpy.ui.Action):
-            def __init__(self, viewModel):
-                self.viewModel = viewModel
+            def __init__(self, view_model):
+                self.view_model = view_model
 
             def __call__(self):
-                self.viewModel.process_stop()
+                self.view_model.process_stop()
 
     vbox:
         xfill True
@@ -39,7 +39,7 @@ screen JK_SavesListProcessing(viewModel):
 
         vbox:
             hbox:
-                use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=JK.Colors.danger)
+                use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(view_model), color=JK.Colors.danger)
 
             # Close
             hbox:

@@ -41,7 +41,7 @@ init python in JK:
 
             return self
 
-        def editFromPlaythrough(self, playthrough, moveSaveDirectory=False):
+        def edit_from_playthrough(self, playthrough, moveSaveDirectory=False):
             if(self.directory == None or (moveSaveDirectory and playthrough.name != self.name and playthrough.id != 1)):
                 self.directory = Utils.name_to_directory_name(playthrough.name)
 
@@ -110,7 +110,7 @@ init python in JK:
         def hasThumbnail(self):
             return self.thumbnail != None
 
-        def makeThumbnail(self):
+        def make_thumbnail(self):
             # Get the screenshot
             screenshot = renpy.game.interface.get_screenshot()
             # Encode it to a base64 string, the important word here is "string" because Python 3 would return b'' from base64.b64encode()...
@@ -122,12 +122,12 @@ init python in JK:
         def sequentializeSaves(self):
             current_page = 1
             current_slot = 1
-            slots_per_page = Utils.getSlotsPerPage()
+            slots_per_page = Utils.get_slots_per_page()
 
-            instance = SaveSystem.getPlaythroughSaveInstance(self.id)
+            instance = SaveSystem.get_playthrough_save_instance(self.id)
             instance.location.scan()
 
-            slots = Utils.getSortedSaves()
+            slots = Utils.get_sorted_saves()
 
             for slot in slots:
                 if(renpy.loadsave.can_load(slot)):
@@ -142,7 +142,7 @@ init python in JK:
                         current_slot = 1
                         current_page += 1
 
-        def beforeDeactivation(self):
+        def before_deactivation(self):
             self.selectedPage = renpy.store.persistent._file_page
             self.filePageName = renpy.store.persistent._file_page_name
 

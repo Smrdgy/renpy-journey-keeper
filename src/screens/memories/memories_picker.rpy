@@ -4,9 +4,8 @@ screen JK_MemoriesLibrary():
     modal True
 
     default columns = 4
-    default thumbnailSize = (int((renpy.config.screen_width - 100) / columns - renpy.config.screen_width / 20), 200)
 
-    use JK_Dialog(title="Select a memory to play", closeAction=Hide("JK_MemoriesLibrary")):
+    use JK_Dialog(title="Select a memory to play", close_action=Hide("JK_MemoriesLibrary")):
         style_prefix "JK"
 
         viewport:

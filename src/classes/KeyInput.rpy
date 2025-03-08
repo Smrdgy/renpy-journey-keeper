@@ -282,18 +282,18 @@ init python in JK:
         def __init__(self, assignment=None, action=None, disabled=False, **properties):
             self.disabled = disabled
 
-            self.setupText(assignment)
+            self.setup_text(assignment)
 
             super(KeyInputButton, self).__init__(self.text, **properties)
 
             if not disabled:
-                self.clicked = KeyInputButton.ToggleDetecting(self)
-                self.action = KeyInputButton.ToggleDetecting(self)
+                self.clicked = KeyInputButton.ToggleDetectingAction(self)
+                self.action = KeyInputButton.ToggleDetectingAction(self)
 
             self.newKeyAction = action
             self.detecting = False
 
-        def setupText(self, assignment):
+        def setup_text(self, assignment):
             text = assignment
             text_style = "keyinput_disabled_text" if self.disabled else "keyinput_text"
             if assignment == None:
@@ -307,7 +307,7 @@ init python in JK:
 
             self.text = renpy.text.text.Text(text, style=text_style)
 
-        def setDetecting(self):
+        def set_detecting(self):
             self.detecting = True
             self.text.style = renpy.style.Style("keyinput_text_placeholder")
             self.text.set_text("[Waiting for input...]")
@@ -324,12 +324,12 @@ init python in JK:
 
             return super(KeyInputButton, self).event(ev, x, y, st)
 
-        class ToggleDetecting(renpy.ui.Action):
+        class ToggleDetectingAction(renpy.ui.Action):
             def __init__(self, button):
                 self.button = button
 
             def __call__(self):
-                self.button.setDetecting()
+                self.button.set_detecting()
 
     def KeyInput(assignment=None, action=None, style='keyinput', disabled=False, **properties):
         return KeyInputButton(assignment=assignment, action=action, style="keyinput_disabled" if disabled else style, **properties)

@@ -29,10 +29,10 @@ init python in JK:
             hasNative = False
             hasMemories = False
 
-            userdir_playthroughs = UserDir.loadPlaythroughs()
-            persistent_playthroughs = self.loadFromPersistent()
+            userdir_playthroughs = UserDir.load_playthroughs()
+            persistent_playthroughs = self.load_from_persistent()
 
-            userdir_mtime = UserDir.playthroughsMtime()
+            userdir_mtime = UserDir.playthroughs_mtime()
             persistent_mtime = renpy.store.persistent.JK_PlaythroughsMtime or 0
 
             playthroughs = None
@@ -48,7 +48,7 @@ init python in JK:
                     elif playthrough.get("id") == 2:
                         hasMemories = True
 
-                    self._playthroughs.append(self.createPlaythroughFromSerialization(playthrough))
+                    self._playthroughs.append(self.create_playthrough_from_serialization(playthrough))
 
             native, memories = PlaythroughsClass.get_default_playthroughs()
 
@@ -63,20 +63,20 @@ init python in JK:
             return self._playthroughs
 
         @property
-        def activePlaythrough(self):
+        def active_playthrough(self):
             if(self._activePlaythrough != None):
                 return self._activePlaythrough
 
             return self._playthroughs[0]
 
         @property
-        def activePlaythroughOrNone(self):
+        def active_playthrough_or_none(self):
             if(self._activePlaythrough != None):
                 return self._activePlaythrough
 
             return None
 
-        def loadFromPersistent(self):
+        def load_from_persistent(self):
             if renpy.store.persistent.JK_Playthroughs:
                 return json.loads(renpy.store.persistent.JK_Playthroughs)
 
@@ -89,11 +89,11 @@ init python in JK:
                 PlaythroughClass(id=2, directory="_memories", name="Memories", autosaveOnChoices=False, useChoiceLabelAsSaveName=False)#MODIFY HERE
             )
 
-        def createPlaythroughFromSerialization(self, data):
+        def create_playthrough_from_serialization(self, data):
             return PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
 
         def get_instance_for_edit(self):
-            playthrough = self.createPlaythroughFromSerialization(Settings.playthroughTemplate) if Settings.playthroughTemplate else PlaythroughClass()
+            playthrough = self.create_playthrough_from_serialization(Settings.playthroughTemplate) if Settings.playthroughTemplate else PlaythroughClass()
             playthrough.directory = None
 
             return playthrough
@@ -111,7 +111,7 @@ init python in JK:
 
         def add(self, playthrough):
             self._playthroughs.append(playthrough)
-            self.activateByInstance(playthrough)
+            self.activate_by_instance(playthrough)
 
             self.save()
             renpy.restart_interaction()
@@ -125,14 +125,14 @@ init python in JK:
 
             return None
 
-        def getByID(self, id):
+        def get_by_id(self, id):
             for playthrough in self.playthroughs:
                 if(playthrough.id == id):
                     return playthrough
 
             return None
 
-        def getIndexByID(self, id):
+        def get_index_by_id(self, id):
             i = 0
             for playthrough in self.playthroughs:
                 if playthrough.id == id:
@@ -142,35 +142,32 @@ init python in JK:
 
             return -1
 
-        def getOrAdd(self, name):
-            return self.get(name) or self.add(PlaythroughClass(name=name))
-
-        def remove(self, playthroughID, deleteSaveFiles=False, keepActive=False):
-            playthrough = self.getByID(playthroughID)
+        def remove(self, playthroughID, delete_save_files=False, keepActive=False):
+            playthrough = self.get_by_id(playthroughID)
             if playthrough:
-                if deleteSaveFiles:
-                    SaveSystem.removeSaveFilesForPlaythrough(playthrough, remove_dir=True)
+                if delete_save_files:
+                    SaveSystem.remove_save_files_for_playthrough(playthrough, remove_dir=True)
 
                 self.playthroughs.remove(playthrough)
 
             if keepActive == False:
-                self.activateFirstOrNone()
+                self.activate_first_or_none()
 
             return True
 
         def edit(self, playthrough, originalPlaythrough, moveSaveDirectory=False):
-            rv = originalPlaythrough.editFromPlaythrough(playthrough, moveSaveDirectory=moveSaveDirectory)
+            rv = originalPlaythrough.edit_from_playthrough(playthrough, moveSaveDirectory=moveSaveDirectory)
                 
             self.save()
             renpy.restart_interaction()
 
             return rv
 
-        def addOrEdit(self, playthrough, moveSaveDirectory=False, force=False):
-            sourcePlaythrough = self.getByID(playthrough.id)
+        def add_or_edit(self, playthrough, moveSaveDirectory=False, force=False):
+            sourcePlaythrough = self.get_by_id(playthrough.id)
             if(sourcePlaythrough != None):
-                if moveSaveDirectory and sourcePlaythrough.name != playthrough.name and playthrough.id != 1 and self.isValidName(playthrough.name):
-                    result = self.renameSaveDirectory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name), force=force)
+                if moveSaveDirectory and sourcePlaythrough.name != playthrough.name and playthrough.id != 1 and self.is_valid_name(playthrough.name):
+                    result = self.rename_save_directory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name), force=force)
 
                     if result != True:
                         renpy.show_screen("JK_MovePlaythroughDirectoryError", playthrough=playthrough, errors=result)
@@ -178,51 +175,51 @@ init python in JK:
 
                 rv = self.edit(playthrough, sourcePlaythrough, moveSaveDirectory=moveSaveDirectory)
 
-                if self.activePlaythrough.id == rv.id:
-                    SaveSystem.regeneratePlaythroughSaveInstance(rv)
+                if self.active_playthrough.id == rv.id:
+                    SaveSystem.regenerate_playthrough_save_instance(rv)
 
                 return rv
 
             return self.add(playthrough)
 
-        def toggleAutosaveOnChoicesOnActive(self):
-            self.activePlaythrough.edit(autosaveOnChoices=not self.activePlaythrough.autosaveOnChoices)
+        def toggle_autosave_on_choices_for_active(self):
+            self.active_playthrough.edit(autosaveOnChoices=not self.active_playthrough.autosaveOnChoices)
 
-            Autosaver.pendingSave = None
+            Autosaver.pending_save = None
 
             self.save()
             renpy.restart_interaction()
 
-            renpy.notify("Autosave on choice is " + ("enabled" if self.activePlaythrough.autosaveOnChoices else "disabled"))
+            renpy.notify("Autosave on choice is " + ("enabled" if self.active_playthrough.autosaveOnChoices else "disabled"))
 
-        def activateByName(self, playthroughName):
-            self.activateByInstance(self.get(playthroughName))
+        def activate_by_name(self, playthroughName):
+            self.activate_by_instance(self.get(playthroughName))
 
-        def activateByID(self, playthroughID):
-            self.activateByInstance(self.getByID(playthroughID))
+        def activate_by_id(self, playthroughID):
+            self.activate_by_instance(self.get_by_id(playthroughID))
 
-        def activateByInstance(self, playthrough):
+        def activate_by_instance(self, playthrough):
             if(playthrough == None):
                 return
 
-            SaveSystem.getOrCreatePlaythroughSaveInstance(playthrough, autoActivate=True)
+            SaveSystem.get_or_create_playthrough_save_instance(playthrough, autoActivate=True)
 
-            self.__setActivePlaythrough(playthrough)
+            self.__set_active_playthrough(playthrough)
 
             self.save()
             renpy.restart_interaction()
 
-        def activateNative(self):
-            self.activateByInstance(self.playthroughs[0])
+        def activate_native(self):
+            self.activate_by_instance(self.playthroughs[0])
 
-        def activateFirstOrNone(self):
-            self.activateNative()
+        def activate_first_or_none(self):
+            self.activate_native()
 
         def save(self):
-            self.saveToUserDir()
-            self.saveToPersistent()
+            self.save_to_user_dir()
+            self.save_to_persistent()
 
-        def getPlaythroughsAsJson(self):
+        def get_playthrough_as_json(self):
             arr = []
             for playthrough in self.playthroughs:
                 if playthrough.id != 2:
@@ -230,32 +227,32 @@ init python in JK:
 
             return json.dumps(arr)
 
-        def saveToUserDir(self):
-            save_to_userdir = UserDir.hasPlaythroughs()
+        def save_to_user_dir(self):
+            save_to_userdir = UserDir.has_playthroughs()
             if len(self.playthroughs) <= 2:
-                if self.getByID(1).serializable() != PlaythroughsClass.get_default_playthroughs()[0].serializable():
+                if self.get_by_id(1).serializable() != PlaythroughsClass.get_default_playthroughs()[0].serializable():
                     save_to_userdir = True
             else:
                 save_to_userdir = True
 
             if save_to_userdir:
-                UserDir.savePlaythroughs(self.getPlaythroughsAsJson())
+                UserDir.save_playthroughs(self.get_playthrough_as_json())
 
-        def saveToPersistent(self):
-            renpy.store.persistent.JK_Playthroughs = self.getPlaythroughsAsJson()
+        def save_to_persistent(self):
+            renpy.store.persistent.JK_Playthroughs = self.get_playthrough_as_json()
             renpy.store.persistent.JK_PlaythroughsMtime = int(time.time())
 
             renpy.save_persistent()
 
-        def isValidName(self, name):
+        def is_valid_name(self, name):
             for playthrough in self.playthroughs:
-                if(playthrough.name == name):
+                if playthrough.name == name:
                     return False
 
             return True
 
-        def renameSaveDirectory(self, playthrough, newName, force=False):
-            instance = SaveSystem.getOrCreatePlaythroughSaveInstance(playthrough)
+        def rename_save_directory(self, playthrough, newName, force=False):
+            instance = SaveSystem.get_or_create_playthrough_save_instance(playthrough)
 
             if instance:
                 errors = [] if force else instance.location.validate_locations_for_change_of_directory_name(newName)
@@ -268,10 +265,10 @@ init python in JK:
 
             return errors
 
-        def __setActivePlaythrough(self, playthrough=None):
-            prev_playthrough = self.activePlaythroughOrNone
+        def __set_active_playthrough(self, playthrough=None):
+            prev_playthrough = self.active_playthrough_or_none
             if prev_playthrough:
-                self.activePlaythrough.beforeDeactivation()
+                self.active_playthrough.before_deactivation()
 
             renpy.store.persistent.JK_ActivePlaythrough = playthrough.id if playthrough != None else None
             self._activePlaythrough = playthrough
@@ -280,22 +277,22 @@ init python in JK:
                 renpy.store.persistent._file_page = str(playthrough.selectedPage or 1)
                 renpy.store.persistent._file_page_name = playthrough.filePageName or {}
 
-            self.saveToPersistent()
+            self.save_to_persistent()
 
         class ActivateNative(renpy.ui.Action):
             def __call__(self):
-                Playthroughs.activateNative()
+                Playthroughs.activate_native()
 
         class SetThumbnail(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
             def __call__(self):
-                self.playthrough.makeThumbnail()
+                self.playthrough.make_thumbnail()
 
                 renpy.restart_interaction()
 
-        class AddOrEdit(renpy.ui.Action):
+        class AddOrEditAction(renpy.ui.Action):
             def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory):#MODIFY HERE
                 self.playthrough = playthrough
                 self.name = name
@@ -323,18 +320,18 @@ init python in JK:
                 if moveSaveDirectory and playthrough.id == 1:
                     moveSaveDirectory = False
 
-                Playthroughs.addOrEdit(playthrough, moveSaveDirectory=moveSaveDirectory)
+                Playthroughs.add_or_edit(playthrough, moveSaveDirectory=moveSaveDirectory)
                 renpy.restart_interaction()
 
-        class ActivatePlaythrough(renpy.ui.Action):
+        class ActivatePlaythroughAction(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
             def __call__(self):
-                Playthroughs.activateByID(self.playthrough.id)
+                Playthroughs.activate_by_id(self.playthrough.id)
                 renpy.restart_interaction()
 
-        class Remove(renpy.ui.Action):
+        class RemoveAction(renpy.ui.Action):
             def __init__(self, playthroughID, deleteSaves):
                 self.playthroughID = playthroughID
                 self.deleteSaves = deleteSaves
@@ -343,23 +340,23 @@ init python in JK:
                 playthroughID = self.playthroughID if not callable(self.playthroughID) else self.playthroughID()
                 deleteSaves = self.deleteSaves if not callable(self.deleteSaves) else self.deleteSaves()
 
-                Playthroughs.remove(playthroughID=playthroughID, deleteSaveFiles=deleteSaves)
+                Playthroughs.remove(playthroughID=playthroughID, delete_save_files=deleteSaves)
                 renpy.restart_interaction()
 
-        class ToggleAutosaveOnChoicesOnActive(renpy.ui.Action):
+        class ToggleAutosaveOnChoicesForActiveAction(renpy.ui.Action):
             def __call__(self):
-                Playthroughs.toggleAutosaveOnChoicesOnActive()
+                Playthroughs.toggle_autosave_on_choices_for_active()
 
-        class QuickSave(renpy.ui.Action):
+        class QuickSaveAction(renpy.ui.Action):
             def __call__(self):
-                page, _, slotString = Autosaver.getCurrentSlot()
+                page, _, slotString = Autosaver.get_current_slot()
                 slotString = Utils.format_slotname(slotString)
 
                 renpy.take_screenshot()
                 renpy.save(slotString)
 
                 if not Settings.offsetSlotAfterManualSave:
-                    Autosaver.setNextSlot()
+                    Autosaver.set_next_slot()
 
                 if Settings.pageFollowsQuickSave:
                     renpy.store.persistent._file_page = str(page)
@@ -377,19 +374,19 @@ init python in JK:
                 showConfirm(
                     title="Sequentialize playthrough",
                     message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
-                    yes=Playthroughs.SequentializeSaves(playthrough),
-                    yesIcon="\ue089",
-                    yesColor=Colors.error
+                    yes=Playthroughs.SequentializeSavesAction(playthrough),
+                    yes_icon="\ue089",
+                    yes_color=Colors.error
                 )
 
-        class SequentializeSaves(renpy.ui.Action):
+        class SequentializeSavesAction(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
             def __call__(self):
                 self.playthrough.sequentializeSaves()
         
-        class RemoveThumbnail(renpy.ui.Action):
+        class RemoveThumbnailAction(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
@@ -397,15 +394,15 @@ init python in JK:
                 self.playthrough.removeThumbnail()
                 renpy.restart_interaction()
 
-        class DeleteAllSaves(renpy.ui.Action):
+        class DeleteAllSavesAction(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
             def __call__(self):
-                SaveSystem.removeSaveFilesForPlaythrough(self.playthrough)
+                SaveSystem.remove_save_files_for_playthrough(self.playthrough)
                 renpy.restart_interaction()
 
-        class ConfirmDeleteAllSaves(renpy.ui.Action):
+        class ConfirmDeleteAllSavesAction(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
@@ -415,9 +412,9 @@ init python in JK:
                 showConfirm(
                     title="Remove all saves",
                     message="This action will remove {b}{u}all{/u}{/b} your save files for the \"" + name + "\" playthrough.\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
-                    yes=Playthroughs.DeleteAllSaves(self.playthrough),
-                    yesIcon="\ue92b",
-                    yesColor=Colors.error
+                    yes=Playthroughs.DeleteAllSavesAction(self.playthrough),
+                    yes_icon="\ue92b",
+                    yes_color=Colors.error
                 )
 
         class DuplicatePlaythroughAction(renpy.ui.Action):
@@ -434,11 +431,11 @@ init python in JK:
 
                 Playthroughs.add(new_playthrough)
 
-                original_instance = SaveSystem.getPlaythroughSaveInstance(self.playthrough.id)
+                original_instance = SaveSystem.get_playthrough_save_instance(self.playthrough.id)
                 if not original_instance:
                     raise Exception("Can't find old save instance")
 
-                new_instance = SaveSystem.getPlaythroughSaveInstance(new_playthrough.id)
+                new_instance = SaveSystem.get_playthrough_save_instance(new_playthrough.id)
                 if not new_instance:
                     raise Exception("Can't find new save instance")
 
@@ -450,7 +447,7 @@ init python in JK:
 
                 renpy.hide_screen("JK_DuplicatePlaythrough")
         
-        class ShowCreatePlaythroughFromDirname(renpy.ui.Action):
+        class ShowCreatePlaythroughFromDirnameAction(renpy.ui.Action):
             def __init__(self, dirname):
                 self.dirname = dirname
 
@@ -461,21 +458,21 @@ init python in JK:
 
                 renpy.show_screen("JK_EditPlaythrough", playthrough)
 
-        class ForceRenamePlaythrough(renpy.ui.Action):
+        class ForceRenamePlaythroughAction(renpy.ui.Action):
             def __init__(self, playthrough):
                 self.playthrough = playthrough
 
             def __call__(self):
-                Playthroughs.addOrEdit(self.playthrough, moveSaveDirectory=True, force=True)
+                Playthroughs.add_or_edit(self.playthrough, moveSaveDirectory=True, force=True)
 
-        class ReorderPlaythroughs(renpy.ui.Action):
+        class ReorderPlaythroughsAction(renpy.ui.Action):
             def __init__(self, source, target):
                 self.source = source
                 self.target = target
 
             def __call__(self):
-                source_index = Playthroughs.getIndexByID(self.source)
-                target_index = Playthroughs.getIndexByID(self.target)
+                source_index = Playthroughs.get_index_by_id(self.source)
+                target_index = Playthroughs.get_index_by_id(self.target)
 
                 if source_index > -1 and target_index > -1:
                     if source_index > 0 or target_index + 1 == len(Playthroughs.playthroughs):

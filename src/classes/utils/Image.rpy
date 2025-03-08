@@ -49,16 +49,16 @@ init -9999 python in JK:
             return nrv
 
         def scale(self, image, desired_size):
-            return Utils.resizeDimensionsToLimits(image.get_size(), desired_size)
+            return Utils.resize_dimensions_to_limits(image.get_size(), desired_size)
 
         # ==============
         # STATIC METHODS
         # ==============
 
         @staticmethod
-        def getLimitedImageSizeWithAspectRatio(desired_width, desired_height):
+        def get_limited_image_size_with_preserved_aspect_ratio(desired_width, desired_height):
             # Get the aspect ratio from Ren'Py's screen configuration
             original_width = renpy.config.thumbnail_width or 1 if hasattr(renpy.config, "thumbnail_width") else 1
             original_height = renpy.config.thumbnail_height or 1 if hasattr(renpy.config, "thumbnail_height") else 1
 
-            return Utils.resizeDimensionsToLimits((original_width, original_height), (desired_width, desired_height))
+            return Utils.resize_dimensions_to_limits((original_width, original_height), (desired_width, desired_height))

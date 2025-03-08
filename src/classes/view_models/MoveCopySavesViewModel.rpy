@@ -30,14 +30,14 @@ init python in JK:
             self.cleanup_thread = None  # To track the cleanup thread
             self.skip_conflicts_thread = None  # To handle skip conflicts in background
 
-            self.source_instance = SaveSystem.getOrCreatePlaythroughSaveInstance(self.source_playthrough)
+            self.source_instance = SaveSystem.get_or_create_playthrough_save_instance(self.source_playthrough)
             if not self.source_instance:
                 self.error = "Couldn't find the source location."
                 self.processing = False
                 renpy.restart_interaction()
                 return
 
-            self.destination_instance = SaveSystem.getOrCreatePlaythroughSaveInstance(self.destination_playthrough)
+            self.destination_instance = SaveSystem.get_or_create_playthrough_save_instance(self.destination_playthrough)
             if not self.destination_instance:
                 self.error = "Couldn't find the destination location."
                 self.processing = False
@@ -45,8 +45,8 @@ init python in JK:
                 return
 
         def loadSaves(self):
-            self.source_saves = Utils.sortSaves(SaveSystem.listAllSavesForPlaythrough(self.source_playthrough))
-            self.destination_saves = SaveSystem.listAllSavesForPlaythrough(self.destination_playthrough)
+            self.source_saves = Utils.sort_saves(SaveSystem.list_all_saves_for_playthrough(self.source_playthrough))
+            self.destination_saves = SaveSystem.list_all_saves_for_playthrough(self.destination_playthrough)
 
         def process_saves(self, saves, mode="COPY"):
             self.mode = mode
@@ -91,7 +91,7 @@ init python in JK:
                     self.process_continue()
                     return
 
-                renpy.show_screen("JK_MoveCopySavesOverwriteConfirm", save=save, viewModel=self)
+                renpy.show_screen("JK_MoveCopySavesOverwriteConfirm", save=save, view_model=self)
                 time.sleep(0.1)
                 renpy.restart_interaction()
                 return
@@ -204,10 +204,10 @@ init python in JK:
             renpy.restart_interaction()
 
         class StartProcessAction(renpy.ui.Action):
-            def __init__(self, viewModel, saves, mode="COPY"):
-                self.viewModel = viewModel
+            def __init__(self, view_model, saves, mode="COPY"):
+                self.view_model = view_model
                 self.saves = saves
                 self.mode = mode
 
             def __call__(self):
-                self.viewModel.process_saves(self.saves, mode=self.mode)
+                self.view_model.process_saves(self.saves, mode=self.mode)

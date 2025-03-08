@@ -1,9 +1,9 @@
-screen JK_Radio(checked, text, action=None, xsize=None, sensitive=None, disabled=False, color=None, iconColor=None, textColor=None):
+screen JK_Radio(checked, text, action=None, xsize=None, sensitive=None, disabled=False, color=None, icon_color=None, text_color=None):
     style_prefix 'JK_radio'
 
     python:
-        icon_color = JK.Colors.disabled if disabled else (iconColor or color)
-        text_color = JK.Colors.disabled if disabled else (textColor or color)
+        icon_color = JK.Colors.disabled if disabled else (icon_color or color)
+        text_color = JK.Colors.disabled if disabled else (text_color or color)
 
     button:
         xsize xsize

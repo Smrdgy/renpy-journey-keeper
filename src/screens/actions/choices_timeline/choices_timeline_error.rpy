@@ -1,14 +1,14 @@
-screen JK_ChoicesTimelineError(viewModel):
+screen JK_ChoicesTimelineError(view_model):
     style_prefix 'JK'
     modal True
 
     python:
         class ClearErrorAction(renpy.ui.Action):
-            def __init__(self, viewModel):
-                self.viewModel = viewModel
+            def __init__(self, view_model):
+                self.view_model = view_model
             
             def __call__(self):
-                self.viewModel.error = None
+                self.view_model.error = None
                 renpy.restart_interaction()
 
     vbox:
@@ -23,7 +23,7 @@ screen JK_ChoicesTimelineError(viewModel):
             use JK_YSpacer(offset=2)
 
             vbox xalign 0.5:
-                text viewModel.error xalign 0.5 text_align 0.5
+                text view_model.error xalign 0.5 text_align 0.5
 
                 use JK_YSpacer(offset=2)
 
@@ -39,7 +39,7 @@ screen JK_ChoicesTimelineError(viewModel):
         vbox:
             # OK
             hbox:
-                use JK_IconButton(icon="", text="OK", action=ClearErrorAction(viewModel))
+                use JK_IconButton(icon="", text="OK", action=ClearErrorAction(view_model))
 
             # Close
             hbox:

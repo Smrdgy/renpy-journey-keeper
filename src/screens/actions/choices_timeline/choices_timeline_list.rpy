@@ -1,23 +1,23 @@
-screen JK_ChoicesTimelineList(viewModel, show_thumbnails, search):
+screen JK_ChoicesTimelineList(view_model, show_thumbnails, search):
     default search_input = JK.TextInput("search")
 
     python:
-        timeline = JK.Utils.filter_timeline(viewModel.timeline, search)
+        timeline = JK.Utils.filter_timeline(view_model.timeline, search)
 
         current_state_text = "{color=" + JK.Colors.status_disabled + "}disabled{/color}"
-        if viewModel.playthrough.autosaveOnChoices:
+        if view_model.playthrough.autosaveOnChoices:
             current_state_text = "{color=" + JK.Colors.status_enabled + "}enabled{/color}"
 
-        choicesText = "Choices are saved into save files {u}only{/u} when this mod is active and \"Autosave on choice\" is enabled (currently [current_state_text]) in the playthrough settings.\n{color=[JK.Colors.warning]}Warning - Manual and quick saves are unable to store choices.{/c}"
+        choices_text = "Choices are saved into save files {u}only{/u} when this mod is active and \"Autosave on choice\" is enabled (currently [current_state_text]) in the playthrough settings.\n{color=[JK.Colors.warning]}Warning - Manual and quick saves are unable to store choices.{/c}"
 
-        hasTimelineEntry = False
-        for entry in viewModel.timeline:
+        has_timeline_entry = False
+        for entry in view_model.timeline:
             if entry[1] != None:
-                hasTimelineEntry = True
+                has_timeline_entry = True
 
-        exportAction = JK.ChoicesTimelineViewModel.ExportTimelineToFile(viewModel)
+        export_action = JK.ChoicesTimelineViewModel.ExportTimelineToFileAction(view_model)
 
-    if hasTimelineEntry:
+    if has_timeline_entry:
         key 'ctrl_K_f' action JK.TextInput.SetActiveAction("search")
         if JK.TextInput.is_active("search"):
             key 'K_ESCAPE' action JK.TextInput.SetActiveAction(None)
@@ -32,12 +32,12 @@ screen JK_ChoicesTimelineList(viewModel, show_thumbnails, search):
                 hbox:
                     xfill True
 
-                    text choicesText xalign 0.5 text_align 0.5
+                    text choices_text xalign 0.5 text_align 0.5
 
                 hbox:
                     xalign 0.5
 
-                    use JK_IconButton('\uf0fb', text="Export to file", action=exportAction, key="ctrl_K_e")
+                    use JK_IconButton('\uf0fb', text="Export to file", action=export_action, key="ctrl_K_e")
 
                 use JK_YSpacer(offset=3)
 
@@ -54,7 +54,7 @@ screen JK_ChoicesTimelineList(viewModel, show_thumbnails, search):
 
                             button:
                                 key_events True
-                                action SetScreenVariable(JK.TextInput.activeTextInputScreenVariableName, "search")
+                                action SetScreenVariable(JK.TextInput.active_text_input_screen_variable_name, "search")
 
                                 vbox:
                                     hbox:
@@ -80,7 +80,7 @@ screen JK_ChoicesTimelineList(viewModel, show_thumbnails, search):
 
                             hbox:
                                 if show_thumbnails:
-                                    image renpy.slot_screenshot(entry[2]) size JK.Utils.resizeDimensionsToLimits((renpy.config.thumbnail_width, renpy.config.thumbnail_height), (100, 100))
+                                    image renpy.slot_screenshot(entry[2]) size JK.Utils.resize_dimensions_to_limits((renpy.config.thumbnail_width, renpy.config.thumbnail_height), (100, 100))
 
                                     use JK_XSpacer(offset=3)
 
@@ -93,7 +93,7 @@ screen JK_ChoicesTimelineList(viewModel, show_thumbnails, search):
                                     if entry[1] is None:
                                         text "??????" color JK.Colors.na hover_color JK.Colors.hover
                                     else:
-                                        text JK.Utils.replaceReservedCharacters(entry[1]) hover_color JK.Colors.hover
+                                        text JK.Utils.escape_renpy_reserved_characters(entry[1]) hover_color JK.Colors.hover
 
                                     use JK_XSpacer(offset=3)
 
@@ -103,7 +103,7 @@ screen JK_ChoicesTimelineList(viewModel, show_thumbnails, search):
             hbox:
                 xfill True
 
-                text choicesText xalign 0.5 text_align 0.5
+                text choices_text xalign 0.5 text_align 0.5
 
             hbox:
                 xfill True

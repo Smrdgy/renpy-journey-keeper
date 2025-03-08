@@ -5,7 +5,7 @@ screen JK_MovePlaythroughDirectoryError(playthrough, errors=[]):
 
     $ errorsLen = len(errors)
 
-    use JK_Dialog(title="Failed to rename directories", closeAction=Hide("JK_MovePlaythroughDirectoryError")):
+    use JK_Dialog(title="Failed to rename directories", close_action=Hide("JK_MovePlaythroughDirectoryError")):
         viewport:
             mousewheel True
             draggable True
@@ -49,7 +49,7 @@ screen JK_MovePlaythroughDirectoryError(playthrough, errors=[]):
             vbox:
                 # Overwrite
                 hbox:
-                    use JK_IconButton(icon="\ue15a", text="Overwrite", action=JK.ShowConfirmAction(title="Overwrite conflicting directories", message="Are you sure? This will delete any data stored in those directories.\n\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}.", yes=[Hide("JK_MovePlaythroughDirectoryError"), JK.Playthroughs.ForceRenamePlaythrough(playthrough)], yesColor=JK.Colors.danger), color=JK.Colors.danger, spacing=JK.scaled(5))
+                    use JK_IconButton(icon="\ue15a", text="Overwrite", action=JK.ShowConfirmAction(title="Overwrite conflicting directories", message="Are you sure? This will delete any data stored in those directories.\n\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}.", yes=[Hide("JK_MovePlaythroughDirectoryError"), JK.Playthroughs.ForceRenamePlaythroughAction(playthrough)], yes_color=JK.Colors.danger), color=JK.Colors.danger, spacing=JK.scaled(5))
 
                 # Close
                 hbox:

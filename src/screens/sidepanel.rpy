@@ -24,7 +24,7 @@ screen JK_Sidepanel():
             
             return size
 
-        playthrough = JK.Playthroughs.activePlaythrough
+        playthrough = JK.Playthroughs.active_playthrough
         noPlaythrough = playthrough == None
         autosave_on_choices_enabled = playthrough and playthrough.autosaveOnChoices
         custom_pagination_enabled = renpy.store.persistent.JK_ShowPagination
@@ -62,26 +62,26 @@ screen JK_Sidepanel():
             background "#000000{:02X}".format(int(JK.Settings.sidepanelOpacity * 255))
 
             use JK_AnyDirectionBox(horizontal):
-                use JK_IconButton('\ueb73', tt="Select playthrough", ttSide=tooltip_side, action=Show("JK_PlaythroughsPicker")):
+                use JK_IconButton('\ueb73', tt="Select playthrough", tt_side=tooltip_side, action=Show("JK_PlaythroughsPicker")):
                     frame xysize (0, 0) offset JK.scaled((-10, -5)) style "JK_default":
                         if amount_of_custom_playthroughs > 0:
                             text "{b}[amount_of_playthroughs]{/b}" size JK.scaled(15) outlines [(JK.scaled(5), "#000000", 0, 0)] color JK.Colors.theme
 
-                use JK_IconButton('\uea20', tt="New playthrough", ttSide=tooltip_side, action=Show("JK_EditPlaythrough", playthrough=None))
+                use JK_IconButton('\uea20', tt="New playthrough", tt_side=tooltip_side, action=Show("JK_EditPlaythrough", playthrough=None))
 
                 if JK.Settings.memoriesEnabled:
-                    use JK_IconButton('\ue02c', tt="Open memories", ttSide=tooltip_side, action=Show("JK_MemoriesLibrary"), disabled=not JK.Settings.memoriesEnabled)
+                    use JK_IconButton('\ue02c', tt="Open memories", tt_side=tooltip_side, action=Show("JK_MemoriesLibrary"), disabled=not JK.Settings.memoriesEnabled)
 
                 use JK_Divider(sizeX=(2 if horizontal else 40), sizeY=(40 if horizontal else 2))
 
-                use JK_IconButton('\ue3c9', tt="Edit playthrough", ttSide=tooltip_side, action=Show("JK_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
-                use JK_IconButton('\ue4f9', toggled=autosave_on_choices_enabled, toggledIcon='\ue167', tt=("Disable autosave on choices" if autosave_on_choices_enabled else "Enable autosave on choices"), ttSide=tooltip_side, action=JK.Playthroughs.ToggleAutosaveOnChoicesOnActive(), disabled=noPlaythrough or not JK.Utils.hasColsAndRowsConfiguration(), toggledColor=JK.Colors.selected)
-                use JK_IconButton('\ue2e6', tt="Playthrough actions", ttSide=tooltip_side, action=Show("JK_PlaythroughActions", playthrough=playthrough))
+                use JK_IconButton('\ue3c9', tt="Edit playthrough", tt_side=tooltip_side, action=Show("JK_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True), disabled=noPlaythrough)
+                use JK_IconButton('\ue4f9', toggled=autosave_on_choices_enabled, toggled_icon='\ue167', tt=("Disable autosave on choices" if autosave_on_choices_enabled else "Enable autosave on choices"), tt_side=tooltip_side, action=JK.Playthroughs.ToggleAutosaveOnChoicesForActiveAction(), disabled=noPlaythrough or not JK.Utils.has_cols_and_rows_configuration(), toggled_color=JK.Colors.selected)
+                use JK_IconButton('\ue2e6', tt="Playthrough actions", tt_side=tooltip_side, action=Show("JK_PlaythroughActions", playthrough=playthrough))
 
                 use JK_Divider(sizeX=(2 if horizontal else 40), sizeY=(40 if horizontal else 2))
 
-                use JK_IconButton('\uf045', tt=("Hide custom pagination" if custom_pagination_enabled else "Show custom pagination"), ttSide=tooltip_side, action=JK.Pagination.TogglePagination(), toggled=custom_pagination_enabled, toggledColor=JK.Colors.selected)
-                use JK_IconButton('\ue8b8', tt="Open settings", ttSide=tooltip_side, action=Show("JK_Settings"))
+                use JK_IconButton('\uf045', tt=("Hide custom pagination" if custom_pagination_enabled else "Show custom pagination"), tt_side=tooltip_side, action=JK.Pagination.TogglePaginationAction(), toggled=custom_pagination_enabled, toggled_color=JK.Colors.selected)
+                use JK_IconButton('\ue8b8', tt="Open settings", tt_side=tooltip_side, action=Show("JK_Settings"))
 
 screen JK_AnyDirectionBox(horizontal=False):
     if horizontal:
@@ -114,7 +114,7 @@ screen JK_SidepanelHolder():
         if JK.Settings.searchPlaythroughsKey and isSaveLoadScreen:
             key JK.Settings.searchPlaythroughsKey action Show("JK_SearchPlaythrough", search_all=True)
 
-    if(showSidepanel and isSaveLoadScreen and JK.Pagination.isShowingPagination):
+    if(showSidepanel and isSaveLoadScreen and JK.Pagination.is_showing_pagination):
         use JK_Pagination()
     else:
         $ renpy.hide_screen("JK_GoToPage")

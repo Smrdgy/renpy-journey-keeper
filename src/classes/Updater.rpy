@@ -107,13 +107,13 @@ init python in JK:
                 return data
             except _urllib_error.HTTPError as e:
                 print("HTTP error occurred while downloading update metadata: ", e)
-                self.error = "A HTTP error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A HTTP error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.escape_renpy_reserved_characters(str(e)) + "{/color}"
             except _urllib_error.URLError as e:
                 print("URL error occurred while downloading update metadata: ", e)
-                self.error = "A URL error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A URL error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.escape_renpy_reserved_characters(str(e)) + "{/color}"
             except Exception as e:
                 print("An error occurred while downloading update metadata: ", e)
-                self.error = "An unexpected error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "An unexpected error occurred while downloading update information: {color=[JK.Colors.error]}" + Utils.escape_renpy_reserved_characters(str(e)) + "{/color}"
 
             self.loading = False
             renpy.restart_interaction()
@@ -146,7 +146,7 @@ init python in JK:
                 renpy.restart_interaction()
                 return
             except Exception as e:
-                error_message = "{color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                error_message = "{color=[JK.Colors.error]}" + Utils.escape_renpy_reserved_characters(str(e)) + "{/color}"
 
                 if e.args[0] == 13:
                     print("Unable to replace the .rpa file, Ren'Py or other program is blocking the file.")
@@ -187,13 +187,13 @@ init python in JK:
                 return True
             except _urllib_error.HTTPError as e:
                 print("HTTP error occurred downloading/writing the asset: ", e)
-                self.error = "A HTTP error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A HTTP error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.escape_renpy_reserved_characters(str(e)) + "{/color}"
             except _urllib_error.URLError as e:
                 print("URL error occurred downloading/writing the asset: ", e)
-                self.error = "A URL error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "A URL error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.escape_renpy_reserved_characters(str(e)) + "{/color}"
             except Exception as e:
                 print("An error occurred downloading/writing the asset: ", e)
-                self.error = "An unexpected error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.replaceReservedCharacters(str(e)) + "{/color}"
+                self.error = "An unexpected error occurred while downloading/writing the asset: {color=[JK.Colors.error]}" + Utils.escape_renpy_reserved_characters(str(e)) + "{/color}"
 
             self.downloading = False
             renpy.restart_interaction()
@@ -218,7 +218,7 @@ init python in JK:
             # Block code
             text = re.sub(r'```(.*?)```', r'\1', text, flags=re.DOTALL)
             # Interpolation [...]
-            text = Utils.replaceReservedCharacters(text)
+            text = Utils.escape_renpy_reserved_characters(text)
             # Headers
             text = re.sub(r'^# (.*?)$', r'{color=[JK.Colors.theme]}{b}\1{/b}{/color}', text, flags=re.MULTILINE)
             text = re.sub(r'^## (.*?)$', r'{color=[JK.Colors.theme]}{i}\1{/i}{/color}', text, flags=re.MULTILINE)
@@ -245,16 +245,16 @@ init python in JK:
                 showConfirm(
                     title="Disable updates",
                     message="Do you really wish to disable automatic checking for the updates?\n{color=[JK.Colors.info]}You can re-enable it in the settings at any time.{/color}",
-                    yes=Settings.ToggleEnabled("updater"),
-                    yesIcon="\ue888",
-                    yesColor=Colors.error
+                    yes=Settings.ToggleEnabledAction("updater"),
+                    yes_icon="\ue888",
+                    yes_color=Colors.error
                 )
         
         class CheckForUpdateAction(renpy.ui.Action):
             def __call__(self):
                 Updater.check_for_update(ignore_blacklist=True, ignore_force_auto_update=True)
 
-        class RestartGame(renpy.ui.Action):
+        class RestartGameAction(renpy.ui.Action):
             def __call__(self):
                 Updater.reload_and_update = True
                 renpy.restart_interaction()

@@ -5,12 +5,12 @@ screen JK_AutosaveOverwriteConfirm():
     layer "JK_Overlay"
     style_prefix 'JK'
 
-    use JK_Dialog(title=title, message=message, closeAction=[JK.Autosaver.ConfirmDialogClose(), Hide("JK_AutosaveOverwriteConfirm")]):
+    use JK_Dialog(title=title, message=message, close_action=[JK.Autosaver.ConfirmDialogCloseAction(), Hide("JK_AutosaveOverwriteConfirm")]):
         vbox:
             xfill True
 
             python:
-                page, slot, _ = JK.Autosaver.getCurrentSlot()
+                page, slot, _ = JK.Autosaver.get_current_slot()
 
             add FileScreenshot(name=slot, page=page) xalign 0.5
 
@@ -25,16 +25,16 @@ screen JK_AutosaveOverwriteConfirm():
             vbox:
                 # Overwrite
                 hbox:
-                    use JK_IconButton(icon="\ue161", text="Overwrite", action=[JK.Autosaver.ConfirmDialogSave(), JK.Autosaver.ConfirmDialogClose(), Hide("JK_AutosaveOverwriteConfirm")], color=JK.Colors.danger)
+                    use JK_IconButton(icon="\ue161", text="Overwrite", action=[JK.Autosaver.ConfirmDialogSaveAction(), JK.Autosaver.ConfirmDialogCloseAction(), Hide("JK_AutosaveOverwriteConfirm")], color=JK.Colors.danger)
 
                 # Move one over
                 hbox:
-                    use JK_IconButton(icon="\ue3cd", text="Save one over", action=[JK.Autosaver.MoveOneSlotOver(), Hide("JK_AutosaveOverwriteConfirm"), JK.Autosaver.TrySavePendingSave()])
+                    use JK_IconButton(icon="\ue3cd", text="Save one over", action=[JK.Autosaver.MoveOneSlotOverAction(), Hide("JK_AutosaveOverwriteConfirm"), JK.Autosaver.TrySavePendingSaveAction()])
 
                 # Skip once
                 hbox:
-                    use JK_IconButton(icon="\ue044", text="Skip this time", action=[JK.Autosaver.ConfirmDialogClose(), Hide("JK_AutosaveOverwriteConfirm")])
+                    use JK_IconButton(icon="\ue044", text="Skip this time", action=[JK.Autosaver.ConfirmDialogCloseAction(), Hide("JK_AutosaveOverwriteConfirm")])
 
                 # No
                 hbox:
-                    use JK_IconButton(icon="\ue5cd", text="No & disable autosave", action=[JK.Playthroughs.ToggleAutosaveOnChoicesOnActive(), JK.Autosaver.ConfirmDialogClose(), Hide("JK_AutosaveOverwriteConfirm")])
+                    use JK_IconButton(icon="\ue5cd", text="No & disable autosave", action=[JK.Playthroughs.ToggleAutosaveOnChoicesForActiveAction(), JK.Autosaver.ConfirmDialogCloseAction(), Hide("JK_AutosaveOverwriteConfirm")])

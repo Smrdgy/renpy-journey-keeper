@@ -4,7 +4,7 @@ screen JK_SearchPlaythrough(search_all=False):
     modal True
 
     default search = ""
-    default viewModel = JK.SearchPlaythroughViewModel(search_playthroughs=search_all)
+    default view_model = JK.SearchPlaythroughViewModel(search_playthroughs=search_all)
     default search_input = JK.TextInput("search", auto_focus=True)
     default focused_button = None
 
@@ -33,25 +33,25 @@ screen JK_SearchPlaythrough(search_all=False):
             playthrough = result[2]
 
             if t == "PLAYTHROUGH_NAME":
-                return JK.Playthroughs.ActivatePlaythrough(playthrough)
+                return JK.Playthroughs.ActivatePlaythroughAction(playthrough)
             elif t == "PLAYTHROUGH_DESCRIPTION":
-                return JK.Playthroughs.ActivatePlaythrough(playthrough)
+                return JK.Playthroughs.ActivatePlaythroughAction(playthrough)
             elif t == "FILE_PAGE_NAME":
-                return [JK.Playthroughs.ActivatePlaythrough(playthrough), FilePage(result[3])]
+                return [JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(result[3])]
             elif t == "SAVE_NAME":
                 page, _ = JK.Utils.split_slotname(result[3])
-                return [JK.Playthroughs.ActivatePlaythrough(playthrough), FilePage(page)]
+                return [JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(page)]
             elif t == "SAVE_CHOICE":
                 page, _ = JK.Utils.split_slotname(result[3])
-                return [JK.Playthroughs.ActivatePlaythrough(playthrough), FilePage(page)]
+                return [JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(page)]
 
     if JK.Settings.searchPlaythroughKey:
-        key JK.Settings.searchPlaythroughKey action JK.SearchPlaythroughViewModel.SetSearchAll(viewModel, False)
+        key JK.Settings.searchPlaythroughKey action JK.SearchPlaythroughViewModel.SetSearchAllAction(view_model, False)
 
     if JK.Settings.searchPlaythroughsKey:
-        key JK.Settings.searchPlaythroughsKey action JK.SearchPlaythroughViewModel.SetSearchAll(viewModel, True)
+        key JK.Settings.searchPlaythroughsKey action JK.SearchPlaythroughViewModel.SetSearchAllAction(view_model, True)
 
-    use JK_Dialog(title="Seach playthrough", closeAction=Hide("JK_SearchPlaythrough")):
+    use JK_Dialog(title="Seach playthrough", close_action=Hide("JK_SearchPlaythrough")):
         style_prefix "JK"
 
         button:
@@ -60,29 +60,29 @@ screen JK_SearchPlaythrough(search_all=False):
 
             vbox:
                 add search_input.displayable(placeholder="Search")
-                $ viewModel.set_search_text(search)
+                $ view_model.set_search_text(search)
                 frame style "JK_default" background "#ffffff22" hover_background JK.Colors.hover ysize 2 offset JK.scaled((0, 2))
 
         hbox:
             xalign 1.0
 
-            use JK_Checkbox(checked=viewModel.search_playthroughs, text="Search playthrough names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabled(viewModel, "search_playthroughs"))
-            use JK_Checkbox(checked=viewModel.search_playthrough_names, text="Search playthrough names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabled(viewModel, "search_playthrough_names"), disabled=not viewModel.search_playthroughs)
-            use JK_Checkbox(checked=viewModel.search_playthrough_descriptions, text="Search playthrough descriptions", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabled(viewModel, "search_playthrough_descriptions"), disabled=not viewModel.search_playthroughs)
-            use JK_Checkbox(checked=viewModel.search_page_names, text="Search page names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabled(viewModel, "search_page_names"))
-            use JK_Checkbox(checked=viewModel.search_save_names, text="Search save names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabled(viewModel, "search_save_names"))
-            use JK_Checkbox(checked=viewModel.search_choices, text="Search choices", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabled(viewModel, "search_choices"))
+            use JK_Checkbox(checked=view_model.search_playthroughs, text="Search playthrough names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_playthroughs"))
+            use JK_Checkbox(checked=view_model.search_playthrough_names, text="Search playthrough names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_playthrough_names"), disabled=not view_model.search_playthroughs)
+            use JK_Checkbox(checked=view_model.search_playthrough_descriptions, text="Search playthrough descriptions", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_playthrough_descriptions"), disabled=not view_model.search_playthroughs)
+            use JK_Checkbox(checked=view_model.search_page_names, text="Search page names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_page_names"))
+            use JK_Checkbox(checked=view_model.search_save_names, text="Search save names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_save_names"))
+            use JK_Checkbox(checked=view_model.search_choices, text="Search choices", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_choices"))
 
-        if viewModel.searching or viewModel.search_after_cache_is_built:
+        if view_model.searching or view_model.search_after_cache_is_built:
             text "Searching..."
 
-        if viewModel.searched and len(viewModel.search_text) > 0:
-            if len(viewModel.results) > 0:
-                text "Found {}".format(len(viewModel.results))
+        if view_model.searched and len(view_model.search_text) > 0:
+            if len(view_model.results) > 0:
+                text "Found {}".format(len(view_model.results))
             else:
                 text "No results"
 
-            for result in viewModel.results:
+            for result in view_model.results:
                 python:
                     hovered = result == focused_button
                     i = 0
@@ -122,9 +122,9 @@ screen JK_SearchPlaythrough(search_all=False):
 
                                 if result_type in ("FILE_PAGE_NAME", "SAVE_NAME", "SAVE_CHOICE"):
                                     $ page, slot = JK.Utils.split_slotname(result[3])
-                                    use JK_IconButton(icon="\ue8a0", tt="Show page", action=[JK.Playthroughs.ActivatePlaythrough(playthrough), FilePage(page), hide_action])
+                                    use JK_IconButton(icon="\ue8a0", tt="Show page", action=[JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(page), hide_action])
         
                                 if result_type in ("SAVE_NAME", "SAVE_CHOICE"):
                                     $ page, slot = JK.Utils.split_slotname(result[3])
-                                    use JK_IconButton(icon="\ue1c4", tt="Load save", action=[JK.Playthroughs.ActivatePlaythrough(playthrough), FilePage(page), FileLoad(slot, confirm=True, page=page), hide_action])
+                                    use JK_IconButton(icon="\ue1c4", tt="Load save", action=[JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(page), FileLoad(slot, confirm=True, page=page), hide_action])
         

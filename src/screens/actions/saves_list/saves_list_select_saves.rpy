@@ -1,14 +1,14 @@
-screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_selected_save, selection_mode, show_thumbnails):
+screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_selected_save, selection_mode, show_thumbnails):
     style_prefix 'JK'
     modal True
 
     python:
-        saves_length = viewModel.saves_length
-        selected_length = len(viewModel.selection)
+        saves_length = view_model.saves_length
+        selected_length = len(view_model.selection)
         row_height = 80 if show_thumbnails else 50
-        col_size = 1.0 / len(viewModel.locations) - 0.01
+        col_size = 1.0 / len(view_model.locations) - 0.01
 
-    key "ctrl_K_a" action JK.SavesListViewModel.SelectAllAction(viewModel, selection_mode)
+    key "ctrl_K_a" action JK.SavesListViewModel.SelectAllAction(view_model, selection_mode)
 
     hbox ysize JK.scaled(42):
         xfill True
@@ -22,16 +22,16 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                         text "[selected_length] item(s) selected"
 
                 if selected_length == 0:
-                    use JK_IconButton(icon="\ue5d5", action=JK.SavesListViewModel.RefreshSavesAction(viewModel), tt="Rescan saves")
+                    use JK_IconButton(icon="\ue5d5", action=JK.SavesListViewModel.RefreshSavesAction(view_model), tt="Rescan saves")
 
             hbox xalign 0.5 yalign 0.5:
-                use JK_IconButton(icon="\ue8fe", text="Per save selection", action=JK.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggledColor=JK.Colors.selected)
-                use JK_IconButton(icon="\ue949", text="Per directory selection", action=JK.SavesListViewModel.SetSelectionModeAction(viewModel, "PER_DIRECTORY"), toggled=selection_mode == "PER_DIRECTORY", toggledColor=JK.Colors.selected)
+                use JK_IconButton(icon="\ue8fe", text="Per save selection", action=JK.SavesListViewModel.SetSelectionModeAction(view_model, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggled_color=JK.Colors.selected)
+                use JK_IconButton(icon="\ue949", text="Per directory selection", action=JK.SavesListViewModel.SetSelectionModeAction(view_model, "PER_DIRECTORY"), toggled=selection_mode == "PER_DIRECTORY", toggled_color=JK.Colors.selected)
 
             if selected_length > 0:
                 hbox xpos 1.0 xanchor 1.0:
                     # Delete selection
-                    use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.MassDeleteConfirmAction(viewModel), tt="Delete {} save(s)".format(selected_length), ttSide="left")
+                    use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.MassDeleteConfirmAction(view_model), tt="Delete {} save(s)".format(selected_length), tt_side="left")
    
     hbox xalign 1.0:
         xfill True
@@ -52,11 +52,11 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
         vbox:
             use JK_YSpacer()
 
-            grid len(viewModel.locations) 1:
+            grid len(view_model.locations) 1:
                 spacing (1 if selection_mode == "PER_SAVE" else 5)
 
                 $ directory_index = 0
-                for location, saves in viewModel.locations:
+                for location, saves in view_model.locations:
                     vbox:
                         xsize col_size
 
@@ -66,7 +66,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                             use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
 
                         $ i = 0
-                        for save in viewModel.all_saves:
+                        for save in view_model.all_saves:
                             python:
                                 page, slot = JK.Utils.split_slotname(save)
                                 id = (save, None) if selection_mode == "PER_SAVE" else (save, location)
@@ -80,10 +80,10 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                                 button:
                                     ysize JK.scaled(row_height)
                                     xsize 1.0
-                                    style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button") selected id in viewModel.selection
+                                    style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button") selected id in view_model.selection
 
                                     key_events True
-                                    action JK.SavesListViewModel.SelectionAction(viewModel, id, saves, last_selected_save)
+                                    action JK.SavesListViewModel.SelectionAction(view_model, id, saves, last_selected_save)
 
                                     if hovered_button != id:
                                         hovered SetScreenVariable('hovered_button', id)
@@ -97,7 +97,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                                             hbox xysize JK.scaled((42, 42)) yalign 0.5:
                                                 if hovered_button == id and (directory_index == 0 if selection_mode == "PER_SAVE" else True):
                                                     hbox yalign 0.5:
-                                                        use JK_Checkbox(checked=id in viewModel.selection, text="", action=ToggleSetMembership(viewModel.selection, id))
+                                                        use JK_Checkbox(checked=id in view_model.selection, text="", action=ToggleSetMembership(view_model.selection, id))
 
                                             hbox:
                                                 yalign 0.5
@@ -105,7 +105,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
 
                                                 hbox yalign 0.5:
                                                     if show_thumbnails:
-                                                        image location.screenshot(save) size JK.Image.getLimitedImageSizeWithAspectRatio(100, 80) yalign 0.5
+                                                        image location.screenshot(save) size JK.Image.get_limited_image_size_with_preserved_aspect_ratio(100, 80) yalign 0.5
 
                                                         use JK_XSpacer(offset=2)
 
@@ -127,7 +127,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
                                                         use JK_IconButton(icon="\ue1c4", action=FileLoad(slot, confirm=True, page=page), tt="Load save")
 
                                                         # Delete
-                                                        use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.DeleteSingleConfirmAction(viewModel, (save, location)), tt="Delete save")
+                                                        use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.DeleteSingleConfirmAction(view_model, (save, location)), tt="Delete save")
                             else:
                                 hbox ysize JK.scaled(row_height):
                                     hbox xysize JK.scaled((42, 42))
@@ -154,7 +154,7 @@ screen JK_SavesListSelectSaves(playthrough, viewModel, hovered_button, last_sele
             vbox xalign 1.0:
                 # Delete all saves
                 hbox:
-                    use JK_IconButton(icon="\ue92b", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSaves(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="ctrl_K_d")
+                    use JK_IconButton(icon="\ue92b", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="ctrl_K_d")
 
                 # Close
                 hbox:

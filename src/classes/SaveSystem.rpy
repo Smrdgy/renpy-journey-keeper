@@ -6,28 +6,28 @@ init python in JK:
 
     class SaveSystemClass(x52NonPicklable):
         def __init__(self):
-            self._playthroughSaves = OrderedDict()
+            self._playthrough_save_class_dict = OrderedDict()
             self.multilocation = MultiLocation()
 
             renpy.loadsave.location = self.multilocation
 
-        def getPlaythroughSaveInstance(self, playthroughID):
-            return self._playthroughSaves.get(playthroughID)
+        def get_playthrough_save_instance(self, playthroughID):
+            return self._playthrough_save_class_dict.get(playthroughID)
 
-        def getOrCreatePlaythroughSaveInstanceByID(self, playthroughID, autoActivate=False):
-            playthrough = Playthroughs.getByID(playthroughID)
+        def get_or_create_playthrough_save_instance_by_id(self, playthroughID, autoActivate=False):
+            playthrough = Playthroughs.get_by_id(playthroughID)
             if playthrough:
-                return self.getOrCreatePlaythroughSaveInstance(playthrough, autoActivate=autoActivate)
+                return self.get_or_create_playthrough_save_instance(playthrough, autoActivate=autoActivate)
 
             return None
 
-        def overrideNativeLocation(self):
+        def override_native_location(self):
             renpy.loadsave.location = self.multilocation
 
-        def getAllNativeSaveLocations(self):
+        def get_all_native_save_locations(self):
             return self.multilocation.nativeLocations
 
-        def getAllNativeSaveLocationsForOptions(self):
+        def get_all_native_save_locations_for_options(self):
             options = []
 
             # 1. User savedir.
@@ -44,6 +44,70 @@ init python in JK:
 
             return options
 
+        def create_playthrough_save_instance(self, playthrough, noScan=False):
+            self._playthrough_save_class_dict[playthrough.id] = SaveSystemClass.PlaythroughSaveClass(playthrough, noScan)
+            
+            return self._playthrough_save_class_dict.get(playthrough.id)
+
+        def get_or_create_playthrough_save_instance(self, playthrough, autoActivate=False):
+            instance = self.get_playthrough_save_instance(playthrough.id)
+
+            if instance == None:
+                instance = self.create_playthrough_save_instance(playthrough)
+
+            if instance.playthrough.enabledSaveLocations != playthrough.enabledSaveLocations:
+                instance = self.create_playthrough_save_instance(playthrough)
+
+            if autoActivate:
+                instance.activate()
+
+            return instance
+
+        def remove_save_files_for_playthrough(self, playthrough, remove_dir=False):
+            instance = self.get_or_create_playthrough_save_instance(playthrough)
+            if instance == None:
+                return False
+
+            instance.delete_save_files(scan=False)
+
+            if remove_dir:
+                instance.location.remove_dir()
+
+                self.remove_instance(instance)
+            else:
+                instance.scan()
+
+            return True
+
+        def removePlaythroughSaveInstance(self, playthrough):
+            oldInstance = self.get_playthrough_save_instance(playthrough.id)
+            if oldInstance != None:
+                self.remove_instance(oldInstance)
+
+        def remove_instance(self, instance):
+            for location in instance.location.locations:
+                SaveSystem.multilocation.remove(location)
+
+            for playthrough_id in self._playthrough_save_class_dict:
+                if self._playthrough_save_class_dict[playthrough_id] == instance:
+                    del self._playthrough_save_class_dict[playthrough_id]
+                    break
+
+        def regenerate_playthrough_save_instance(self, playthrough, noScan=False, autoActivate=True):
+            self.removePlaythroughSaveInstance(playthrough)
+
+            instance = self.create_playthrough_save_instance(playthrough, noScan)
+
+            if autoActivate:
+                instance.activate()
+
+        def list_all_saves_for_playthrough(self, playthrough):
+            instance = self.get_playthrough_save_instance(playthrough.id)
+            if instance:
+                return instance.listAllSaves()
+
+            return SetAction()
+            
         class PlaythroughSaveClass(x52NonPicklable):
             def __init__(self, playthrough, noScan=False):
                 self.location = MultiLocation()
@@ -72,16 +136,16 @@ init python in JK:
             def activate(self):
                 # For some reason Exciting Games running on RenPy v7.7.1.24030407 retains native location.
                 # This will fix the location every time a playthrough is activated, just in case...
-                SaveSystem.overrideNativeLocation()
-                SaveSystem.multilocation.deactivateLocations()
+                SaveSystem.override_native_location()
+                SaveSystem.multilocation.deactivate_locations()
 
-                self.location.activateLocations()
+                self.location.activate_locations()
 
                 renpy.loadsave.clear_cache()
                 SaveSystem.multilocation.scan()
 
             def deactivate(self):
-                self.location.deactivateLocations()
+                self.location.deactivate_locations()
 
             def deleteFiles(self):
                 import shutil
@@ -89,7 +153,7 @@ init python in JK:
                 for location in self.location.locations:
                     shutil.rmtree(location.directory)
 
-            def deleteSaveFiles(self, scan=True):
+            def delete_save_files(self, scan=True):
                 self.location.unlink_all(scan=False)
 
                 if scan:
@@ -102,68 +166,3 @@ init python in JK:
 
             def listAllSaves(self):
                 return self.location.list_including_inactive()
-
-        def createPlaythroughSaveInstance(self, playthrough, noScan=False):
-            self._playthroughSaves[playthrough.id] = SaveSystemClass.PlaythroughSaveClass(playthrough, noScan)
-            
-            return self._playthroughSaves.get(playthrough.id)
-
-        def getOrCreatePlaythroughSaveInstance(self, playthrough, autoActivate=False):
-            instance = self.getPlaythroughSaveInstance(playthrough.id)
-
-            if instance == None:
-                instance = self.createPlaythroughSaveInstance(playthrough)
-
-            if instance.playthrough.enabledSaveLocations != playthrough.enabledSaveLocations:
-                instance = self.createPlaythroughSaveInstance(playthrough)
-
-            if autoActivate:
-                instance.activate()
-
-            return instance
-
-        def removeSaveFilesForPlaythrough(self, playthrough, remove_dir=False):
-            instance = self.getOrCreatePlaythroughSaveInstance(playthrough)
-            if instance == None:
-                return False
-
-            instance.deleteSaveFiles(scan=False)
-
-            if remove_dir:
-                instance.location.remove_dir()
-
-                self.removeInstance(instance)
-            else:
-                instance.scan()
-
-            return True
-
-        def removePlaythroughSaveInstance(self, playthrough):
-            oldInstance = self.getPlaythroughSaveInstance(playthrough.id)
-            if oldInstance != None:
-                self.removeInstance(oldInstance)
-
-        def removeInstance(self, instance):
-            for location in instance.location.locations:
-                SaveSystem.multilocation.remove(location)
-
-            for playthrough_id in self._playthroughSaves:
-                if self._playthroughSaves[playthrough_id] == instance:
-                    del self._playthroughSaves[playthrough_id]
-                    break
-
-        def regeneratePlaythroughSaveInstance(self, playthrough, noScan=False, autoActivate=True):
-            self.removePlaythroughSaveInstance(playthrough)
-
-            instance = self.createPlaythroughSaveInstance(playthrough, noScan)
-
-            if autoActivate:
-                instance.activate()
-
-        def listAllSavesForPlaythrough(self, playthrough):
-            instance = self.getPlaythroughSaveInstance(playthrough.id)
-            if instance:
-                return instance.listAllSaves()
-
-            return Set()
-            

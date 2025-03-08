@@ -14,7 +14,7 @@ screen JK_EditSave(slotname, location=None):
     if JK.TextInput.is_active("choice") or JK.TextInput.is_active("name"):
         key 'K_ESCAPE' action JK.TextInput.SetActiveAction(None)
 
-    use JK_Dialog(title="Edit save", closeAction=Hide("JK_EditSave")):
+    use JK_Dialog(title="Edit save", close_action=Hide("JK_EditSave")):
         if view_model.save_json:
             viewport:
                 mousewheel True

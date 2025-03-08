@@ -5,7 +5,7 @@ screen JK_ResetSettingsConfirm():
 
     default include_global = False
 
-    use JK_Dialog(title="Reset settings", closeAction=Hide("JK_ResetSettingsConfirm")):
+    use JK_Dialog(title="Reset settings", close_action=Hide("JK_ResetSettingsConfirm")):
         style_prefix "JK"
 
         vbox xalign 0.5 yalign 0.5:
@@ -28,7 +28,7 @@ screen JK_ResetSettingsConfirm():
             vbox:
                 # Reset
                 hbox:
-                    use JK_IconButton(icon="\ue8ba", text="Reset all" if include_global else "Perform reset", action=[JK.Settings.Reset(include_global), Hide("JK_ResetSettingsConfirm")], color=JK.Colors.danger)
+                    use JK_IconButton(icon="\ue8ba", text="Reset all" if include_global else "Perform reset", action=[JK.Settings.ResetAction(include_global), Hide("JK_ResetSettingsConfirm")], color=JK.Colors.danger)
 
                 # Close
                 hbox:
