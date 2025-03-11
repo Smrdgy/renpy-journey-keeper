@@ -91,17 +91,19 @@ Most of these issues arise from the wide diversity of how the games are programm
 Some game developers rename save/load screens while customizing them, breaking the mod's detection system when it looks for "save"/"load" screen names.
 
 ### Scenario B: No independent screens
-#### Solution
+#### Solution (sort of)
 In extreme cases were you are unable to find the save/load screen(s), follow these steps:
 1. Press `ALT + P` (or draw `P` -> `Up + Right + Down + Left` on a touch screen) to cycle the sidepanel visibility to "Always visible". 
 2. Do what you need to do.
 3. Press `ALT + P` (or the touch screen equivalent) again to hide the sidepanel. 
 
+> **Note** The visibility cycle has 3 modes, in order to bring the sidepanel back again, you will have to repeat the press multiple times.
+
 #### Reason:
 So far, in all of my tests, there has only been one game where the developer integrated the save/load screens directly into the game screen, making them impossible to detect.
 
 ## UI is too big or too small
-The mod was developed with a 1080p resolution in mind. Older games, often using 720p resolution, may encounter sizing issues.
+The mod was developed with a 1080p resolution in mind. Older games, often using 720p resolution, or newer using 4K may encounter sizing issues.
 
 ### Solution:
 1. Open settings (⚙️).
@@ -152,6 +154,7 @@ The game uses custom buttons for choices, which the mod cannot detect.
 
 #### Reason:
 Some games force manual saves during gameplay, disrupting the autosave system. There is nothing that can be done about it, short of manually removing all the save function calls from the game’s code.
+However, there is a system that detects when the page number jumps too much (by more than one page) while making a choice. When that happens, you will be prompted to either keep the new page or revert it back.
 
 ### Scenario B: Incorrect save grid numbers
 
@@ -175,6 +178,10 @@ There have been rare cases, so far only 2 out of ~100 games, where save values w
 
 **This issue should be resolved. If it persists, please report it.**
 
+## Error while saving after an update
+The mod may throw an error when attempting to autosave after an update. If any code inside the injects directory changes, a full restart of the game is required—reloading isn't enough.
+This occurs because the old code from those files remains loaded when the game reloads itself.
+
 ## Game error
 ```
 I'm sorry, but an uncaught exception occurred.
@@ -187,9 +194,3 @@ PicklingError: Can't pickle [some function]: it's not the same object as renpy.[
 This, or very similar error, is not necessarily related to this mod.
 Despite the trace, it only indicates that something has happened during saving/loading, which this mod "hijacks" in order to detect when user performed save/load.
 The issue is most likely with other mod or the game itself.
-
-# Known problematic games
-
-- Chasing Sunsets
-  - The game creates manual saves at specific points in the story, which disrupts the autosave counter, causing new saves to appear on page 99.
-    - A system to counteract this behavior was implemented; whenever the game performs the hard-coded manual save on the page 99, a confirmation dialog will appear where you can revert the slot back to the correct value.
