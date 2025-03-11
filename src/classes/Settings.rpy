@@ -72,6 +72,7 @@ init -1 python in JK:
             self.dialogOpacity = data.get("dialogOpacity", 1)
             self.sidepanelOpacity = data.get("sidepanelOpacity", 0.8)
             self.paginationOpacity = data.get("paginationOpacity", 0.9)
+            self.preventAutosaveModifierKey = data.get("preventAutosaveModifierKey", "ALT")
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -113,6 +114,7 @@ init -1 python in JK:
                 'dialogOpacity': self.dialogOpacity,
                 'sidepanelOpacity': self.sidepanelOpacity,
                 'paginationOpacity': self.paginationOpacity,
+                'preventAutosaveModifierKey': self.preventAutosaveModifierKey,
             })
 
         def get_settings_for_reset(self, no_globals=False):

@@ -26,6 +26,17 @@ screen JK_Settings_Autosave():
         use JK_YSpacer(2)
 
         hbox:
+            text "Prevent autosave modifier key" yalign 0.5
+            use JK_Helper("While holding this key, autosave won't be performed when you make a choice")
+            use JK_ToggleSettingGlobalizationButton("preventAutosaveModifierKey")
+
+        use JK_Radio(checked=not JK.Settings.preventAutosaveModifierKey, text="None", action=JK.Settings.SetAction("preventAutosaveModifierKey", None))
+        use JK_Radio(checked="ALT" == JK.Settings.preventAutosaveModifierKey, text="Alt", action=JK.Settings.SetAction("preventAutosaveModifierKey", "ALT"))
+        use JK_Radio(checked="SHIFT" == JK.Settings.preventAutosaveModifierKey, text="Shift", action=JK.Settings.SetAction("preventAutosaveModifierKey", "SHIFT"))
+
+        use JK_YSpacer(2)
+
+        hbox:
             text "Toggle autosave key" yalign 0.5
             use JK_ToggleSettingGlobalizationButton("autosaveKey")
 

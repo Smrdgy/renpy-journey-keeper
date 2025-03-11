@@ -10,6 +10,7 @@ init python in JK:
     import io
     import sys
     import re
+    import pygame_sdl2 as pygame
 
     class AutosaverClass(x52NonPicklable):
         def __init__(self):
@@ -166,6 +167,16 @@ init python in JK:
             # If autosave on question is disabled, make sure the jump at then end of the choice doesn't lead back to JK_LastLabel
             if not Settings.autosaveOnQuestion:
                 if self.__is_choice_question(choice):
+                    return
+
+            # Prevent making autosave when prevent modifier (SHIFT/ALT) is held
+            if Settings.preventAutosaveModifierKey:
+                key_mods = pygame.key.get_mods()
+
+                if key_mods and (
+                    (Settings.preventAutosaveModifierKey == "ALT" and key_mods & (pygame.KMOD_ALT | pygame.KMOD_META)) or
+                    (Settings.preventAutosaveModifierKey == "SHIFT" and key_mods & pygame.KMOD_SHIFT)
+                ):
                     return
 
             # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
