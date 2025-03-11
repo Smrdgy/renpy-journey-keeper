@@ -5,7 +5,7 @@ screen JK_ExitMemoryConfirm():
 
     $ returnAction = [JK.Memories.ExitMemory(), MainMenu(confirm=False)] #TODO: Replace MainMenu() with Return() when the restoration of a session is figured out...
 
-    use JK_Dialog(title="Exit memory", closeAction=Return()):
+    use JK_Dialog(title="Exit memory", close_action=Return()):
         key 'K_RETURN' action returnAction
         key 'K_KP_ENTER' action returnAction
     

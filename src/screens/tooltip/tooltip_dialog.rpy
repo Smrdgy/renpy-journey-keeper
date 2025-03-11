@@ -3,10 +3,10 @@ screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interacti
     style_prefix 'JK_dialog'
     zorder 99999
 
-    $ closeAction = Hide("JK_TooltipDialog")
-    if closeAction:
-        key 'K_ESCAPE' action closeAction
-        key 'mouseup_3' action closeAction
+    $ close_action = Hide("JK_TooltipDialog")
+    if close_action:
+        key 'K_ESCAPE' action close_action
+        key 'mouseup_3' action close_action
 
     if not interactive:
         timer 0.01 repeat follow_mouse action JK.UpdateTooltipPositionAction(side, distance, pos)
@@ -44,7 +44,7 @@ screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interacti
 
                         if interactive:
                             hbox xpos 1.0 xanchor 1.0:
-                                use JK_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
+                                use JK_IconButton(icon="\ue5cd", action=[close_action, NullAction()])
 
                 if message:
                     text message style "JK_text" xalign 0.5

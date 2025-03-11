@@ -9,27 +9,27 @@ init -1 python in JK:
     # Main Settings class
     class SettingsClass(x52NonPicklable):
         def __init__(self):
-            global_settings = self.loadFromGlobalSettings()
+            global_settings = self.load_from_global_settings()
 
             settings = {}
             settings.update(global_settings)
-            settings.update(self.loadFromUserDir())
-            settings.update(self.loadFromPersistent())
+            settings.update(self.load_from_user_dir())
+            settings.update(self.load_from_persistent())
 
             # Apply globalized settings again in case some local setting is overwriting it
             for setting in settings.get("globalizedSettings", []):
                 if global_settings.get(setting):
                     settings[setting] = global_settings.get(setting)
 
-            self.setSettings(settings)
+            self.set_settings(settings)
 
-        def loadFromUserDir(self):
-            return UserDir.loadSettings()
+        def load_from_user_dir(self):
+            return UserDir.load_settings()
 
-        def loadFromGlobalSettings(self):
-            return UserDir.loadGlobalSettings()
+        def load_from_global_settings(self):
+            return UserDir.load_global_settings()
 
-        def loadFromPersistent(self):
+        def load_from_persistent(self):
             if renpy.store.persistent.JK_Settings:
                 data = json.loads(renpy.store.persistent.JK_Settings)
             else:
@@ -37,7 +37,7 @@ init -1 python in JK:
 
             return data
 
-        def setSettings(self, data):
+        def set_settings(self, data):
             self.autosaveNotificationEnabled = data.get("autosaveNotificationEnabled", False)
             self.autosaveKey = data.get("autosaveKey", "alt_K_a")
             self.quickSaveEnabled = data.get("quickSaveEnabled", True)
@@ -115,7 +115,7 @@ init -1 python in JK:
                 'paginationOpacity': self.paginationOpacity,
             })
 
-        def getSettingsForReset(self, no_globals=False):
+        def get_settings_for_reset(self, no_globals=False):
             if no_globals:
                 return {}
 
@@ -131,7 +131,7 @@ init -1 python in JK:
 
             return new_settings
 
-        def getGlobalSettingsAsJson(self):
+        def get_global_settings_as_json(self):
             settings = {
                 'updaterEnabled': self.updaterEnabled,
                 'autoUpdateWithoutPrompt': self.autoUpdateWithoutPrompt,
@@ -147,17 +147,17 @@ init -1 python in JK:
             return json.dumps(settings)
 
         def save(self):
-            self.saveToUserDir()
-            self.saveToGlobals()
-            self.saveToPersistent()
+            self.save_to_user_dir()
+            self.save_to_globals()
+            self.save_to_persistent()
 
-        def saveToUserDir(self):
-            UserDir.saveSettings(self.getSettingsAsJson())
+        def save_to_user_dir(self):
+            UserDir.save_settings(self.getSettingsAsJson())
 
-        def saveToGlobals(self):
-            UserDir.saveGlobalSettings(self.getGlobalSettingsAsJson())
+        def save_to_globals(self):
+            UserDir.save_global_settings(self.get_global_settings_as_json())
 
-        def saveToPersistent(self):
+        def save_to_persistent(self):
             renpy.store.persistent.JK_Settings = self.getSettingsAsJson()
 
             renpy.save_persistent()
@@ -168,32 +168,19 @@ init -1 python in JK:
                 rebuild_ui = True
 
             renpy.store.persistent.JK_Settings = None
-            UserDir.removeSettings()
+            UserDir.remove_settings()
 
             if include_global:
-                UserDir.removeGlobalSettings()
+                UserDir.remove_global_settings()
             
-            self.setSettings(self.getSettingsForReset(no_globals=include_global))
+            self.set_settings(self.get_settings_for_reset(no_globals=include_global))
 
             self.save()
 
             if rebuild_ui:
                 renpy.store.gui.rebuild()
 
-        class ConfirmReset(renpy.ui.Action):
-            def __init__(self, include_global=False):
-                self.include_global = include_global
-
-            def __call__(self):
-                showConfirm(
-                    title="Reset settings",
-                    message="Do you really wish to reset all settings into their default configuration?",
-                    yes=Settings.Reset(self.include_global),
-                    yesIcon="\ue8ba",
-                    yesColor=Colors.danger
-                )
-
-        class Reset(renpy.ui.Action):
+        class ResetAction(renpy.ui.Action):
             def __init__(self, include_global=False):
                 self.include_global = include_global
 
@@ -201,7 +188,7 @@ init -1 python in JK:
                 Settings.reset(self.include_global)
                 renpy.restart_interaction()
 
-        class ToggleEnabled(renpy.ui.Action):
+        class ToggleEnabledAction(renpy.ui.Action):
             def __init__(self, attr_name):
                 self.attr_name = attr_name
 
@@ -211,7 +198,7 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class Set(renpy.ui.Action):
+        class SetAction(renpy.ui.Action):
             def __init__(self, attr_name, value):
                 self.attr_name = attr_name
                 self.value = value
@@ -222,52 +209,30 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class SetAutosaveToggleKey(SetKey):
-            def __call__(self):
-                Settings.autosaveKey = self.resolveKey()
+        class IncrementAction(renpy.ui.Action):
+            def __init__(self, attr_name, amount=1, min=None, max=None):
+                self.attr_name = attr_name
+                self.amount = amount
+                self.min = min
+                self.max = max
 
-                Settings.save()
-                renpy.restart_interaction()
-
-        class SetQuickSaveKey(SetKey):
             def __call__(self):
-                Settings.quickSaveKey = self.resolveKey()
+                current_value = getattr(Settings, self.attr_name)
+                new_value = current_value + self.amount
 
-                Settings.save()
-                renpy.restart_interaction()
+                if self.min:
+                    new_value = max(self.min, new_value)
 
-        class SetCreateMemoryKey(SetKey):
-            def __call__(self):
-                Settings.memoriesKey = self.resolveKey()
+                if self.max:
+                    new_value = min(self.max, new_value)
 
-                Settings.save()
-                renpy.restart_interaction()
+                Settings.SetAction(self.attr_name, new_value)()
 
-        class DecrementCustomGridX(renpy.ui.Action):
-            def __call__(self):
-                Settings.customGridX = max(Settings.customGridX - 1, 1)
-                Settings.save()
-                renpy.restart_interaction()
-        
-        class IncrementCustomGridX(renpy.ui.Action):
-            def __call__(self):
-                Settings.customGridX = Settings.customGridX + 1
-                Settings.save()
-                renpy.restart_interaction()
-        
-        class DecrementCustomGridY(renpy.ui.Action):
-            def __call__(self):
-                Settings.customGridY = max(Settings.customGridY - 1, 1)
-                Settings.save()
-                renpy.restart_interaction()
-        
-        class IncrementCustomGridY(renpy.ui.Action):
-            def __call__(self):
-                Settings.customGridY = Settings.customGridY + 1
-                Settings.save()
-                renpy.restart_interaction()
+        @staticmethod
+        def DecrementAction(key, amount=-1, min=None):
+            return Settings.IncrementAction(key, amount, min, max)
 
-        class SetSaveScreenName(renpy.ui.Action):
+        class SetSaveScreenNameAction(renpy.ui.Action):
             def __init__(self, name):
                 self.name = name
 
@@ -279,7 +244,7 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class SetLoadScreenName(renpy.ui.Action):
+        class SetLoadScreenNameAction(renpy.ui.Action):
             def __init__(self, name):
                 self.name = name
 
@@ -291,7 +256,7 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class IncrementSizeAdjustment(renpy.ui.Action):
+        class IncrementSizeAdjustmentAction(renpy.ui.Action):
             def __call__(self):
                 if renpy.store.persistent.JK_SizeAdjustmentRollbackValue is None:
                     renpy.store.persistent.JK_SizeAdjustmentRollbackValue = int(Settings.sizeAdjustment)
@@ -303,7 +268,7 @@ init -1 python in JK:
                 if renpy.store.persistent.JK_SizeAdjustmentRollbackValue == Settings.sizeAdjustment or Settings.sizeAdjustment == 0:
                     renpy.store.persistent.JK_SizeAdjustmentRollbackValue = None
         
-        class DecrementSizeAdjustment(renpy.ui.Action):
+        class DecrementSizeAdjustmentAction(renpy.ui.Action):
             def __call__(self):
                 if renpy.store.persistent.JK_SizeAdjustmentRollbackValue is None:
                     renpy.store.persistent.JK_SizeAdjustmentRollbackValue = int(Settings.sizeAdjustment)
@@ -315,14 +280,14 @@ init -1 python in JK:
                 if renpy.store.persistent.JK_SizeAdjustmentRollbackValue == Settings.sizeAdjustment or Settings.sizeAdjustment == 0:
                     renpy.store.persistent.JK_SizeAdjustmentRollbackValue = None
 
-        class ApplySizeAdjustment(renpy.ui.Action):
+        class ApplySizeAdjustmentAction(renpy.ui.Action):
             def __call__(self):
                 renpy.store.gui.rebuild()
 
                 if renpy.store.persistent.JK_SizeAdjustmentRollbackValue is not None:
                     renpy.show_screen("JK_ConfirmSizeAdjustment")
 
-        class SetSizeAdjustment(renpy.ui.Action):
+        class SetSizeAdjustmentAction(renpy.ui.Action):
             def __init__(self, value, store_rollback_value=True):
                 self.store_rollback_value = store_rollback_value
                 self.value = value or 0
@@ -339,7 +304,7 @@ init -1 python in JK:
                 if renpy.store.persistent.JK_SizeAdjustmentRollbackValue == Settings.sizeAdjustment or Settings.sizeAdjustment == 0:
                     renpy.store.persistent.JK_SizeAdjustmentRollbackValue = None
 
-        class ResetSizeAdjustment(renpy.ui.Action):
+        class ResetSizeAdjustmentAction(renpy.ui.Action):
             def __call__(self):
                 Settings.sizeAdjustment = 0
                 #Also reset sidepanel and pagination positions just in case there are positioned somewhere outside of the screen
@@ -348,16 +313,15 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class SetChangeSidepanelVisibilityKey(SetKey):
+        class SetChangeSidepanelVisibilityKeyAction(SetKeyAction):
             def __call__(self):
-                Settings.changeSidepanelVisibilityKey = self.resolveKey()
-                renpy.config.gestures['w_s_e_s_w'] = Settings.changeSidepanelVisibilityKey
+                Settings.changeSidepanelVisibilityKey = self.resolve_key()
+                renpy.config.gestures['n_e_s_w'] = Settings.changeSidepanelVisibilityKey
 
                 Settings.save()
                 renpy.restart_interaction()
 
-        
-        class ToggleGlobalizedSetting(renpy.ui.Action):
+        class ToggleGlobalizedSettingAction(renpy.ui.Action):
             def __init__(self, setting_name):
                 self.setting_name = setting_name
 
@@ -370,7 +334,7 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class SaveDefaultPlaythroughTemplate(renpy.ui.Action):
+        class SaveDefaultPlaythroughTemplateAction(renpy.ui.Action):
             def __init__(self, playthrough_template, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations):#MODIFY HERE
                 self.template = playthrough_template.edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName, enabledSaveLocations=enabledSaveLocations)#MODIFY HERE
 
@@ -380,7 +344,7 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class TogglePreventAutosavingWhileNotInGameEnabled(renpy.ui.Action):
+        class TogglePreventAutosavingWhileNotInGameEnabledAction(renpy.ui.Action):
             def __call__(self):
                 Settings.preventAutosavingWhileNotInGame = not Settings.preventAutosavingWhileNotInGame
 
@@ -389,36 +353,37 @@ init -1 python in JK:
                 Settings.save()
                 renpy.restart_interaction()
 
-        class ToggleSidepanelHorizontalEnabled(renpy.ui.Action):
+        class ToggleSidepanelHorizontalEnabledAction(renpy.ui.Action):
             def __call__(self):
                 Settings.sidepanelHorizontal = not Settings.sidepanelHorizontal
 
                 Settings.save()
 
-                Settings.ResetSidepanelPosition()()
+                Settings.ResetSidepanelPositionAction()()
 
-        class ResetSidepanelPosition(renpy.ui.Action):
+        class ResetSidepanelPositionAction(renpy.ui.Action):
             def __call__(self):
                 renpy.store.persistent.JK_SidepanelPos = None
 
                 renpy.restart_interaction()
 
-        class SetSearchPlaythroughKey(SetKey):
-            def __call__(self):
-                Settings.searchPlaythroughKey = self.resolveKey()
-
-                Settings.save()
-                renpy.restart_interaction()
-
-        class SetSearchPlaythroughsKey(SetKey):
-            def __call__(self):
-                Settings.searchPlaythroughsKey = self.resolveKey()
-
-                Settings.save()
-                renpy.restart_interaction()
-
-        class FieldValue(renpy.store.FieldValue):
+        class FieldValueAction(renpy.store.FieldValue):
             def changed(self, value):
-                super(Settings.FieldValue, self).changed(value)
+                super(Settings.FieldValueAction, self).changed(value)
 
                 Settings.save()
+
+        # ==============
+        # Static methods
+        # ==============
+
+        @staticmethod
+        def get_set_key_action(key):
+            class SetKeyAction(renpy.store.JK.SetKeyAction):
+                def __call__(self):
+                    setattr(Settings, key, self.resolve_key())
+
+                    Settings.save()
+                    renpy.restart_interaction()
+
+            return SetKeyAction

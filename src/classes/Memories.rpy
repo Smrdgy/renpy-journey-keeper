@@ -14,19 +14,19 @@ init python in JK:
 
         @property
         def saveInstance(self):
-            self._save_instance = self._save_instance or SaveSystem.getOrCreatePlaythroughSaveInstanceByID(2)
+            self._save_instance = self._save_instance or SaveSystem.get_or_create_playthrough_save_instance_by_id(2)
             return self._save_instance
 
         def getMemories(self):
             save_location = self.saveInstance.location
-            save_location.activateLocations()
+            save_location.activate_locations()
             save_location.scan()
             memories = save_location.list()
-            save_location.deactivateLocations()
+            save_location.deactivate_locations()
             return memories
 
         def callCustomReplay(self, slotname):
-            self.saveInstance.location.activateLocations()
+            self.saveInstance.location.activate_locations()
 
             # Backup current session
             # TODO: Figure out session restoration #### UPDATE ##### -- maybe I've fixed it with context_clear_layers in main.rpy, but have to check this out later in the future...
@@ -54,7 +54,7 @@ init python in JK:
 
             # renpy.execution.run_context(False)
 
-            self.saveInstance.location.deactivateLocations()
+            self.saveInstance.location.deactivate_locations()
 
             # renpy.store._in_replay = True
 
@@ -149,14 +149,14 @@ init python in JK:
 
             def __call__(self):
                 save_location = Memories.saveInstance.location
-                save_location.activateLocations()
+                save_location.activate_locations()
                 saveRecord = MemoriesClass.createSaveRecord(extra_info=self.name)
 
                 for location in save_location.active_locations():
                     location.save(str(time.time())[:-3], saveRecord)
 
                 save_location.scan()
-                save_location.deactivateLocations()
+                save_location.deactivate_locations()
                 
                 renpy.restart_interaction()
 
@@ -222,6 +222,6 @@ init python in JK:
                     title="Delete memory \"{}\"".format(name),
                     message="This action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
                     yes=Memories.DeleteMemory(self.slotname),
-                    yesIcon="\ue92b",
-                    yesColor=Colors.error
+                    yes_icon="\ue92b",
+                    yes_color=Colors.error
                 )

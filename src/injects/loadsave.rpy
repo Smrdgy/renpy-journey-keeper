@@ -2,9 +2,9 @@ init 9999 python in JK:
     _constant = True
     
     def before_load(slotname):
-        Autosaver.activeSlotPending = slotname
+        Autosaver.active_slot_pending = slotname
         Autosaver.prevent_confirm_on_large_page_jump = True
-        Autosaver.suppressAutosaveConfirm = False
+        Autosaver.suppress_autosave_confirm = False
     
     def before_save(slotname):
         #Ignore temporary save
@@ -12,10 +12,10 @@ init 9999 python in JK:
             return
 
         if Settings.offsetSlotAfterManualSave:
-            Autosaver.setActiveSlot(slotname)
+            Autosaver.set_active_slot(slotname)
 
-            if not Utils.isDisplayingChoicesInAnyContext():
-                Autosaver.setNextSlot()
+            if not Utils.is_displaying_choices_in_any_context():
+                Autosaver.set_next_slot()
 
     def load_partial(func, *args, **kwargs):
         def new_funct(*new_args, **new_kwargs):

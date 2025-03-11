@@ -24,10 +24,10 @@ init python in JK:
             self.loading = True
             self.loaded = 0
 
-            instance = SaveSystem.getPlaythroughSaveInstance(self.playthrough.id)
+            instance = SaveSystem.get_playthrough_save_instance(self.playthrough.id)
             instance.location.scan()
 
-            self.slots = Utils.getSortedSaves()
+            self.slots = Utils.get_sorted_saves()
             self.to_load = len(self.slots)
 
             renpy.restart_interaction()
@@ -58,10 +58,10 @@ init python in JK:
             self.loading = False
             renpy.restart_interaction()
 
-        class ExportTimelineToFile(renpy.ui.Action):
-            def __init__(self, viewModel):
-                self.timeline = viewModel.timeline
-                self.playthrough = viewModel.playthrough
+        class ExportTimelineToFileAction(renpy.ui.Action):
+            def __init__(self, view_model):
+                self.timeline = view_model.timeline
+                self.playthrough = view_model.playthrough
 
             def __call__(self):
                 import os
@@ -78,10 +78,10 @@ init python in JK:
                     title="Timeline exported into the game files",
                     message="You can find the file in " + path,
                     yes=OpenDirectoryAction(path=dirPath),
-                    yesText="Open location",
-                    yesIcon='\ue2c8',
-                    noText="Close",
-                    noIcon=None
+                    yes_text="Open location",
+                    yes_icon='\ue2c8',
+                    no_text="Close",
+                    no_icon=None
                 )
             
             def __replace_tags(self, text):

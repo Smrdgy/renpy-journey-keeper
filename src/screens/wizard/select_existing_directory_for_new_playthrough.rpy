@@ -5,7 +5,7 @@ screen JK_SelectExistingDirectoryForNewPlaythrough():
 
     default directories = JK.Playthroughs.list_available_directories_to_create_playthrough_from()
 
-    use JK_Dialog(title="Select directory", closeAction=Hide("JK_SelectExistingDirectoryForNewPlaythrough")):
+    use JK_Dialog(title="Select directory", close_action=Hide("JK_SelectExistingDirectoryForNewPlaythrough")):
         style_prefix "JK"
 
         if len(directories) > 0:
@@ -24,7 +24,7 @@ screen JK_SelectExistingDirectoryForNewPlaythrough():
                         button style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button"):
                             xfill True
 
-                            action [Hide("JK_SelectExistingDirectoryForNewPlaythrough"), JK.Playthroughs.ShowCreatePlaythroughFromDirname(dirname)]
+                            action [Hide("JK_SelectExistingDirectoryForNewPlaythrough"), JK.Playthroughs.ShowCreatePlaythroughFromDirnameAction(dirname)]
 
                             text dirname
 

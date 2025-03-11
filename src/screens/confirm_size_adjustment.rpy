@@ -7,7 +7,7 @@ screen JK_ConfirmSizeAdjustment():
     python:
         class RevertSizeAdjustmentValue(renpy.ui.Action):
             def __call__(self):
-                JK.Settings.SetSizeAdjustment(value=renpy.store.persistent.JK_SizeAdjustmentRollbackValue, store_rollback_value=False)()
+                JK.Settings.SetSizeAdjustmentAction(value=renpy.store.persistent.JK_SizeAdjustmentRollbackValue, store_rollback_value=False)()
                 renpy.store.persistent.JK_SizeAdjustmentRollbackValue = None
                 renpy.save_persistent()
                 renpy.store.gui.rebuild()

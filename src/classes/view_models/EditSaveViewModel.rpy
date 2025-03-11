@@ -14,9 +14,9 @@ init python in JK:
         def save(self):
             json = self.save_json.copy()
             if self.name:
-                json['_save_name'] = Utils.replaceReservedCharacters(self.name)
+                json['_save_name'] = Utils.escape_renpy_reserved_characters(self.name)
             if self.choice:
-                json['_JK_choice'] = Utils.replaceReservedCharacters(self.choice)
+                json['_JK_choice'] = Utils.escape_renpy_reserved_characters(self.choice)
 
             (self.location or SaveSystem.multilocation).edit_json(self.slotname, json)
 

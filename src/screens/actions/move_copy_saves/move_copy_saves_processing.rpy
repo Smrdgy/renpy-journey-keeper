@@ -1,14 +1,14 @@
-screen JK_MoveCopySavesProcessing(viewModel):
+screen JK_MoveCopySavesProcessing(view_model):
     python:
-        processed = viewModel.processed
-        to_process = len(viewModel.saves_to_process)
+        processed = view_model.processed
+        to_process = len(view_model.saves_to_process)
 
         class StopAction(renpy.ui.Action):
-            def __init__(self, viewModel):
-                self.viewModel = viewModel
+            def __init__(self, view_model):
+                self.view_model = view_model
 
             def __call__(self):
-                self.viewModel.process_stop()
+                self.view_model.process_stop()
 
     vbox:
         xfill True
@@ -20,7 +20,7 @@ screen JK_MoveCopySavesProcessing(viewModel):
             xmaximum 0.85
 
             hbox xalign 0.5:
-                use JK_Title("Copying saves..." if viewModel.stage == "COPY" else "Removing old saves...")
+                use JK_Title("Copying saves..." if view_model.stage == "COPY" else "Removing old saves...")
 
             use JK_YSpacer()
 
@@ -36,7 +36,7 @@ screen JK_MoveCopySavesProcessing(viewModel):
 
         vbox:
             hbox:
-                use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(viewModel), color=JK.Colors.danger)
+                use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(view_model), color=JK.Colors.danger)
 
             # Close
             hbox:

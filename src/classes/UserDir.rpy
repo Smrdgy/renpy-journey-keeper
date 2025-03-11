@@ -33,43 +33,43 @@ init -2 python in JK:
             return os.path.join(UserDir.game_path(), "playthroughs.json")
 
         @staticmethod
-        def loadSettings():
-            return UserDir.loadJson(UserDir.settings_path()) or {}
+        def load_settings():
+            return UserDir.load_json(UserDir.settings_path()) or {}
 
         @staticmethod
-        def saveSettings(data):
-            return UserDir.saveJson(UserDir.settings_path(), data)
+        def save_settings(data):
+            return UserDir.save_json(UserDir.settings_path(), data)
 
         @staticmethod
-        def removeSettings():
+        def remove_settings():
             os.unlink(UserDir.settings_path())
 
         @staticmethod
-        def loadGlobalSettings():
-            return UserDir.loadJson(UserDir.global_settings_path()) or {}
+        def load_global_settings():
+            return UserDir.load_json(UserDir.global_settings_path()) or {}
 
         @staticmethod
-        def saveGlobalSettings(data):
-            return UserDir.saveJson(UserDir.global_settings_path(), data)
+        def save_global_settings(data):
+            return UserDir.save_json(UserDir.global_settings_path(), data)
 
         @staticmethod
-        def removeGlobalSettings():
+        def remove_global_settings():
             os.unlink(UserDir.global_settings_path())
 
         @staticmethod
-        def loadPlaythroughs():
-            return UserDir.loadJson(UserDir.playthroughs_path())
+        def load_playthroughs():
+            return UserDir.load_json(UserDir.playthroughs_path())
 
         @staticmethod
-        def savePlaythroughs(data):
-            return UserDir.saveJson(UserDir.playthroughs_path(), data)
+        def save_playthroughs(data):
+            return UserDir.save_json(UserDir.playthroughs_path(), data)
 
         @staticmethod
-        def hasPlaythroughs():
-            return UserDir.playthroughsMtime() > 0
+        def has_playthroughs():
+            return UserDir.playthroughs_mtime() > 0
 
         @staticmethod
-        def playthroughsMtime():
+        def playthroughs_mtime():
             path = UserDir.playthroughs_path()
 
             if not os.path.exists(path):
@@ -78,7 +78,7 @@ init -2 python in JK:
             return os.path.getmtime(path)
 
         @staticmethod
-        def loadJson(path):
+        def load_json(path):
             if not renpy.config.save_directory:
                 return None
 
@@ -91,7 +91,7 @@ init -2 python in JK:
                     return None
 
         @staticmethod
-        def saveJson(file_path, data):
+        def save_json(file_path, data):
             if not renpy.config.save_directory:
                 return False
 

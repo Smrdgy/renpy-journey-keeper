@@ -21,7 +21,7 @@ screen JK_PendingUpdateSuccess():
         vbox:
             # Restart game
             hbox:
-                use JK_IconButton(icon="\ue9ba", text="Restart the game", action=JK.Updater.RestartGame())
+                use JK_IconButton(icon="\ue9ba", text="Restart the game", action=JK.Updater.RestartGameAction())
 
             # Close
             hbox:

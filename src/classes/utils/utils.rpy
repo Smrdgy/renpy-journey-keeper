@@ -2,15 +2,9 @@ init -9999 python in JK:
     _constant = True
 
     import re
-    import shutil
     import os
-    import threading
-    disk_lock = threading.RLock()
     import unicodedata
     import sys
-    import time
-    import locale
-    from json import dumps as json_dumps
 
     class x52NonPicklable(python_object):
         def __setstate__(self, d):
@@ -23,56 +17,6 @@ init -9999 python in JK:
             return None
         def itervalues(self):
             return None
-
-    class ImagePlaceholder(renpy.display.core.Displayable):
-        def __init__(self, width=0, height=0, **properties):
-            super(ImagePlaceholder, self).__init__(**properties)
-
-            self.width = width
-            self.height = height
-
-        def render(self, width, height, st, at):
-            return renpy.display.render.Render(self.width, self.height)
-
-    class Image(renpy.display.core.Displayable):
-        def __init__(self, surface, width, height, fitAfterResize=False, **properties):
-            super(Image, self).__init__(**properties)
-            self.width = width
-            self.height = height
-            self.surface = surface
-            self.fitAfterResize = fitAfterResize # Fits the bounds to the new size instead of using provided width and height
-
-        def render(self, width, height, st, at):
-            surface = self.surface
-
-            sw, sh = surface.get_size()
-            w, h = self.scale(surface, (self.width, self.height))
-
-            # Render the image in its original size
-            rv = renpy.display.render.Render(sw, sh)
-            rv.blit(surface, (0, 0))
- 
-            # Scale it down to the desired size based on width and height arguments
-            try:
-                renpy.display.render.blit_lock.acquire()
-                surface = renpy.display.scale.smoothscale(surface, (w, h))
-            finally:
-                renpy.display.render.blit_lock.release()
-
-            cw, ch = surface.get_size()
-
-            if self.fitAfterResize:
-                self.width = cw
-                self.height = ch
-
-            # Create a new render for the scaled down image and return that
-            nrv = renpy.display.render.Render(self.width, self.height)
-            nrv.blit(surface, (0, 0))
-
-            return nrv
-
-        def scale(self, image, desired_size):
-            return Utils.resizeDimensionsToLimits(image.get_size(), desired_size)
 
     class Utils(x52NonPicklable):
         @staticmethod
@@ -113,12 +57,12 @@ init -9999 python in JK:
                 return 0, 0
 
         @staticmethod
-        def getSortedSaves():
+        def get_sorted_saves():
             regexp = r'\d+' + '-' + r'\d+'
-            return Utils.sortSaves(renpy.list_slots(regexp=regexp))
+            return Utils.sort_saves(renpy.list_slots(regexp=regexp))
 
         @staticmethod
-        def sortSaves(saves_list):
+        def sort_saves(saves_list):
             return sorted(saves_list, key=Utils.__custom_saves_sort)
         
         @staticmethod
@@ -168,24 +112,24 @@ init -9999 python in JK:
             return directory_name
 
         @staticmethod
-        def getSlotsPerPage():
+        def get_slots_per_page():
             if Settings.customGridEnabled:
                 return Settings.customGridX * Settings.customGridY
 
-            if Utils.hasColsAndRowsConfiguration():
+            if Utils.has_cols_and_rows_configuration():
                 return renpy.store.gui.file_slot_cols * renpy.store.gui.file_slot_rows
 
             return 4
 
         @staticmethod
-        def hasColsAndRowsConfiguration():
+        def has_cols_and_rows_configuration():
             if Settings.customGridEnabled:
                 return True
 
             return hasattr(renpy.store.gui, "file_slot_cols") and hasattr(renpy.store.gui, "file_slot_rows")
 
         @staticmethod
-        def isDisplayingChoices():
+        def is_displaying_choices():
             try:
                 current = renpy.game.context().current
                 script = renpy.game.script.lookup(current)
@@ -194,7 +138,7 @@ init -9999 python in JK:
                 return False
 
         @staticmethod
-        def isDisplayingMultipleChoices():
+        def is_displaying_multiple_choices():
             try:
                 current = renpy.game.context().current
                 script = renpy.game.script.lookup(current)
@@ -213,7 +157,7 @@ init -9999 python in JK:
                 return False
 
         @staticmethod
-        def isDisplayingChoicesInAnyContext():
+        def is_displaying_choices_in_any_context():
             try:
                 for context in renpy.game.contexts:
                     script = renpy.game.script.lookup(context.current)
@@ -226,7 +170,7 @@ init -9999 python in JK:
 
         # In built games `[ some text ]` it's not a problem, but if there ever is game with these and config.developer = True, it will throw an exception
         @staticmethod
-        def replaceReservedCharacters(text):
+        def escape_renpy_reserved_characters(text):
             result = []
             length = len(text)
             i = 0
@@ -249,7 +193,7 @@ init -9999 python in JK:
             return ''.join(result)
 
         @staticmethod
-        def getScreenVariable(variableName, dictionaryKey=None):
+        def get_screen_variable(variableName, dictionaryKey=None):
             cs = renpy.current_screen()
             
             if not cs or not variableName in cs.scope:
@@ -262,7 +206,7 @@ init -9999 python in JK:
                 return cs.scope[variableName]
 
         @staticmethod
-        def resizeDimensionsToLimits(original_size, desired_size):
+        def resize_dimensions_to_limits(original_size, desired_size):
             # Extract dimensions
             desired_width, desired_height = desired_size
             original_width, original_height = original_size
@@ -279,14 +223,6 @@ init -9999 python in JK:
             new_height = original_height * scaling_factor
 
             return int(new_width), int(new_height)
-
-        @staticmethod
-        def getLimitedImageSizeWithAspectRatio(desired_width, desired_height):
-            # Get the aspect ratio from Ren'Py's screen configuration
-            original_width = renpy.config.thumbnail_width or 1 if hasattr(renpy.config, "thumbnail_width") else 1
-            original_height = renpy.config.thumbnail_height or 1 if hasattr(renpy.config, "thumbnail_height") else 1
-
-            return Utils.resizeDimensionsToLimits((original_width, original_height), (desired_width, desired_height))
 
         @staticmethod
         def filter_timeline(timeline, search):
@@ -383,273 +319,6 @@ init -9999 python in JK:
                                 screens.append(name)
             
             return screens
-
-    class MultiLocation(renpy.savelocation.MultiLocation):
-        def __init__(self):
-            super(MultiLocation, self).__init__()
-
-            self.nativeLocations = renpy.loadsave.location.locations
-
-        def add(self, location):
-            self.locations.append(location)
-
-        def activateLocations(self):
-            for location in self.locations:
-                location.active = True
-
-        def deactivateLocations(self):
-            for location in self.locations:
-                location.active = False
-
-        def load_persistent(self):
-            rv = []
-
-            for l in self.nativeLocations:
-                rv.extend(l.load_persistent())
-
-            return rv
-
-        def save_persistent(self, data):
-            for l in self.nativeLocations:
-                l.save_persistent(data)
-        
-        def remove(self, location):
-            self.locations.remove(location)
-
-        def newest_including_inactive(self, slotname):
-            """
-            Same logic as newest(), but this one includes locations with active=False.
-            """
-
-            mtime = -1
-            location = None
-
-            for l in self.locations:
-                slot_mtime = l.mtime(slotname) or -1
-
-                if slot_mtime > mtime:
-                    mtime = slot_mtime
-                    location = l
-
-            return location
-
-        def has_save(self, slotname, check_inactive=True):
-            if check_inactive:
-                return self.newest_including_inactive(slotname) != None
-
-            return self.newest(slotname) != None
-
-        def screenshot_including_inactive(self, slotname):
-            l = self.newest_including_inactive(slotname)
-
-            if l is None:
-                return None
-
-            return l.screenshot(slotname)
-
-        def unlink_save(self, slotname, include_inactive=True, scan=True):
-            for l in (self.locations if include_inactive else self.active_locations()):
-                l.unlink_save(slotname, scan)
-
-        def list_including_inactive(self):
-            self.scan()
-
-            rv = set()
-
-            for l in self.locations:
-                original_active = l.active
-                l.active = True
-                l.scan()
-
-                rv.update(l.list())
-
-                l.active = original_active
-
-            return list(rv)
-
-        def copy_save_into_other_multilocation(self, save, multilocation, scan=True):
-            for l in multilocation.locations:
-                self.copy_save_into_other_location(save, l, scan)
-
-            if scan:
-                self.scan()
-
-        def copy_save_into_other_location(self, save, location, scan=True):
-            for l in self.locations:
-                l.copy_into_other_directory(save, save, location.directory, scan=False)
-            
-            if scan:
-                self.scan()
-
-        def unlink_all(self, scan=True, include_inactive=False):
-            for l in (self.locations if include_inactive else self.active_locations()):
-                for save in l.list():
-                    l.unlink_save(save, scan=False)
-            
-            if scan:
-                self.scan()
-
-        def copy_all_saves_into_other_multilocation(self, multilocation, include_inactive=True, scan=True):
-            target_locations = multilocation.locations if include_inactive else multilocation.active_locations()
-            source_locations = self.locations if include_inactive else self.active_locations()
-
-            with disk_lock:
-                for i in range(0, len(target_locations)):
-                    source_location = source_locations[i]
-                    if not source_location:
-                        raise Exception("Source location not found")
-
-                    target_location = target_locations[i]
-                    if not target_location:
-                        raise Exception("Target location not found")
-
-                    shutil.rmtree(target_location.directory) # Clear anything that is already there and also remove the root directory, otherwise shutil.copytree would throw an exception...
-
-                    try:
-                        shutil.copytree(source_location.directory, target_location.directory)
-                    except Exception as e:
-                        print(e)
-                        return False
-
-                if scan:
-                    multilocation.scan()
-
-                return True
-
-        def save_json(self, slotname, include_inactive=True):
-            if include_inactive:
-                l = self.newest_including_inactive(slotname)
-
-                if l is None:
-                    return None
-
-                return l.json(slotname)
-
-            return self.json(slotname)
-
-        def save_name(self, slotname, include_inactive=True):
-            save_json = self.save_json(slotname, include_inactive=include_inactive)
-            if save_json:
-                return save_json.get("_save_name", None)
-
-            return None
-
-        def change_locations_directory_name(self, name, force=False):
-            for location in self.locations:
-                location.change_directory_name(name, force)
-
-        def validate_locations_for_change_of_directory_name(self, name):
-            error_locations = []
-            for location in self.locations:
-                if not location.can_change_directory_name(name):
-                    error_locations.append((os.path.abspath(os.path.join(location.directory, "..", name)), "LOCATION_EXISTS"))
-            
-            return error_locations
-
-        def remove_dir(self):
-            for location in self.locations:
-                location.remove_dir()
-
-        def edit_json(self, slotname, json, include_inactive=False, scan=True):
-            for location in (self.locations if include_inactive else self.active_locations()):
-                location.edit_json(slotname, json)
-            
-            if scan:
-                self.scan()
-
-    class FileLocation(renpy.savelocation.FileLocation):
-        def copy_into_other_directory(self, old, new, destination, scan=True):
-            with disk_lock:
-                old = self.filename(old)
-
-                if not os.path.exists(old):
-                    return
-
-                new = os.path.join(destination, renpy.exports.fsencode(new + renpy.savegame_suffix))
-
-                shutil.copyfile(old, new)
-
-                if scan:
-                    self.scan()
-
-        def unlink_save(self, slotname, scan=True):
-            with disk_lock:
-                filename = self.filename(slotname)
-                if os.path.exists(filename):
-                    os.unlink(filename)
-
-                if scan:
-                    self.scan()
-
-        def name(self):
-            if renpy.config.savedir in self.directory:
-                return "User data"
-
-            if renpy.config.gamedir in self.directory:
-                return "Game"
-
-            return self.directory
-
-        def mtime_as_date(self, slotname):
-            # Set locale to the user's default settings
-            locale.setlocale(locale.LC_TIME, '')
-
-            mtime = self.mtime(slotname)
-            if mtime:
-                return time.strftime('%c', time.localtime(mtime))
-
-            return None
-
-        def change_directory_name(self, name, force=False):
-            self.change_directory(os.path.join(self.directory, "..", name), force)
-
-        def change_directory(self, new_directory, force=False):
-            if not force and not self.can_change_directory(new_directory):
-                raise Exception("LOCATION_EXISTS")
-
-            if os.path.exists(new_directory):
-                shutil.rmtree(new_directory)
-
-            shutil.move(self.directory, new_directory)
-
-            self.directory = new_directory
-
-        def can_change_directory_name(self, name):
-            return self.can_change_directory(os.path.join(self.directory, "..", name))
-
-        def can_change_directory(self, new_directory):
-            if os.path.exists(new_directory):
-                return len(os.listdir(new_directory)) == 0
-
-            return True
-
-        def remove_dir(self):
-            if os.path.exists(self.directory):
-                os.rmdir(self.directory)
-
-        def edit_json(self, slotname, json):
-            with disk_lock:
-                try:
-                    filename = self.filename(slotname)
-                    filename_new = filename + ".new"
-                    with zipfile.ZipFile(filename, 'r') as zin:
-                        with zipfile.ZipFile(filename_new, 'w') as zout:
-                            for item in zin.infolist():
-                                if item.filename != "json":
-                                    zout.writestr(item, zin.read(item.filename))
-
-                            zout.writestr("json", json_dumps(json))
-
-                    os.remove(filename)
-                    os.rename(filename_new, filename)
-                except Exception as e:
-                    print(e)
-                    return False
-                finally:
-                    if zin:
-                        zin.close()
-                    if zout:
-                        zout.close()
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):
@@ -736,14 +405,14 @@ init -9999 python in JK:
 
     #         renpy.restart_interaction()
     
-    class SetKey(renpy.ui.Action):
+    class SetKeyAction(renpy.ui.Action):
         def __init__(self, key, shift=False, ctrl=False, alt=False):
             self.key = key
             self.shift = shift
             self.ctrl = ctrl
             self.alt = alt
 
-        def resolveKey(self):
+        def resolve_key(self):
             if self.key == None:
                 return None
 

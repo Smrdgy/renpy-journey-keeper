@@ -6,8 +6,8 @@ init 9999 python in JK:
             new_kwargs.update(kwargs.copy())
         
             # Prevent making any autosave action when the game is not initialized yet or the player is viewing a memory or a replay
-            if not Autosaver.prevent_autosaving and not Memories.memoryInProgress and not renpy.store._in_replay and (Settings.autosaveOnSingletonChoice or Utils.isDisplayingMultipleChoices()):
-                Autosaver.handleChoiceSelection(new_args[0])
+            if not Autosaver.prevent_autosaving and not Memories.memoryInProgress and not renpy.store._in_replay and (Settings.autosaveOnSingletonChoice or Utils.is_displaying_multiple_choices()):
+                Autosaver.handle_choice_selection(new_args[0])
 
             fn = func(*(args + new_args), **new_kwargs)
 

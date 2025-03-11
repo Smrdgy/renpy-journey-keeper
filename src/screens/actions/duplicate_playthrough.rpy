@@ -12,7 +12,7 @@ screen JK_DuplicatePlaythrough(playthrough):
     python:
         submitAction = JK.Playthroughs.DuplicatePlaythroughAction(playthrough=playthrough, name=name, description=description)
 
-    use JK_Dialog(title="Duplicate \"" + playthrough.name + "\"", closeAction=Hide("JK_DuplicatePlaythrough")):
+    use JK_Dialog(title="Duplicate \"" + playthrough.name + "\"", close_action=Hide("JK_DuplicatePlaythrough")):
         style_prefix "JK"
 
         viewport:
@@ -27,7 +27,7 @@ screen JK_DuplicatePlaythrough(playthrough):
 
                 add name_input.displayable(placeholder="Click here to start writing the name")
 
-                if(not JK.Playthroughs.isValidName(name)):
+                if(not JK.Playthroughs.is_valid_name(name)):
                     vbox offset JK.scaled((15, 2)):
                         text "Are you sure? This name already exists." color JK.Colors.warning
                         use JK_InfoBox("All existing saves of \"" + name + "\" will be deleted. This action {u}{color=[JK.Colors.error]}is irreversible{/color}{/u}!")

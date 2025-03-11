@@ -1,11 +1,11 @@
-screen JK_Dialog(title=None, message=None, closeAction=None, icon=None):
+screen JK_Dialog(title=None, message=None, close_action=None, icon=None):
     layer "overlay"
     style_prefix 'JK_dialog'
     modal True
 
-    if closeAction:
-        key 'K_ESCAPE' action closeAction
-        key 'mouseup_3' action closeAction
+    if close_action:
+        key 'K_ESCAPE' action close_action
+        key 'mouseup_3' action close_action
 
     frame style_suffix "overlay":
         background "#000000{:02X}".format(int(JK.Settings.dialogOpacity * 255))
@@ -30,7 +30,7 @@ screen JK_Dialog(title=None, message=None, closeAction=None, icon=None):
                     xalign 1.0
                     yalign 0.5
 
-                    use JK_IconButton(icon="\ue5cd", action=[closeAction, NullAction()])
+                    use JK_IconButton(icon="\ue5cd", action=[close_action, NullAction()])
 
             button:
                 style_suffix "content"

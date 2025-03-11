@@ -21,21 +21,21 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
     python:
         if editing_template:
             submitAction = [
-                JK.Settings.SaveDefaultPlaythroughTemplate(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations),#MODIFY HERE
+                JK.Settings.SaveDefaultPlaythroughTemplateAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations),#MODIFY HERE
                 Hide('JK_EditPlaythrough')
             ]
         else:
             submitAction = [
-                JK.Playthroughs.AddOrEdit(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory),#MODIFY HERE
+                JK.Playthroughs.AddOrEditAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory),#MODIFY HERE
                 Hide('JK_EditPlaythrough')
             ]
 
-        name_conflicting = not editing_template and name != originalname and not JK.Playthroughs.isValidName(name)
+        name_conflicting = not editing_template and name != originalname and not JK.Playthroughs.is_valid_name(name)
         name_invalid = name_conflicting or len(name) == 0
 
     key 'ctrl_K_DELETE' action Show("JK_RemovePlaythroughConfirm", playthrough=playthrough)
 
-    use JK_Dialog(title=("Edit default template" if editing_template else ("Edit playthrough" if isEdit else "New playthrough")), closeAction=Hide("JK_EditPlaythrough")):
+    use JK_Dialog(title=("Edit default template" if editing_template else ("Edit playthrough" if isEdit else "New playthrough")), close_action=Hide("JK_EditPlaythrough")):
         style_prefix "JK"
 
         viewport:
@@ -71,11 +71,11 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                         text "[computedDirectory]" color JK.Colors.theme
 
                         if isEdit:
-                            use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", ttSide="right")
+                            use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", tt_side="right")
                         else:
-                            use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", ttSide="right")
+                            use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", tt_side="right")
 
-                    $ allSaveLocations = JK.SaveSystem.getAllNativeSaveLocationsForOptions()
+                    $ allSaveLocations = JK.SaveSystem.get_all_native_save_locations_for_options()
 
                     if isEdit and playthrough.id > 1 and name != originalname and not name_invalid:
                         use JK_Checkbox(checked=moveSaveDirectory, text="Rename the directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False))
@@ -143,9 +143,9 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                     vbox:
                         hbox:
-                            use JK_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not JK.Utils.hasColsAndRowsConfiguration())
+                            use JK_Checkbox(checked=autosaveOnChoices, text="Autosave on choice", action=ToggleScreenVariable('autosaveOnChoices', True, False), disabled=not JK.Utils.has_cols_and_rows_configuration())
                             use JK_Helper("This system automatically saves your progress (not to be confused with Ren'Py's autosave) right before you make a choice in the game, making it easier to back up and track your progress.")
-                        if not JK.Utils.hasColsAndRowsConfiguration():
+                        if not JK.Utils.has_cols_and_rows_configuration():
                             text "{size=-7}{color=[JK.Colors.error]}This game uses an unconventional save configuration, so the autosave feature requires a manual adjustment to be enabled.{/color}" offset JK.scaled((35, -10))
                             hbox offset JK.scaled((35, -10)):
                                 button style "JK_default":
@@ -160,7 +160,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                         hbox:
                             offset JK.scaled((15, 0))
 
-                            use JK_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system enabled above){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not JK.Utils.hasColsAndRowsConfiguration() or not autosaveOnChoices)
+                            use JK_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system enabled above){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not JK.Utils.has_cols_and_rows_configuration() or not autosaveOnChoices)
 
                 use JK_YSpacer()
 
@@ -188,7 +188,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                             # Remove thumbnail
                             if playthrough.hasThumbnail():
-                                use JK_IconButton(icon="\ue92b", text="Remove thumbnail", action=JK.Playthroughs.RemoveThumbnail(playthrough=playthrough), color=JK.Colors.danger)
+                                use JK_IconButton(icon="\ue92b", text="Remove thumbnail", action=JK.Playthroughs.RemoveThumbnailAction(playthrough=playthrough), color=JK.Colors.danger)
 
         hbox:
             xfill True
@@ -216,7 +216,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                 if not isEdit and not editing_template:
                     hbox:
-                        use JK_IconButton(icon="\uebbd", text="Create from existing directory", action=Show("JK_SelectExistingDirectoryForNewPlaythrough"), tt="You can use already existing directory to create a playthrough. It will fill out the name and set the directory for you.", ttSide="left")
+                        use JK_IconButton(icon="\uebbd", text="Create from existing directory", action=Show("JK_SelectExistingDirectoryForNewPlaythrough"), tt="You can use already existing directory to create a playthrough. It will fill out the name and set the directory for you.", tt_side="left")
 
                 # Close
                 hbox:

@@ -42,12 +42,12 @@ init python in JK:
 
             cache_all_playthroughs = self.search_playthroughs
 
-            playthroughs = Playthroughs.playthroughs if self.search_playthroughs else [Playthroughs.activePlaythrough]
+            playthroughs = Playthroughs.playthroughs if self.search_playthroughs else [Playthroughs.active_playthrough]
             for playthrough in playthroughs:
                 self.save_names_cache[playthrough.id] = {}
                 self.save_choices_cache[playthrough.id] = {}
 
-                instance = SaveSystem.getOrCreatePlaythroughSaveInstanceByID(playthrough.id)
+                instance = SaveSystem.get_or_create_playthrough_save_instance_by_id(playthrough.id)
 
                 saves_list = instance.location.list_including_inactive()
                 for slotname in saves_list:
@@ -87,7 +87,7 @@ init python in JK:
                 self.search_after_cache_is_built = True
                 return
 
-            playthroughs = Playthroughs.playthroughs if self.search_playthroughs else [Playthroughs.activePlaythrough]
+            playthroughs = Playthroughs.playthroughs if self.search_playthroughs else [Playthroughs.active_playthrough]
             for playthrough in playthroughs:
                 # Playthrough names
                 if self.search_playthroughs and self.search_playthrough_names:
@@ -104,7 +104,7 @@ init python in JK:
                 # Page names
                 if self.search_page_names:
                     page_names = playthrough.filePageName
-                    if playthrough.id == Playthroughs.activePlaythrough.id:
+                    if playthrough.id == Playthroughs.active_playthrough.id:
                         page_names = renpy.store.persistent._file_page_name
 
                     for page, text in page_names.items():
@@ -188,32 +188,32 @@ init python in JK:
             
             return True, formatted_s1
 
-        class SetSearchEnabled(renpy.ui.Action):
-            def __init__(self, viewModel, key):
-                self.viewModel = viewModel
+        class SetSearchEnabledAction(renpy.ui.Action):
+            def __init__(self, view_model, key):
+                self.view_model = view_model
                 self.key = key
 
             def __call__(self):
-                setattr(self.viewModel, self.key, not getattr(self.viewModel, self.key))
+                setattr(self.view_model, self.key, not getattr(self.view_model, self.key))
 
-                if self.key == "search_playthroughs" and self.viewModel.search_playthroughs and not self.viewModel.all_playthroughs_cached:
-                    renpy.invoke_in_thread(self.viewModel.cache_saves)
+                if self.key == "search_playthroughs" and self.view_model.search_playthroughs and not self.view_model.all_playthroughs_cached:
+                    renpy.invoke_in_thread(self.view_model.cache_saves)
 
-                self.viewModel.search()
+                self.view_model.search()
 
                 renpy.restart_interaction()
 
-        class SetSearchAll(renpy.ui.Action):
-            def __init__(self, viewModel, enabled):
-                self.viewModel = viewModel
+        class SetSearchAllAction(renpy.ui.Action):
+            def __init__(self, view_model, enabled):
+                self.view_model = view_model
                 self.enabled = enabled
 
             def __call__(self):
-                self.viewModel.search_playthroughs = self.enabled
+                self.view_model.search_playthroughs = self.enabled
 
-                if self.enabled and not self.viewModel.all_playthroughs_cached:
-                    renpy.invoke_in_thread(self.viewModel.cache_saves)
+                if self.enabled and not self.view_model.all_playthroughs_cached:
+                    renpy.invoke_in_thread(self.view_model.cache_saves)
 
-                self.viewModel.search()
+                self.view_model.search()
 
                 renpy.restart_interaction()

@@ -48,7 +48,7 @@ init python in JK:
             return rv
 
     class TextInput(x52NonPicklable):
-        activeTextInputScreenVariableName = "__activeTextInput__"
+        active_text_input_screen_variable_name = "__activeTextInput__"
 
         def __init__(self, identifier, variableName=None, value=None, auto_focus=False, disabled=False, multiline=False, allowed_characters=None, excluded_characters=None, max_length=None, placeholder=None):
             self.id = identifier
@@ -88,8 +88,8 @@ init python in JK:
             if not cs:
                 return
 
-            if cs.scope[self.activeTextInputScreenVariableName] == self.id:
-                cs.scope[self.activeTextInputScreenVariableName] = None
+            if cs.scope[self.active_text_input_screen_variable_name] == self.id:
+                cs.scope[self.active_text_input_screen_variable_name] = None
 
                 renpy.restart_interaction()
         
@@ -97,7 +97,7 @@ init python in JK:
             if self.value:
                 return self.value.get_text()
             elif self.variableName:
-                return Utils.getScreenVariable(self.variableName)
+                return Utils.get_screen_variable(self.variableName)
             return None
 
         def get_enable_action(self):
@@ -128,11 +128,11 @@ init python in JK:
 
         @staticmethod
         def is_active(id):
-            return Utils.getScreenVariable(TextInput.activeTextInputScreenVariableName) == id
+            return Utils.get_screen_variable(TextInput.active_text_input_screen_variable_name) == id
 
         @staticmethod
         def set_active(id):
-            renpy.store.SetScreenVariable(TextInput.activeTextInputScreenVariableName, id)()
+            renpy.store.SetScreenVariable(TextInput.active_text_input_screen_variable_name, id)()
 
         class SetActiveAction(renpy.ui.Action):
             def __init__(self, id):
@@ -470,7 +470,7 @@ init python in JK:
 
             # elif renpy.map_event(ev, 'input_next_input'):
             #     if self.id:
-            #         inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
+            #         inputIDs = Utils.get_screen_variable(self.availableTextInputsScreenVariableName) or []
             #         print(inputIDs)
             #         i = inputIDs.index(self.id) + 1
 
@@ -480,12 +480,12 @@ init python in JK:
             #         if i < 0:
             #             i = len(inputIDs) - 1
                     
-            #         renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, inputIDs[i])()
+            #         renpy.store.SetScreenVariable(self.active_text_input_screen_variable_name, inputIDs[i])()
             #         raise renpy.display.core.IgnoreEvent()
 
             # elif renpy.map_event(ev, 'input_prev_input'):
             #     if self.id:
-            #         inputIDs = Utils.getScreenVariable(self.availableTextInputsScreenVariableName) or []
+            #         inputIDs = Utils.get_screen_variable(self.availableTextInputsScreenVariableName) or []
             #         i = inputIDs.index(self.id) - 1
 
             #         if i == -1:
@@ -494,7 +494,7 @@ init python in JK:
             #         if i > len(inputIDs) - 1:
             #             i = 0
                     
-            #         renpy.store.SetScreenVariable(self.activeTextInputScreenVariableName, inputIDs[i])()
+            #         renpy.store.SetScreenVariable(self.active_text_input_screen_variable_name, inputIDs[i])()
             #         raise renpy.display.core.IgnoreEvent()
 
 

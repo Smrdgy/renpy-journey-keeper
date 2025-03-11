@@ -3,11 +3,11 @@ screen JK_RemovePlaythroughConfirm(playthrough):
     style_prefix 'JK'
     modal True
 
-    default deleteFiles = False
+    default delete_files = False
 
-    $ deleteAction = [JK.Playthroughs.Remove(playthrough.id, deleteFiles), Hide("JK_RemovePlaythroughConfirm"), Hide("JK_EditPlaythrough")]
+    $ deleteAction = [JK.Playthroughs.RemoveAction(playthrough.id, delete_files), Hide("JK_RemovePlaythroughConfirm"), Hide("JK_EditPlaythrough")]
 
-    use JK_Dialog(title="Delete playthrough", closeAction=Hide("JK_RemovePlaythroughConfirm")):
+    use JK_Dialog(title="Delete playthrough", close_action=Hide("JK_RemovePlaythroughConfirm")):
         key 'K_RETURN' action deleteAction
         key 'K_KP_ENTER' action deleteAction
 
@@ -18,7 +18,7 @@ screen JK_RemovePlaythroughConfirm(playthrough):
             xalign 0.5
             padding (0, 10, 0, 0)
 
-            use JK_Checkbox(checked=deleteFiles, text="Delete files", action=ToggleScreenVariable('deleteFiles', True, False))
+            use JK_Checkbox(checked=delete_files, text="Delete files", action=ToggleScreenVariable('delete_files', True, False))
 
         frame:
             background None
@@ -29,7 +29,7 @@ screen JK_RemovePlaythroughConfirm(playthrough):
                 use JK_InfoBox("If you choose to delete the files, you won't be able to recover the playthrough.")
 
         python:
-            removeText = "Remove & delete files" if deleteFiles else "Remove"
+            removeText = "Remove & delete files" if delete_files else "Remove"
 
         hbox:
             xfill True

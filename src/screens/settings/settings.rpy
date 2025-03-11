@@ -3,7 +3,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
     style_prefix 'JK'
     modal True
 
-    default originalSizeAdjustment = JK.Settings.sizeAdjustment
+    default original_size_adjustment = JK.Settings.sizeAdjustment
     default active_section = section
 
     python:
@@ -11,8 +11,8 @@ screen JK_Settings(section="ACCESSIBILITY"):
 
         default_close_action = Hide("JK_Settings")
         close_action = default_close_action
-        if originalSizeAdjustment != JK.Settings.sizeAdjustment and JK.Settings.sizeAdjustment != 0:
-            close_action = [JK.ShowConfirmAction(title="You have unapplied size adjustment, would you like to apply it now?", message=reset_size_adjustment_hint, yes=[JK.Settings.ApplySizeAdjustment(), default_close_action], yesText="Apply now", yesColor=JK.Colors.success, noText="Back")]
+        if original_size_adjustment != JK.Settings.sizeAdjustment and JK.Settings.sizeAdjustment != 0:
+            close_action = [JK.ShowConfirmAction(title="You have unapplied size adjustment, would you like to apply it now?", message=reset_size_adjustment_hint, yes=[JK.Settings.ApplySizeAdjustmentAction(), default_close_action], yes_text="Apply now", yes_color=JK.Colors.success, no_text="Back")]
 
         sections = [
             ("ACCESSIBILITY", "\ue84e", "Accessibility"),
@@ -28,7 +28,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
         if renpy.config.developer:
             sections.append(("DEBUG", "\ue868", "Debug"))
 
-    use JK_Dialog(title="Settings", closeAction=close_action):
+    use JK_Dialog(title="Settings", close_action=close_action):
         style_prefix "JK"
 
         grid len(sections) 1:
@@ -43,7 +43,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
                     if section[0] == "DEBUG":
                         selected JK.Settings.debugEnabled
                         style "JK_Settings_Tab_button_debug"
-                        action JK.Settings.ToggleEnabled("debugEnabled")
+                        action JK.Settings.ToggleEnabledAction("debugEnabled")
 
                     else:
                         selected section[0] == active_section
@@ -72,7 +72,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
             ymaximum 0.85
 
             if active_section == "ACCESSIBILITY":
-                use JK_Settings_Accessibility(originalSizeAdjustment, reset_size_adjustment_hint)
+                use JK_Settings_Accessibility(original_size_adjustment, reset_size_adjustment_hint)
             elif active_section == "AUTOSAVE":
                 use JK_Settings_Autosave()
             elif active_section == "QUICKSAVE":
