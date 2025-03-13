@@ -1,4 +1,4 @@
-screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=None, tt=None, tt_side="top", toggled=False, toggled_icon=None, disabled=False, color=None, text_color=None, icon_color=None, toggled_color=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None, spacing=None):
+screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=None, tt=None, tt_side="top", toggled=False, toggled_icon=None, disabled=False, color=None, text_color=None, icon_color=None, toggled_color=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None, spacing=None, outlines=None):
     style_prefix "JK"
 
     python:
@@ -26,7 +26,7 @@ screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=Non
             if spacing:
                 spacing spacing
 
-            use JK_Icon(toggled_icon if toggled else icon, color=icon_color, size=size, hover_color=hover_color)
+            use JK_Icon(toggled_icon if toggled else icon, color=icon_color, size=size, hover_color=hover_color, outlines=outlines)
 
             if text:
                 python:
@@ -40,5 +40,7 @@ screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=Non
                         size JK.scaled(size)
                     if hover_color:
                         hover_color hover_color
+                    if outlines:
+                        outlines outlines
 
             transclude

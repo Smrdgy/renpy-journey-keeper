@@ -19,6 +19,10 @@ init python in JK:
         def __getstate__(self):
             return None
 
+        def regenerate_unique_data(self):
+            self.id = int(time.time())
+            self.directory = Utils.name_to_directory_name(self.name)
+
         def copy(self):
             return PlaythroughClass(self.id, self.directory, self.name, self.description, self.thumbnail, self.storeChoices, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName, self.enabledSaveLocations)#MODIFY HERE
 

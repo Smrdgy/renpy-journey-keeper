@@ -1,4 +1,4 @@
-screen JK_Checkbox(checked, text, action=None, xsize=None, sensitive=None, disabled=False, color=None, icon_color=None, text_color=None, size=None):
+screen JK_Checkbox(checked=False, text=None, action=None, xsize=None, sensitive=None, disabled=False, color=None, icon_color=None, text_color=None, size=None):
     style_prefix 'JK_checkbox'
 
     python:

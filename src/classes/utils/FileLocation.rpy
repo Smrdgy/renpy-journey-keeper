@@ -56,11 +56,18 @@ init -9999 python in JK:
             self.change_directory(os.path.join(self.directory, "..", name), force)
 
         def change_directory(self, new_directory, force=False):
+            if self.directory == new_directory:
+                return
+
             if not force and not self.can_change_directory(new_directory):
                 raise Exception("LOCATION_EXISTS")
 
             if os.path.exists(new_directory):
                 shutil.rmtree(new_directory)
+
+            if not os.path.exists(self.directory):
+                os.mkdir(new_directory)
+                return
 
             shutil.move(self.directory, new_directory)
 

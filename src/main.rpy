@@ -62,6 +62,10 @@ init python in JK:
         if Autosaver.pending_save:
             json["_JK_choice"] = Autosaver.pending_save.choice
 
+        elif Settings.debugEnabled:
+            print("No choice was recorded", json)
+            renpy.notify("No choice was recorded")
+
     def wait_for_start_label_callback(statement):
         if Autosaver.prevent_autosaving and statement == "label":
             current = renpy.game.context().current

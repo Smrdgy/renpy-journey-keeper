@@ -109,12 +109,17 @@ init python in JK:
 
             return relevant_directories
 
-        def add(self, playthrough):
+        def add(self, playthrough, activate=True, save=True, restart_interaction=True):
             self._playthroughs.append(playthrough)
-            self.activate_by_instance(playthrough)
 
-            self.save()
-            renpy.restart_interaction()
+            if activate:
+                self.activate_by_instance(playthrough)
+
+            if save:
+                self.save()
+
+            if restart_interaction:
+                renpy.restart_interaction()
 
             return playthrough
 

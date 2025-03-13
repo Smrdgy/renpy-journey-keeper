@@ -66,6 +66,7 @@ You can also unassign the mapping by clicking the circular red X button
 - Use actually working pagination, with go-to a specific page feature
 - Create memories (*WIP*).
 - Search playthrough(s) and their save names and choices
+- Import playthroughs from other games (to continue from a previous part/season for example)
 
 **Note:**  
 Memories are an experimental feature. Until I figure out how to store a sequence of events, a "memory" will be just a glorified save.

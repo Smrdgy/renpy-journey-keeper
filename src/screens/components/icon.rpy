@@ -1,4 +1,4 @@
-screen JK_Icon(icon, color=None, hover_color=None, size=None, xalign=None):
+screen JK_Icon(icon, color=None, hover_color=None, size=None, xalign=None, outlines=None):
     style_prefix "JK"
 
     frame style "JK_default":
@@ -13,4 +13,6 @@ screen JK_Icon(icon, color=None, hover_color=None, size=None, xalign=None):
                         size JK.scaled(size)
                     if xalign:
                         xalign xalign
+                    if outlines:
+                        outlines outlines
             transclude

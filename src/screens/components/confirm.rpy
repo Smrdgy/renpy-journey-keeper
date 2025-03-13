@@ -29,7 +29,7 @@ screen JK_Confirm(title=None, message=None, yes=None, yes_text=None, yes_icon=No
 
 init python in JK:
     def showConfirm(title="Confirm", message=None, yes=None, no=None, yes_text="Yes", no_text="No", yes_icon="\ue876", no_icon="\ue5cd", yes_color=None, no_color=None):
-        renpy.show_screen("JK_Confirm", title, message, yes, no, yes_text, no_text, yes_icon, no_icon, yes_color, no_color)
+        renpy.show_screen("JK_Confirm", title=title, message=message, yes=yes, no=no, yes_text=yes_text, no_text=no_text, yes_icon=yes_icon, no_icon=no_icon, yes_color=yes_color, no_color=no_color)
         renpy.restart_interaction()
 
     class ShowConfirmAction(renpy.ui.Action):
@@ -46,5 +46,5 @@ init python in JK:
             self.no_color = no_color
 
         def __call__(self):
-            renpy.show_screen("JK_Confirm", self.title, self.message, self.yes, self.no, self.yes_text, self.no_text, self.yes_icon, self.no_icon, self.yes_color, self.no_color)
+            renpy.show_screen("JK_Confirm", title=self.title, message=self.message, yes=self.yes, no=self.no, yes_text=self.yes_text, no_text=self.no_text, yes_icon=self.yes_icon, no_icon=self.no_icon, yes_color=self.yes_color, no_color=self.no_color)
             renpy.restart_interaction()

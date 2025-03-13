@@ -61,7 +61,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                 if(playthrough.id != 1 and not editing_template):
                     python:
-                        computedDirectory = playthrough.directory if (playthrough.directory != None) else (JK.Utils.name_to_directory_name(name) if name else None) or ""
+                        computedDirectory = playthrough.directory if playthrough.directory and not moveSaveDirectory else (JK.Utils.name_to_directory_name(name) if name else None) or ""
 
                     use JK_Title("Directory", 2)
                     hbox:
@@ -167,11 +167,11 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 if isEdit:
                     use JK_Title("Thumbnail")
                     hbox:
-                        frame:
-                            xysize JK.scaled((160, 160))
+                        frame style "JK_default":
+                            xysize JK.scaled((350, 350))
 
                             if playthrough.hasThumbnail():
-                                add playthrough.getThumbnail(width=JK.scaled(150), maxHeight=JK.scaled(150))
+                                image playthrough.getThumbnail(width=JK.scaled(350), height=JK.scaled(350))
                             else:
                                 button:
                                     style_prefix ""
@@ -181,6 +181,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                                     use JK_Icon(icon="\ue3f4", color="#333")
 
+                        use JK_XSpacer(3)
 
                         vbox:
                             # Set thumbnail

@@ -10,6 +10,8 @@ screen JK_PlaythroughsPicker():
     )
     default reorder_source = None
 
+    $ outlines = [(JK.scaled(2), "#000000", 0, 0)]
+
     use JK_Dialog(title="Select a playthrough", close_action=Hide("JK_PlaythroughsPicker")):
         style_prefix "JK"
 
@@ -18,6 +20,7 @@ screen JK_PlaythroughsPicker():
             draggable True
             scrollbars "vertical"
             pagekeys True
+            ymaximum 0.9
 
             python:
                 playthroughs = [p for p in JK.Playthroughs.playthroughs if p.id != 2] # Get all playthroughs except memories
@@ -72,16 +75,16 @@ screen JK_PlaythroughsPicker():
                                 # Description
                                 if playthrough.description:
                                     hbox xalign 1.0 yalign 0.0:
-                                        use JK_IconButton(icon="\uef42", tt=playthrough.description, tt_side="bottom")
+                                        use JK_IconButton(icon="\uef42", tt=playthrough.description, tt_side="bottom", outlines=outlines)
 
                                 # Reorder
                                 hbox xalign 0.0 yalign 0.0:
                                     if reorder_source == playthrough.id:
-                                        use JK_IconButton(icon="\ue5c9", action=SetScreenVariable("reorder_source", None), tt="Cancel", tt_side="bottom", hover_color=JK.Colors.error)
+                                        use JK_IconButton(icon="\ue5c9", action=SetScreenVariable("reorder_source", None), tt="Cancel", tt_side="bottom", hover_color=JK.Colors.error, outlines=outlines)
                                     elif reorder_source:
-                                        use JK_IconButton(icon="\ue39e", action=[JK.Playthroughs.ReorderPlaythroughsAction(source=reorder_source, target=playthrough.id), SetScreenVariable("reorder_source", None)], tt="Move here", tt_side="bottom")
+                                        use JK_IconButton(icon="\ue39e", action=[JK.Playthroughs.ReorderPlaythroughsAction(source=reorder_source, target=playthrough.id), SetScreenVariable("reorder_source", None)], tt="Move here", tt_side="bottom", outlines=outlines)
                                     else:
-                                        use JK_IconButton(icon="\ue074", action=SetScreenVariable("reorder_source", playthrough.id), tt="Change order", tt_side="bottom", color=JK.Colors.text_light, hover_color=JK.Colors.hover)
+                                        use JK_IconButton(icon="\ue074", action=SetScreenVariable("reorder_source", playthrough.id), tt="Change order", tt_side="bottom", color=JK.Colors.text_light, hover_color=JK.Colors.hover, outlines=outlines)
 
                             use JK_YSpacer(4)
 
@@ -138,3 +141,16 @@ screen JK_PlaythroughsPicker():
                 # Placeholders
                 for _ in range(0, spotsToFill):
                     text ""
+
+        # Dialog footer
+        hbox:
+            xfill True
+            yfill True
+
+            style_prefix "JK_dialog_action_buttons"
+
+            vbox xalign 0.0:
+                # Overwrite
+                hbox:
+                    if JK.UserDir.is_available:
+                        use JK_IconButton(icon="\ue884", text="Import from another game", action=Show("JK_ImportPlaythroughs"))
