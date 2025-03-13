@@ -26,6 +26,7 @@ screen JK_ChoicesTimelineList(view_model, show_thumbnails, search):
             mousewheel True
             draggable True
             scrollbars "vertical"
+            vscrollbar_unscrollable "hide"
             pagekeys True
 
             vbox:

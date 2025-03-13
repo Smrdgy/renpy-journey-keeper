@@ -3,6 +3,7 @@ screen JK_ImportPlaythroughsSelectGame(view_model):
         mousewheel True
         draggable True
         scrollbars "vertical"
+        vscrollbar_unscrollable "hide"
         pagekeys True
 
         vbox:

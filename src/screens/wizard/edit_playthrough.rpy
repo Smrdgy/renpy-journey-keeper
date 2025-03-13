@@ -42,6 +42,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
             mousewheel True
             draggable True
             scrollbars "vertical"
+            vscrollbar_unscrollable "hide"
             pagekeys True
             ymaximum 0.85
 
@@ -168,7 +169,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                     use JK_Title("Thumbnail")
                     hbox:
                         frame style "JK_default":
-                            xysize JK.scaled((350, 350))
+                            xysize JK.scaled((350, 250))
 
                             if playthrough.hasThumbnail():
                                 image playthrough.getThumbnail(width=JK.scaled(350), height=JK.scaled(350))

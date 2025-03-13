@@ -6,6 +6,7 @@ screen JK_MoveCopySavesSelectSaves(view_model, saves_to_process, show_thumbnails
         mousewheel True
         draggable True
         scrollbars "vertical"
+        vscrollbar_unscrollable "hide"
         pagekeys True
         ymaximum 0.85
 

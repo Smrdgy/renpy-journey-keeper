@@ -19,6 +19,7 @@ screen JK_PlaythroughsPicker():
             mousewheel True
             draggable True
             scrollbars "vertical"
+            vscrollbar_unscrollable "hide"
             pagekeys True
             ymaximum 0.9
 

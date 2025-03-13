@@ -20,6 +20,7 @@ screen JK_EditSave(slotname, location=None):
                 mousewheel True
                 draggable True
                 scrollbars "vertical"
+                vscrollbar_unscrollable "hide"
                 pagekeys True
                 ymaximum 0.85
 

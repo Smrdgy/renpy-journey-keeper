@@ -106,7 +106,7 @@ init python in JK:
             if instance:
                 return instance.listAllSaves()
 
-            return SetAction()
+            return []
             
         class PlaythroughSaveClass(x52NonPicklable):
             def __init__(self, playthrough, noScan=False):

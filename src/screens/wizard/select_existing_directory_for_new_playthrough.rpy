@@ -13,6 +13,7 @@ screen JK_SelectExistingDirectoryForNewPlaythrough():
                 mousewheel True
                 draggable True
                 scrollbars "vertical"
+                vscrollbar_unscrollable "hide"
                 pagekeys True
                 ymaximum 0.85
 

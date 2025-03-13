@@ -18,6 +18,7 @@ screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthr
             mousewheel True
             draggable True
             scrollbars "vertical"
+            vscrollbar_unscrollable "hide"
             pagekeys True
             ymaximum 0.85
 

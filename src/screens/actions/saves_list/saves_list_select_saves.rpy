@@ -46,6 +46,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
         mousewheel True
         draggable True
         scrollbars "vertical"
+        vscrollbar_unscrollable "hide"
         pagekeys True
         ymaximum 0.85
 

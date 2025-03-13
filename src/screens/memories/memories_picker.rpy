@@ -12,6 +12,7 @@ screen JK_MemoriesLibrary():
             mousewheel True
             draggable True
             scrollbars "vertical"
+            vscrollbar_unscrollable "hide"
             pagekeys True
 
             python:
