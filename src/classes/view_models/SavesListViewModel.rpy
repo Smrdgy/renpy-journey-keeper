@@ -261,11 +261,3 @@ init python in JK:
                 self.view_model.success = False
 
                 renpy.restart_interaction()
-
-        class RefreshSavesAction(renpy.ui.Action):
-            def __init__(self, view_model):
-                self.view_model = view_model
-
-            def __call__(self):
-                self.view_model.load_saves()
-                renpy.restart_interaction()

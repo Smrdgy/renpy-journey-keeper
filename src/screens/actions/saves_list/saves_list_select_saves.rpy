@@ -22,7 +22,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                         text "[selected_length] item(s) selected"
 
                 if selected_length == 0:
-                    use JK_IconButton(icon="\ue5d5", action=JK.SavesListViewModel.RefreshSavesAction(view_model), tt="Rescan saves")
+                    use JK_IconButton(icon="\ue5d5", action=JK.Call(view_model.load_saves, _restart_interaction=True), tt="Rescan saves")
 
             hbox xalign 0.5 yalign 0.5:
                 use JK_IconButton(icon="\ue8fe", text="Per save selection", action=JK.SavesListViewModel.SetSelectionModeAction(view_model, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggled_color=JK.Colors.selected)

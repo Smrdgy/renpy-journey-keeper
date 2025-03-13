@@ -75,7 +75,7 @@ init python in JK:
 
                 self.remove_instance(instance)
             else:
-                instance.scan()
+                instance.location.scan()
 
             return True
 

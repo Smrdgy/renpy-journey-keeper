@@ -379,25 +379,10 @@ init python in JK:
                 showConfirm(
                     title="Sequentialize playthrough",
                     message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
-                    yes=Playthroughs.SequentializeSavesAction(playthrough),
+                    yes=Call(playthrough.sequentializeSaves),
                     yes_icon="\ue089",
                     yes_color=Colors.error
                 )
-
-        class SequentializeSavesAction(renpy.ui.Action):
-            def __init__(self, playthrough):
-                self.playthrough = playthrough
-
-            def __call__(self):
-                self.playthrough.sequentializeSaves()
-        
-        class RemoveThumbnailAction(renpy.ui.Action):
-            def __init__(self, playthrough):
-                self.playthrough = playthrough
-
-            def __call__(self):
-                self.playthrough.removeThumbnail()
-                renpy.restart_interaction()
 
         class DeleteAllSavesAction(renpy.ui.Action):
             def __init__(self, playthrough):
