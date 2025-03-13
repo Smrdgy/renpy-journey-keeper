@@ -71,10 +71,11 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                         text "saves/" color '#e5e5e5'
                         text "[computedDirectory]" color JK.Colors.theme
 
-                        if isEdit:
-                            use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", tt_side="right")
-                        else:
-                            use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", tt_side="right")
+                        hbox yalign 0.5 xoffset JK.scaled(5):
+                            if isEdit:
+                                use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=computedDirectory, cwd=renpy.config.savedir), size=20, tt="Open playthrough directory", tt_side="right")
+                            else:
+                                use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=renpy.config.savedir), size=20, tt="Open a directory where this playthrough will be created", tt_side="right")
 
                     $ allSaveLocations = JK.SaveSystem.get_all_native_save_locations_for_options()
 
@@ -161,7 +162,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                         hbox:
                             offset JK.scaled((15, 0))
 
-                            use JK_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as a save name\n{size=-7}(Applies only for the saves created by this mod's autosave system enabled above){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not JK.Utils.has_cols_and_rows_configuration() or not autosaveOnChoices)
+                            use JK_Checkbox(checked=useChoiceLabelAsSaveName, text="Use the choice text as the save name\n{size=-7}(Only applies to saves created by this mod's autosave system){/size}", action=ToggleScreenVariable('useChoiceLabelAsSaveName', True, False), disabled=not JK.Utils.has_cols_and_rows_configuration() or not autosaveOnChoices)
 
                 use JK_YSpacer()
 

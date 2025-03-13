@@ -36,19 +36,21 @@ The sidepanel is the only element added to your field of view. From here, you ca
 
 ## Keyboard shortcuts
 - `ALT + P` or draw `P` → `Up + Right + Down + Left` on a touch screen
-  - Cycles between 3 modes of sidepanel visibility "Visible only on save/load screens" → "Always visible" → "Always hidden"
+  - Cycles between 3 modes of sidepanel visibility "Visible only on save/load screens" → "Always visible" → "Always hidden".
 - `ALT + A`
-  - Toggles autosave function (if it can be enabled)
+  - Toggles autosave function (if it can be enabled).
 - `F5`
-  - Makes a quick save
+  - Makes a quick save.
 - ` (Backtick)
-  - Saves a memory
+  - Saves a memory.
 - `CTRL + ALT + SHIFT + P`
-  - Resets text sizing as well as sidepanel and pagination position
+  - Resets text sizing as well as sidepanel and pagination position.
 - `CTRL + F`
-  - Search in active playthrough
+  - Search in active playthrough.
 - `CTRL + SHIFT + F`
-  - Search in all playthroughs
+  - Search in all playthroughs.
+- `ALT + [Click on a choice]`
+  - Prevents autosaving the choice when autosave is enabled.
 
 **Note**: All shortcuts can be remapped in the settings, in case of conflicts with the game or another mod.
 Additionally, the mappings can be set global via the globe icon button. Meaning, the mapping will apply to all other games as well.

@@ -9,7 +9,7 @@ screen JK_Settings_Sidepanel():
         use JK_YSpacer(2)
 
         hbox:
-            text "Toggle visibility mode key" yalign 0.5
+            text "Change visibility mode key" yalign 0.5
             use JK_ToggleSettingGlobalizationButton("changeSidepanelVisibilityKey")
 
         use JK_KeyInput(assignment=JK.Settings.changeSidepanelVisibilityKey, action=JK.Settings.SetChangeSidepanelVisibilityKeyAction)
