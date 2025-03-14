@@ -18,6 +18,9 @@ init 9999 python in JK:
                 Autosaver.set_next_slot()
 
     def load_partial(func, *args, **kwargs):
+        if hasattr(func, "_original"):
+            func = func._original
+
         def new_funct(*new_args, **new_kwargs):
             new_kwargs.update(kwargs.copy())
 
@@ -27,9 +30,15 @@ init 9999 python in JK:
             Memories.memoryInProgress = False
 
             return func(*(args + new_args), **new_kwargs)
+
+        new_funct._original = func
+
         return new_funct
 
     def save_partial(func, *args, **kwargs):
+        if hasattr(func, "_original"):
+            func = func._original
+
         def new_funct(*new_args, **new_kwargs):
             new_kwargs.update(kwargs.copy())
 
@@ -37,6 +46,9 @@ init 9999 python in JK:
                 before_save(new_args[0])
 
             return func(*(args + new_args), **new_kwargs)
+
+        new_funct._original = func
+
         return new_funct
 
 

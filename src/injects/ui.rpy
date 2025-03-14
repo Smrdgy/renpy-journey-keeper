@@ -2,6 +2,9 @@ init 9999 python in JK:
     _constant = True
 
     def my_partial(func, *args, **kwargs):
+        if hasattr(func, "_original"):
+            func = func._original
+
         def new_funct(*new_args, **new_kwargs):
             new_kwargs.update(kwargs.copy())
         
@@ -12,6 +15,9 @@ init 9999 python in JK:
             fn = func(*(args + new_args), **new_kwargs)
 
             return fn
+
+        new_funct._original = func
+
         return new_funct
 
     renpy.ui.ChoiceReturn.__call__ = my_partial(renpy.ui.ChoiceReturn.__call__)
