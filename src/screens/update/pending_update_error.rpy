@@ -1,4 +1,4 @@
-screen JK_PendingUpdateError(error):
+screen JK_PendingUpdateError(release, error):
     style_prefix 'JK'
     modal True
 
@@ -44,7 +44,7 @@ screen JK_PendingUpdateError(error):
             else:
                 # Retry
                 hbox:
-                    use JK_IconButton(icon="\ue5d5", text="Retry", action=JK.Updater.InstallUpdateAction())
+                    use JK_IconButton(icon="\ue5d5", text="Retry", action=JK.Updater.InstallUpdateAction(release))
 
             # Close
             hbox:

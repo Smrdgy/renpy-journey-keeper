@@ -319,6 +319,36 @@ init -9999 python in JK:
                                 screens.append(name)
             
             return screens
+
+        @staticmethod
+        def translate_markdown(text):
+            if text is None:
+                return None
+
+            # New lines
+            text = re.sub(r'\r\n', r'\n', text, flags=re.MULTILINE)
+            # Bold
+            text = re.sub(r'\*\*(.*?)\*\*', r'{b}\1{/b}', text)
+            # Italic
+            text = re.sub(r'\*(.*?)\*', r'{i}\1{/i}', text)
+            # Strikethrough
+            text = re.sub(r'~~(.*?)~~', r'{s}\1{/s}', text)
+            # Lists
+            text = re.sub(r'^- (.*?)$', r'    - \1', text, flags=re.MULTILINE)
+            # Links
+            text = re.sub(r'\[(.*?)\]\((.*?)\)', r'{a=\1}\2{/a}', text)
+            # Inline code
+            text = re.sub(r'`(.*?)`', r'\1', text)
+            # Block code
+            text = re.sub(r'```(.*?)```', r'\1', text, flags=re.DOTALL)
+            # Interpolation [...]
+            text = Utils.escape_renpy_reserved_characters(text)
+            # Headers
+            text = re.sub(r'^# (.*?)$', r'{color=[JK.Colors.theme]}{b}\1{/b}{/color}', text, flags=re.MULTILINE)
+            text = re.sub(r'^## (.*?)$', r'{color=[JK.Colors.theme]}{i}\1{/i}{/color}', text, flags=re.MULTILINE)
+            text = re.sub(r'^### (.*?)$', r'{color=[JK.Colors.theme]}\1{/color}', text, flags=re.MULTILINE)
+
+            return text
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):

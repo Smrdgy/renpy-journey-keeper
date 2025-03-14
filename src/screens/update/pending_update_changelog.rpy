@@ -1,4 +1,4 @@
-screen JK_PendingUpdateChangelog(version, changelog):
+screen JK_PendingUpdateChangelog(release):
     style_prefix 'JK'
     modal True
 
@@ -11,7 +11,7 @@ screen JK_PendingUpdateChangelog(version, changelog):
         ymaximum 0.85
 
         vbox:
-            text changelog or "{i}\"Looks like I was in so much hurry that I even forgot to write a changelog entry. Sorry!\"{/i}\n -- Smrdgy"
+            text release.changelog or "{i}\"Looks like I was in so much hurry that I even forgot to write a changelog entry. Sorry!\"{/i}\n -- Smrdgy"
 
             use JK_YSpacer(offset=2)
 
@@ -32,11 +32,11 @@ screen JK_PendingUpdateChangelog(version, changelog):
         vbox:
             # Download and install
             hbox:
-                use JK_IconButton(icon="\ue884", text="Download & install", action=JK.Updater.InstallUpdateAction(), color=JK.Colors.success)
+                use JK_IconButton(icon="\ue884", text="Download & install", action=JK.Updater.InstallUpdateAction(release), color=JK.Colors.success)
 
             # Skip this update
             hbox:
-                use JK_IconButton(icon="\ue14b", text="Skip this one out", action=[JK.Updater.SkipUpdateAction(version), Hide("JK_PendingUpdate")])
+                use JK_IconButton(icon="\ue14b", text="Skip this one out", action=[JK.Updater.SkipUpdateAction(release.version), Hide("JK_PendingUpdate")])
 
             # Disable updates
             hbox:
