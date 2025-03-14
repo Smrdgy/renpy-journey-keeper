@@ -32,6 +32,15 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                 hbox xpos 1.0 xanchor 1.0:
                     # Delete selection
                     use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.MassDeleteConfirmAction(view_model), tt="Delete {} save(s)".format(selected_length), tt_side="left")
+            else:
+                hbox xalign 1.0:
+                    text "Saves per page:" yalign 0.5
+
+                    use JK_IconButton(text="10", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=10), toggled=view_model.saves_per_page == 10, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="20", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=20), toggled=view_model.saves_per_page == 20, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="50", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=50), toggled=view_model.saves_per_page == 50, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="100", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=100), toggled=view_model.saves_per_page == 100, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="All", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=None), toggled=view_model.saves_per_page == None, toggled_color=JK.Colors.selected)
    
     hbox xalign 1.0:
         xfill True
@@ -67,7 +76,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                             use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
 
                         $ i = 0
-                        for save in view_model.all_saves:
+                        for save in view_model.pages[view_model.current_page]:
                             python:
                                 page, slot = JK.Utils.split_slotname(save)
                                 id = (save, None) if selection_mode == "PER_SAVE" else (save, location)
@@ -138,25 +147,73 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                         $ directory_index += 1
     
     # Dialog footer
-    hbox:
+    vbox:
         xfill True
         yfill True
 
-        vbox:
-            use JK_YSpacer(offset=2)
+        if view_model.saves_per_page:
+            hbox xalign 0.5 yalign 0.5:
+                hbox yalign 0.5:
+                    $ prev_jump_page = max(view_model.current_page - 10, 0)
+                    use JK_IconButton(icon="\ueac3", action=SetField(view_model, "current_page", prev_jump_page), tt=str(prev_jump_page + 1), disabled=view_model.current_page < 1)
+                    use JK_IconButton(icon="\ue5cb", action=SetField(view_model, "current_page", view_model.current_page - 1), disabled=view_model.current_page < 1)
 
-            text "{color=#abe9ff}click{/color} to select only one"
-            text "{color=#abe9ff}shift + click{/color} to select multiple"
-            text "{color=#abe9ff}ctrl + click{/color} or {color=#abe9ff}click the checkbox{/color} to select/deselect one"
+                hbox yalign 0.5:
+                    python:
+                        def paginate(selected_page, total_pages):
+                            visible_pages=10
+                            offset = selected_page // (visible_pages - 1)
 
-        vbox:
-            style_prefix "JK_dialog_action_buttons"
+                            start_page = max(0, offset * (visible_pages - 1))
+                            end_page = min(start_page + visible_pages - 1, total_pages)
 
-            vbox xalign 1.0:
-                # Delete all saves
-                hbox:
-                    use JK_IconButton(icon="\ue92b", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="ctrl_K_d")
+                            return list(range(start_page, end_page))
 
-                # Close
-                hbox:
-                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SavesList"))
+                        def paginate_seamlessly(selected_page, total_pages):
+                            visible_pages = 9
+                            half_visible = visible_pages // 2
+
+                            # Adjust start and end to ensure exactly `visible_pages` items if possible
+                            start_page = max(0, selected_page - half_visible)
+                            end_page = start_page + visible_pages - 1
+
+                            # If end_page exceeds total_pages, shift the range back
+                            if end_page >= total_pages:
+                                end_page = total_pages - 1
+                                start_page = max(0, end_page - visible_pages + 1)
+
+                            return list(range(start_page, end_page + 1))
+
+                    for page in (paginate_seamlessly(view_model.current_page, len(view_model.pages)) if JK.Settings.seamlessPagination else paginate(view_model.current_page, len(view_model.pages))):
+                        button:
+                            style_prefix ("JK_PaginationButton_active" if page == view_model.current_page else "JK_PaginationButton")
+                            text str(page + 1)
+                            action SetField(view_model, "current_page", page)
+
+                hbox yalign 0.5:
+                    use JK_IconButton(icon="\ue5cc", action=SetField(view_model, "current_page", view_model.current_page + 1), disabled=view_model.current_page == len(view_model.pages) - 1)
+
+                    $ next_jump_page = min(view_model.current_page + (10 if view_model.current_page > 0 else 9), len(view_model.pages) - 1)
+                    use JK_IconButton(icon="\ueac9", action=SetField(view_model, "current_page", next_jump_page), tt=str(next_jump_page + 1), disabled=view_model.current_page == len(view_model.pages) - 1)
+
+        hbox:
+            xfill True
+
+            vbox:
+                use JK_YSpacer(offset=2)
+
+                text "{color=#abe9ff}click{/color} to select only one"
+                text "{color=#abe9ff}shift + click{/color} to select multiple"
+                text "{color=#abe9ff}ctrl + click{/color} or {color=#abe9ff}click the checkbox{/color} to select/deselect one"
+
+            vbox:
+                style_prefix "JK_dialog_action_buttons"
+
+                vbox xalign 1.0:
+                    # Delete all saves
+                    hbox:
+                        use JK_IconButton(icon="\ue92b", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="ctrl_K_d")
+
+                    # Close
+                    hbox:
+                        use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SavesList"))

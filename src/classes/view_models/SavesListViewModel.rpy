@@ -13,6 +13,10 @@ init python in JK:
             self.saves_length = 0
             self.saves_multilocation = None
 
+            self.saves_per_page = 20
+            self.pages = []
+            self.current_page = 0
+
             self.selection = []
 
             self.processing = False
@@ -50,6 +54,7 @@ init python in JK:
                     self.saves_length = current_len
 
             self.all_saves = Utils.sort_saves(all_saves)
+            self.split_saves_into_pages()
 
             renpy.restart_interaction()
 
@@ -127,6 +132,20 @@ init python in JK:
                 self.delete_thread.join()  # Wait for the thread to finish if stopping early
 
             SaveSystem.multilocation.scan()
+
+        def set_saves_per_page(self, amount):
+            self.current_page = 0
+            self.saves_per_page = amount
+            self.split_saves_into_pages()
+
+        def split_saves_into_pages(self):
+            def __paginate_list(lst, page_size):
+                if page_size is None:
+                    return [lst]
+
+                return [lst[i:i + page_size] for i in range(0, len(lst), page_size)]
+
+            self.pages = __paginate_list(self.all_saves, self.saves_per_page)
 
         class SelectionAction(renpy.ui.Action):
             def __init__(self, view_model, id, all_saves, last_selected_save):
