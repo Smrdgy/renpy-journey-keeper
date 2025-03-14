@@ -2,6 +2,8 @@
 
 # Journey Keeper
 
+[![Static Badge](https://dcbadge.limes.pink/api/server/https://discord.gg/H5SgkKbBE7)](https://discord.gg/H5SgkKbBE7)
+
 **Journey Keeper** (**JK**) is a Ren'Py mod, designed to help you organize saves into distinct playthroughs, introduces an autosave on choice feature, tracks all choices with a timeline, and offers a variety of tools for efficient save management.
 Compatible with all Ren'Py games from version 7 onward, JK ensures you never lose track of your journey, whether you're exploring new routes or revisiting past decisions.
 
