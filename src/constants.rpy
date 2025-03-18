@@ -1,6 +1,6 @@
 init -1 python in JK:
     MOD_NAME = "Journey Keeper"
-    MOD_VERSION = "0.4.3"
+    MOD_VERSION = "0.4.4"
     MOD_GITHUB_OWNER = "Smrdgy"
     MOD_GITHUB_REPO = "renpy-journey-keeper"
     DISCORD_URL = "https://discord.gg/H5SgkKbBE7"

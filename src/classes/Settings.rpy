@@ -234,7 +234,7 @@ init -1 python in JK:
 
         @staticmethod
         def DecrementAction(key, amount=-1, min=None):
-            return Settings.IncrementAction(key, amount, min, max)
+            return Settings.IncrementAction(key, amount, min)
 
         class SetSaveScreenNameAction(renpy.ui.Action):
             def __init__(self, name):
