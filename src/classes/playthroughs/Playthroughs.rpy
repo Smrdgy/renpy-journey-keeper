@@ -191,9 +191,9 @@ init python in JK:
             self.active_playthrough.edit(autosaveOnChoices=not self.active_playthrough.autosaveOnChoices)
 
             Autosaver.pending_save = None
+            renpy.restart_interaction()
 
             self.save()
-            renpy.restart_interaction()
 
             renpy.notify("Autosave on choice is " + ("enabled" if self.active_playthrough.autosaveOnChoices else "disabled"))
 
@@ -350,7 +350,7 @@ init python in JK:
 
         class ToggleAutosaveOnChoicesForActiveAction(renpy.ui.Action):
             def __call__(self):
-                Playthroughs.toggle_autosave_on_choices_for_active()
+                renpy.invoke_in_thread(Playthroughs.toggle_autosave_on_choices_for_active)
 
         class QuickSaveAction(renpy.ui.Action):
             def __call__(self):

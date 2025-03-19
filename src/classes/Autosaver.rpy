@@ -118,6 +118,8 @@ init python in JK:
                 while node and prediction_depth < 2:
                     if node in resolved_nodes:
                         return True
+
+                    resolved_nodes.append(node)
                     
                     # Python usually indicates that something will happen with variables,
                     # so even if the choice might be a question it is a question with a potential reward, thus save-worthy.
@@ -148,10 +150,13 @@ init python in JK:
 
                     i += 1
 
-                    if i > 1000000:
-                        raise Exception("JK.Utils.find_next_label_from_current() infinite loop prevented. Or just reeeeeally long code stack...")
+                    if i > 1000:
+                        raise Exception("Autosaver.__is_choice_question() infinite loop prevented. Or just reeeeeally long code stack...")
             except Exception as e:
                 print(e)
+
+                if Settings.debugEnabled:
+                    renpy.notify(str(e))
 
             return False
 
