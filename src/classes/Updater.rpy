@@ -203,7 +203,7 @@ init python in JK:
 
             @property
             def version(self):
-                return self.data.get("tag_name")
+                return self.data.get("tag_name").replace("v", "")
             
             @property
             def download_url(self):
