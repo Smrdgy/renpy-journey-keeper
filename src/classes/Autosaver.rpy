@@ -102,17 +102,20 @@ init python in JK:
 
                 self.pending_save.save()
 
-        def __is_choice_question(self, choice):
+        def __is_question(self, choice=None, node=None):
             try:
                 i = 0
-                menu_node = renpy.game.script.lookup(choice.location)
-                choice_item = menu_node.items[choice.value]
-                if len(choice_item) > 2 and choice_item[2]:
-                    node = choice_item[2][0]
-                else:
-                    node = None
+                resolved_nodes = []
 
-                resolved_nodes = [menu_node]
+                if choice:
+                    menu_node = renpy.game.script.lookup(choice.location)
+                    choice_item = menu_node.items[choice.value]
+                    if len(choice_item) > 2 and choice_item[2]:
+                        node = choice_item[2][0]
+                    else:
+                        node = None
+
+                    resolved_nodes = [menu_node]
                 
                 prediction_depth = 0
                 while node and prediction_depth < 2:
@@ -121,7 +124,7 @@ init python in JK:
 
                     resolved_nodes.append(node)
                     
-                    # Python usually indicates that something will happen with variables,
+                    # "python" usually indicates that something will happen with variables,
                     # so even if the choice might be a question it is a question with a potential reward, thus save-worthy.
                     if isinstance(node, renpy.ast.Python) and hasattr(node, 'code') and hasattr(node.code, 'source'):
                         if not node.code.source.startswith('renpy.pause(') and not node.code.source.startswith('ui.'):
@@ -160,19 +163,21 @@ init python in JK:
 
             return False
 
-        def handle_choice_selection(self, choice):
+        def __can_perform_autosave(self):
+            # Prevent making any autosave actions when the feature is disabled
+            if not Playthroughs.active_playthrough.autosaveOnChoices: return
+
+            # Prevent when forcefully disabled
+            if self.prevent_autosaving: return
+
             # Prevent a single choice from saving multiple times (debouncer)
-            if self.pending_save:
-                return
+            if self.pending_save: return
 
-            # Prevent making any autosave actions when the feature is diabled or is viewing a memory or a replay
-            if not Playthroughs.active_playthrough.autosaveOnChoices or Memories.memoryInProgress or renpy.store._in_replay:
-                return
+            # Prevent when viewing a replay or a memory
+            if Memories.memoryInProgress or renpy.store._in_replay: return
 
-            # If autosave on question is disabled, make sure the jump at then end of the choice doesn't lead back to JK_LastLabel
-            if not Settings.autosaveOnQuestion:
-                if self.__is_choice_question(choice):
-                    return
+            # Prevent when singleton choice is detected and not allowed
+            if not Settings.autosaveOnSingletonChoice and not Utils.is_displaying_multiple_choices(): return
 
             # Prevent making autosave when prevent modifier (SHIFT/ALT) is held
             if Settings.preventAutosaveModifierKey:
@@ -184,6 +189,54 @@ init python in JK:
                 ):
                     return
 
+            return True
+
+        def handle_any_button_click(self, button):
+            # Make sure the autosave can be performed
+            if not self.__can_perform_autosave():
+                return
+
+            # Retrieve label
+
+            if isinstance(button, renpy.display.behavior.Button):
+                if isinstance(button.child, renpy.text.text.Text):
+                    # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
+                    text_component = renpy.ui.text(button.child.text)
+                    choice_text = Utils.escape_renpy_reserved_characters(' '.join(text_component.text))
+
+                    self.create_pending_save_from_generic_button(button, choice_text)
+                else:
+                    self.create_pending_save_from_generic_button(button)
+
+            elif isinstance(button, renpy.display.behavior.ImageButton):
+                    self.create_pending_save_from_generic_button(button)
+
+            elif isinstance(button, renpy.display.behavior.TextButton):
+                self.create_pending_save_from_generic_button(button)
+
+        def create_pending_save_from_generic_button(self, button, label=None):
+            node = button.action.node
+
+            # If "autosave on question" is disabled, make sure the jump at then end of the choice doesn't lead back to JK_LastLabel
+            if not Settings.autosaveOnQuestion and node:
+                if self.__is_question(node=node):
+                    return
+
+            self.create_pending_save(label)
+
+        def handle_choice_selection(self, choice):
+            # Make sure the autosave can be performed
+            if not self.__can_perform_autosave():
+                return
+
+            # If "autosave on question" is disabled, make sure the jump at then end of the choice doesn't lead back to JK_LastLabel
+            if not Settings.autosaveOnQuestion:
+                if self.__is_question(choice=choice):
+                    return
+
+            self.create_pending_save_from_choice(choice)
+
+        def create_pending_save_from_choice(self, choice):
             # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
             textComponent = renpy.ui.text(choice.label)
             choiceText = Utils.escape_renpy_reserved_characters(' '.join(textComponent.text))
@@ -191,8 +244,8 @@ init python in JK:
             self.create_pending_save(choiceText)
 
         # The JK_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
-        # However when a manual save is loaded it might not be a choice screen.
-        # If so, the save slot needs to move further as to not override the manual slot with the next autosave.
+        #  However when a manual save is loaded it might not be a choice screen.
+        #  If so, the save slot needs to move further as to not override the manual slot with the next autosave.
         def process_slot_after_load(self):
             self.loaded_manual_save_without_choices = False
 

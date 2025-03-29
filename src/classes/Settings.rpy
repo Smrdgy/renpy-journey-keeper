@@ -74,6 +74,7 @@ init -1 python in JK:
             self.paginationOpacity = data.get("paginationOpacity", 0.9)
             self.preventAutosaveModifierKey = data.get("preventAutosaveModifierKey", "ALT")
             self.noUpdatePrompt = data.get("noUpdatePrompt", False)
+            self.autosaveOnNormalButtonsWithJump = data.get("autosaveOnNormalButtonsWithJump", False)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -117,6 +118,7 @@ init -1 python in JK:
                 'paginationOpacity': self.paginationOpacity,
                 'preventAutosaveModifierKey': self.preventAutosaveModifierKey,
                 'noUpdatePrompt': self.noUpdatePrompt,
+                'autosaveOnNormalButtonsWithJump': self.autosaveOnNormalButtonsWithJump,
             })
 
         def get_settings_for_reset(self, no_globals=False):

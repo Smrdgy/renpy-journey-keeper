@@ -122,7 +122,7 @@ The mod was developed with a 1080p resolution in mind. Older games, often using 
 ### Solution:
 1. Count the number of rows and columns in the save/load grid.
 2. Open settings (⚙️).
-3. Find `Custom slots grid` checkbox under `Save/Load` section.
+3. Find and enable `Custom slots grid` checkbox under `Save/Load` section.
 4. Use the `+` and `-` buttons to match the row and column numbers from step 1.
 
 ### Reason:
@@ -144,11 +144,17 @@ For instance, some games feature an age check right at the beginning, and the "y
 ### Scenario B: Custom choice buttons
 
 #### Solution:
-Cannot be fixed.
+1. Open settings (⚙️).
+2. Click on the "Autosave" tab
+3. Find and enable "Perform autosave on normal buttons" under the "Advanced" section.
 
 #### Reason:
-The game uses custom buttons for choices, which the mod cannot detect.
+The game uses custom buttons for choices, which the mod cannot detect by default.
+To accommodate this, the setting forces an autosave on any button that might be considered a choice.
+However, be aware that this may result in false positives, such as free-roam navigation buttons.
 
+**For the curious technically apt users**:
+A Button is considered a choice button if it contains the `Jump` action.
 
 ## The autosaves are disorganized
 
@@ -166,11 +172,11 @@ However, there is a system that detects when the page number jumps too much (by 
 #### Solution:
 1. Count the number of rows and columns in the save/load grid.
 2. Open settings (⚙️).
-3. Find `Custom slots grid` checkbox under `Save/Load` section.
+3. Find and enable `Custom slots grid` checkbox under `Save/Load` section.
 4. Use the `+` and `-` buttons to match the row and column numbers from step 1.
 
 #### Reason:
-Some games with custom save/load screens may encounter issues if two variables, `renpy.store.gui.file_slot_cols` and `renpy.store.gui.file_slot_rows`, are defined incorrectly. This misconfiguration can confuse the autosave counter, leading to saves either overflowing the grid or prematurely jumping to another page.
+Some games with custom save/load screens may encounter issues if two variables, `renpy.store.gui.file_slot_cols` and `renpy.store.gui.file_slot_rows`, are defined incorrectly. This misconfiguration can confuse the autosave counter, leading saves to either overflow the grid or prematurely jumping to another page.
 
 
 # Known issues
