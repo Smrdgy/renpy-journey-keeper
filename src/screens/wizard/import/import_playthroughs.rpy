@@ -6,6 +6,7 @@ screen JK_ImportPlaythroughs():
     default view_model = JK.ImportPlaythroughsViewModel()
     default last_selected_playthrough = None
     default show_thumbnails = False
+    default search = ""
 
     $ game_name = view_model.selected_game[0] if view_model.selected_game else None
     use JK_Dialog(title="Import playthrough(s)", message="Select playthroughs you want to import from {}.".format(game_name) if view_model.selected_game else "Select a game you want to import from.", close_action=Hide("JK_ImportPlaythroughs")):
@@ -95,5 +96,5 @@ screen JK_ImportPlaythroughs():
             use JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthrough, show_thumbnails)
 
         else:
-            use JK_ImportPlaythroughsSelectGame(view_model)
+            use JK_ImportPlaythroughsSelectGame(view_model, search)
             

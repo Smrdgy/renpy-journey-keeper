@@ -28,7 +28,6 @@ init python in JK:
             root_path = os.path.normpath(os.path.join(UserDir.root_path(), ".."))
             try:
                 if os.path.exists(root_path):
-                    print(os.listdir(root_path))
                     for game_name in os.listdir(root_path):
                         if game_name in ["JK", "0x52-URM", renpy.config.save_directory]:
                             continue
