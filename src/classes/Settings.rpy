@@ -75,6 +75,7 @@ init -1 python in JK:
             self.preventAutosaveModifierKey = data.get("preventAutosaveModifierKey", "ALT")
             self.noUpdatePrompt = data.get("noUpdatePrompt", False)
             self.autosaveOnNormalButtonsWithJump = data.get("autosaveOnNormalButtonsWithJump", False)
+            self.playthroughsViewMode = data.get("playthroughsViewMode", "grid")
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -119,6 +120,7 @@ init -1 python in JK:
                 'preventAutosaveModifierKey': self.preventAutosaveModifierKey,
                 'noUpdatePrompt': self.noUpdatePrompt,
                 'autosaveOnNormalButtonsWithJump': self.autosaveOnNormalButtonsWithJump,
+                'playthroughsViewMode': self.playthroughsViewMode,
             })
 
         def get_settings_for_reset(self, no_globals=False):
@@ -378,6 +380,10 @@ init -1 python in JK:
                 super(Settings.FieldValueAction, self).changed(value)
 
                 Settings.save()
+
+        class ShowSaveLoadAction(renpy.ui.Action):
+            def __call__(self):
+                renpy.store.Show('JK_Settings', section='SAVE_LOAD')()
 
         # ==============
         # Static methods

@@ -17,9 +17,9 @@ init python in JK:
 
         status_enabled = success
         status_disabled = error
-        status_enabled_disabled = "#002200"
+        status_enabled_disabled = "#004400"
 
-        disabled = "#2f2f2f55"
+        disabled = "#62626255"
         na = disabled # N/A
 
         selected = "#7ff981ff"
