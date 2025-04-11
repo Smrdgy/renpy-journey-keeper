@@ -353,21 +353,38 @@ init python in JK:
                 renpy.invoke_in_thread(Playthroughs.toggle_autosave_on_choices_for_active)
 
         class QuickSaveAction(renpy.ui.Action):
+            temp_save_slotname = "JK-temp"
+
+            def __init__(self, force=False, move_one=False):
+                self.force = force
+                self.move_one = move_one
+
             def __call__(self):
+                if self.move_one:
+                    Autosaver.set_next_slot()
+
                 page, _, slotString = Autosaver.get_current_slot()
                 slotString = Utils.format_slotname(slotString)
 
-                renpy.take_screenshot()
-                renpy.save(slotString)
+                if not self.move_one and not self.force:
+                    renpy.take_screenshot()
 
-                if not Settings.offsetSlotAfterManualSave:
+                renpy.save(self.temp_save_slotname)
+
+                if not self.force and SaveSystem.multilocation.newest(slotString):
+                    renpy.show_screen("JK_QuickSaveOverwriteConfirm")
+                    return
+
+                renpy.rename_save(self.temp_save_slotname, slotString)
+
+                if Settings.offsetSlotAfterQuickSave:
                     Autosaver.set_next_slot()
 
                 if Settings.pageFollowsQuickSave:
                     renpy.store.persistent._file_page = str(page)
 
-                if Settings.quickSaveNotificationEnabled:
-                    renpy.notify("Quicksave created at {}".format(slotString))
+                # if Settings.quickSaveNotificationEnabled:
+                #     renpy.notify("Quicksave created at {}".format(slotString))
 
         class TrySequentializeSaves(renpy.ui.Action):
             def __init__(self, playthrough):

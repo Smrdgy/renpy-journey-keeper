@@ -331,8 +331,8 @@ init python in JK:
             def __call__(self):
                 self.button.set_detecting()
 
-    def KeyInput(assignment=None, action=None, style='keyinput', disabled=False, **properties):
-        return KeyInputButton(assignment=assignment, action=action, style="keyinput_disabled" if disabled else style, **properties)
+    def KeyInput(assignment=None, action=None, style='keyinput', **properties):
+        return KeyInputButton(assignment=assignment, action=action, style=style, **properties)
 
 # Screen
 screen JK_KeyInput(assignment=None, action=NullAction, disabled=False, supress_ctrl_warning=False, supress_no_mod_warning=False):
@@ -352,7 +352,7 @@ screen JK_KeyInput(assignment=None, action=NullAction, disabled=False, supress_c
 
         if assignment:
             if not supress_ctrl_warning and "ctrl_" in assignment:
-                text "Please note that while CTRL is allowed, it may conflict with the skip action during gameplay." color JK.Colors.warning
+                text "Please note that while CTRL is allowed, it may conflict with the skip action during gameplay." color (JK.Colors.disabled if disabled else JK.Colors.warning)
 
             if not supress_no_mod_warning and len(assignment.split("_")) == 2:
-                text "Be aware, simple key shortcuts may trigger accidentally while renaming a page." color JK.Colors.warning
+                text "Be aware, simple key shortcuts may trigger accidentally while renaming a page." color (JK.Colors.disabled if disabled else JK.Colors.warning)

@@ -85,7 +85,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                         if isEdit and playthrough.id > 1 and name != originalname and not name_invalid:
                             use JK_Checkbox(checked=moveSaveDirectory, text="Rename the directory as well", action=ToggleScreenVariable('moveSaveDirectory', True, False))
 
-                    if allSaveLocations > 1:
+                    if len(allSaveLocations) > 1:
                         hbox:
                             use JK_Checkbox(checked=enabledSaveLocations != False, text="Manage save locations", action=ToggleScreenVariable('enabledSaveLocations', allSaveLocations, False))
                             use JK_Helper("Here, you can configure where your saves for this playthrough are stored.\nBy default, Ren'Py saves are kept in two {color=[JK.Colors.warning]}(varies by platform){/color} locations: the game directory and the user directory. If you want to disable one of these locations, for example, to save storage space, you can do that here.")

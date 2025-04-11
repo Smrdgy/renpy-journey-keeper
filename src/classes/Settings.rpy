@@ -52,6 +52,7 @@ init -1 python in JK:
             self.saveScreenName = data.get("saveScreenName", ["save"])
             self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", False)
             self.offsetSlotAfterManualSave = data.get("offsetSlotAfterManualSave", True)
+            self.offsetSlotAfterQuickSave = data.get("offsetSlotAfterQuickSave", True)
             self.sizeAdjustment = data.get("sizeAdjustment", 0) or 0
             self.changeSidepanelVisibilityKey = data.get("changeSidepanelVisibilityKey", "alt_K_p")
             self.debugEnabled = data.get("debugEnabled", False)
@@ -100,6 +101,7 @@ init -1 python in JK:
                 'saveScreenName': self.saveScreenName,
                 'offsetSlotAfterManualSaveIsLoaded': self.offsetSlotAfterManualSaveIsLoaded,
                 'offsetSlotAfterManualSave': self.offsetSlotAfterManualSave,
+                'offsetSlotAfterQuickSave': self.offsetSlotAfterQuickSave,
                 'sizeAdjustment': self.sizeAdjustment,
                 'changeSidepanelVisibilityKey': self.changeSidepanelVisibilityKey,
                 'debugEnabled': self.debugEnabled,
