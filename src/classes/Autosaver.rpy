@@ -102,6 +102,9 @@ init python in JK:
 
                 self.pending_save.save()
 
+        # This feature simply doesn't work. There is a lot of false positives because once there is a python block, a choice is considered not a question anymore.
+        #  At the same time, if there is a menu with bunch of text that falls through or has jumpt at the end and other choices is clearly a proper choice, then this choice is fasly considered a question.
+        #  So for now, I'm shelving the featre until I can find a proper solution. Or just leave it here to rot.
         def __is_question(self, choice=None, node=None):
             try:
                 i = 0
