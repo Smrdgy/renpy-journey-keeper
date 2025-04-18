@@ -18,9 +18,9 @@ screen JK_Sidepanel():
             size = 0
             for item in structure:
                 if item == "DIVIDER":
-                    size += divider_size
+                    size += JK.scaled(divider_size)
                 else:
-                    size += item_size
+                    size += JK.scaled(item_size)
             
             return size
 
@@ -32,11 +32,11 @@ screen JK_Sidepanel():
         amount_of_custom_playthroughs = len([p for p in JK.Playthroughs.playthroughs if p.id > 2])
 
         if horizontal:
-            estimatedPanelSize = JK.scaled((calculate_structure_size(structure), 70))
+            estimatedPanelSize = J(calculate_structure_size(structure), 70)
             sidepanelPos = store.persistent.JK_SidepanelPos or (int(renpy.config.screen_width / 2 - estimatedPanelSize[0] / 2), 15)
             tooltip_side = "top" if sidepanelPos[1] > renpy.config.screen_height / 2 else "bottom"            
         else:
-            estimatedPanelSize = JK.scaled((70, calculate_structure_size(structure)))
+            estimatedPanelSize = (70, calculate_structure_size(structure))
             sidepanelPos = store.persistent.JK_SidepanelPos or (int(renpy.config.screen_width - estimatedPanelSize[0] - 15), int(renpy.config.screen_height / 2 - estimatedPanelSize[1] / 2))
             tooltip_side = "left" if sidepanelPos[0] > renpy.config.screen_width / 2 else "right"
 
@@ -69,8 +69,8 @@ screen JK_Sidepanel():
 
                 use JK_IconButton('\uea20', tt="New playthrough", tt_side=tooltip_side, action=Show("JK_EditPlaythrough", playthrough=None))
 
-                if JK.Settings.memoriesEnabled:
-                    use JK_IconButton('\ue02c', tt="Open memories", tt_side=tooltip_side, action=Show("JK_MemoriesLibrary"), disabled=not JK.Settings.memoriesEnabled)
+                if "MEMORIES" in structure:
+                    use JK_IconButton('\ue02c', tt="Open memories", tt_side=tooltip_side, action=Show("JK_MemoriesLibrary"))
 
                 use JK_Divider(sizeX=(2 if horizontal else 40), sizeY=(40 if horizontal else 2))
 
@@ -82,14 +82,6 @@ screen JK_Sidepanel():
 
                 use JK_IconButton('\uf045', tt=("Hide custom pagination" if custom_pagination_enabled else "Show custom pagination"), tt_side=tooltip_side, action=JK.Pagination.TogglePaginationAction(), toggled=custom_pagination_enabled, toggled_color=JK.Colors.selected)
                 use JK_IconButton('\ue8b8', tt="Open settings", tt_side=tooltip_side, action=Show("JK_Settings"))
-
-screen JK_AnyDirectionBox(horizontal=False):
-    if horizontal:
-        hbox:
-            transclude
-    else:
-        vbox:
-            transclude
 
 screen JK_SidepanelHolder():
     layer "JK_Sidepanel"

@@ -10,6 +10,7 @@ init -9999 python in JK:
         def __init__(self):
             super(MultiLocation, self).__init__()
 
+            self.last_page_cache = None
             self.nativeLocations = renpy.loadsave.location.locations
 
         def add(self, location):
@@ -178,3 +179,7 @@ init -9999 python in JK:
             
             if scan:
                 self.scan()
+
+        def scan(self):
+            self.last_page_cache = None
+            return super(MultiLocation, self).scan()

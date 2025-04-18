@@ -101,7 +101,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
                 use JK_YSpacer(2)
 
                 use JK_Title("Encountered an issue?", size=3, color=JK.Colors.error)
-                text "Visit our {a=[JK.DISCORD_URL]}Discord{/a} or check {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]}GitHub{/a}."
+                text "Visit our {a=[JK.DISCORD_URL]}Discord{/a} or {a=https://github.com/[JK.MOD_GITHUB_OWNER]/[JK.MOD_GITHUB_REPO]}GitHub{/a}."
 
             hbox:
                 style_prefix "JK_dialog_action_buttons"

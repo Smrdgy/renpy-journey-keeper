@@ -77,6 +77,13 @@ init -1 python in JK:
             self.noUpdatePrompt = data.get("noUpdatePrompt", False)
             self.autosaveOnNormalButtonsWithJump = data.get("autosaveOnNormalButtonsWithJump", False)
             self.playthroughsViewMode = data.get("playthroughsViewMode", "grid")
+            self.paginationQuickSaves = data.get("paginationQuickSaves", True)
+            self.paginationAutoSaves = data.get("paginationAutoSaves", True)
+            self.paginationFirstPage = data.get("paginationFirstPage", True)
+            self.paginationLastPage = data.get("paginationLastPage", True)
+            self.paginationBigJump = data.get("paginationBigJump", True)
+            self.paginationGoTo = data.get("paginationGoTo", True)
+            self.paginationNumbers = data.get("paginationNumbers", True)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -123,6 +130,13 @@ init -1 python in JK:
                 'noUpdatePrompt': self.noUpdatePrompt,
                 'autosaveOnNormalButtonsWithJump': self.autosaveOnNormalButtonsWithJump,
                 'playthroughsViewMode': self.playthroughsViewMode,
+                'paginationQuickSaves': self.paginationQuickSaves,
+                'paginationAutoSaves': self.paginationAutoSaves,
+                'paginationFirstPage': self.paginationFirstPage,
+                'paginationLastPage': self.paginationLastPage,
+                'paginationBigJump': self.paginationBigJump,
+                'paginationGoTo': self.paginationGoTo,
+                'paginationNumbers': self.paginationNumbers,
             })
 
         def get_settings_for_reset(self, no_globals=False):

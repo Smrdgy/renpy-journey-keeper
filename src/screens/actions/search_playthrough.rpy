@@ -66,7 +66,7 @@ screen JK_SearchPlaythrough(search_all=False):
         hbox:
             xalign 1.0
 
-            use JK_Checkbox(checked=view_model.search_playthroughs, text="Search playthrough names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_playthroughs"))
+            use JK_Checkbox(checked=view_model.search_playthroughs, text="Search playthroughs", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_playthroughs"))
             use JK_Checkbox(checked=view_model.search_playthrough_names, text="Search playthrough names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_playthrough_names"), disabled=not view_model.search_playthroughs)
             use JK_Checkbox(checked=view_model.search_playthrough_descriptions, text="Search playthrough descriptions", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_playthrough_descriptions"), disabled=not view_model.search_playthroughs)
             use JK_Checkbox(checked=view_model.search_page_names, text="Search page names", size=JK.scaled(15), action=JK.SearchPlaythroughViewModel.SetSearchEnabledAction(view_model, "search_page_names"))

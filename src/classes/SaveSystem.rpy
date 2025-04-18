@@ -107,6 +107,16 @@ init python in JK:
                 return instance.listAllSaves()
 
             return []
+
+        def get_last_page(self):
+            if self.multilocation.last_page_cache:
+                return self.multilocation.last_page_cache
+
+            savename = Utils.get_sorted_saves()[-1]
+            if savename:
+                page, _ = Utils.split_slotname(savename)
+                self.multilocation.last_page_cache = page
+                return page
             
         class PlaythroughSaveClass(x52NonPicklable):
             def __init__(self, playthrough, noScan=False):

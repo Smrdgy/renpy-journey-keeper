@@ -1,4 +1,4 @@
-screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=None, tt=None, tt_side="top", toggled=False, toggled_icon=None, disabled=False, color=None, text_color=None, icon_color=None, toggled_color=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None, spacing=None, outlines=None):
+screen JK_IconButton(icon=None, text=None, action=None, size=None, tt=None, tt_side="top", toggled=False, toggled_icon=None, disabled=False, color=None, text_color=None, icon_color=None, toggled_color=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None, spacing=None, outlines=None):
     style_prefix "JK"
 
     python:
@@ -7,20 +7,18 @@ screen JK_IconButton(icon=None, text=None, action=None, size=None, sensitive=Non
         toggled_icon = toggled_icon or icon
 
     button:
-        sensitive sensitive
+        sensitive not disabled
         key_events True
 
         hovered [JK.OpenTooltipAction(message=tt, side=tt_side), hovered]
         unhovered [Hide("JK_TooltipDialog"), unhovered]
         selected toggled
-
-        if(not disabled):
-            action [Hide("JK_TooltipDialog"), action]
+        action [Hide("JK_TooltipDialog"), action]
 
         hbox:
             style_prefix "JK_Icon_button"
 
-            if key:
+            if key and not disabled:
                 key key action [Hide("JK_TooltipDialog"), action]
 
             if spacing:
