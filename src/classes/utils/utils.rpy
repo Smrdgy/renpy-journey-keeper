@@ -6,6 +6,12 @@ init -9999 python in JK:
     import unicodedata
     import sys
 
+    # All the credit for this class goes to 0x52.
+    # @see https://0x52.dev/
+    # 
+    # At this point, I could write this class on my own,
+    # although I would most likely end up with the same one anyway.
+    # But definitely not when I started and had no idea what pickling even is...
     class x52NonPicklable(python_object):
         def __setstate__(self, d):
             pass
