@@ -32,11 +32,11 @@ screen JK_Sidepanel():
         amount_of_custom_playthroughs = len([p for p in JK.Playthroughs.playthroughs if p.id > 2])
 
         if horizontal:
-            estimatedPanelSize = J(calculate_structure_size(structure), 70)
+            estimatedPanelSize = (calculate_structure_size(structure), JK.scaled(70))
             sidepanelPos = store.persistent.JK_SidepanelPos or (int(renpy.config.screen_width / 2 - estimatedPanelSize[0] / 2), 15)
             tooltip_side = "top" if sidepanelPos[1] > renpy.config.screen_height / 2 else "bottom"            
         else:
-            estimatedPanelSize = (70, calculate_structure_size(structure))
+            estimatedPanelSize = (JK.scaled(70), calculate_structure_size(structure))
             sidepanelPos = store.persistent.JK_SidepanelPos or (int(renpy.config.screen_width - estimatedPanelSize[0] - 15), int(renpy.config.screen_height / 2 - estimatedPanelSize[1] / 2))
             tooltip_side = "left" if sidepanelPos[0] > renpy.config.screen_width / 2 else "right"
 
