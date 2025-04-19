@@ -20,7 +20,7 @@ screen JK_PlaythroughsGridPicker(playthroughs, reorder_source):
         for playthrough in playthroughs:
             python:
                 is_active_playthrough = JK.Playthroughs.active_playthrough == playthrough or (playthrough.id == 1 and JK.Playthroughs.active_playthrough == None)
-                delete_action = Show("JK_RemovePlaythroughConfirm", playthrough=playthrough)
+                delete_action = Show("JK_RemovePlaythroughConfirm", playthrough=playthrough) if playthrough.id > 1 else NullAction()
                 edit_action = Show("JK_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True)
 
             button style "JK_playthrough_button":
@@ -61,13 +61,14 @@ screen JK_PlaythroughsGridPicker(playthroughs, reorder_source):
                                 use JK_IconButton(icon="\uef42", tt=playthrough.description, tt_side="bottom", outlines=outlines)
 
                         # Reorder
-                        hbox xalign 0.0 yalign 0.0:
-                            if reorder_source == playthrough.id:
-                                use JK_IconButton(icon="\ue5c9", action=SetScreenVariable("reorder_source", None), tt="Cancel", tt_side="bottom", hover_color=JK.Colors.error, outlines=outlines)
-                            elif reorder_source:
-                                use JK_IconButton(icon="\ue39e", action=[JK.Playthroughs.ReorderPlaythroughsAction(source=reorder_source, target=playthrough.id), SetScreenVariable("reorder_source", None)], tt="Move here", tt_side="bottom", outlines=outlines)
-                            else:
-                                use JK_IconButton(icon="\ue074", action=SetScreenVariable("reorder_source", playthrough.id), tt="Change order", tt_side="bottom", color=JK.Colors.text_light, hover_color=JK.Colors.hover, outlines=outlines)
+                        if len(playthroughs) > 1:
+                            hbox xalign 0.0 yalign 0.0:
+                                if reorder_source == playthrough.id:
+                                    use JK_IconButton(icon="\ue5c9", action=SetScreenVariable("reorder_source", None), tt="Cancel", tt_side="bottom", hover_color=JK.Colors.error, outlines=outlines)
+                                elif reorder_source:
+                                    use JK_IconButton(icon="\ue39e", action=[JK.Playthroughs.ReorderPlaythroughsAction(source=reorder_source, target=playthrough.id), SetScreenVariable("reorder_source", None)], tt="Move here", tt_side="bottom", outlines=outlines)
+                                else:
+                                    use JK_IconButton(icon="\ue074", action=SetScreenVariable("reorder_source", playthrough.id), tt="Change order", tt_side="bottom", color=JK.Colors.text_light, hover_color=JK.Colors.hover, outlines=outlines)
 
                     use JK_YSpacer(4)
 
@@ -98,19 +99,13 @@ screen JK_PlaythroughsGridPicker(playthroughs, reorder_source):
                 yanchor 1.0
 
                 frame style "JK_default":
-                    xmaximum thumbnailSize[0]
-                    ymaximum thumbnailSize[1]
+                    xysize thumbnailSize
 
-                    frame:
-                        xysize thumbnailSize
+                    vbox:
+                        xalign 0.5
+                        yalign 0.5
 
-                        button:
-                            style_prefix ""
-                            action None
-                            xalign 0.5
-                            yalign 0.5
-
-                            use JK_Icon(icon="\ue148", color="#333", hover_color="#fff", size=50)
+                        use JK_Icon(icon="\ue148", hover_color=JK.Colors.text_primary, size=60)
 
                 use JK_YSpacer(4)
 
