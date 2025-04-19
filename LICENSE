@@ -25,9 +25,16 @@ conditions:
 
 2. Redistribution of modified versions of the Software is permitted, provided
    that:
+   - The modifications are non-trivial and add meaningful differences to the
+     original Software. Superficial changes — such as renaming, recoloring,
+     or rebranding without functional or creative contribution — are not
+     sufficient on their own.
    - The modified version is clearly marked as such and does not misrepresent
      itself as the original Software.
    - The modified version includes prominent notice of the changes made.
+   - The redistribution is for non-commercial purposes only, unless it falls
+     under the bundling exception described in Clause 1 or is otherwise
+     granted by express written permission from the copyright holder.
    - The redistribution complies with all other terms of this license.
 
 3. This license does not grant permission to use the Software for other

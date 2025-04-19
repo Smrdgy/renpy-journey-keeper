@@ -4,17 +4,19 @@
 
 [![Static Badge](https://dcbadge.limes.pink/api/server/https://discord.gg/H5SgkKbBE7)](https://discord.gg/H5SgkKbBE7)
 
-**Journey Keeper** (**JK**) is a Ren'Py mod, designed to help you organize saves into distinct playthroughs, introduces an autosave on choice feature, tracks all choices with a timeline, and offers a variety of tools for efficient save management.
+**Journey Keeper** (**JK**) is a Ren'Py mod, designed to help you organize saves into distinct playthroughs. Introduces an autosave on choice feature, tracks all choices with a timeline, and offers a variety of tools for save management.
 Compatible with all Ren'Py games from version 7 onward, JK ensures you never lose track of your journey, whether you're exploring new routes or revisiting past decisions.
 
 # Table of Contents
-1. [Install](#install)
+1. [Installation](#installation)
 2. [First-Time Orientation](#first-time-orientation)
 3. [Features](#features)
-5. [Troubleshooting](#troubleshooting)
-6. [Known Issues](#known-issues)
+4. [Troubleshooting](#troubleshooting)
+5. [Known Issues](#known-issues)
 
-# Install
+# Installation
+Download the [latest release](https://github.com/Smrdgy/renpy-journey-keeper/releases/latest) right here from GitHub
+
 Copy `JK.rpa` into the `/game` directory of the game you want to play.
 
 *Tip for Windows*:
@@ -26,9 +28,8 @@ This approach enables you to reuse the mod across multiple games, and in the eve
 When you start the game, go to the load screen. You should see a black bar with buttons on the right side -- a sidepanel.
 If the sidepanel doesn't appear, check the [Troubleshooting](#troubleshooting) section for the "I can't find the panel" issue.
 
-The sidepanel is the only element added to your field of view. From here, you can:
+The sidepanel is the only element added to your field of view by default. From here, you can:
 - Select, edit, or create playthroughs.
-- View and manage created memories (*WIP*).
 - Quickly toggle autosaving for the active playthrough.
 - Manage active playthrough via specific actions, like:
   - Duplicate playthrough.
@@ -43,8 +44,6 @@ The sidepanel is the only element added to your field of view. From here, you ca
   - Toggles autosave function (if it can be enabled).
 - `F5`
   - Makes a quick save.
-- ` (Backtick)
-  - Saves a memory.
 - `CTRL + ALT + SHIFT + P`
   - Resets text sizing as well as sidepanel and pagination position.
 - `CTRL + F`
@@ -54,34 +53,41 @@ The sidepanel is the only element added to your field of view. From here, you ca
 - `ALT + [Click on a choice]`
   - Prevents autosaving the choice when autosave is enabled.
 
-**Note**: All shortcuts can be remapped in the settings, in case of conflicts with the game or another mod.
+💡 **Note**: All shortcuts can be remapped in the settings, in case of conflicts with the game or another mod.
 Additionally, the mappings can be set global via the globe icon button. Meaning, the mapping will apply to all other games as well.
 > For example: I'm not using the Ren'Py's native accessibility menu (`A`), so I unchecked ALT on the autosave mapping to simplify the shortcut.
 
 You can also unassign the mapping by clicking the circular red X button 
 
 # Features
-- Manage multiple playthroughs, each with its own name, thumbnail, and description—accessible from the save/load screen.
-- Autosave every choice you make, with the ability to view them in a list.
-- View and manage saves across playthroughs:
+- 📂 Manage multiple playthroughs, each with its own name, thumbnail, and description—accessible from the save/load screen.
+- 💾 Autosave every choice you make, with the ability to view them in a list.
+- 🧮 View and manage saves across playthroughs:
   - Copy saves from one playthrough to another.
   - Delete any save from any location.
   - Restructure saves into a sequence.
-- Use actually working pagination, with go-to a specific page feature
-- Create memories (*WIP*).
-- Search playthrough(s) and their save names and choices
-- Import playthroughs from other games (to continue from a previous part/season for example)
+- 🔢 Use actually working pagination, with go-to a specific page feature
+- 🔎 Search playthrough(s) and their save names and choices
+- 📚 Import playthroughs from other games (to continue from a previous part/season for example)
+- ⚙️ Comprehensive collection of settings to personalize your experience
 
-**Note:**  
-Memories are an experimental feature. Until I figure out how to store a sequence of events, a "memory" will be just a glorified save.
+💡 **Note** Every non-fullscreen element can be dragged around.
 
 ### Planned features *(or at least under consideration)*
 
-- Complete memories
 - Add custom save/load page
+- Add more progress bars wherever a time-consuming operation occurs
+- Implement system to prevent autosaving when choosing a choice question (a choice that leads back to the same menu the choice was made from)
+- Add memories
+  - A system to record segments of the gameplay to be replayed at any time. Basically a glorified save and replay in one. No choices, minigames, etc.. Perfect for replaying key moments like 18+ scenes when gallery isn't available.
+- Localization
+- Improve performance of save picker screens (if it's even possible)
+- Colors customization (colorblind accessibility)
 
 # Troubleshooting
-Most of these issues arise from the wide diversity of how the games are programmed, so don't be surprised by the recurring pattern of blaming the other developers.
+ℹ️ If you've encountered an issue, first check the frequently occurring scenarios below for possible solutions. If that doesn't help, feel free to visit our [Discord](https://discord.gg/H5SgkKbBE7) to report it and/or get further help. Alternatively you can submit an issue right here on GitHub. 
+
+💡 Most of these issues arise from the wide diversity of how the games are programmed, so don't be surprised by the recurring pattern of blaming the other developers 😅.
 
 ## I can't find the panel
 ### Scenario A: Wrong save/load names
@@ -102,7 +108,7 @@ In extreme cases were you are unable to find the save/load screen(s), follow the
 2. Do what you need to do.
 3. Press `ALT + P` (or the touch screen equivalent) again to hide the sidepanel. 
 
-> **Note** The visibility cycle has 3 modes, in order to bring the sidepanel back again, you will have to repeat the press multiple times.
+> 💡 **Note** The visibility cycle has 3 modes. In order to bring the sidepanel back again, you will have to repeat the press multiple times.
 
 #### Reason:
 So far, in all of my tests, there has only been one game where the developer integrated the save/load screens directly into the game screen, making them impossible to detect.
@@ -134,7 +140,8 @@ Custom save/load screens may not follow standard Ren'Py variables, such as `renp
 
 #### Solution:
 1. Open settings (⚙️).
-2. Uncheck “Restrict autosave to in-game only” under `Advanced` in the `Autosave` section.
+2. Go to `Autosave` tab
+3. Uncheck `Restrict autosave to in-game only` in the `Advanced` section.
 
 #### Reason:
 The mod depends on a very specific moment in the game's lifecycle to prevent saving during menus or age verification prompts.
@@ -145,8 +152,8 @@ For instance, some games feature an age check right at the beginning, and the "y
 
 #### Solution:
 1. Open settings (⚙️).
-2. Click on the "Autosave" tab
-3. Find and enable "Perform autosave on normal buttons" under the "Advanced" section.
+2. Go to the `Autosave` tab
+3. Find and enable `Perform autosave on normal buttons` in the `Advanced` section.
 
 #### Reason:
 The game uses custom buttons for choices, which the mod cannot detect by default.
@@ -182,16 +189,20 @@ Some games with custom save/load screens may encounter issues if two variables, 
 # Known issues
 
 ## “Reload” button on the exception screen crashes the game
-This issue stems from two file injections that are overwriting standard Ren'Py behavior, specifically: `loadsave.rpy` and `ui.rpy`. Simply re-start the game manually.
+~~This issue stems from two file injections that are overwriting standard Ren'Py behavior, specifically: `loadsave.rpy` and `ui.rpy`. Simply re-start the game manually.~~
+
+**This issue should be resolved. If it persists, please report it.**
 
 ## Loss of progress
-There have been rare cases, so far only 2 out of ~100 games, where save values were not stored or loaded properly, causing loss of progress and/or exceptions.
+~~There have been rare cases, so far only 2 out of ~100 games, where save values were not stored properly, causing loss of progress and subsequently exceptions.~~~
 
 **This issue should be resolved. If it persists, please report it.**
 
 ## Error while saving after an update
-The mod may throw an error when attempting to autosave after an update. If any code inside the injects directory changes, a full restart of the game is required—reloading isn't enough.
-This occurs because the old code from those files remains loaded when the game reloads itself.
+~~The mod may throw an error when attempting to autosave after an update. If any code inside the injects directory changes, a full restart of the game is required—reloading isn't enough.
+This occurs because the old code from those files remains loaded when the game reloads itself.~~
+
+**This issue should be resolved. If it persists, please report it.**
 
 ## Game error
 ```
@@ -205,3 +216,22 @@ PicklingError: Can't pickle [some function]: it's not the same object as renpy.[
 This, or very similar error, is not necessarily related to this mod.
 Despite the trace, it only indicates that something has happened during saving/loading, which this mod "hijacks" in order to detect when user performed save/load.
 The issue is most likely with other mod or the game itself.
+
+# License 
+In a nutshell (not legally binding):
+
+- ✅ You can use this software for personal or internal use.
+- ✅ You can modify it and share your modified versions. Fork away! Just leave me a little credit somewhere, okay?
+- 🚫 You cannot redistribute the original, unmodified version. **Unless it's bundled with a game.**
+- 🚫 You cannot sell or commercially use this software or its derivatives, **except when bundled as part of a commercialized game.**
+
+Please refer to the full license below for legally binding terms.
+
+[Full license](LICENSE)
+
+# Disclaimer
+
+This mod is provided as-is and is not officially supported by the game developers nor the engine developers. Use at your own risk.
+Installing or using this mod may result in unintended behavior, including but not limited to game crashes, corrupted save files, or loss of progress.
+It is strongly recommended that you back up your save data before installing.
+The mod creator is not responsible for any damage or data loss caused by the use of this mod.
