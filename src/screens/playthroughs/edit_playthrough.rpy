@@ -33,7 +33,14 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
         name_conflicting = not editing_template and name != originalname and not JK.Playthroughs.is_valid_name(name)
         name_invalid = name_conflicting or len(name) == 0
 
+        is_save_disabled = enabledSaveLocations != False and len(enabledSaveLocations) == 0
+        if not editing_template:
+            is_save_disabled = is_save_disabled or name_invalid
+
     key 'ctrl_K_DELETE' action Show("JK_RemovePlaythroughConfirm", playthrough=playthrough)
+
+    if not is_save_disabled:
+        key "ctrl_K_s" action submitAction
 
     use JK_Dialog(title=("Edit default template" if editing_template else ("Edit playthrough" if isEdit else "New playthrough")), close_action=Hide("JK_EditPlaythrough")):
         style_prefix "JK"
@@ -211,14 +218,14 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
                 if(isEdit and playthrough.id != 1):
                     # Remove
                     hbox:
-                        use JK_IconButton(icon="\ue92b", text="Remove", action=Show("JK_RemovePlaythroughConfirm", playthrough=playthrough), color=JK.Colors.danger, key="ctrl_K_r")
+                        use JK_IconButton(icon="\ue92b", text="Remove", action=Show("JK_RemovePlaythroughConfirm", playthrough=playthrough), color=JK.Colors.danger, key="alt_K_r")
 
                 # Save
                 hbox:
                     if editing_template:
-                        use JK_IconButton(icon="\ue161", text="Save template", action=submitAction, key="ctrl_K_s", disabled=enabledSaveLocations != False and len(enabledSaveLocations) == 0)
+                        use JK_IconButton(icon="\ue161", text="Save template", action=submitAction, key="alt_K_s", disabled=is_save_disabled)
                     else:
-                        use JK_IconButton(icon="\ue161", text="Save", action=submitAction, disabled=(enabledSaveLocations != False and len(enabledSaveLocations) == 0) or name_invalid, key="ctrl_K_s")
+                        use JK_IconButton(icon="\ue161", text="Save", action=submitAction, disabled=is_save_disabled, key="alt_K_s")
 
                 if not isEdit and not editing_template:
                     hbox:

@@ -29,7 +29,7 @@ screen JK_SaveMemory():
             vbox:
                 # Save
                 hbox:
-                    use JK_IconButton(icon="\ue161", text="Save", action=submitAction, key="ctrl_K_s")
+                    use JK_IconButton(icon="\ue161", text="Save", action=submitAction, key="alt_K_s")
 
                 # Close
                 hbox:

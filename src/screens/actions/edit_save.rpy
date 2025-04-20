@@ -14,6 +14,10 @@ screen JK_EditSave(slotname, location=None):
     if JK.TextInput.is_active("choice") or JK.TextInput.is_active("name"):
         key 'K_ESCAPE' action JK.TextInput.SetActiveAction(None)
 
+    $ save_action = [JK.EditSaveViewModel.Save(view_model, name, choice), Hide("JK_EditSave")]
+
+    key "ctrl_K_s" action save_action
+
     use JK_Dialog(title="Edit save", close_action=Hide("JK_EditSave")):
         if view_model.save_json:
             viewport:
@@ -68,7 +72,7 @@ screen JK_EditSave(slotname, location=None):
             vbox xalign 1.0:
                 # Save
                 hbox:
-                    use JK_IconButton(icon="\ue161", text="Save", action=[JK.EditSaveViewModel.Save(view_model, name, choice), Hide("JK_EditSave")], color=JK.Colors.success, key="ctrl_K_s")
+                    use JK_IconButton(icon="\ue161", text="Save", action=save_action, color=JK.Colors.success, key="alt_K_s")
 
                 # Close
                 hbox:

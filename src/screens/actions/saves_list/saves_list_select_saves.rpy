@@ -212,7 +212,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                 vbox xalign 1.0:
                     # Delete all saves
                     hbox:
-                        use JK_IconButton(icon="\ue92b", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="ctrl_K_d")
+                        use JK_IconButton(icon="\ue92b", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="alt_K_d")
 
                     # Close
                     hbox:

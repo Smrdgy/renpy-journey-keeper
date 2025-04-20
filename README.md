@@ -46,16 +46,20 @@ The sidepanel is the only element added to your field of view by default. From h
   - Makes a quick save.
 - `CTRL + ALT + SHIFT + P`
   - Resets text sizing as well as sidepanel and pagination position.
-- `CTRL + F`
+- `CTRL + F` (save/load screen only)
   - Search in active playthrough.
-- `CTRL + SHIFT + F`
+- `CTRL + SHIFT + F` (save/load screen only)
   - Search in all playthroughs.
 - `ALT + [Click on a choice]`
   - Prevents autosaving the choice when autosave is enabled.
+- `ESC` / `[Right mouse click]`
+  - Exit any dialog
 
 💡 **Note**: All shortcuts can be remapped in the settings, in case of conflicts with the game or another mod.
 Additionally, the mappings can be set global via the globe icon button. Meaning, the mapping will apply to all other games as well.
 > For example: I'm not using the Ren'Py's native accessibility menu (`A`), so I unchecked ALT on the autosave mapping to simplify the shortcut.
+
+💡 **Also note**: A lot of buttons have underlined letter like: <ins>S</ins>ave. This implies, the button action can be triggered by a combination of `ALT + [that letter]`
 
 You can also unassign the mapping by clicking the circular red X button 
 

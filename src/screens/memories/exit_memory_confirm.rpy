@@ -24,7 +24,7 @@ screen JK_ExitMemoryConfirm():
                 vbox:
                     # Save
                     hbox:
-                        use JK_IconButton(icon="\ue9ba", text="Exit memory", action=returnAction, key="ctrl_K_e")
+                        use JK_IconButton(icon="\ue9ba", text="Exit memory", action=returnAction, key="alt_K_e")
 
                     # Close
                     hbox:

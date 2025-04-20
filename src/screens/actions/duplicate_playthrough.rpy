@@ -12,6 +12,8 @@ screen JK_DuplicatePlaythrough(playthrough):
     python:
         submitAction = JK.Playthroughs.DuplicatePlaythroughAction(playthrough=playthrough, name=name, description=description)
 
+    key "ctrl_K_s" action submitAction
+
     use JK_Dialog(title="Duplicate \"" + playthrough.name + "\"", close_action=Hide("JK_DuplicatePlaythrough")):
         style_prefix "JK"
 
@@ -47,7 +49,7 @@ screen JK_DuplicatePlaythrough(playthrough):
             vbox:
                 # Save
                 hbox:
-                    use JK_IconButton(icon="\ue161", text="Save", action=submitAction, key="ctrl_K_s")
+                    use JK_IconButton(icon="\ue161", text="Save", action=submitAction, key="alt_K_s")
                 # Close
                 hbox:
                     use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_DuplicatePlaythrough"))
