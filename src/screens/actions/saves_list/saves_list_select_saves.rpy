@@ -10,6 +10,9 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
 
     key "ctrl_K_a" action JK.SavesListViewModel.SelectAllAction(view_model, selection_mode)
 
+    if selected_length > 0:
+        key "K_DELETE" action JK.SavesListViewModel.MassDeleteConfirmAction(view_model)
+
     hbox ysize JK.scaled(42):
         xfill True
 
@@ -187,7 +190,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                     for page in (paginate_seamlessly(view_model.current_page, len(view_model.pages)) if JK.Settings.seamlessPagination else paginate(view_model.current_page, len(view_model.pages))):
                         button:
                             style_prefix ("JK_PaginationButton_active" if page == view_model.current_page else "JK_PaginationButton")
-                            text str(page + 1)
+                            text str(page + 1) yalign 0.5
                             action SetField(view_model, "current_page", page)
 
                 hbox yalign 0.5:
@@ -212,7 +215,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                 vbox xalign 1.0:
                     # Delete all saves
                     hbox:
-                        use JK_IconButton(icon="\ue92b", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="alt_K_d")
+                        use JK_IconButton(icon="\ueb34", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="alt_K_d")
 
                     # Close
                     hbox:

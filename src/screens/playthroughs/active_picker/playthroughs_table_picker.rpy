@@ -24,7 +24,6 @@ screen JK_PlaythroughsTablePicker(playthroughs, reorder_source):
                         # Thumbnail
                         frame style "JK_default":
                             xysize JK.scaled((150, 80))
-                            xmaximum JK.scaled(150)
 
                             hbox:
                                 xalign 0.5
@@ -86,7 +85,6 @@ screen JK_PlaythroughsTablePicker(playthroughs, reorder_source):
                     # Thumbnail
                     frame style "JK_default":
                         xysize JK.scaled((150, 80))
-                        xmaximum JK.scaled(150)
 
                         hbox:
                             xalign 0.5

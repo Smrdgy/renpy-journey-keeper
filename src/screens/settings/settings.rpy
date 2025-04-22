@@ -19,7 +19,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
             ("AUTOSAVE", "\ue167", "Autosave"),
             ("QUICKSAVE", "\ue161", "Quick save"),
             ("SIDEPANEL", "\ue8aa", "Sidepanel"),
-            ("MEMORIES", "\ue02c", "Memories{size=-20}{color=[JK.Colors.danger]} WIP{/color}{/size}"),
+            #("MEMORIES", "\ue02c", "Memories{size=-20}{color=[JK.Colors.danger]} WIP{/color}{/size}"),
             ("SAVE_LOAD", "\ue0e0", "Save/Load"),
             ("CUSTOMIZATION", "\ue40a", "Customize"),
             ("UPDATES", "\ue8d7", "Updates"),

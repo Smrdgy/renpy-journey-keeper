@@ -33,7 +33,7 @@ screen JK_Settings_Updater():
             hbox:
                 button yalign 0.5:
                     action NullAction()
-                    use JK_Icon("\uf05a", size=JK.scaled(20), color=JK.Colors.warning)
+                    use JK_Icon("\uf05a", size=20, color=JK.Colors.warning)
 
                 text "You have a pending update ready to be applied." color JK.Colors.warning yalign 0.5
 
@@ -64,9 +64,9 @@ screen JK_Settings_Updater():
                         use JK_Title(release.version, 2, color=JK.Colors.warning)
 
                         hbox yalign 0.5:
-                            use JK_IconButton(icon="\ue895", action=OpenURL(release.url), tt="Open in browser", size=JK.scaled(20))
+                            use JK_IconButton(icon="\ue895", action=OpenURL(release.url), tt="Open in browser", size=20)
                             $ confirm_action = JK.ShowConfirmAction(title="Install {{color=[JK.Colors.theme]}}{}{{/color}}?".format(release.version), message="{color=[JK.Colors.warning]}Caution! Using older versions may cause crashes, corrupt your playthroughs, or reset your settings.{/color}", yes=JK.Updater.InstallUpdateAction(release), yes_text="Download and install", yes_icon="\uf090", yes_color=JK.Colors.danger)
-                            use JK_IconButton(icon="\uf090", action=confirm_action, tt="Download and install {}".format(release.version), size=JK.scaled(20))
+                            use JK_IconButton(icon="\uf090", action=confirm_action, tt="Download and install {}".format(release.version), size=20)
 
                     if release.changelog:
                         text release.changelog
