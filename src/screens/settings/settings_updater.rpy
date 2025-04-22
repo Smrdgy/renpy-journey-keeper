@@ -75,7 +75,7 @@ screen JK_Settings_Updater():
 
                     use JK_YSpacer(2)
         else:
-            use JK_IconButton(icon="\uf090", text="Loading..." if releases_view_model.loading else "Load releases", action=JK.Call(releases_view_model.fetch_all_releases))
+            use JK_IconButton(icon="\uf090", text="Loading..." if releases_view_model.loading else "Load releases", action=Function(releases_view_model.fetch_all_releases))
 
             if releases_view_model.error:
                 text releases_view_model.error color JK.Colors.error

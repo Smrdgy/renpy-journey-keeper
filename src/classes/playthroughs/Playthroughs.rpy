@@ -396,7 +396,7 @@ init python in JK:
                 showConfirm(
                     title="Sequentialize playthrough",
                     message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
-                    yes=Call(playthrough.sequentializeSaves),
+                    yes=renpy.store.Function(playthrough.sequentializeSaves),
                     yes_icon="\ue089",
                     yes_color=Colors.error
                 )

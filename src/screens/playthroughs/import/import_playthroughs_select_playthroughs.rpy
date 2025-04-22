@@ -73,7 +73,7 @@ screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthr
             vbox xalign 1.0:
                 # Import playthroughs
                 hbox:
-                    use JK_IconButton(icon="\ue884", text="Import playthrough(s)", action=JK.Call(view_model.import_selected_playthroughs), key="alt_K_i", disabled=len(view_model.selected_playthroughs) == 0)
+                    use JK_IconButton(icon="\ue884", text="Import playthrough(s)", action=Function(view_model.import_selected_playthroughs), key="alt_K_i", disabled=len(view_model.selected_playthroughs) == 0)
 
                 # Back
                 hbox:

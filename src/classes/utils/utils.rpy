@@ -541,19 +541,6 @@ init -9999 python in JK:
         def __call__(self):
             OpenDirectoryAction(path=renpy.config.gamedir)()
 
-    class Call(renpy.ui.Action):
-        def __init__(self, fnc, _restart_interaction=False, *args, **kwargs):
-            self.fnc = fnc
-            self.args = args
-            self.kwargs = kwargs
-            self.restart_interaction = _restart_interaction
-        
-        def __call__(self):
-            self.fnc(*self.args, **self.kwargs)
-
-            if self.restart_interaction:
-                renpy.restart_interaction()
-
     def scaled(value, min_value=None):
         # Helper function to apply adjustment only to integers
         def adjust_number(value):

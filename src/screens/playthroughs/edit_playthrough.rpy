@@ -211,7 +211,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
 
                             # Remove thumbnail
                             if playthrough.hasThumbnail():
-                                use JK_IconButton(icon="\ue92b", text="Remove thumbnail", action=JK.Call(playthrough.removeThumbnail, _restart_interaction=True), color=JK.Colors.danger)
+                                use JK_IconButton(icon="\ue92b", text="Remove thumbnail", action=Function(playthrough.removeThumbnail, _update_screens=True), color=JK.Colors.danger)
 
         hbox:
             xfill True

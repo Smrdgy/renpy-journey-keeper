@@ -22,7 +22,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                         text "[selected_length] item(s) selected"
 
                 if selected_length == 0:
-                    use JK_IconButton(icon="\ue5d5", action=JK.Call(view_model.load_saves, _restart_interaction=True), tt="Rescan saves")
+                    use JK_IconButton(icon="\ue5d5", action=Function(view_model.load_saves, _update_screens=True), tt="Rescan saves")
 
             hbox xalign 0.5 yalign 0.5:
                 use JK_IconButton(icon="\ue8fe", text="Per save selection", action=JK.SavesListViewModel.SetSelectionModeAction(view_model, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggled_color=JK.Colors.selected)
@@ -36,11 +36,11 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                 hbox xalign 1.0:
                     text "Saves per page:" yalign 0.5
 
-                    use JK_IconButton(text="10", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=10), toggled=view_model.saves_per_page == 10, toggled_color=JK.Colors.selected)
-                    use JK_IconButton(text="20", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=20), toggled=view_model.saves_per_page == 20, toggled_color=JK.Colors.selected)
-                    use JK_IconButton(text="50", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=50), toggled=view_model.saves_per_page == 50, toggled_color=JK.Colors.selected)
-                    use JK_IconButton(text="100", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=100), toggled=view_model.saves_per_page == 100, toggled_color=JK.Colors.selected)
-                    use JK_IconButton(text="All", action=JK.Call(view_model.set_saves_per_page, _restart_interaction=True, amount=None), toggled=view_model.saves_per_page == None, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="10", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=10), toggled=view_model.saves_per_page == 10, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="20", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=20), toggled=view_model.saves_per_page == 20, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="50", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=50), toggled=view_model.saves_per_page == 50, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="100", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=100), toggled=view_model.saves_per_page == 100, toggled_color=JK.Colors.selected)
+                    use JK_IconButton(text="All", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=None), toggled=view_model.saves_per_page == None, toggled_color=JK.Colors.selected)
    
     hbox xalign 1.0:
         xfill True

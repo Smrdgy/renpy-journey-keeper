@@ -43,15 +43,15 @@ screen JK_ImportPlaythroughsConflict(view_model):
         vbox xalign 1.0:
             # Overwrite
             hbox:
-                use JK_IconButton(icon="\ue161", text="Overwrite", action=[JK.Call(view_model.conflict_overwrite)], color=JK.Colors.danger)
+                use JK_IconButton(icon="\ue161", text="Overwrite", action=[Function(view_model.conflict_overwrite)], color=JK.Colors.danger)
 
             # Keep both
             hbox:
-                use JK_IconButton(icon="\ue161", text="Keep both", action=[JK.Call(view_model.conflict_keep_both)])
+                use JK_IconButton(icon="\ue161", text="Keep both", action=[Function(view_model.conflict_keep_both)])
             
             # Skip
             hbox:
-                use JK_IconButton(icon="\ue044", text="Skip", action=[JK.Call(view_model.conflict_skip)])
+                use JK_IconButton(icon="\ue044", text="Skip", action=[Function(view_model.conflict_skip)])
 
             # Close
             hbox:
