@@ -431,9 +431,7 @@ init python in JK:
                 self.description = description
 
             def __call__(self):
-                new_playthrough = self.playthrough.copy()
-                new_playthrough.id = int(time.time())
-                new_playthrough.directory = None
+                new_playthrough = self.playthrough.copy().remove_unique_data()
                 new_playthrough.edit(name=self.name, description=self.description)
 
                 Playthroughs.add(new_playthrough)
@@ -451,8 +449,6 @@ init python in JK:
                     raise Exception("Playthrough created but failed to transfer saves. Check the logs for more information.")
 
                 renpy.restart_interaction()
-
-                renpy.hide_screen("JK_DuplicatePlaythrough")
         
         class ShowCreatePlaythroughFromDirnameAction(renpy.ui.Action):
             def __init__(self, dirname):

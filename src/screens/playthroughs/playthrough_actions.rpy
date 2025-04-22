@@ -19,7 +19,7 @@ screen JK_PlaythroughActions(playthrough):
 
                 # Duplicate playthrough
                 hbox:
-                    use JK_IconButton(icon="\uebbd", text="Duplicate playthrough", action=[Show("JK_DuplicatePlaythrough", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="alt_K_d")
+                    use JK_IconButton(icon="\uebbd", text="Duplicate playthrough", action=[Show("JK_EditPlaythrough", playthrough=playthrough.copy().remove_unique_data(), duplicating=True), Hide("JK_PlaythroughActions")], key="alt_K_d")
 
                 # List all saves
                 hbox:

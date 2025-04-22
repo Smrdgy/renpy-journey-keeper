@@ -1,4 +1,4 @@
-screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
+screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, duplicating=False):
     layer "JK_Overlay"
     style_prefix 'JK'
     modal True
@@ -21,14 +21,14 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
     python:
         if editing_template:
             submitAction = [
-                JK.Settings.SaveDefaultPlaythroughTemplateAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations),#MODIFY HERE
-                Hide('JK_EditPlaythrough')
+                JK.Settings.SaveDefaultPlaythroughTemplateAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations)#MODIFY HERE
             ]
         else:
             submitAction = [
-                JK.Playthroughs.AddOrEditAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory),#MODIFY HERE
-                Hide('JK_EditPlaythrough')
+                JK.Playthroughs.AddOrEditAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory)#MODIFY HERE
             ]
+
+        submitAction.append(Hide('JK_EditPlaythrough'))
 
         name_conflicting = not editing_template and name != originalname and not JK.Playthroughs.is_valid_name(name)
         name_invalid = name_conflicting or len(name) == 0
@@ -37,12 +37,22 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
         if not editing_template:
             is_save_disabled = is_save_disabled or name_invalid
 
+        title = ""
+        if editing_template:
+            title = "Edit default template"
+        elif isEdit:
+            title = "Edit playthrough"
+        elif duplicating:
+            title = "Duplicate \"" + playthrough.name + "\""
+        else:
+            title = "New playthrough"
+
     key 'ctrl_K_DELETE' action Show("JK_RemovePlaythroughConfirm", playthrough=playthrough)
 
     if not is_save_disabled:
         key "ctrl_K_s" action submitAction
 
-    use JK_Dialog(title=("Edit default template" if editing_template else ("Edit playthrough" if isEdit else "New playthrough")), close_action=Hide("JK_EditPlaythrough")):
+    use JK_Dialog(title=title, close_action=Hide("JK_EditPlaythrough")):
         style_prefix "JK"
 
         viewport:
@@ -176,7 +186,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False):
 
                 use JK_YSpacer()
 
-                if isEdit:
+                if isEdit or duplicating:
                     use JK_Title("Thumbnail")
                     hbox:
                         frame style "JK_default":

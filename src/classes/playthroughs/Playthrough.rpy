@@ -26,6 +26,12 @@ init python in JK:
         def copy(self):
             return PlaythroughClass(self.id, self.directory, self.name, self.description, self.thumbnail, self.storeChoices, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName, self.enabledSaveLocations)#MODIFY HERE
 
+        def remove_unique_data(self):
+            self.id = int(time.time())
+            self.directory = None
+
+            return self
+
         def edit(self, name=None, description=None, thumbnail=None, storeChoices=None, autosaveOnChoices=None, selectedPage=None, filePageName=None, useChoiceLabelAsSaveName=None, enabledSaveLocations=None):#MODIFY HERE
             if name != None:
                 self.name = name
