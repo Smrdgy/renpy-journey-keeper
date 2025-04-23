@@ -110,6 +110,8 @@ init python in JK:
             renpy.restart_interaction()
 
 init 9999 python in JK:
+    _constant = True
+
     renpy.config.search_prefixes.append("JK/src/assets/") # Provides discoverability for assets that are used in JK
 
     if not 'n_e_s_w' in renpy.config.gestures:
