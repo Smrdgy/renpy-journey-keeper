@@ -58,6 +58,14 @@ init python in JK:
             if not hasMemories and Settings.memoriesEnabled:
                 self._playthroughs.insert(1, memories)
 
+            # Initialize active playthrough
+
+            if self.active_playthrough_or_none == None and renpy.store.persistent.JK_ActivePlaythrough != None:
+                self.activate_by_id(renpy.store.persistent.JK_ActivePlaythrough)
+            
+            if self.active_playthrough_or_none is None:
+                self.activate_native()
+
         @property
         def playthroughs(self):
             return self._playthroughs

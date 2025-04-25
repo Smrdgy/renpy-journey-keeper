@@ -9,17 +9,11 @@ init python in JK:
     _constant = True
 
     Updater = UpdaterClass()
-    Playthroughs = PlaythroughsClass()
     SaveSystem = SaveSystemClass()
+    Playthroughs = PlaythroughsClass()
     Autosaver = AutosaverClass()
     Pagination = PaginationClass()
     Memories = MemoriesClass()
-
-    if Playthroughs.active_playthrough_or_none == None and renpy.store.persistent.JK_ActivePlaythrough != None:
-        Playthroughs.activate_by_id(renpy.store.persistent.JK_ActivePlaythrough)
-    
-    if Playthroughs.active_playthrough_or_none is None:
-        Playthroughs.activate_native()
 
     renpy.config.search_prefixes.append("JK/src/assets/") # Provides discoverability for assets that are used in JK
 
