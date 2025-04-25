@@ -1,4 +1,4 @@
-screen JK_Settings_Updater():
+screen JK_Settings_Updates():
     default releases_view_model = JK.ReleasesViewModel()
     
     vbox:

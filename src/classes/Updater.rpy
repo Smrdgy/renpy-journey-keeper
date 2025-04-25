@@ -49,6 +49,7 @@ init python in JK:
 
             self.pending_update = None
             self.latest = None
+            self.error = None
             renpy.restart_interaction()
 
             self.latest = self.fetch_latest_release()

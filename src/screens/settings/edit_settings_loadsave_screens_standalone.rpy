@@ -5,17 +5,17 @@ screen JK_SettingsLoadSaveScreensStandalone():
     drag:
         draggable True
         drag_handle (0, 0, 1.0, 1.0)
-        xpos 20
-        ypos 20
+        xpos JK.scaled(20)
+        ypos JK.scaled(150)
         droppable False
 
         frame style "JK_default":
             background "#f00"
-            padding (2, 2, 2, 2)
+            padding JK.scaled((2, 2, 2, 2))
 
             frame style "JK_default":
                 background "#000"
-                padding (10, 10, 10, 10)
+                padding JK.scaled((10, 10, 10, 10))
 
                 vbox:
                     use JK_SettingsLoadSaveScreens(update_at_runtime=True)

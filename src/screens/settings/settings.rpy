@@ -85,7 +85,7 @@ screen JK_Settings(section="ACCESSIBILITY"):
             elif active_section == "SAVE_LOAD":
                 use JK_Settings_LoadSave()
             elif active_section == "UPDATES":
-                use JK_Settings_Updater()
+                use JK_Settings_Updates()
             elif active_section == "CUSTOMIZATION":
                 use JK_Settings_Customization()
 
