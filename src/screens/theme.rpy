@@ -28,7 +28,8 @@ style textinput is JK_text:
     color "#959595"
     offset JK.scaled((10, 1))
 
-style textinput_caret is textinput
+style textinput_caret is textinput:
+    color JK.Colors.theme
 
 style JK_vscrollbar:
     base_bar "#00000072"

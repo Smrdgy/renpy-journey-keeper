@@ -84,7 +84,7 @@ init -9999 python in JK:
 
         def remove_dir(self):
             if os.path.exists(self.directory):
-                os.rmdir(self.directory)
+                shutil.rmtree(self.directory)
 
         def edit_json(self, slotname, json):
             with disk_lock:

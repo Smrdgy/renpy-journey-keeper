@@ -6,6 +6,12 @@ init -9999 python in JK:
     import unicodedata
     import sys
 
+    # All the credit for this class goes to 0x52.
+    # @see https://0x52.dev/
+    # 
+    # At this point, I could write this class on my own,
+    # although I would most likely end up with the same one anyway.
+    # But definitely not when I started and had no idea what pickling even is...
     class x52NonPicklable(python_object):
         def __setstate__(self, d):
             pass
@@ -534,19 +540,6 @@ init -9999 python in JK:
     class OpenGameDirectoryAction(renpy.ui.Action):
         def __call__(self):
             OpenDirectoryAction(path=renpy.config.gamedir)()
-
-    class Call(renpy.ui.Action):
-        def __init__(self, fnc, _restart_interaction=False, *args, **kwargs):
-            self.fnc = fnc
-            self.args = args
-            self.kwargs = kwargs
-            self.restart_interaction = _restart_interaction
-        
-        def __call__(self):
-            self.fnc(*self.args, **self.kwargs)
-
-            if self.restart_interaction:
-                renpy.restart_interaction()
 
     def scaled(value, min_value=None):
         # Helper function to apply adjustment only to integers

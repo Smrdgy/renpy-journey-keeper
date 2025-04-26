@@ -11,16 +11,6 @@ init python in JK:
         _activePlaythrough = None
 
         def __init__(self):
-            # Legacy conversion #TODO: Remove at some point
-            if renpy.store.persistent.SSSSS_playthroughs:
-                renpy.store.persistent.JK_Playthroughs = renpy.store.persistent.SSSSS_playthroughs
-                renpy.store.persistent.JK_PlaythroughsMtime = int(time.time())
-                renpy.store.persistent.SSSSS_playthroughs = None
-            if renpy.store.persistent.URPS_Playthroughs:
-                renpy.store.persistent.JK_Playthroughs = renpy.store.persistent.URPS_Playthroughs
-                renpy.store.persistent.JK_PlaythroughsMtime = int(time.time())
-                renpy.store.persistent.URPS_Playthroughs = None
-
             # For some reason the __init__ is called twice in Ren'Py 7.0.0.196.
             # When that happens the playthroughs are loaded twice which led to a buildup of playthroughs when saved. This if should mitigate that.
             if hasattr(renpy.config, "JK_Playthroughs_initialized"): return
@@ -48,7 +38,7 @@ init python in JK:
                     elif playthrough.get("id") == 2:
                         hasMemories = True
 
-                    self._playthroughs.append(self.create_playthrough_from_serialization(playthrough))
+                    self._playthroughs.append(PlaythroughClass.from_dict(playthrough))
 
             native, memories = PlaythroughsClass.get_default_playthroughs()
 
@@ -57,6 +47,14 @@ init python in JK:
 
             if not hasMemories and Settings.memoriesEnabled:
                 self._playthroughs.insert(1, memories)
+
+            # Initialize active playthrough
+
+            if self.active_playthrough_or_none == None and renpy.store.persistent.JK_ActivePlaythrough != None:
+                self.activate_by_id(renpy.store.persistent.JK_ActivePlaythrough)
+            
+            if self.active_playthrough_or_none is None:
+                self.activate_native()
 
         @property
         def playthroughs(self):
@@ -85,15 +83,12 @@ init python in JK:
         @staticmethod
         def get_default_playthroughs():
             return (
-                PlaythroughClass(id=1, directory="", name="Native", autosaveOnChoices=False, useChoiceLabelAsSaveName=False),#MODIFY HERE
-                PlaythroughClass(id=2, directory="_memories", name="Memories", autosaveOnChoices=False, useChoiceLabelAsSaveName=False)#MODIFY HERE
+                PlaythroughClass.create_native(),
+                PlaythroughClass.create_memories()
             )
 
-        def create_playthrough_from_serialization(self, data):
-            return PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
-
         def get_instance_for_edit(self):
-            playthrough = self.create_playthrough_from_serialization(Settings.playthroughTemplate) if Settings.playthroughTemplate else PlaythroughClass()
+            playthrough = PlaythroughClass.from_dict(Settings.playthroughTemplate) if Settings.playthroughTemplate else PlaythroughClass()
             playthrough.directory = None
 
             return playthrough
@@ -224,27 +219,27 @@ init python in JK:
             self.save_to_user_dir()
             self.save_to_persistent()
 
-        def get_playthrough_as_json(self):
+        def get_playthroughs_as_json(self):
             arr = []
             for playthrough in self.playthroughs:
                 if playthrough.id != 2:
-                    arr.append(playthrough.serializable())
+                    arr.append(playthrough.serialize_for_json())
 
             return json.dumps(arr)
 
         def save_to_user_dir(self):
             save_to_userdir = UserDir.has_playthroughs()
             if len(self.playthroughs) <= 2:
-                if self.get_by_id(1).serializable() != PlaythroughsClass.get_default_playthroughs()[0].serializable():
+                if self.get_by_id(1).serialize_for_json() != PlaythroughsClass.get_default_playthroughs()[0].serialize_for_json():
                     save_to_userdir = True
             else:
                 save_to_userdir = True
 
             if save_to_userdir:
-                UserDir.save_playthroughs(self.get_playthrough_as_json())
+                UserDir.save_playthroughs(self.get_playthroughs_as_json())
 
         def save_to_persistent(self):
-            renpy.store.persistent.JK_Playthroughs = self.get_playthrough_as_json()
+            renpy.store.persistent.JK_Playthroughs = self.get_playthroughs_as_json()
             renpy.store.persistent.JK_PlaythroughsMtime = int(time.time())
 
             renpy.save_persistent()
@@ -310,14 +305,14 @@ init python in JK:
                 #MODIFY HERE
 
             def __call__(self):
-                playthrough = self.playthrough if not callable(self.playthrough) else self.playthrough()
-                name = self.name if not callable(self.name) else self.name()
-                description = self.description if not callable(self.description) else self.description()
-                storeChoices = self.storeChoices if not callable(self.storeChoices) else self.storeChoices()
-                autosaveOnChoices = self.autosaveOnChoices if not callable(self.autosaveOnChoices) else self.autosaveOnChoices()
-                useChoiceLabelAsSaveName = self.useChoiceLabelAsSaveName if not callable(self.useChoiceLabelAsSaveName) else self.useChoiceLabelAsSaveName()
-                enabledSaveLocations = self.enabledSaveLocations if not callable(self.enabledSaveLocations) else self.enabledSaveLocations()
-                moveSaveDirectory = self.moveSaveDirectory if not callable(self.moveSaveDirectory) else self.moveSaveDirectory()
+                playthrough = self.playthrough
+                name = self.name
+                description = self.description
+                storeChoices = self.storeChoices
+                autosaveOnChoices = self.autosaveOnChoices
+                useChoiceLabelAsSaveName = self.useChoiceLabelAsSaveName
+                enabledSaveLocations = self.enabledSaveLocations
+                moveSaveDirectory = self.moveSaveDirectory
                 #MODIFY HERE
 
                 playthrough = playthrough.copy().edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName, enabledSaveLocations=enabledSaveLocations)#MODIFY HERE
@@ -396,7 +391,7 @@ init python in JK:
                 showConfirm(
                     title="Sequentialize playthrough",
                     message="Sequentialization of a playthrough will rename all your saves, so they start from 1-1 and continue in a sequence without a gap.\nIt may take some time based on the amount of saves and your device.\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}. Do you wish to proceed?",
-                    yes=Call(playthrough.sequentializeSaves),
+                    yes=renpy.store.Function(playthrough.sequentializeSaves),
                     yes_icon="\ue089",
                     yes_color=Colors.error
                 )
@@ -425,20 +420,25 @@ init python in JK:
                 )
 
         class DuplicatePlaythroughAction(renpy.ui.Action):
-            def __init__(self, playthrough, name, description):
+            def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory):#MODIFY HERE
                 self.playthrough = playthrough
                 self.name = name
                 self.description = description
+                self.storeChoices = storeChoices
+                self.autosaveOnChoices = autosaveOnChoices
+                self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
+                self.enabledSaveLocations = enabledSaveLocations
+                self.moveSaveDirectory = moveSaveDirectory
+                #MODIFY HERE
 
             def __call__(self):
-                new_playthrough = self.playthrough.copy()
-                new_playthrough.id = int(time.time())
-                new_playthrough.directory = None
-                new_playthrough.edit(name=self.name, description=self.description)
+                original_playthrough = Playthroughs.active_playthrough
+                new_playthrough = self.playthrough
+                new_playthrough.edit(name=self.name, description=self.description, storeChoices=self.storeChoices, autosaveOnChoices=self.autosaveOnChoices, useChoiceLabelAsSaveName=self.useChoiceLabelAsSaveName, enabledSaveLocations=self.enabledSaveLocations)#MODIFY HERE
 
                 Playthroughs.add(new_playthrough)
 
-                original_instance = SaveSystem.get_playthrough_save_instance(self.playthrough.id)
+                original_instance = SaveSystem.get_playthrough_save_instance(original_playthrough.id)
                 if not original_instance:
                     raise Exception("Can't find old save instance")
 
@@ -448,11 +448,9 @@ init python in JK:
 
                 original_instance.location.scan()
                 if not original_instance.location.copy_all_saves_into_other_multilocation(new_instance.location):
-                    raise Exception("Playthrough created but failed to transfer saves. Check the logs for more information.")
+                        raise Exception("Playthrough created but failed to transfer saves. Check the logs for more information.")
 
                 renpy.restart_interaction()
-
-                renpy.hide_screen("JK_DuplicatePlaythrough")
         
         class ShowCreatePlaythroughFromDirnameAction(renpy.ui.Action):
             def __init__(self, dirname):

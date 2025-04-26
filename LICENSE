@@ -1,24 +1,50 @@
 Copyright Smrdgy
 
+In a nutshell (not legally binding):
+
+- You can use this software for personal or internal use.
+- You can modify it and share your modified versions. Fork away! Just leave me a little credit somewhere, okay?
+- You cannot redistribute the original, unmodified version unless it's bundled with a game.
+- You cannot sell or commercially use this software, except when bundled as part of a commercialized game.
+
+Please refer to the full license below for legally binding terms.
+
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to use
 the Software for personal or internal purposes, subject to the following
 conditions:
 
-1. Redistribution of the Software, in source, compiled or archived form, whether modified
-   or unmodified, is prohibited without prior written permission from the
-   copyright holder, except in the following case:
+1. Redistribution of the Software in its unmodified form, in source, compiled or archived
+   form, is prohibited without prior written permission from the copyright
+   holder, except in the following case:
+
    - The Software may be bundled with a commercialized video game, provided
-        that the Software is not sold or distributed independently of the
-        game and the game’s primary value is not derived from the Software.
+     that the Software is not sold or distributed independently from the
+     game and the game’s primary value is not derived from the Software.
 
-2. This license does not grant permission to use the Software for commercial
-   purposes, including but not limited to selling copies of the Software or
-   using it as part of a commercial service outside the bundling
-   exception described above.
+2. Redistribution of modified versions of the Software is permitted, provided
+   that:
+   - The modifications are non-trivial and add meaningful differences to the
+     original Software. Superficial changes — such as renaming, recoloring,
+     or rebranding without functional or creative contribution — are not
+     sufficient on their own.
+   - The modified version is clearly marked as such and does not misrepresent
+     itself as the original Software.
+   - The modified version includes prominent notice of the changes made.
+   - The redistribution is for non-commercial purposes only, unless it falls
+     under the bundling exception described in Clause 1 or is otherwise
+     granted by express written permission from the copyright holder.
+   - The redistribution complies with all other terms of this license.
 
-3. The above copyright notice and this permission notice shall be included in
-   all copies or substantial portions of the Software.
+3. This license does not grant permission to use the Software for other
+   commercial purposes, including but not limited to selling copies of the
+   Software or using it as part of a commercial service, except for the
+   bundling exception described in Clause 1.
+
+4. The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software, modified or
+   unmodified.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

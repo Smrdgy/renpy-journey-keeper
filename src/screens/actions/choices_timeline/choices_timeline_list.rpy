@@ -38,7 +38,7 @@ screen JK_ChoicesTimelineList(view_model, show_thumbnails, search):
                 hbox:
                     xalign 0.5
 
-                    use JK_IconButton('\uf0fb', text="Export to file", action=export_action, key="ctrl_K_e")
+                    use JK_IconButton('\uf0fb', text="Export to file", action=export_action, key="alt_K_e")
 
                 use JK_YSpacer(offset=3)
 

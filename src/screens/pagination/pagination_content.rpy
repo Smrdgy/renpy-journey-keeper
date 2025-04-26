@@ -52,7 +52,7 @@ screen JK_PaginationContent(content):
                     for page in JK.Pagination.paginate(currentPage):
                         button:
                             style_prefix ("JK_PaginationButton_active" if page == currentPage else "JK_PaginationButton")
-                            text (str(page) if page > 0 else "")
+                            text (str(page) if page > 0 else "") yalign 0.5
 
                             if page > 0:
                                 action FilePage(page)

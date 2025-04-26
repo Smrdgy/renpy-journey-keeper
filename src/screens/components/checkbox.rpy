@@ -23,4 +23,4 @@ screen JK_Checkbox(checked=False, text=None, action=None, xsize=None, disabled=F
                     if text_color:
                         color text_color
                     if size:
-                        size size
+                        size JK.scaled(size)

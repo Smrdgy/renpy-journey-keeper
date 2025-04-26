@@ -11,7 +11,7 @@ init -9999 python in JK:
             super(MultiLocation, self).__init__()
 
             self.last_page_cache = None
-            self.nativeLocations = renpy.loadsave.location.locations
+            self.nativeLocations = renpy.loadsave.location.nativeLocations if hasattr(renpy.loadsave, "nativeLocations") else renpy.loadsave.location.locations
 
         def add(self, location):
             self.locations.append(location)
@@ -123,10 +123,8 @@ init -9999 python in JK:
                         raise Exception("Source location not found")
 
                     target_location = target_locations[i]
-                    if not target_location:
-                        raise Exception("Target location not found")
-
-                    shutil.rmtree(target_location.directory) # Clear anything that is already there and also remove the root directory, otherwise shutil.copytree would throw an exception...
+                    if target_location and os.path.exists(target_location.directory):
+                        shutil.rmtree(target_location.directory) # Clear anything that is already there and also remove the root directory, otherwise shutil.copytree would throw an exception...
 
                     try:
                         shutil.copytree(source_location.directory, target_location.directory)

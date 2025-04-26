@@ -17,8 +17,6 @@ init python in JK:
 
         url = "https://api.github.com/repos/{}/{}/releases/latest".format(MOD_GITHUB_OWNER, MOD_GITHUB_REPO)
 
-        authorization = "Bearer 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"#TODO: Remove when the repo becomes public
-
         unavailable = False
 
         def __init__(self):
@@ -51,6 +49,7 @@ init python in JK:
 
             self.pending_update = None
             self.latest = None
+            self.error = None
             renpy.restart_interaction()
 
             self.latest = self.fetch_latest_release()
@@ -75,7 +74,6 @@ init python in JK:
 
             try:
                 request = _urllib_request.Request(self.url)
-                request.add_header("Authorization", self.authorization)
                 request.add_header("Accept", "application/vnd.github.v3+json")
 
                 response = _urllib_request.urlopen(request)
@@ -158,7 +156,6 @@ init python in JK:
             try:
                 request = _urllib_request.Request(release.download_url)
                 request.add_header("Accept", "application/octet-stream")
-                request.add_header("Authorization", self.authorization)
 
                 response = _urllib_request.urlopen(request)
 

@@ -3,7 +3,6 @@ init python in JK:
 
     class ReleasesViewModel(x52NonPicklable):
         url = "https://api.github.com/repos/{}/{}/releases".format(MOD_GITHUB_OWNER, MOD_GITHUB_REPO)
-        authorization = "Bearer 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"#TODO: Remove when the repo becomes public
 
         def __init__(self):
             self.loading = False
@@ -19,7 +18,6 @@ init python in JK:
 
             try:
                 request = _urllib_request.Request(self.url)
-                request.add_header("Authorization", self.authorization)
                 request.add_header("Accept", "application/vnd.github.v3+json")
 
                 response = _urllib_request.urlopen(request)

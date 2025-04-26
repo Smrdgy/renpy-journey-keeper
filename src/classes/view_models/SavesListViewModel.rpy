@@ -258,7 +258,7 @@ init python in JK:
                     title="Delete save \"" + self.save[0] + "\"",
                     message="Do you really wish to delete \"" + self.save[0] + "\"" + (" from \"" + self.save[1].directory + "\"" if self.save[1] else "") + "?\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}.",
                     yes=SavesListViewModel.DeleteSingleAction(self.view_model, self.save),
-                    yes_icon="\ue089",
+                    yes_icon="\ue92b",
                     yes_color=Colors.error
                 )
 

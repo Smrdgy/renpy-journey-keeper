@@ -24,7 +24,6 @@ screen JK_PlaythroughsTablePicker(playthroughs, reorder_source):
                         # Thumbnail
                         frame style "JK_default":
                             xysize JK.scaled((150, 80))
-                            xmaximum JK.scaled(150)
 
                             hbox:
                                 xalign 0.5
@@ -59,15 +58,40 @@ screen JK_PlaythroughsTablePicker(playthroughs, reorder_source):
                         yalign 0.5
 
                         # Move button
-                        if reorder_source == playthrough.id:
-                            use JK_IconButton(icon="\ue5c9", action=SetScreenVariable("reorder_source", None), tt="Cancel", tt_side="bottom", hover_color=JK.Colors.error)
-                        elif reorder_source:
-                            use JK_IconButton(icon="\ue39e", action=[JK.Playthroughs.ReorderPlaythroughsAction(source=reorder_source, target=playthrough.id), SetScreenVariable("reorder_source", None)], tt="Move here", tt_side="bottom")
-                        else:
-                            use JK_IconButton(icon="\ue074", action=SetScreenVariable("reorder_source", playthrough.id), tt="Change order", tt_side="bottom", color=JK.Colors.text_light, hover_color=JK.Colors.hover)
+                        if len(playthroughs) > 1:
+                            if reorder_source == playthrough.id:
+                                use JK_IconButton(icon="\ue5c9", action=SetScreenVariable("reorder_source", None), tt="Cancel", hover_color=JK.Colors.error)
+                            elif reorder_source:
+                                use JK_IconButton(icon="\ue39e", action=[JK.Playthroughs.ReorderPlaythroughsAction(source=reorder_source, target=playthrough.id), SetScreenVariable("reorder_source", None)], tt="Move here")
+                            else:
+                                use JK_IconButton(icon="\ue074", action=SetScreenVariable("reorder_source", playthrough.id), tt="Change order")
 
                         # Edit button
                         use JK_IconButton(icon="\ue3c9", tt="Edit", action=edit_action)
 
                         # Delete button
-                        use JK_IconButton(icon="\ue872", tt="Delete", action=delete_action)
+                        use JK_IconButton(icon="\ue872", tt="Delete", action=delete_action, disabled=playthrough.id == 1, disabled_color="#00000000")
+
+        $ i += 1
+        button:
+            style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button")
+            action Show("JK_EditPlaythrough", playthrough=None)
+
+            hbox:
+                spacing 10
+                xfill True
+
+                hbox:
+                    # Thumbnail
+                    frame style "JK_default":
+                        xysize JK.scaled((150, 80))
+
+                        hbox:
+                            xalign 0.5
+                            yalign 0.5
+
+                            use JK_Icon("\ue148", hover_color=JK.Colors.text_primary, size=40)
+
+                    use JK_XSpacer()
+
+                    text "New playthrough" yalign 0.5

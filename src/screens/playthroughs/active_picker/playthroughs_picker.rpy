@@ -49,3 +49,8 @@ screen JK_PlaythroughsPicker():
                 hbox:
                     if JK.UserDir.is_available:
                         use JK_IconButton(icon="\ue884", text="Import from another game", action=Show("JK_ImportPlaythroughs"))
+
+            vbox xalign 1.0:
+                # Close
+                hbox:
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_PlaythroughsPicker"))

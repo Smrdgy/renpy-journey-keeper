@@ -112,7 +112,8 @@ init python in JK:
             if self.multilocation.last_page_cache:
                 return self.multilocation.last_page_cache
 
-            savename = Utils.get_sorted_saves()[-1]
+            sorted_saves = Utils.get_sorted_saves()
+            savename = sorted_saves[-1] if len(sorted_saves) > 0 else None
             if savename:
                 page, _ = Utils.split_slotname(savename)
                 self.multilocation.last_page_cache = page

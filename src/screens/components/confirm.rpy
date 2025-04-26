@@ -28,6 +28,8 @@ screen JK_Confirm(title=None, message=None, yes=None, yes_text=None, yes_icon=No
                     use JK_IconButton(icon=no_icon, text=no_text, action=noAction, color=no_color, key="K_n")
 
 init python in JK:
+    _constant = True
+
     def showConfirm(title="Confirm", message=None, yes=None, no=None, yes_text="Yes", no_text="No", yes_icon="\ue876", no_icon="\ue5cd", yes_color=None, no_color=None):
         renpy.show_screen("JK_Confirm", title=title, message=message, yes=yes, no=no, yes_text=yes_text, no_text=no_text, yes_icon=yes_icon, no_icon=no_icon, yes_color=yes_color, no_color=no_color)
         renpy.restart_interaction()

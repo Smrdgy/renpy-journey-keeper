@@ -15,27 +15,27 @@ screen JK_PlaythroughActions(playthrough):
             vbox:
                 # Search playthrough
                 hbox:
-                    use JK_IconButton(icon="\ue8b6", text="Seach playthrough", action=[Show("JK_SearchPlaythrough"), Hide("JK_PlaythroughActions")], key="ctrl_K_f")
+                    use JK_IconButton(icon="\ue8b6", text="Seach playthrough", action=[Show("JK_SearchPlaythrough"), Hide("JK_PlaythroughActions")], key="alt_K_f")
 
                 # Duplicate playthrough
                 hbox:
-                    use JK_IconButton(icon="\uebbd", text="Duplicate playthrough", action=[Show("JK_DuplicatePlaythrough", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="ctrl_K_d")
+                    use JK_IconButton(icon="\uebbd", text="Duplicate playthrough", action=[Show("JK_EditPlaythrough", playthrough=playthrough.copy().remove_unique_data(), duplicating=True), Hide("JK_PlaythroughActions")], key="alt_K_d")
 
                 # List all saves
                 hbox:
-                    use JK_IconButton(icon="\ue617", text="Manage saves", action=[Show("JK_SavesList", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="ctrl_K_e")
+                    use JK_IconButton(icon="\ue617", text="Manage saves", action=[Show("JK_SavesList", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="alt_K_e")
 
                 # Sequentialize saves
                 hbox:
-                    use JK_IconButton(icon="\ue089", text="Sequentialize saves", action=[JK.Playthroughs.TrySequentializeSaves(playthrough), Hide("JK_PlaythroughActions")], disabled=not JK.Utils.has_cols_and_rows_configuration(), key="ctrl_K_s")
+                    use JK_IconButton(icon="\ue089", text="Sequentialize saves", action=[JK.Playthroughs.TrySequentializeSaves(playthrough), Hide("JK_PlaythroughActions")], disabled=not JK.Utils.has_cols_and_rows_configuration(), key="alt_K_s")
                 
                 # Show choices timeline
                 hbox:
-                    use JK_IconButton(icon="\uf184", text="Show choice Timeline", action=[Show("JK_ChoicesTimeline", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="ctrl_K_t")
+                    use JK_IconButton(icon="\uf184", text="Show choice Timeline", action=[Show("JK_ChoicesTimeline", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="alt_K_t")
 
                 # Move/copy saves
                 hbox:
-                    use JK_IconButton(icon="\ueb7d", text="Move/copy saves", action=[Show("JK_MoveCopySaves", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="ctrl_K_m")
+                    use JK_IconButton(icon="\ueb7d", text="Move/copy saves", action=[Show("JK_MoveCopySaves", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="alt_K_m")
                 
                 # Close
                 hbox:

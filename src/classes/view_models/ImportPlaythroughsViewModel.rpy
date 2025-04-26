@@ -63,7 +63,7 @@ init python in JK:
             if playthroughs:
                 for playthrough_data in playthroughs:
                     if playthrough_data.get("directory") not in ["_memories"]:
-                        self.playthroughs.append(Playthroughs.create_playthrough_from_serialization(playthrough_data))
+                        self.playthroughs.append(PlaythroughClass.from_dict(playthrough_data))
             else:
                 self.error_message = "Failed to load playthroughs"
 

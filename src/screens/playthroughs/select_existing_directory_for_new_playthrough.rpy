@@ -36,3 +36,14 @@ screen JK_SelectExistingDirectoryForNewPlaythrough():
             
                 hbox xalign 0.5 yalign 0.5:
                     use JK_Title("No directories found.", color=JK.Colors.error)
+
+        hbox:
+            xfill True
+            yfill True
+
+            style_prefix "JK_dialog_action_buttons"
+
+            vbox:
+                # Close
+                hbox:
+                    use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SelectExistingDirectoryForNewPlaythrough"))
