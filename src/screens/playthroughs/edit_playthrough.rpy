@@ -23,6 +23,10 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
             submitAction = [
                 JK.Settings.SaveDefaultPlaythroughTemplateAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations)#MODIFY HERE
             ]
+        elif duplicating:
+            submitAction = [
+                JK.Playthroughs.DuplicatePlaythroughAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory)#MODIFY HERE
+            ]
         else:
             submitAction = [
                 JK.Playthroughs.AddOrEditAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory)#MODIFY HERE
@@ -219,13 +223,13 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
 
             style_prefix "JK_dialog_action_buttons"
 
-            if not isEdit and not editing_template:
+            if not isEdit and not editing_template and not duplicating:
                 vbox xalign 0.0:
                     hbox:
                         use JK_IconButton(icon="\uead3", text="Edit default values", action=Show("JK_EditPlaythrough", playthrough=None, editing_template=True), tt="Click here to edit the default values for new playthroughs")
 
             vbox:
-                if(isEdit and playthrough.id != 1):
+                if isEdit and playthrough.id != 1:
                     # Remove
                     hbox:
                         use JK_IconButton(icon="\ue92b", text="Remove", action=Show("JK_RemovePlaythroughConfirm", playthrough=playthrough), color=JK.Colors.danger, key="alt_K_r")
@@ -237,7 +241,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
                     else:
                         use JK_IconButton(icon="\ue161", text="Save", action=submitAction, disabled=is_save_disabled, key="alt_K_s")
 
-                if not isEdit and not editing_template:
+                if not isEdit and not editing_template and not duplicating:
                     hbox:
                         use JK_IconButton(icon="\uebbd", text="Create from existing directory", action=Show("JK_SelectExistingDirectoryForNewPlaythrough"), tt="You can use already existing directory to create a playthrough. It will fill out the name and set the directory for you.", tt_side="left")
 

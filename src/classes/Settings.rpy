@@ -363,7 +363,7 @@ init -1 python in JK:
                 self.template = playthrough_template.edit(name=name, description=description, storeChoices=storeChoices, autosaveOnChoices=autosaveOnChoices, useChoiceLabelAsSaveName=useChoiceLabelAsSaveName, enabledSaveLocations=enabledSaveLocations)#MODIFY HERE
 
             def __call__(self):
-                Settings.playthroughTemplate = self.template.serializable_for_template()
+                Settings.playthroughTemplate = self.template.serialize_template_for_json()
 
                 Settings.save()
                 renpy.restart_interaction()

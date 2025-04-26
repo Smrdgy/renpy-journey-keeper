@@ -23,8 +23,10 @@ init python in JK:
             self.id = int(time.time())
             self.directory = Utils.name_to_directory_name(self.name)
 
+            return self
+
         def copy(self):
-            return PlaythroughClass(self.id, self.directory, self.name, self.description, self.thumbnail, self.storeChoices, self.autosaveOnChoices, self.selectedPage, self.filePageName, self.useChoiceLabelAsSaveName, self.enabledSaveLocations)#MODIFY HERE
+            return PlaythroughClass.from_json_string(self.serialize_to_json_string())
 
         def remove_unique_data(self):
             self.id = int(time.time())
@@ -68,7 +70,7 @@ init python in JK:
 
             return self
 
-        def serializable(self):
+        def serialize_for_json(self):
             return {
                 'id': self.id,
                 'directory': self.directory,
@@ -84,7 +86,7 @@ init python in JK:
                 #MODIFY HERE
             }
 
-        def serializable_for_template(self):
+        def serialize_template_for_json(self):
             return {
                 'name': self.name,
                 'description': self.description,
@@ -94,6 +96,9 @@ init python in JK:
                 'enabledSaveLocations': self.enabledSaveLocations,
                 #MODIFY HERE
             }
+
+        def serialize_to_json_string(self):
+            return json.dumps(self.serialize_for_json())
 
         def getThumbnail(self, width=None, height=None, maxWidth=None, maxHeight=None):
             defWidth = 150
@@ -156,4 +161,20 @@ init python in JK:
             self.selectedPage = renpy.store.persistent._file_page
             self.filePageName = renpy.store.persistent._file_page_name
 
-            Playthroughs.save()   
+            Playthroughs.save()
+
+        @staticmethod
+        def from_dict(data):
+            return PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
+
+        @staticmethod
+        def from_json_string(json_string):
+            return PlaythroughClass.from_dict(json.loads(json_string))
+
+        @staticmethod
+        def create_native():
+            return PlaythroughClass(id=1, directory="", name="Native", autosaveOnChoices=False, useChoiceLabelAsSaveName=False)#MODIFY HERE
+
+        @staticmethod
+        def create_memories():
+            return PlaythroughClass(id=2, directory="_memories", name="Memories", autosaveOnChoices=False, useChoiceLabelAsSaveName=False)#MODIFY HERE
