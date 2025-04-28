@@ -588,16 +588,26 @@ accessed through `JK.api.callbacks`
 ---
 
 ### `new_playthrough_instance_callbacks (list)`
+
 **Description**:  
+
 Called whenever a new playthrough instance is created.
+
 **Use Case**:  
+
 Useful for initializing custom data, tracking analytics, or modifying the new playthrough before it becomes active.
+
 **Example Scenario**:  
+
 You might register a callback to pre-populate `meta` field for every newly created playthrough.
-**Code example**
+
+**Code example**:
+
 ```python
 def __add_metadata(playthrough):
-  playthrough.meta = "My metadata" # This will add "My metadata" to every new playthrough
+  playthrough.meta = "My metadata"  # This will add "My metadata" to every new playthrough
+
+
 JK.api.callbacks.new_playthrough_instance_callbacks.append(__add_metadata)
 ```
 
@@ -606,15 +616,24 @@ JK.api.callbacks.new_playthrough_instance_callbacks.append(__add_metadata)
 ### `playthroughs_filter_callbacks (list)`
 
 **Description**:  
-  Called whenever playthroughs are being collected for display, such as on the "Select Playthrough" screen or in the side panel showing available playthrough counts.
+
+Called whenever playthroughs are being collected for display, such as on the "Select Playthrough" screen or in the side
+panel showing available playthrough counts.
+
 **Use Case**:
-  Useful for filtering or modifying the list of playthroughs shown to the user.
+
+Useful for filtering or modifying the list of playthroughs shown to the user.
+
 **Example Scenario**:
-  You might register a callback to hide certain playthroughs from the standard UI.
-**Code example**
+
+You might register a callback to hide certain playthroughs from the standard UI.
+
+**Code example**:
 ```python
 # This filter will return only playthroughs that have id < 0. There aren't any, but you got the point, right?
 def __filter(playthrough):
   return playthrough.id < 0
+
+
 JK.api.callbacks.playthroughs_filter_callbacks.append(__filter)
 ```
