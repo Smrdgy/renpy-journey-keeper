@@ -20,7 +20,7 @@ screen JK_PlaythroughsGridPicker(playthroughs, reorder_source):
         for playthrough in playthroughs:
             python:
                 is_active_playthrough = JK.Playthroughs.active_playthrough == playthrough or (playthrough.id == 1 and JK.Playthroughs.active_playthrough == None)
-                delete_action = Show("JK_RemovePlaythroughConfirm", playthrough=playthrough) if playthrough.id > 1 else NullAction()
+                delete_action = Show("JK_RemovePlaythroughConfirm", playthrough=playthrough) if playthrough.deletable else NullAction()
                 edit_action = Show("JK_EditPlaythrough", playthrough=playthrough.copy(), isEdit=True)
 
             button style "JK_playthrough_button":
@@ -83,7 +83,7 @@ screen JK_PlaythroughsGridPicker(playthroughs, reorder_source):
                             xfill True
 
                             hbox xpos 0.0 xanchor 0.0 ypos 1.0 yanchor 1.0:
-                                use JK_IconButton('\ue872', text="Remove", action=delete_action, disabled=playthrough.id == 1, color=JK.Colors.danger)
+                                use JK_IconButton('\ue872', text="Remove", action=delete_action, disabled=not playthrough.deletable, color=JK.Colors.danger)
 
                             hbox xpos 1.0 xanchor 1.0 ypos 1.0 yanchor 1.0:
                                 use JK_IconButton('\ue3c9', text="Edit", action=edit_action)

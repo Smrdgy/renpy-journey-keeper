@@ -70,7 +70,7 @@ screen JK_PlaythroughsTablePicker(playthroughs, reorder_source):
                         use JK_IconButton(icon="\ue3c9", tt="Edit", action=edit_action)
 
                         # Delete button
-                        use JK_IconButton(icon="\ue872", tt="Delete", action=delete_action, disabled=playthrough.id == 1, disabled_color="#00000000")
+                        use JK_IconButton(icon="\ue872", tt="Delete", action=delete_action, disabled=not playthrough.deletable, disabled_color="#00000000")
 
         $ i += 1
         button:

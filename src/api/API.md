@@ -1,3 +1,5 @@
+> ## ⚠️ All API definitions are in `init 1` python blocks.<br>Ensure your modifications use at least `init 2`, or are triggered after the init phase. ⚠️
+
 # Playthroughs API Documentation
 
 Here you can find all the functions and actions related to playthroughs.
@@ -79,13 +81,14 @@ Adds a playthrough instance to the collection.
 - `activate (bool?)`: Automatically activate after adding *(recommended off when adding multiple)*
 - `save (bool?)`: Save the collection immediately *(recommended off when adding multiple)*
 - `restart_interaction (bool?)`: Restart interaction after adding *(recommended off when adding multiple)*
+- `i_know_what_i_am_doing_with_the_name_so_skip_the_check (bool?)`: A safety override for those who like to live dangerously. If set to True, it will skip the `name` check and add the playthrough regardless of any conflicting names that already exist. ⚠️ If you choose to do this, make absolutely sure you have set the `directory` on the playthrough instance! ⚠️
 
 **Returns:**
 - `PlaythroughClass`
 
 Example
 ```python
-playthrough = JK.api.playthroughs.create_playthrough_instance(id=3, name="Test")
+playthrough = JK.api.playthroughs.create_playthrough_instance(name="Test")
 JK.api.playthroughs.add(playthrough)
 ```
 
@@ -322,6 +325,18 @@ A list of keywords ("USER"/"GAME") and full system paths where this playthrough 
     - `"GAME"`: `/game/saves` directory
     - `str`: Full system path
   - `None`: Enable all
+- `meta (anything JSON serializable)`
+Optional metadata associated with the playthrough. It can be any type you wish, as long as it's JSON serializable.
+- `native (bool)`
+Marks the playthrough as a built-in or system-level playthrough.
+- `directory_immovable (bool)`
+Prevents the playthrough's saves directory from being moved or renamed.
+- `hidden (bool)`
+Hides the playthrough from standard user interfaces.
+- `serializable (bool)`
+Controls whether the playthrough should be saved to persistent storage.
+- `deletable (bool)`
+Determines whether the playthrough can be deleted by the user or system.
 
 ### Methods
 
@@ -560,3 +575,45 @@ JK.api.settings.set_setting("dialogOpacity", 0.75)
 
 ### `save()`
 Saves the settings into persistent storage and user directory (if available)
+
+---
+
+# Callbacks API Documentation
+
+Here you can find all the available callbacks.
+These callbacks allow you to hook into core systems at various points in the mod's flow.
+
+accessed through `JK.api.callbacks`
+
+---
+
+### `new_playthrough_instance_callbacks (list)`
+- **Description**:  
+  Called whenever a new playthrough instance is created.
+- **Use Case**:  
+  Useful for initializing custom data, tracking analytics, or modifying the new playthrough before it becomes active.
+- **Example Scenario**:  
+  You might register a callback to pre-populate `meta` field for every newly created playthrough.
+- **Code example**
+  ```python
+  def __add_metadata(playthrough):
+    playthrough.meta = "My metadata" # This will add "My metadata" to every new playthrough
+  JK.api.callbacks.new_playthrough_instance_callbacks.append(__add_metadata)
+  ```
+---
+
+### `playthroughs_filter_callbacks (list)`
+
+- **Description**:  
+  Called whenever playthroughs are being collected for display, such as on the "Select Playthrough" screen or in the side panel showing available playthrough counts.
+- **Use Case**:
+  Useful for filtering or modifying the list of playthroughs shown to the user.
+- **Example Scenario**:
+  You might register a callback to hide certain playthroughs from the standard UI.
+- **Code example**
+  ```python
+  # This filter will return only playthroughs that have id < 0. There aren't any, but you got the point, right?
+  def __filter(playthrough):
+    return playthrough.id < 0
+  JK.api.callbacks.playthroughs_filter_callbacks.append(__filter)
+  ```

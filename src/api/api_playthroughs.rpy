@@ -22,6 +22,31 @@ init 1 python in JK.api.playthroughs:
         """ Returns a list of all playthroughs """
         return JK.Playthroughs.playthroughs
 
+    def list_all_filtered(additional_filter_callback=None, include_hidden=False):
+        """
+        Retruns a list of all playthroughs that pass all the conditions set by filters and are not hidden (unless `include_hidden` is set to True)
+        Results are going to be affected by these callback functions:
+            - additional_filter_callback
+            - JK.api.callbacks.playthroughs_filter_callbacks
+
+        Args:
+            additional_filter_callback (Callable[[PlaythroughClass], bool]?): If defined, this function must return either True or False, otherwise you'll get an exception.
+            include_hidden (bool?): By default, hidden playthroughs are filtered out, if True, they will be included.
+
+        Example:
+            a = JK.api.playthroughs.create_playthrough_instance(name="A")
+            b = JK.api.playthroughs.create_playthrough_instance(name="B", hidden=True)
+            c = JK.api.playthroughs.create_playthrough_instance(name="C")
+
+            print(JK.api.playthroughs.list_all_filtered()) # -> [a, c]
+            print(JK.api.playthroughs.list_all_filtered(include_hidden=True)) # -> [a, b, c]
+            print(JK.api.playthroughs.list_all_filtered(lambda playthrough: not playthrough.name == "C")) # -> [c]
+
+            JK.api.callbacks.playthroughs_filter_callbacks.append(lambda p: p.name == "A")
+            print(JK.api.playthroughs.list_all_filtered(lambda playthrough: not playthrough.name == "C")) # -> []
+        """
+        return JK.Playthroughs.get_filtered_playthroughs(additional_filter_callback=additional_filter_callback, include_hidden=include_hidden)
+
     def get_active():
         """ Returns currently active playthrough. If there is none, the native playthrough is returned. """
         return JK.Playthroughs.active_playthrough
@@ -65,7 +90,7 @@ init 1 python in JK.api.playthroughs:
         """
         return JK.Playthroughs.get_index_by_id(id)
 
-    def add(playthrough, activate=True, save=True, restart_interaction=True):
+    def add(playthrough, activate=True, save=True, restart_interaction=True, i_know_what_i_am_doing_with_the_name_so_skip_the_check=False):
         """
         Adds a playthrough instance to the playthroughs
 
@@ -74,12 +99,13 @@ init 1 python in JK.api.playthroughs:
             activate (bool): Whether to automatically activate this playthrough.
             save (bool): Whether to save the playthroughs into the persistent storage (if false, you have to manually perform save() ortherwise the playthroughs might be lost when the game quits!)
             restart_interaction (bool): Whether to perform restart_interaction when the playthrough is added, it is advised to turn this off when adding multiple playthroughs at the same time.
+            i_know_what_i_am_doing_with_the_name_so_skip_the_check (bool): A safety override for those who like to live dangerously. If set to True, it will skip the `name` check and add the playthrough regardless of any conflicting names that already exist. ⚠️ If you choose to do this, make absolutely sure you have set the `directory` on the playthrough instance! ⚠️
 
         Returns:
             PlaythroughClass: The same instance that was provided; good for chaining.
         """
 
-        if not JK.Playthroughs.is_valid_name(playthrough.name):
+        if not i_know_what_i_am_doing_with_the_name_so_skip_the_check and not JK.Playthroughs.is_valid_name(playthrough.name):
             raise Exception("Playthrough name \"{}\" already exists.".format(playthrough.name))
 
         return JK.Playthroughs.add(playthrough=playthrough, activate=activate, save=save, restart_interaction=restart_interaction)
@@ -228,13 +254,29 @@ init 1 python in JK.api.playthroughs:
     """
     PerformQuickSaveAction = JK.Playthroughs.QuickSaveAction
 
-    def create_playthrough_instance(name, id=None, directory=None, description=None, thumbnail=None, autosave_on_choice=True, use_choice_label_as_save_name=False, enabled_save_locations=None):#MODIFY HERE
+    def create_playthrough_instance(
+        name,
+        id=None,
+        directory=None,
+        description=None,
+        thumbnail=None,
+        autosave_on_choice=True,
+        use_choice_label_as_save_name=False,
+        enabled_save_locations=None,
+        meta=None,
+        native=False,
+        directory_immovable=False,
+        hidden=False,
+        serializable=True,
+        deletable=True
+        #MODIFY HERE
+    ):
         """
         Creates a playthrough instance
 
         Args:
             name (str): Name of the playthrough [REQUIRED]
-            id (int): ID of the playthroug. Can be left None and will be autofilled by current a timestamp using `time.time()`
+            id (int): ID of the playthrough. Can be left None and will be autofilled by current a timestamp using `time.time()`
             directory (str): Name of the directory where this playthrough is going to store saves. When None, the directory will be autofilled from `name`
             description (str): A description of the playthrough the player can read.
             thumbnail (str): UTF-8 - base64 encoded renpy screenshot (@see get_encoded_thumbnail)
@@ -251,6 +293,12 @@ init 1 python in JK.api.playthroughs:
 
                 None:
                     All of the above enabled
+            meta (anything JSON serializable): Optional metadata associated with the playthrough. It can be any type you wish, as long as it's JSON serializable.
+            native (bool): Marks the playthrough as a built-in or system-level playthrough.
+            directory_immovable (bool): Prevents the playthrough's saves directory from being moved or renamed.
+            hidden (bool): Hides the playthrough from standard user interfaces.
+            serializable (bool): Controls whether the playthrough should be saved to persistent storage.
+            deletable (bool): Determines whether the playthrough can be deleted by the player or system.
 
         Returns:
             PlaythroughClass: The newly created playthrough instance
