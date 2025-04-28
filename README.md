@@ -13,6 +13,7 @@ Compatible with all Ren'Py games from version 7 onward, JK ensures you never los
 3. [Features](#features)
 4. [Troubleshooting](#troubleshooting)
 5. [Known Issues](#known-issues)
+6. [API](#API)
 
 # Installation
 Download the [latest release](https://github.com/Smrdgy/renpy-journey-keeper/releases/latest) right here from GitHub
@@ -239,3 +240,7 @@ This mod is provided as-is and is not officially supported by the game developer
 Installing or using this mod may result in unintended behavior, including but not limited to game crashes, corrupted save files, or loss of progress.
 It is strongly recommended that you back up your save data before installing.
 The mod creator is not responsible for any damage or data loss caused by the use of this mod.
+
+# API
+
+Full API documentation can be found [here](src/api/API.md)

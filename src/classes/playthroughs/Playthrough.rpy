@@ -131,6 +131,8 @@ init python in JK:
             # Encode it to a base64 string, the important word here is "string" because Python 3 would return b'' from base64.b64encode()...
             self.thumbnail = base64.b64encode(screenshot).decode('utf-8')
 
+            return self
+
         def removeThumbnail(self):
             self.thumbnail = None
 

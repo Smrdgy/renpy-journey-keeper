@@ -24,7 +24,7 @@ init python in JK:
             self.loaded_manual_save_without_choices = False
             self.prevent_confirm_on_large_page_jump = False
 
-        def set_active_slot(self, slotname):
+        def set_active_slot(self, slotname, ignore_large_jump=False):
             page, slot = Utils.split_slotname(slotname)
 
             #Last resort check to counter forced autosaves screwing up the counter (e.g. $ renpy.save("auto-1") somewhere in the dialog)
@@ -35,7 +35,7 @@ init python in JK:
                 if self.prevent_confirm_on_large_page_jump:
                     self.prevent_confirm_on_large_page_jump = False
 
-                else:
+                elif not ignore_large_jump:
                     prev_page, _ = Utils.split_slotname(self.prev_active_slot)
 
                     if Settings.showConfirmOnLargePageJump and not Utils.is_save_load_screen() and (prev_page > page + 1 or prev_page < page - 1):
@@ -66,25 +66,8 @@ init python in JK:
 
             return page, slot, slotString
 
-        def get_previous_slot(self):
-            page, slot = Utils.split_slotname(renpy.store.JK_ActiveSlot)
-
-            slot -= 1
-
-            if(slot < 1):
-                slot = 1
-                page -= 1
-
-            slotString = str(page) + "-" + str(slot)
-
-            return page, slot, slotString
-
         def set_next_slot(self):
             _, _, slotString = Autosaver.get_next_slot()
-            self.set_active_slot(slotString)
-
-        def set_previous_slot(self):
-            _, _, slotString = Autosaver.get_previous_slot()
             self.set_active_slot(slotString)
 
         def try_save_pending_save(self):

@@ -105,6 +105,17 @@ init python in JK:
             return relevant_directories
 
         def add(self, playthrough, activate=True, save=True, restart_interaction=True):
+            other_playthrough = self.get_by_id(playthrough.id)
+            if other_playthrough:
+                if playthrough.hasThumbnail():
+                    playthrough.thumbnail = "[Image string - too long to display]"
+
+                if other_playthrough.hasThumbnail():
+                    other_playthrough.thumbnail = "[Image string - too long to display]"
+
+                print("Exception occurred with playthrough:\n", playthrough.__dict__, "\n conflicting with:\n", other_playthrough.__dict__)
+                raise Exception("Playthrough with ID \"{}\" already exists!".format(playthrough.id))
+
             self._playthroughs.append(playthrough)
 
             if activate:
@@ -151,12 +162,19 @@ init python in JK:
                 self.playthroughs.remove(playthrough)
 
             if keepActive == False:
-                self.activate_first_or_none()
+                self.activate_first()
 
-            return True
+            return playthrough != None
 
         def edit(self, playthrough, originalPlaythrough, moveSaveDirectory=False):
             rv = originalPlaythrough.edit_from_playthrough(playthrough, moveSaveDirectory=moveSaveDirectory)
+
+            if moveSaveDirectory and originalPlaythrough.name != playthrough.name and playthrough.id != 1 and self.is_valid_name(playthrough.name):
+                result = self.rename_save_directory(originalPlaythrough, Utils.name_to_directory_name(playthrough.name), force=force)
+
+                if result != True:
+                    renpy.show_screen("JK_MovePlaythroughDirectoryError", playthrough=playthrough, errors=result)
+                    return None
                 
             self.save()
             renpy.restart_interaction()
@@ -166,13 +184,6 @@ init python in JK:
         def add_or_edit(self, playthrough, moveSaveDirectory=False, force=False):
             sourcePlaythrough = self.get_by_id(playthrough.id)
             if(sourcePlaythrough != None):
-                if moveSaveDirectory and sourcePlaythrough.name != playthrough.name and playthrough.id != 1 and self.is_valid_name(playthrough.name):
-                    result = self.rename_save_directory(sourcePlaythrough, Utils.name_to_directory_name(playthrough.name), force=force)
-
-                    if result != True:
-                        renpy.show_screen("JK_MovePlaythroughDirectoryError", playthrough=playthrough, errors=result)
-                        return None
-
                 rv = self.edit(playthrough, sourcePlaythrough, moveSaveDirectory=moveSaveDirectory)
 
                 if self.active_playthrough.id == rv.id:
@@ -183,7 +194,10 @@ init python in JK:
             return self.add(playthrough)
 
         def toggle_autosave_on_choices_for_active(self):
-            self.active_playthrough.edit(autosaveOnChoices=not self.active_playthrough.autosaveOnChoices)
+            self.set_autosave_on_choices_for_active(not self.active_playthrough.autosaveOnChoices)
+
+        def set_autosave_on_choices_for_active(self, enabled):
+            self.active_playthrough.edit(autosaveOnChoices=enabled)
 
             Autosaver.pending_save = None
             renpy.restart_interaction()
@@ -210,10 +224,10 @@ init python in JK:
             renpy.restart_interaction()
 
         def activate_native(self):
-            self.activate_by_instance(self.playthroughs[0])
+            self.activate_by_id(1)
 
-        def activate_first_or_none(self):
-            self.activate_native()
+        def activate_first(self):
+            self.activate_by_instance(self.playthroughs[0])
 
         def save(self):
             self.save_to_user_dir()
