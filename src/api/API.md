@@ -29,6 +29,40 @@ Returns a list of all playthrough instances.
 
 ---
 
+### `list_all_filtered()`
+Returns a list of all playthroughs that pass all the conditions set by filters and are not hidden (unless `include_hidden` is set to True)
+
+Results are going to be affected by these callback functions:
+  - `additional_filter_callback`
+  - `JK.api.callbacks.playthroughs_filter_callbacks`
+
+Args:
+  - `additional_filter_callback (Callable[[PlaythroughClass], bool]?)`: If defined, this function must return either True or False, otherwise you'll get an exception. `True` allows the playthrough to be included, while `False` will filter it out.
+  - `include_hidden (bool?)`: By default, hidden playthroughs are filtered out, if `True`, they will be included.
+
+
+**Returns:**
+- `PlaythroughClass[]`
+
+**Example:**
+```python
+a = JK.api.playthroughs.create_playthrough_instance(name="A")
+b = JK.api.playthroughs.create_playthrough_instance(name="B", hidden=True)
+c = JK.api.playthroughs.create_playthrough_instance(name="C")
+
+JK.api.playthroughs.add(a, activate=False, save=False, restart_interaction=False)
+JK.api.playthroughs.add(b, activate=False, save=False, restart_interaction=False)
+JK.api.playthroughs.add(c)
+
+print(JK.api.playthroughs.list_all_filtered()) # -> [a, c]
+print(JK.api.playthroughs.list_all_filtered(include_hidden=True)) # -> [a, b, c]
+print(JK.api.playthroughs.list_all_filtered(lambda playthrough: not playthrough.name == "C")) # -> [c]
+
+JK.api.callbacks.playthroughs_filter_callbacks.append(lambda p: p.name == "A")
+print(JK.api.playthroughs.list_all_filtered(lambda playthrough: not playthrough.name == "C")) # -> []
+```
+---
+
 ### `get_active()`
 Returns the currently active playthrough. If there is none, the native playthrough is returned.
 
