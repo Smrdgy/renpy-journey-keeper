@@ -263,7 +263,7 @@ screen ExampleOverlay():
 
 ---
 
-## Playthrough
+## Playthrough related functions
 
 ### Functions
 
@@ -289,12 +289,12 @@ A list of keywords ("USER"/"GAME") and full system paths where this playthrough 
 **Returns:**
 - `PlaythroughClass`
 
-### PlaythroughClass structure
+## PlaythroughClass
 
 I'm so sorry about this class... It's the oldest one along with PlaythroughsClass, and it's a complete mess.
 I hope to clean it up some day, but we will see.
 
-#### Attributes
+### Attributes
 - `id (int)`:
 A numerical unique identifier.
 Currently, IDs 1 and 2 are reserved, as well as any numbers beyond approximately 1,730,000,000 (which come from a timestamp using `time.time()`).
