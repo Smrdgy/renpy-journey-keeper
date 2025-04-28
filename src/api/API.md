@@ -630,7 +630,7 @@ You might register a callback to hide certain playthroughs from the standard UI.
 
 **Code example**:
 ```python
-# This filter will return only playthroughs that have id < 0. There aren't any, but you got the point, right?
+# This filter will allow only playthroughs that have id < 0. There aren't any, but you got the point, right?
 def __filter(playthrough):
   return playthrough.id < 0
 
