@@ -21,7 +21,7 @@ screen JK_Settings_Updates():
 
                 text "Latest version: {}".format(state)
 
-                if JK.Updater.latest and JK.Updater.latest.version == JK.MOD_VERSION:
+                if JK.Updater.has_latest_version():
                     text "{size=-5} (You have the latest version.){/size}" color JK.Colors.success yalign 0.5
 
             use JK_IconButton("\ue5d5", text="Refresh", action=JK.Updater.CheckForUpdateAction())

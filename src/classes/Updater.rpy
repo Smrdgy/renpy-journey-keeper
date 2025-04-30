@@ -41,6 +41,9 @@ init python in JK:
                     self.install_update()
                     self.pending_utter_restart = True
 
+        def has_latest_version(self):
+            return self.compare_versions(self.latest.version, MOD_VERSION) >= 0 if self.latest else None
+
         def check_for_update(self, ignore_blacklist=False, ignore_force_auto_update=False):
             if self.loading or self.unavailable:
                 return
@@ -55,7 +58,7 @@ init python in JK:
             self.latest = self.fetch_latest_release()
             if self.latest:
                 version = self.latest.version
-                if version != MOD_VERSION and (ignore_blacklist or renpy.store.persistent.JK_IgnoredUpdate != version):
+                if not self.has_latest_version() and (ignore_blacklist or renpy.store.persistent.JK_IgnoredUpdate != version):
                     self.pending_update = self.latest
 
                     if self.pending_update.asset:
@@ -186,6 +189,28 @@ init python in JK:
                 renpy.restart_interaction()
 
             return False
+
+        @staticmethod
+        def compare_versions(v1, v2):
+            if v1 == v2:
+                return 0
+
+            # Remove non-numeric characters
+            v1 = re.sub(r"[^0-9.]", "", v1)
+            v2 = re.sub(r"[^0-9.]", "", v2)
+
+            # Split versions into parts
+            v1_parts = list(map(int, v1.split(".")))
+            v2_parts = list(map(int, v2.split(".")))
+
+            for i in range(max(len(v1_parts), len(v2_parts))):
+                part1 = v1_parts[i] if i < len(v1_parts) else 0
+                part2 = v2_parts[i] if i < len(v2_parts) else 0
+
+                if part1 != part2:
+                    return part2 - part1
+
+            return 0
 
         class Release(x52NonPicklable):
             assets_url = "https://api.github.com/repos/{}/{}/releases/assets/".format(MOD_GITHUB_OWNER, MOD_GITHUB_REPO)
