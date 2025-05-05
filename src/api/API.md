@@ -59,6 +59,7 @@ print(JK.api.playthroughs.list_all_filtered(include_hidden=True)) # -> [a, b, c]
 print(JK.api.playthroughs.list_all_filtered(lambda playthrough: playthrough.name == "C")) # -> [c]
 
 JK.api.callbacks.playthroughs_filter_callbacks.append(lambda p: p.name == "A")
+print(JK.api.playthroughs.list_all_filtered()) # -> [a]
 print(JK.api.playthroughs.list_all_filtered(lambda playthrough: playthrough.name == "C")) # -> []
 ```
 ---
