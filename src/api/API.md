@@ -29,7 +29,7 @@ Returns a list of all playthrough instances.
 
 ---
 
-### `list_all_filtered()`
+### `list_all_filtered(additional_filter_callback=None, include_hidden=False)`
 Returns a list of all playthroughs that pass all the conditions set by filters and are not hidden (unless `include_hidden` is set to True)
 
 Results are going to be affected by these callback functions:
@@ -56,10 +56,10 @@ JK.api.playthroughs.add(c)
 
 print(JK.api.playthroughs.list_all_filtered()) # -> [a, c]
 print(JK.api.playthroughs.list_all_filtered(include_hidden=True)) # -> [a, b, c]
-print(JK.api.playthroughs.list_all_filtered(lambda playthrough: not playthrough.name == "C")) # -> [c]
+print(JK.api.playthroughs.list_all_filtered(lambda playthrough: playthrough.name == "C")) # -> [c]
 
 JK.api.callbacks.playthroughs_filter_callbacks.append(lambda p: p.name == "A")
-print(JK.api.playthroughs.list_all_filtered(lambda playthrough: not playthrough.name == "C")) # -> []
+print(JK.api.playthroughs.list_all_filtered(lambda playthrough: playthrough.name == "C")) # -> []
 ```
 ---
 
