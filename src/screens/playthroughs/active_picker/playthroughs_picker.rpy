@@ -5,8 +5,7 @@ screen JK_PlaythroughsPicker():
 
     default reorder_source = None
 
-    # Get all playthroughs except memories
-    $ playthroughs = [p for p in JK.Playthroughs.playthroughs if p.id != 2] # Warning, playthroughs can't be made default because it will change when reordering
+    $ playthroughs = JK.Playthroughs.get_filtered_playthroughs()
 
     use JK_Dialog(title="Select a playthrough", close_action=Hide("JK_PlaythroughsPicker")):
         style_prefix "JK"

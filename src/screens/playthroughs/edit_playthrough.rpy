@@ -81,14 +81,14 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
 
                 use JK_YSpacer(2)
 
-                if playthrough.id != 1:
+                if not playthrough.directory_immovable:
                     python:
                         allSaveLocations = JK.SaveSystem.get_all_native_save_locations_for_options()
                         computedDirectory = "[[Playthrough name]"
 
                     if not editing_template:
                         python:
-                            computedDirectory = playthrough.directory if playthrough.directory and not moveSaveDirectory else (JK.Utils.name_to_directory_name(name) if name else None) or ""
+                            computedDirectory = playthrough.directory if playthrough.directory and (not moveSaveDirectory or name == playthrough.name) else (JK.Utils.name_to_directory_name(name) if name else None) or ""
 
                         use JK_Title("Directory", 2)
                         hbox:
@@ -158,7 +158,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
 
                                         text "Warning: If you don't use [platform_specific_library_name], your save files are going to be stored only with the game. Uninstalling the game will {u}delete your progress{/u} as well." color JK.Colors.warning xoffset JK.scaled(10)
 
-                use JK_YSpacer()
+                    use JK_YSpacer()
 
                 button:
                     action description_input.get_enable_action()
@@ -229,7 +229,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
                         use JK_IconButton(icon="\uead3", text="Edit default values", action=Show("JK_EditPlaythrough", playthrough=None, editing_template=True), tt="Click here to edit the default values for new playthroughs")
 
             vbox:
-                if isEdit and playthrough.id != 1:
+                if isEdit and playthrough.deletable:
                     # Remove
                     hbox:
                         use JK_IconButton(icon="\ue92b", text="Remove", action=Show("JK_RemovePlaythroughConfirm", playthrough=playthrough), color=JK.Colors.danger, key="alt_K_r")

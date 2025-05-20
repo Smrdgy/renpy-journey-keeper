@@ -1,8 +1,30 @@
 init python in JK:
     _constant = True
 
+    new_playthrough_instance_callbacks = []
+
     class PlaythroughClass(x52NonPicklable):
-        def __init__(self, id=None, directory=None, name=None, description=None, thumbnail=None, storeChoices=False, autosaveOnChoices=True, selectedPage=1, filePageName={}, useChoiceLabelAsSaveName=False, enabledSaveLocations=None):#MODIFY HERE
+        def __init__(
+            self,
+            id=None,
+            directory=None,
+            name=None,
+            description=None,
+            thumbnail=None,
+            storeChoices=False,
+            autosaveOnChoices=True,
+            selectedPage=1,
+            filePageName={},
+            useChoiceLabelAsSaveName=False,
+            enabledSaveLocations=None,
+            meta=None,
+            native=False,
+            directory_immovable=False,
+            hidden=False,
+            serializable=True,
+            deletable=True
+            #MODIFY HERE
+        ):
             self.id = id or int(time.time())
             self.directory = directory if (directory != None) else (Utils.name_to_directory_name(name) if name else None)
             self.name = name
@@ -14,7 +36,17 @@ init python in JK:
             self.filePageName = filePageName
             self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
             self.enabledSaveLocations = enabledSaveLocations # Possible values: USER, GAME, string (other full path locations, e.g. C:\\Users\User\Desktop\some saves directory)
+            self.meta = meta
+            self.native = native
+            self.directory_immovable = directory_immovable
+            self.hidden = hidden
+            self.serializable = serializable
+            self.deletable = deletable
             #MODIFY HERE
+
+            for cb in new_playthrough_instance_callbacks:
+                if callable(cb):
+                    cb(self)
 
         def __getstate__(self):
             return None
@@ -26,7 +58,7 @@ init python in JK:
             return self
 
         def copy(self):
-            return PlaythroughClass.from_json_string(self.serialize_to_json_string())
+            return PlaythroughClass.from_json_string(self.serialize_to_json_string(ignore_serializable=True))
 
         def remove_unique_data(self):
             self.id = int(time.time())
@@ -34,7 +66,25 @@ init python in JK:
 
             return self
 
-        def edit(self, name=None, description=None, thumbnail=None, storeChoices=None, autosaveOnChoices=None, selectedPage=None, filePageName=None, useChoiceLabelAsSaveName=None, enabledSaveLocations=None):#MODIFY HERE
+        def edit(
+            self,
+            name=None,
+            description=None,
+            thumbnail=None,
+            storeChoices=None,
+            autosaveOnChoices=None,
+            selectedPage=None,
+            filePageName=None,
+            useChoiceLabelAsSaveName=None,
+            enabledSaveLocations=None,
+            meta=None,
+            native=None,
+            directory_immovable=None,
+            hidden=None,
+            serializable=None,
+            deletable=None
+            #MODIFY HERE
+        ):
             if name != None:
                 self.name = name
 
@@ -49,12 +99,18 @@ init python in JK:
             if filePageName != None: self.filePageName = filePageName
             if useChoiceLabelAsSaveName != None: self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
             if enabledSaveLocations != None: self.enabledSaveLocations = enabledSaveLocations or None #enabledSaveLocations can be False, in that case it needs to be replaced with None
+            if meta != None: self.meta = meta
+            if native != None: self.native = native
+            if directory_immovable != None: self.directory_immovable = directory_immovable
+            if hidden != None: self.hidden = hidden
+            if serializable != None: self.serializable = serializable
+            if deletable != None: self.deletable = deletable
             #MODIFY HERE
 
             return self
 
         def edit_from_playthrough(self, playthrough, moveSaveDirectory=False):
-            if(self.directory == None or (moveSaveDirectory and playthrough.name != self.name and playthrough.id != 1)):
+            if(self.directory == None or (moveSaveDirectory and playthrough.name != self.name and not playthrough.directory_immovable)):
                 self.directory = Utils.name_to_directory_name(playthrough.name)
 
             self.name = playthrough.name
@@ -66,11 +122,23 @@ init python in JK:
             self.filePageName = playthrough.filePageName
             self.useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
             self.enabledSaveLocations = playthrough.enabledSaveLocations
+            self.meta = playthrough.meta
+            self.native = playthrough.native
+            self.directory_immovable = playthrough.directory_immovable
+            self.hidden = playthrough.hidden
+            self.serializable = playthrough.serializable
+            self.deletable = playthrough.deletable
             #MODIFY HERE
 
             return self
 
-        def serialize_for_json(self):
+        def serialize_for_json(self, ignore_serializable=False):
+            if not self.serializable and not ignore_serializable:
+                if Settings.debugEnabled:
+                    raise Exception("Playthrough \"{}\" was set as NOT serializable but still got to the serialization!".format(self.name))
+
+                return None
+
             return {
                 'id': self.id,
                 'directory': self.directory,
@@ -83,6 +151,12 @@ init python in JK:
                 'filePageName': self.filePageName,
                 'useChoiceLabelAsSaveName': self.useChoiceLabelAsSaveName,
                 'enabledSaveLocations': self.enabledSaveLocations,
+                'meta': self.meta,
+                'native': self.native,
+                'directory_immovable': self.directory_immovable,
+                'hidden': self.hidden,
+                'serializable': self.serializable,
+                'deletable': self.deletable,
                 #MODIFY HERE
             }
 
@@ -97,8 +171,8 @@ init python in JK:
                 #MODIFY HERE
             }
 
-        def serialize_to_json_string(self):
-            return json.dumps(self.serialize_for_json())
+        def serialize_to_json_string(self, ignore_serializable=False):
+            return json.dumps(self.serialize_for_json(ignore_serializable=ignore_serializable))
 
         def getThumbnail(self, width=None, height=None, maxWidth=None, maxHeight=None):
             defWidth = 150
@@ -130,6 +204,8 @@ init python in JK:
             screenshot = renpy.game.interface.get_screenshot()
             # Encode it to a base64 string, the important word here is "string" because Python 3 would return b'' from base64.b64encode()...
             self.thumbnail = base64.b64encode(screenshot).decode('utf-8')
+
+            return self
 
         def removeThumbnail(self):
             self.thumbnail = None
@@ -165,7 +241,26 @@ init python in JK:
 
         @staticmethod
         def from_dict(data):
-            return PlaythroughClass(id=data.get("id"), directory=data.get("directory"), name=data.get("name"), description=data.get("description"), thumbnail=data.get("thumbnail"), storeChoices=data.get("storeChoices"), autosaveOnChoices=data.get("autosaveOnChoices"), selectedPage=data.get("selectedPage"), filePageName=data.get("filePageName"), useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"), enabledSaveLocations=data.get("enabledSaveLocations"))#MODIFY HERE
+            return PlaythroughClass(
+                id=data.get("id"),
+                directory=data.get("directory"),
+                name=data.get("name"),
+                description=data.get("description"),
+                thumbnail=data.get("thumbnail"),
+                storeChoices=data.get("storeChoices"),
+                autosaveOnChoices=data.get("autosaveOnChoices"),
+                selectedPage=data.get("selectedPage"),
+                filePageName=data.get("filePageName"),
+                useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"),
+                enabledSaveLocations=data.get("enabledSaveLocations"),
+                meta=data.get("meta"),
+                native=data.get("native"),
+                directory_immovable=data.get("directory_immovable"),
+                hidden=data.get("hidden"),
+                serializable=data.get("serializable"),
+                deletable=data.get("deletable")
+                #MODIFY HERE
+            )
 
         @staticmethod
         def from_json_string(json_string):
@@ -173,8 +268,8 @@ init python in JK:
 
         @staticmethod
         def create_native():
-            return PlaythroughClass(id=1, directory="", name="Native", autosaveOnChoices=False, useChoiceLabelAsSaveName=False)#MODIFY HERE
+            return PlaythroughClass(id=1, directory="", name="Native", native=True, directory_immovable=True, deletable=False)#MODIFY HERE
 
         @staticmethod
         def create_memories():
-            return PlaythroughClass(id=2, directory="_memories", name="Memories", autosaveOnChoices=False, useChoiceLabelAsSaveName=False)#MODIFY HERE
+            return PlaythroughClass(id=2, directory="_memories", name="Memories", directory_immovable=True, hidden=True, serializable=True, deletable=False)#MODIFY HERE

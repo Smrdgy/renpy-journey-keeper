@@ -28,8 +28,9 @@ screen JK_Sidepanel():
         noPlaythrough = playthrough == None
         autosave_on_choices_enabled = playthrough and playthrough.autosaveOnChoices
         custom_pagination_enabled = renpy.store.persistent.JK_ShowPagination
-        amount_of_playthroughs = len([p for p in JK.Playthroughs.playthroughs if p.id != 2])
-        amount_of_custom_playthroughs = len([p for p in JK.Playthroughs.playthroughs if p.id > 2])
+        playthroughs = JK.Playthroughs.get_filtered_playthroughs()
+        amount_of_playthroughs = len(playthroughs)
+        amount_of_custom_playthroughs = len([p for p in playthroughs if not p.native])
 
         if horizontal:
             estimatedPanelSize = (calculate_structure_size(structure), JK.scaled(70))
