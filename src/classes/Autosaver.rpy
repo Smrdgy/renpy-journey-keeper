@@ -149,21 +149,26 @@ init python in JK:
 
             return False
 
-        def __can_perform_autosave(self):
+        def _assert_can_autosave(self):
             # Prevent making any autosave actions when the feature is disabled
-            if not Playthroughs.active_playthrough.autosaveOnChoices: return
+            if not Playthroughs.active_playthrough.autosaveOnChoices:
+                raise Exception("Autosaver is disabled in the current playthrough.")
 
             # Prevent when forcefully disabled
-            if self.prevent_autosaving: return
+            if self.prevent_autosaving:
+                raise Exception("Autosaver is forcefully disabled.")
 
             # Prevent a single choice from saving multiple times (debouncer)
-            if self.pending_save: return
+            if self.pending_save:
+                raise Exception("Autosaver is already saving a choice.")
 
             # Prevent when viewing a replay or a memory
-            if Memories.memoryInProgress or renpy.store._in_replay: return
+            if Memories.memoryInProgress or renpy.store._in_replay:
+                raise Exception("Autosaver is disabled while viewing a memory or a replay.")
 
             # Prevent when singleton choice is detected and not allowed
-            if not Settings.autosaveOnSingletonChoice and not Utils.is_displaying_multiple_choices(): return
+            if not Settings.autosaveOnSingletonChoice and not Utils.is_displaying_multiple_choices():
+                raise Exception("Autosaver is disabled when displaying a single choice.")
 
             # Prevent making autosave when prevent modifier (SHIFT/ALT) is held
             if Settings.preventAutosaveModifierKey:
@@ -173,13 +178,17 @@ init python in JK:
                     (Settings.preventAutosaveModifierKey == "ALT" and key_mods & (pygame.KMOD_ALT | pygame.KMOD_META)) or
                     (Settings.preventAutosaveModifierKey == "SHIFT" and key_mods & pygame.KMOD_SHIFT)
                 ):
-                    return
+                    raise Exception("Autosaver is disabled when the prevent autosave modifier key is held down.")
 
             return True
 
         def handle_any_button_click(self, button):
             # Make sure the autosave can be performed
-            if not self.__can_perform_autosave():
+            try:
+                self._assert_can_autosave()
+            except Exception as e:
+                if Settings.debugEnabled:
+                    renpy.notify(str(e))
                 return
 
             # Retrieve label
@@ -212,7 +221,11 @@ init python in JK:
 
         def handle_choice_selection(self, choice):
             # Make sure the autosave can be performed
-            if not self.__can_perform_autosave():
+            try:
+                self._assert_can_autosave()
+            except Exception as e:
+                if Settings.debugEnabled:
+                    renpy.notify(str(e))
                 return
 
             # If "autosave on question" is disabled, make sure the jump at then end of the choice doesn't lead back to JK_LastLabel

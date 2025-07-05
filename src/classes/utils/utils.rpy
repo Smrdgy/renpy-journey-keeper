@@ -160,7 +160,9 @@ init -9999 python in JK:
 
                     return False
             except:
-                return False
+                pass
+
+            return True
 
         @staticmethod
         def is_displaying_choices_in_any_context():
