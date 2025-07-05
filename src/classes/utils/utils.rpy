@@ -477,22 +477,24 @@ init -9999 python in JK:
             return "_".join(parts)
 
     class OpenTooltipAction(renpy.ui.Action):
-        def __init__(self, title=None, icon=None, message=None, interactive=False, side="top", pos=None):
+        def __init__(self, title=None, icon=None, message=None, interactive=False, side="top", preferred_axis=None, pos=None):
             self.title = title
             self.icon = icon
             self.message = message
             self.interactive = interactive
             self.side = side
+            self.preferred_axis = preferred_axis
             self.pos = pos
 
         def __call__(self):
             if self.message:
-                renpy.show_screen("JK_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side)
+                renpy.show_screen("JK_TooltipDialog", title=self.title, icon=self.icon, message=self.message, pos=self.pos, interactive=self.interactive, side=self.side, preferred_axis=self.preferred_axis)
                 renpy.restart_interaction()
 
     class UpdateTooltipPositionAction(renpy.ui.Action):
-        def __init__(self, side="top", distance=0, pos=None, allow_offscreen=False):
+        def __init__(self, side="top", preferred_axis=None, distance=0, pos=None, allow_offscreen=False):
             self.side = side
+            self.preferred_axis = preferred_axis
             self.distance = distance
             self.pos = pos
             self.allow_offscreen = allow_offscreen
@@ -507,6 +509,21 @@ init -9999 python in JK:
             pos = self.pos or mouse_pos
             draggable_pos = pos
             window_size = window.window_size #Window displayable that is part of the frame, not the game window
+
+            if self.side == "auto":
+                # Determine the side based on the mouse position against the whole screen
+                if pos[1] < window_size[1] + self.distance and self.preferred_axis != "x":
+                    self.side = "bottom"
+                elif pos[1] > renpy.config.screen_height - window_size[1] - self.distance and self.preferred_axis != "x":
+                    self.side = "top"
+
+                if pos[0] < window_size[0] + self.distance and self.preferred_axis != "y":
+                    self.side = "right"
+                elif pos[0] > renpy.config.screen_width - window_size[0] - self.distance and self.preferred_axis != "y":
+                    self.side = "left"
+
+                if self.side == "auto":
+                    self.side = "top"
 
             if self.side == "top":
                 draggable_pos = (
@@ -528,6 +545,11 @@ init -9999 python in JK:
                     pos[0] + self.distance,
                     pos[1] - window_size[1] / 2,
                 )
+            elif self.side == "center":
+                draggable_pos = (
+                    pos[0] - window_size[0] / 2,
+                    pos[1] - window_size[1] / 2,
+                )
 
             if not self.allow_offscreen:
                 new_x = max(draggable_pos[0], 0)
@@ -544,6 +566,9 @@ init -9999 python in JK:
     def scaled(value, min_value=None):
         # Helper function to apply adjustment only to integers
         def adjust_number(value):
+            if isinstance(value, float):
+                return value
+
             rv = int(value * (renpy.config.screen_height / 1080.0)) + Settings.sizeAdjustment
 
             if min_value:

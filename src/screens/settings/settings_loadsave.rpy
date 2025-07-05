@@ -41,6 +41,28 @@ screen JK_Settings_LoadSave():
                             frame style "JK_default" xysize JK.scaled((10, 10)) background JK.Colors.theme
 
             use JK_YSpacer(2)
+        
+        hbox:
+            use JK_Checkbox(checked=JK.Settings.showPlaythroughNameBanner, text="Show playthrough name banner", action=JK.Settings.ToggleEnabledAction("showPlaythroughNameBanner"))
+            use JK_Helper("When enabled, a banner will appear at the top of the save/load screen, displaying the name of the currently active playthrough. This helps to quickly identify which playthrough you are currently viewing.")
+            use JK_ToggleSettingGlobalizationButton("showPlaythroughNameBanner")
+
+        hbox:
+            use JK_XSpacer()
+
+            vbox:
+                hbox:
+                    use JK_XSpacer(2)
+
+                    use JK_IconButton("\ue8ba", text="Reset position", action=JK.Settings.ResetPlayhtroughBannerPositionAction(), disabled=not JK.Settings.showPlaythroughNameBanner)
+
+                hbox:
+                    use JK_Checkbox(checked=JK.Settings.playthroughBannerShowThumbnail, text="Show playthrough thumbnail", action=JK.Settings.ToggleEnabledAction("playthroughBannerShowThumbnail"), disabled=not JK.Settings.showPlaythroughNameBanner)
+                    use JK_ToggleSettingGlobalizationButton("playthroughBannerShowThumbnail", disabled=not JK.Settings.showPlaythroughNameBanner)
+
+                hbox:
+                    use JK_Checkbox(checked=JK.Settings.playthroughBannerShowChangePlaythroughButtons, text="Show prev/next playthrough buttons", action=JK.Settings.ToggleEnabledAction("playthroughBannerShowChangePlaythroughButtons"), disabled=not JK.Settings.showPlaythroughNameBanner)
+                    use JK_ToggleSettingGlobalizationButton("playthroughBannerShowChangePlaythroughButtons", disabled=not JK.Settings.showPlaythroughNameBanner)
 
         hbox:
             use JK_Checkbox(checked=JK.Settings.offsetSlotAfterManualSaveIsLoaded, text="Always offset the slot after loading a manual save", action=JK.Settings.ToggleEnabledAction("offsetSlotAfterManualSaveIsLoaded"))

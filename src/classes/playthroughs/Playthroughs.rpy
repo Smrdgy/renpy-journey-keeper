@@ -536,3 +536,25 @@ init python in JK:
 
                     Playthroughs.save()
                     renpy.restart_interaction()
+
+        class ActivatePrevPlaythroughAction(renpy.ui.Action):
+            def __call__(self):
+                playthroughs = Playthroughs.get_filtered_playthroughs(include_hidden=True)
+                if len(playthroughs) <= 1:
+                    return
+
+                current_index = Playthroughs.get_index_by_id(Playthroughs.active_playthrough.id)
+                next_index = (current_index + 1) % len(playthroughs)
+
+                Playthroughs.activate_by_instance(playthroughs[next_index])
+
+        class ActivateNextPlaythroughAction(renpy.ui.Action):
+            def __call__(self):
+                playthroughs = Playthroughs.get_filtered_playthroughs(include_hidden=True)
+                if len(playthroughs) <= 1:
+                    return
+
+                current_index = Playthroughs.get_index_by_id(Playthroughs.active_playthrough.id)
+                next_index = (current_index + 1) % len(playthroughs)
+
+                Playthroughs.activate_by_instance(playthroughs[next_index])

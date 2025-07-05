@@ -22,3 +22,6 @@ screen JK_Overlay():
 
     if isSaveLoadScreen and JK.Memories.memoryInProgress:
         use JK_ExitMemoryConfirm()
+
+    if isSaveLoadScreen and JK.Settings.showPlaythroughNameBanner:
+        use JK_ActivePlaythroughBanner()

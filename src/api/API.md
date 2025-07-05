@@ -302,7 +302,7 @@ screen ExampleOverlay():
 
 ### Functions
 
-#### `create_playthrough_instance(name, id=None, directory=None, description=None, thumbnail=None, autosave_on_choice=True, use_choice_label_as_save_name=False, enabled_save_locations=None)`
+#### `create_playthrough_instance(name, id=None, directory=None, description=None, thumbnail=None, autosave_on_choice=True, use_choice_label_as_save_name=False, enabled_save_locations=None, meta=None, native=False, directory_immovable=False, hidden=False, serializable=True, deletable=True)`
 Creates a new playthrough instance.
 
 **Args:**
@@ -313,13 +313,19 @@ Creates a new playthrough instance.
 - `thumbnail (str?)`: UTF-8 base64 encoded thumbnail (optional)
 - `autosave_on_choice (bool?)`: Enable "Autosave on Choice"
 - `use_choice_label_as_save_name (bool?)`: Use the choice label as the save name
-- `enabled_save_locations (list<str> or None)`:
+- `enabled_save_locations ([list<str> or None]?)`:
 A list of keywords ("USER"/"GAME") and full system paths where this playthrough will store its saves 
   - `list`:
     - `"USER"`: User directory (e.g., `%appdata%` on Windows)
     - `"GAME"`: `/game/saves` directory
     - `str`: Full system path
   - `None`: Enable all
+- `meta ([anything JSON serializable]?)`: Optional metadata associated with the playthrough. It can be any type you wish, as long as it's JSON serializable.
+- `native (bool?)`: Marks the playthrough as a built-in or system-level playthrough.
+- `directory_immovable (bool?)`: Prevents the playthrough's saves directory from being moved or renamed.
+- `hidden (bool?)`: Hides the playthrough from standard user interfaces.
+- `serializable (bool?)`: Controls whether the playthrough should be saved to persistent storage.
+- `deletable (bool?)`: Determines whether the playthrough can be deleted by the player or system.
 
 **Returns:**
 - `PlaythroughClass`
