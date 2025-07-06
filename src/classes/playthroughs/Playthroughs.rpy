@@ -33,18 +33,29 @@ init python in JK:
             else:
                 playthroughs = persistent_playthroughs
 
-            if(playthroughs != None):
+            native, memories = PlaythroughsClass.get_default_playthroughs()
+
+            if playthroughs != None:
                 for playthrough in playthroughs:
-                    if(playthrough.get("id") == 1):
+                    playthrough_instance = PlaythroughClass.from_dict(playthrough)
+
+                    if playthrough.get("id") == 1:
                         hasNative = True
+
+                        # Just in case, update playthrough with the lastest native model
+                        native.edit_from_playthrough(playthrough_instance)
+                        playthrough_instance.edit_from_playthrough(native)
+
                     elif playthrough.get("id") == 2:
                         hasMemories = True
 
-                    self._playthroughs.append(PlaythroughClass.from_dict(playthrough))
+                        # Just in case, update playthrough with the lastest memories model
+                        memories.edit_from_playthrough(playthrough_instance)
+                        playthrough_instance.edit_from_playthrough(memories)
 
-            native, memories = PlaythroughsClass.get_default_playthroughs()
+                    self._playthroughs.append(playthrough_instance)
 
-            if(not hasNative):
+            if not hasNative:
                 self._playthroughs.insert(0, native)
 
             if not hasMemories and Settings.memoriesEnabled:
