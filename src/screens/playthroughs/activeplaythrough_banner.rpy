@@ -16,7 +16,7 @@ screen JK_ActivePlaythroughBanner():
                     if d.drag_moved:
                         return
 
-                    banner_pos_x = store.persistent.JK_PlaythroughBannerPos[0] or 0.5
+                    banner_pos_x = (store.persistent.JK_PlaythroughBannerPos[0] if store.persistent.JK_PlaythroughBannerPos else None) or 0.5
 
                     new_x = int(d.parent_width * banner_pos_x - d.w / 2)
 
