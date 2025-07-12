@@ -155,9 +155,7 @@ init python in JK:
             self.thumbnail = None
 
         def sequentializeSaves(self):
-            current_page = 1
-            current_slot = 1
-            slots_per_page = Utils.get_slots_per_page()
+            current_page, current_slot = Utils.get_first_slot()
 
             instance = SaveSystem.get_playthrough_save_instance(self.id)
             instance.location.scan()
@@ -165,17 +163,17 @@ init python in JK:
             slots = Utils.get_sorted_saves()
 
             for slot in slots:
-                if(renpy.loadsave.can_load(slot)):
-                    newSlot = str(current_page) + '-' + str(current_slot)
+                if renpy.loadsave.can_load(slot):
+                    newSlot = Utils.make_slotname(current_page, current_slot)
 
-                    if(slot != newSlot):
+                    if slot != newSlot:
                         renpy.loadsave.rename_save(slot, newSlot)
 
                     current_slot += 1
 
-                    if(current_slot > slots_per_page):
-                        current_slot = 1
+                    if current_slot > Utils.get_last_slot_number_for_page(current_page):
                         current_page += 1
+                        current_slot = Utils.get_first_slot_number_for_page(current_page)
 
         def before_deactivation(self):
             self.selectedPage = renpy.store.persistent._file_page

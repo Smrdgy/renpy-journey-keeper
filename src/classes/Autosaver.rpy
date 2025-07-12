@@ -52,11 +52,11 @@ init python in JK:
 
             slot += 1
 
-            if(slot > Utils.get_slots_per_page()):
-                slot = 1
+            if slot > Utils.get_last_slot_number_for_page(page):
                 page += 1
+                slot = Utils.get_first_slot_number_for_page(page)
 
-            slotString = str(page) + "-" + str(slot)
+            slotString = Utils.make_slotname(page, slot)
 
             return page, slot, slotString
 

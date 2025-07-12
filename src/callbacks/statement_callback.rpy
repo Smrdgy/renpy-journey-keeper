@@ -8,5 +8,6 @@ init 9999 python in JK:
 
             if script.name == "start":
                 Autosaver.prevent_autosaving = False
+                renpy.store.JK_ActiveSlot = Utils.get_first_slotname()
 
     renpy.config.statement_callbacks.append(__wait_for_start_label_callback)

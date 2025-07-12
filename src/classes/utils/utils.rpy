@@ -26,6 +26,26 @@ init -9999 python in JK:
 
     class Utils(x52NonPicklable):
         @staticmethod
+        def make_slotname(page, slot):
+            return "{}-{}".format(page, slot)
+
+        @staticmethod
+        def split_slotname_fast(slotname):
+            try:
+                page, slot = slotname.split('-')
+
+                if page.isdigit() and slot.isdigit():
+                    return int(page), int(slot)
+                
+                if Settings.debugEnabled:
+                    print("Can't resolve slotname ", slotname)
+                return 0, 0
+            except:
+                if Settings.debugEnabled:
+                    print("Can't resolve slotname ", slotname)
+                return 0, 0
+
+        @staticmethod
         def split_slotname(slotname):
             reg_page = "<page>"
             reg_name = "<name>"
@@ -33,7 +53,7 @@ init -9999 python in JK:
             if hasattr(renpy.config, "file_slotname_callback") and renpy.config.file_slotname_callback and callable(renpy.config.file_slotname_callback):
                 sample_slotname = renpy.config.file_slotname_callback(reg_page, reg_name)
             else:
-                sample_slotname = reg_page + "-" + reg_name
+                sample_slotname = Utils.make_slotname(reg_page, reg_name)
 
             pattern = re.escape(sample_slotname)
             pattern = pattern.replace(reg_page, r"(\d+)")
@@ -48,19 +68,7 @@ init -9999 python in JK:
                 if page != None and slot != None and page.isdigit() and slot.isdigit():
                     return int(page), int(slot)
 
-            try:
-                page, slot = slotname.split('-')
-
-                if page.isdigit() and slot.isdigit():
-                    return int(page), int(slot)
-                
-                if Settings.debugEnabled:
-                    print("Can't resolve slotname ", slotname)
-                return 0, 0
-            except:
-                if Settings.debugEnabled:
-                    print("Can't resolve slotname ", slotname)
-                return 0, 0
+            return Utils.split_slotname_fast(slotname)
 
         @staticmethod
         def get_sorted_saves():
@@ -133,6 +141,51 @@ init -9999 python in JK:
                 return True
 
             return hasattr(renpy.store.gui, "file_slot_cols") and hasattr(renpy.store.gui, "file_slot_rows")
+
+        @staticmethod
+        def get_first_page():
+            slots_per_page = Utils.get_slots_per_page()
+
+            return Settings.savesGridOffset // slots_per_page + 1
+
+        @staticmethod
+        def get_first_slot_number_in_page():
+            slots_per_page = Utils.get_slots_per_page()
+
+            return Settings.savesGridOffset % slots_per_page + 1
+
+        @staticmethod
+        def get_last_slot_number_in_page():
+            slots_per_page = Utils.get_slots_per_page()
+
+            return slots_per_page + Settings.savesGridOffset % slots_per_page
+
+        @staticmethod
+        def get_first_slot():
+            return Utils.get_first_page(), Utils.get_first_slot_number_in_page()
+
+        @staticmethod
+        def get_first_slotname():
+            return Utils.make_slotname(Utils.get_first_page(), Utils.get_first_slot_number_in_page())
+
+        @staticmethod
+        def get_first_slot_number_for_page(page=1):
+            if Settings.savesGridOffsetEveryPage:
+                return Utils.get_first_slot_number_in_page()
+
+            return 1
+
+        @staticmethod
+        def get_last_slot_number_for_page(page=1):
+            slots_per_page = Utils.get_slots_per_page()
+
+            if Settings.savesGridOffsetEveryPage:
+                return slots_per_page + Settings.savesGridOffset % slots_per_page
+            
+            if page == 1:
+                return slots_per_page + Settings.savesGridOffset
+
+            return slots_per_page
 
         @staticmethod
         def is_displaying_choices():
@@ -309,7 +362,7 @@ init -9999 python in JK:
             if hasattr(renpy.config, "file_slotname_callback") and renpy.config.file_slotname_callback is not None:
                 return renpy.config.file_slotname_callback(page, name)
             else:
-                return page + "-" + name
+                return Utils.make_slotname(page, name)
 
         @staticmethod
         def get_active_screens():

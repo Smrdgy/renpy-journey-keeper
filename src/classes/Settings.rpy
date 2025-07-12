@@ -48,6 +48,8 @@ init -1 python in JK:
             self.customGridEnabled = data.get("customGridEnabled", False)
             self.customGridX = data.get("customGridX", (renpy.store.gui.file_slot_cols if hasattr(renpy.store.gui, "file_slot_cols") else 2) or 2)
             self.customGridY = data.get("customGridY", (renpy.store.gui.file_slot_rows if hasattr(renpy.store.gui, "file_slot_rows") else 2) or 2)
+            self.savesGridOffset = data.get("savesGridOffset", 0)
+            self.savesGridOffsetEveryPage = data.get("savesGridOffsetEveryPage", True)
             self.loadScreenName = data.get("loadScreenName", ["load"])
             self.saveScreenName = data.get("saveScreenName", ["save"])
             self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", False)
@@ -107,6 +109,8 @@ init -1 python in JK:
                 'customGridEnabled': self.customGridEnabled,
                 'customGridX': self.customGridX,
                 'customGridY': self.customGridY,
+                'savesGridOffset': self.savesGridOffset,
+                'savesGridOffsetEveryPage': self.savesGridOffsetEveryPage,
                 'loadScreenName': self.loadScreenName,
                 'saveScreenName': self.saveScreenName,
                 'offsetSlotAfterManualSaveIsLoaded': self.offsetSlotAfterManualSaveIsLoaded,

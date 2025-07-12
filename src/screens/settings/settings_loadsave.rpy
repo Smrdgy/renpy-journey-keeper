@@ -40,8 +40,50 @@ screen JK_Settings_LoadSave():
                         for y in range(0, JK.Settings.customGridY):
                             frame style "JK_default" xysize JK.scaled((10, 10)) background JK.Colors.theme
 
-            use JK_YSpacer(2)
-        
+        use JK_YSpacer(2)
+
+        vbox:
+            hbox:
+                text "Slots counter offset" yalign 0.5
+
+                use JK_Helper("Adjusts the starting number of save slots by adding an offset to the default counter. Increasing this offset shifts the numbering so that the first slot appears as a higher number, e.g., 1-5 with an offset of 4. This offset also affects the last slot on each page, ensuring that all displayed slot numbers reflect the change.")
+
+                use JK_XSpacer(2)
+
+                hbox:
+                    yalign 0.5
+
+                    use JK_IconButton(icon="\ue15b", action=JK.Settings.DecrementAction("savesGridOffset"))
+
+                    text str(JK.Settings.savesGridOffset) yalign 0.5
+
+                    use JK_IconButton(icon="\ue145", action=JK.Settings.IncrementAction("savesGridOffset"))
+
+            hbox:
+                use JK_XSpacer(2)
+
+                vbox:
+                    use JK_Checkbox(checked=JK.Settings.savesGridOffsetEveryPage, text="Apply the offset to every page", action=JK.Settings.ToggleEnabledAction("savesGridOffsetEveryPage"), disabled=not JK.Settings.savesGridOffset)
+
+                    python:
+                        slots_per_page = JK.Utils.get_slots_per_page()
+                        first_slot = JK.Utils.get_first_slotname()
+                        first_page = JK.Utils.split_slotname_fast(first_slot)[0]
+                        last_slot = JK.Utils.make_slotname(first_page, JK.Utils.get_last_slot_number_in_page())
+                        second_page = first_page + 1
+                        second_page_first_slot = JK.Utils.make_slotname(second_page, JK.Utils.get_first_slot_number_for_page(2))
+                        second_page_last_slot = JK.Utils.make_slotname(second_page, JK.Utils.get_last_slot_number_for_page(2))
+
+                        first_slots_range = "{{color=[JK.Colors.theme]}}{}{{/color}} ... {{color=[JK.Colors.theme]}}{}{{/color}}".format(first_slot, last_slot)
+                        second_slots_range = "{{color=[JK.Colors.theme]}}{}{{/color}} ... {{color=[JK.Colors.theme]}}{}{{/color}}".format(second_page_first_slot, second_page_last_slot)
+
+                    text "Slot ranges per page: " + first_slots_range + "{b},{/b} "+ second_slots_range:
+                        color JK.Colors.text_light
+                        offset JK.scaled((10, 5))
+                        size JK.scaled(15)
+
+        use JK_YSpacer(2)
+
         hbox:
             use JK_Checkbox(checked=JK.Settings.showPlaythroughNameBanner, text="Show playthrough name banner", action=JK.Settings.ToggleEnabledAction("showPlaythroughNameBanner"))
             use JK_Helper("When enabled, a banner will appear at the top of the save/load screen, displaying the name of the currently active playthrough. This helps to quickly identify which playthrough you are currently viewing.")

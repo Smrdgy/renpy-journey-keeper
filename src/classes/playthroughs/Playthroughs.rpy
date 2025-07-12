@@ -438,8 +438,8 @@ init python in JK:
                 if Settings.pageFollowsQuickSave:
                     renpy.store.persistent._file_page = str(page)
 
-                # if Settings.quickSaveNotificationEnabled:
-                #     renpy.notify("Quicksave created at {}".format(slotString))
+                if Settings.quickSaveNotificationEnabled:
+                    renpy.notify("Quicksave created at {}".format(slotString))
 
         class TrySequentializeSaves(renpy.ui.Action):
             def __init__(self, playthrough):
