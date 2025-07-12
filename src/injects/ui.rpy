@@ -1,10 +1,6 @@
 init 9999 python in JK:
     _constant = True
 
-    def __can_perform_autosave():
-        # Prevent making any autosave action when the game is not initialized yet or the player is viewing a memory or a replay
-        return not Autosaver.prevent_autosaving and not Memories.memoryInProgress and not renpy.store._in_replay and (Settings.autosaveOnSingletonChoice or Utils.is_displaying_multiple_choices())
-
     def __choice_return_call_partial(func, *args, **kwargs):
         if hasattr(func, "_original"):
             func = func._original
@@ -48,7 +44,9 @@ init 9999 python in JK:
 
                     return renpy.display.behavior.run(self.original_action, *args, **kwargs)
 
-            # Determine node
+            # Determine wether the button has a Jump action or not.
+            # If it does, we will wrap the action in a custom Action class that will handle the autosave.
+
             node = None
 
             # **Warning!** renpy.ast.Jump != renpy.store.Jump
@@ -60,7 +58,7 @@ init 9999 python in JK:
                     if isinstance(n, renpy.ast.Jump) or isinstance(n, renpy.store.Jump):
                         node = n
 
-            # Make sure the button has Jump action, that way, we can tell at least with some degree of confidence that the button is used for as a choice.
+            # Make sure the button has Jump action, that way, we can tell at least with some degree of confidence that the button is used as a choice.
             #  Otherwise we would get a lot of false positives from the rest of the buttons, like toggle buttons inside Preferences, confirm dialog, etc.
             if isinstance(node, renpy.ast.Jump) or isinstance(node, renpy.store.Jump):
                 button.action = Action(button, button.action, node)

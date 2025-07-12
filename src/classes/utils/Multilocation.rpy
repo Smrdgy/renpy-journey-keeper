@@ -24,11 +24,11 @@ init -9999 python in JK:
             for location in self.locations:
                 location.active = False
 
-        def load_persistent(self):
+        def load_persistent(self, *args, **kwargs):
             rv = []
 
             for l in self.nativeLocations:
-                rv.extend(l.load_persistent())
+                rv.extend(l.load_persistent(*args, **kwargs))
 
             return rv
 

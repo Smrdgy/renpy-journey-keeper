@@ -1,4 +1,4 @@
-screen JK_IconButton(icon=None, text=None, action=None, size=None, tt=None, tt_side="top", toggled=False, toggled_icon=None, disabled=False, color=None, text_color=None, icon_color=None, toggled_color=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None, spacing=None, outlines=None):
+screen JK_IconButton(icon=None, text=None, action=None, size=None, tt=None, tt_side="top", tt_preferred_axis=None, toggled=False, toggled_icon=None, disabled=False, color=None, text_color=None, icon_color=None, toggled_color=None, hovered=None, unhovered=None, hover_color=None, disabled_color=JK.Colors.disabled, key=None, spacing=None, outlines=None):
     style_prefix "JK"
 
     python:
@@ -10,7 +10,7 @@ screen JK_IconButton(icon=None, text=None, action=None, size=None, tt=None, tt_s
         sensitive not disabled
         key_events True
 
-        hovered [JK.OpenTooltipAction(message=tt, side=tt_side), hovered]
+        hovered [JK.OpenTooltipAction(message=tt, side=tt_side, preferred_axis=tt_preferred_axis), hovered]
         unhovered [Hide("JK_TooltipDialog"), unhovered]
         selected toggled
         action [Hide("JK_TooltipDialog"), action]

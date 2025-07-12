@@ -84,6 +84,9 @@ init -1 python in JK:
             self.paginationBigJump = data.get("paginationBigJump", True)
             self.paginationGoTo = data.get("paginationGoTo", True)
             self.paginationNumbers = data.get("paginationNumbers", True)
+            self.showPlaythroughNameBanner = data.get("showPlaythroughNameBanner", False)
+            self.playthroughBannerShowThumbnail = data.get("playthroughBannerShowThumbnail", True)
+            self.playthroughBannerShowChangePlaythroughButtons = data.get("playthroughBannerShowChangePlaythroughButtons", True)
 
             # Update the old system (string only) to list #TODO: Remove at some point
             if not hasattr(self.loadScreenName, "append"):
@@ -137,6 +140,9 @@ init -1 python in JK:
                 'paginationBigJump': self.paginationBigJump,
                 'paginationGoTo': self.paginationGoTo,
                 'paginationNumbers': self.paginationNumbers,
+                'showPlaythroughNameBanner': self.showPlaythroughNameBanner,
+                'playthroughBannerShowThumbnail': self.playthroughBannerShowThumbnail,
+                'playthroughBannerShowChangePlaythroughButtons': self.playthroughBannerShowChangePlaythroughButtons,
             })
 
         def get_settings_for_reset(self, no_globals=False):
@@ -331,9 +337,10 @@ init -1 python in JK:
         class ResetSizeAdjustmentAction(renpy.ui.Action):
             def __call__(self):
                 Settings.sizeAdjustment = 0
-                #Also reset sidepanel and pagination positions just in case there are positioned somewhere outside of the screen
+                #Also reset positions of all draggables, just in case there are positioned somewhere outside of the screen
                 renpy.store.persistent.JK_SidepanelPos = None
                 renpy.store.persistent.JK_PaginationPos = None
+                renpy.store.persistent.JK_PlaythroughBannerPos = None
                 Settings.save()
                 renpy.restart_interaction()
 
@@ -400,6 +407,12 @@ init -1 python in JK:
         class ShowSaveLoadAction(renpy.ui.Action):
             def __call__(self):
                 renpy.store.Show('JK_Settings', section='SAVE_LOAD')()
+
+        class ResetPlayhtroughBannerPositionAction(renpy.ui.Action):
+            def __call__(self):
+                renpy.store.persistent.JK_PlaythroughBannerPos = None
+
+                renpy.restart_interaction()
 
         # ==============
         # Static methods

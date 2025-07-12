@@ -1,4 +1,4 @@
-screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", distance=JK.scaled(20), follow_mouse=True):
+screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interactive=False, side="top", preferred_axis=None, distance=JK.scaled(20), follow_mouse=True):
     layer "JK_Overlay"
     style_prefix 'JK_dialog'
     zorder 99999
@@ -9,7 +9,7 @@ screen JK_TooltipDialog(title=None, icon=None, message=None, pos=None, interacti
         key 'mouseup_3' action close_action
 
     if not interactive:
-        timer 0.01 repeat follow_mouse action JK.UpdateTooltipPositionAction(side, distance, pos)
+        timer 0.01 repeat follow_mouse action JK.UpdateTooltipPositionAction(side, preferred_axis, distance, pos)
 
     drag:
         id "JK_TooltipDialog"

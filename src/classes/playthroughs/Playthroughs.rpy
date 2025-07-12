@@ -33,18 +33,29 @@ init python in JK:
             else:
                 playthroughs = persistent_playthroughs
 
-            if(playthroughs != None):
+            native, memories = PlaythroughsClass.get_default_playthroughs()
+
+            if playthroughs != None:
                 for playthrough in playthroughs:
-                    if(playthrough.get("id") == 1):
+                    playthrough_instance = PlaythroughClass.from_dict(playthrough)
+
+                    if playthrough.get("id") == 1:
                         hasNative = True
+
+                        # Just in case, update playthrough with the lastest native model
+                        native.edit_from_playthrough(playthrough_instance)
+                        playthrough_instance.edit_from_playthrough(native)
+
                     elif playthrough.get("id") == 2:
                         hasMemories = True
 
-                    self._playthroughs.append(PlaythroughClass.from_dict(playthrough))
+                        # Just in case, update playthrough with the lastest memories model
+                        memories.edit_from_playthrough(playthrough_instance)
+                        playthrough_instance.edit_from_playthrough(memories)
 
-            native, memories = PlaythroughsClass.get_default_playthroughs()
+                    self._playthroughs.append(playthrough_instance)
 
-            if(not hasNative):
+            if not hasNative:
                 self._playthroughs.insert(0, native)
 
             if not hasMemories and Settings.memoriesEnabled:
@@ -536,3 +547,25 @@ init python in JK:
 
                     Playthroughs.save()
                     renpy.restart_interaction()
+
+        class ActivatePrevPlaythroughAction(renpy.ui.Action):
+            def __call__(self):
+                playthroughs = Playthroughs.get_filtered_playthroughs(include_hidden=True)
+                if len(playthroughs) <= 1:
+                    return
+
+                current_index = Playthroughs.get_index_by_id(Playthroughs.active_playthrough.id)
+                next_index = (current_index + 1) % len(playthroughs)
+
+                Playthroughs.activate_by_instance(playthroughs[next_index])
+
+        class ActivateNextPlaythroughAction(renpy.ui.Action):
+            def __call__(self):
+                playthroughs = Playthroughs.get_filtered_playthroughs(include_hidden=True)
+                if len(playthroughs) <= 1:
+                    return
+
+                current_index = Playthroughs.get_index_by_id(Playthroughs.active_playthrough.id)
+                next_index = (current_index + 1) % len(playthroughs)
+
+                Playthroughs.activate_by_instance(playthroughs[next_index])

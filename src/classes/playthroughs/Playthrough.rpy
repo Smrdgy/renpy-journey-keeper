@@ -4,45 +4,43 @@ init python in JK:
     new_playthrough_instance_callbacks = []
 
     class PlaythroughClass(x52NonPicklable):
-        def __init__(
-            self,
-            id=None,
-            directory=None,
-            name=None,
-            description=None,
-            thumbnail=None,
-            storeChoices=False,
-            autosaveOnChoices=True,
-            selectedPage=1,
-            filePageName={},
-            useChoiceLabelAsSaveName=False,
-            enabledSaveLocations=None,
-            meta=None,
-            native=False,
-            directory_immovable=False,
-            hidden=False,
-            serializable=True,
-            deletable=True
+        DEFAULTS = {
+            "id": None,
+            "directory": None,
+            "name": None,
+            "description": None,
+            "thumbnail": None,
+            "storeChoices": False,
+            "autosaveOnChoices": True,
+            "selectedPage": 1,
+            "filePageName": {},
+            "useChoiceLabelAsSaveName": False,
+            "enabledSaveLocations": None, # Possible values: USER, GAME, string (other full path locations, e.g. C:\\Users\User\Desktop\some saves directory)
+            "meta": None,
+            "native": False,
+            "directory_immovable": False,
+            "hidden": False,
+            "serializable": True,
+            "deletable": True,
             #MODIFY HERE
-        ):
-            self.id = id or int(time.time())
-            self.directory = directory if (directory != None) else (Utils.name_to_directory_name(name) if name else None)
-            self.name = name
-            self.description = description
-            self.thumbnail = thumbnail
-            self.storeChoices = storeChoices
-            self.autosaveOnChoices = autosaveOnChoices
-            self.selectedPage = selectedPage
-            self.filePageName = filePageName
-            self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
-            self.enabledSaveLocations = enabledSaveLocations # Possible values: USER, GAME, string (other full path locations, e.g. C:\\Users\User\Desktop\some saves directory)
-            self.meta = meta
-            self.native = native
-            self.directory_immovable = directory_immovable
-            self.hidden = hidden
-            self.serializable = serializable
-            self.deletable = deletable
-            #MODIFY HERE
+        }
+
+        def __init__(self, **kwargs):
+            # Start with a copy of the defaults
+            opts = self.DEFAULTS.copy()
+            opts.update((k, v) for k, v in kwargs.items() if v is not None)
+
+            # Special handling
+            opts["id"] = opts["id"] or int(time.time())
+            if opts.get("directory") is None and opts.get("name"):
+                opts["directory"] = Utils.name_to_directory_name(opts["name"])
+
+            # Avoid shared mutable default
+            opts["filePageName"] = opts.get("filePageName") or {}
+
+            # Set all attributes to the instance
+            for key in self.DEFAULTS:
+                setattr(self, key, opts[key])
 
             for cb in new_playthrough_instance_callbacks:
                 if callable(cb):
@@ -66,69 +64,34 @@ init python in JK:
 
             return self
 
-        def edit(
-            self,
-            name=None,
-            description=None,
-            thumbnail=None,
-            storeChoices=None,
-            autosaveOnChoices=None,
-            selectedPage=None,
-            filePageName=None,
-            useChoiceLabelAsSaveName=None,
-            enabledSaveLocations=None,
-            meta=None,
-            native=None,
-            directory_immovable=None,
-            hidden=None,
-            serializable=None,
-            deletable=None
-            #MODIFY HERE
-        ):
-            if name != None:
-                self.name = name
+        def edit(self, **kwargs):
+            for key, value in kwargs.items():
+                if key not in self.DEFAULTS:
+                    if Settings.debugEnabled:
+                        print("Playthrough \"{}\" tried to set an unknown key: {}".format(self.name, key))
+                        renpy.notify("Playthrough tried to set an unknown key: {}".format(key))
+                    continue
 
-                if(self.directory == None):
-                    self.directory = Utils.name_to_directory_name(name)
+                if key == "name" and value is not None:
+                    self.name = value
+                    if self.directory is None:
+                        self.directory = Utils.name_to_directory_name(value)
 
-            if description != None: self.description = description
-            if thumbnail != None: self.thumbnail = thumbnail
-            if storeChoices != None: self.storeChoices = storeChoices
-            if autosaveOnChoices != None: self.autosaveOnChoices = autosaveOnChoices
-            if selectedPage != None: self.selectedPage = selectedPage
-            if filePageName != None: self.filePageName = filePageName
-            if useChoiceLabelAsSaveName != None: self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
-            if enabledSaveLocations != None: self.enabledSaveLocations = enabledSaveLocations or None #enabledSaveLocations can be False, in that case it needs to be replaced with None
-            if meta != None: self.meta = meta
-            if native != None: self.native = native
-            if directory_immovable != None: self.directory_immovable = directory_immovable
-            if hidden != None: self.hidden = hidden
-            if serializable != None: self.serializable = serializable
-            if deletable != None: self.deletable = deletable
-            #MODIFY HERE
+                elif key == "enabledSaveLocations":
+                    #enabledSaveLocations can be False, in that case it needs to be replaced with None
+                    self.enabledSaveLocations = value or None
+
+                elif value is not None:
+                    setattr(self, key, value)
 
             return self
 
         def edit_from_playthrough(self, playthrough, moveSaveDirectory=False):
-            if(self.directory == None or (moveSaveDirectory and playthrough.name != self.name and not playthrough.directory_immovable)):
+            if self.directory is None or (moveSaveDirectory and playthrough.name != self.name and not playthrough.directory_immovable):
                 self.directory = Utils.name_to_directory_name(playthrough.name)
 
-            self.name = playthrough.name
-            self.description = playthrough.description
-            self.thumbnail = playthrough.thumbnail
-            self.storeChoices = playthrough.storeChoices
-            self.autosaveOnChoices = playthrough.autosaveOnChoices
-            self.selectedPage = playthrough.selectedPage
-            self.filePageName = playthrough.filePageName
-            self.useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
-            self.enabledSaveLocations = playthrough.enabledSaveLocations
-            self.meta = playthrough.meta
-            self.native = playthrough.native
-            self.directory_immovable = playthrough.directory_immovable
-            self.hidden = playthrough.hidden
-            self.serializable = playthrough.serializable
-            self.deletable = playthrough.deletable
-            #MODIFY HERE
+            for key in self.DEFAULTS:
+                setattr(self, key, getattr(playthrough, key))
 
             return self
 
@@ -139,26 +102,7 @@ init python in JK:
 
                 return None
 
-            return {
-                'id': self.id,
-                'directory': self.directory,
-                'name': self.name,
-                'description': self.description,
-                'thumbnail': self.thumbnail,
-                'storeChoices': self.storeChoices,
-                'autosaveOnChoices': self.autosaveOnChoices,
-                'selectedPage': self.selectedPage,
-                'filePageName': self.filePageName,
-                'useChoiceLabelAsSaveName': self.useChoiceLabelAsSaveName,
-                'enabledSaveLocations': self.enabledSaveLocations,
-                'meta': self.meta,
-                'native': self.native,
-                'directory_immovable': self.directory_immovable,
-                'hidden': self.hidden,
-                'serializable': self.serializable,
-                'deletable': self.deletable,
-                #MODIFY HERE
-            }
+            return { key: getattr(self, key) for key in self.DEFAULTS }
 
         def serialize_template_for_json(self):
             return {
@@ -241,26 +185,10 @@ init python in JK:
 
         @staticmethod
         def from_dict(data):
-            return PlaythroughClass(
-                id=data.get("id"),
-                directory=data.get("directory"),
-                name=data.get("name"),
-                description=data.get("description"),
-                thumbnail=data.get("thumbnail"),
-                storeChoices=data.get("storeChoices"),
-                autosaveOnChoices=data.get("autosaveOnChoices"),
-                selectedPage=data.get("selectedPage"),
-                filePageName=data.get("filePageName"),
-                useChoiceLabelAsSaveName=data.get("useChoiceLabelAsSaveName"),
-                enabledSaveLocations=data.get("enabledSaveLocations"),
-                meta=data.get("meta"),
-                native=data.get("native"),
-                directory_immovable=data.get("directory_immovable"),
-                hidden=data.get("hidden"),
-                serializable=data.get("serializable"),
-                deletable=data.get("deletable")
-                #MODIFY HERE
-            )
+            return PlaythroughClass(**{
+                k: v for k, v in data.items()
+                if k in PlaythroughClass.DEFAULTS
+            })
 
         @staticmethod
         def from_json_string(json_string):
