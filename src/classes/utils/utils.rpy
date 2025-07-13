@@ -71,8 +71,7 @@ init -9999 python in JK:
             return Utils.split_slotname_fast(slotname)
 
         @staticmethod
-        def get_sorted_saves():
-            regexp = r'\d+' + '-' + r'\d+'
+        def get_sorted_saves(regexp = r'\d+-\d+'):
             return Utils.sort_saves(renpy.list_slots(regexp=regexp))
 
         @staticmethod
