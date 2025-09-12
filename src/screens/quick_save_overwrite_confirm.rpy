@@ -16,7 +16,9 @@ screen JK_QuickSaveOverwriteConfirm():
             python:
                 page, slot, _ = JK.Autosaver.get_current_slot()
 
-            add FileScreenshot(name=slot, page=page) xalign 0.5
+            use JK_YSpacer()
+
+            add FileScreenshot(name=slot, page=page) size JK.Image.get_limited_image_size_with_preserved_aspect_ratio(min(renpy.config.thumbnail_width, JK.scaled(800)), min(renpy.config.thumbnail_height, JK.scaled(600))) xalign 0.5
 
             text "[renpy.store.JK_ActiveSlot]"  xalign 0.5 text_align 0.5
         
