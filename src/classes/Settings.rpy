@@ -55,6 +55,7 @@ init -1 python in JK:
             self.offsetSlotAfterManualSaveIsLoaded = data.get("offsetSlotAfterManualSaveIsLoaded", False)
             self.offsetSlotAfterManualSave = data.get("offsetSlotAfterManualSave", True)
             self.offsetSlotAfterQuickSave = data.get("offsetSlotAfterQuickSave", True)
+            self.offsetSlotBlacklist = data.get("offsetSlotBlacklist", "")
             self.sizeAdjustment = data.get("sizeAdjustment", 0) or 0
             self.changeSidepanelVisibilityKey = data.get("changeSidepanelVisibilityKey", "alt_K_p")
             self.debugEnabled = data.get("debugEnabled", False)
@@ -116,6 +117,7 @@ init -1 python in JK:
                 'offsetSlotAfterManualSaveIsLoaded': self.offsetSlotAfterManualSaveIsLoaded,
                 'offsetSlotAfterManualSave': self.offsetSlotAfterManualSave,
                 'offsetSlotAfterQuickSave': self.offsetSlotAfterQuickSave,
+                'offsetSlotBlacklist': self.offsetSlotBlacklist,
                 'sizeAdjustment': self.sizeAdjustment,
                 'changeSidepanelVisibilityKey': self.changeSidepanelVisibilityKey,
                 'debugEnabled': self.debugEnabled,
@@ -417,6 +419,15 @@ init -1 python in JK:
                 renpy.store.persistent.JK_PlaythroughBannerPos = None
 
                 renpy.restart_interaction()
+
+        class OffsetSlotBlacklistValue(x52NonPicklable):
+            def set_text(self, value):
+                Settings.offsetSlotBlacklist = value
+
+                Settings.save()
+
+            def get_text(self):
+                return Settings.offsetSlotBlacklist
 
         # ==============
         # Static methods

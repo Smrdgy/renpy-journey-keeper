@@ -1,4 +1,6 @@
 screen JK_Settings_Autosave():
+    default offset_slot_blacklist_input = JK.TextInput("offsetSlotBlacklist", value=JK.Settings.OffsetSlotBlacklistValue())
+
     vbox:
         hbox:
             use JK_Checkbox(checked=JK.Settings.autosaveNotificationEnabled, text="Show notification when autosave is performed", action=JK.Settings.ToggleEnabledAction("autosaveNotificationEnabled"))
@@ -54,3 +56,32 @@ screen JK_Settings_Autosave():
         hbox:
             use JK_Checkbox(checked=JK.Settings.autosaveOnNormalButtonsWithJump, text="Perform autosave on normal buttons", action=JK.Settings.ToggleEnabledAction("autosaveOnNormalButtonsWithJump"))
             use JK_Helper("{color=[JK.Colors.info]}If choices aren't triggering autosaves as expected, enabling this option may help.{/color}\n\nWhen enabled, every Button behaves as a choice button, triggering an autosave when clicked. However, only specific buttons qualify—those that logically represent choices in the game.\n{color=[JK.Colors.warning]}Be aware that some non-choice buttons, like free-roam navigation buttons, may still trigger autosaves.{/color}\n\n{b}For the curious advanced users:{/b}\nAutosaves are only performed on Buttons with a Jump action, ensuring that only navigation-relevant interactions are considered. Unfortunately, this filtering cannot be refined any further.", side="right")
+
+        use JK_YSpacer(1)
+
+        hbox:
+            use JK_XSpacer()
+
+            vbox:
+                hbox:
+                    hbox yalign 0.5:
+                        use JK_Title("Slot name blacklist", 2)
+
+                    use JK_Helper("Slot names listed here will not offset the autosave counter. This is useful for games that perform manual saves from the code for special purposes, like automatic saves for each day.")
+
+                button:
+                    action Function(offset_slot_blacklist_input.enable)
+                    key_events True
+
+                    xfill True
+
+                    vbox:
+                        add offset_slot_blacklist_input.displayable(placeholder="Enter slot names here")
+                        frame style "JK_default" background "#ffffff22" hover_background JK.Colors.hover ysize 2 offset JK.scaled((0, 2))
+
+                        vbox xoffset JK.scaled(10) yoffset JK.scaled(10):
+                            text "{size=-5}Use * as a wildcard to match any length and any character.\nSeparate multiple names with commas.{/size}" color JK.Colors.info
+                            text "{size=-5}Example: \"day-*, temp-1, *season-1\", will ignore any save starting with \"day-\", explicitly \"temp-1\" and any save ending with \"season-1\"{/size}" color JK.Colors.text_light
+
+                vbox ysize 50
+

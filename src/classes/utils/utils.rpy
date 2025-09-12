@@ -409,6 +409,19 @@ init -9999 python in JK:
             text = re.sub(r'^### (.*?)$', r'{color=[JK.Colors.theme]}\1{/color}', text, flags=re.MULTILINE)
 
             return text
+
+        @staticmethod
+        def wildcard_match(s, pattern):
+            regex_pattern = ""
+            for char in pattern:
+                if char == "*":
+                    regex_pattern += ".*"
+                else:
+                    regex_pattern += re.escape(char)
+
+            regex_pattern = "^" + regex_pattern + "$"
+
+            return re.match(regex_pattern, s, re.IGNORECASE) is not None
     
     class OpenDirectoryAction(renpy.ui.Action):
         def __init__(self, path, cwd=None):

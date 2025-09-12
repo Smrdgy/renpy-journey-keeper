@@ -12,6 +12,12 @@ init 9999 python in JK:
             return
 
         if Settings.offsetSlotAfterManualSave:
+            if Settings.offsetSlotBlacklist.strip() != "":
+                for pattern in Settings.offsetSlotBlacklist.split(","):
+                    pattern = pattern.strip()
+                    if pattern and (slotname == pattern or Utils.wildcard_match(slotname, pattern)):
+                        return
+
             Autosaver.set_active_slot(slotname)
 
             if not Utils.is_displaying_choices_in_any_context():
