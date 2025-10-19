@@ -126,18 +126,36 @@ init python in JK:
 
                 # 1. User savedir.
                 if playthrough.enabledSaveLocations == None or "USER" in playthrough.enabledSaveLocations:
-                    self._addLocation(FileLocation(os.path.join(renpy.config.savedir, playthrough.directory)))
+                    path = os.path.join(renpy.config.savedir, playthrough.directory)
+                    location = FileLocation(path)
+                    if location.active:
+                        self._addLocation(location)
+                    else:
+                        print("[JK] Warning: User save directory \"{}\" is not writable, ignoring destination. This will prevent storing/loading saves in this directory. This is not a fault of JK. Please check the directory permissions. Additionally, check if the aforementioned path doesn't contain invalid or reserved characters  for your OS (see https://en.wikipedia.org/wiki/Filename#Problematic_characters).".format(path))
+                        Notifications.schedule_notification("Warning: User save directory is not writable. See log.txt for details.")
 
                 # 2. Game-local savedir.
                 if (not renpy.mobile) and (not renpy.macapp) and (playthrough.enabledSaveLocations == None or "GAME" in playthrough.enabledSaveLocations):
                     path = os.path.join(renpy.config.gamedir, "saves", playthrough.directory)
-                    self._addLocation(FileLocation(path))
+                    location = FileLocation(path)
+
+                    if location.active:
+                        self._addLocation(location)
+                    else:
+                        print("[JK] Warning: Game-local save directory \"{}\" is not writable, ignoring destination. This will prevent storing/loading saves in this directory. This is not a fault of JK. Please check the directory permissions. Additionally, check if the aforementioned path doesn't contain invalid or reserved characters  for your OS (see https://en.wikipedia.org/wiki/Filename#Problematic_characters).".format(path))
+                        Notifications.schedule_notification("Warning: Game-local save directory is not writable. See log.txt for details.")
 
                 if(hasattr(renpy.config, "extra_savedirs")):
                     # 3. Extra savedirs.
                     for extra_savedir in renpy.config.extra_savedirs:
                         if playthrough.enabledSaveLocations == None or extra_savedir in playthrough.enabledSaveLocations:
-                            self._addLocation(FileLocation(os.path.join(extra_savedir, playthrough.directory)))
+                            path = os.path.join(extra_savedir, playthrough.directory)
+                            location = FileLocation(path)
+                            if location.active:
+                                self._addLocation(location)
+                            else:
+                                print("[JK] Warning: Extra save directory '{}' is not writable, ignoring destination. This will prevent storing/loading saves in this directory. This is not a fault of JK. Please check the directory permissions. Additionally, check if the aforementioned path doesn't contain invalid or reserved characters  for your OS (see https://en.wikipedia.org/wiki/Filename#Problematic_characters).".format(extra_savedir))
+                                Notifications.schedule_notification("Warning: Extra save directory '{}' is not writable. See log.txt for details.".format(extra_savedir))
 
                 if not noScan:
                     # Scan the location.

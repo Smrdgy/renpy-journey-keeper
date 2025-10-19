@@ -25,4 +25,7 @@ init 9999 python in JK:
         if Settings.updaterEnabled and not Updater.checked_for_update:
             renpy.invoke_in_thread(Updater.check_for_update)
 
+        Notifications.initialized = True
+        Notifications.show_queued_notifications_delayed()
+
     renpy.config.start_interact_callbacks.append(__start_interact_callback)
