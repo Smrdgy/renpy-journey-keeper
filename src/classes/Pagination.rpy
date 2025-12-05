@@ -60,9 +60,12 @@ init python in JK:
             return self._paginate_statically(current_page)
 
         def _paginate_statically(self, selected_page, visible_pages=10):
-            offset = selected_page // visible_pages
+            block_index = (selected_page - 1) // visible_pages
 
-            return list(range(offset * visible_pages, offset * visible_pages + visible_pages))
+            start = block_index * visible_pages + 1
+            end = start + visible_pages - 1
+
+            return list(range(start, end + 1))
 
         def _paginate_seamlessly(self, selected_page, visible_pages=9):
             half_visible = visible_pages // 2
