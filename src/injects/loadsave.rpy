@@ -11,6 +11,10 @@ init 9999 python in JK:
         if AutosaverClass.PendingSaveClass.temp_save_slotname in slotname:
             return
 
+        #Ignore quick and auto saves
+        if "quick" in slotname or "auto" in slotname:
+            return
+
         if Settings.offsetSlotAfterManualSave:
             if Settings.offsetSlotBlacklist.strip() != "":
                 for pattern in Settings.offsetSlotBlacklist.split(","):
