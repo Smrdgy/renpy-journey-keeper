@@ -253,6 +253,39 @@ init -9999 python in JK:
             return ''.join(result)
 
         @staticmethod
+        def escape_all_problematic_characters(text):
+            if not text:
+                return ""
+
+            # Note: We use .replace() because it's atomic and handles 
+            # overlapping patterns more predictably than a manual loop.
+            
+            # 1. Handle Backslashes first. 
+            # In Ren'Py strings, \\ becomes a single \.
+            text = text.replace("\\", "\\\\")
+
+            # 2. Handle Interpolation [ -> [[
+            # We don't need to check if it's already [[. 
+            # Ren'Py treats [[[[ as a literal [[.
+            text = text.replace("[", "[[")
+
+            # 3. Handle Text Tags { -> {{
+            text = text.replace("{", "{{")
+
+            # 4. Handle Ruby Text 【 -> 【【
+            # Using u"" ensures Python 2 treats this as a unicode character.
+            text = text.replace(u"【", u"【【")
+
+            # 5. Handle Percents % -> %%
+            text = text.replace("%", "%%")
+
+            # 6. Handle Quotes (If this is going into a Ren'Py string)
+            text = text.replace("\"", "\\\"")
+            text = text.replace("'", "\\'")
+
+            return text
+
+        @staticmethod
         def get_screen_variable(variableName, dictionaryKey=None):
             cs = renpy.current_screen()
             

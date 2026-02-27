@@ -678,3 +678,35 @@ def __filter(playthrough):
 
 JK.api.callbacks.playthroughs_filter_callbacks.append(__filter)
 ```
+
+---
+
+### `before_storing_choice_text_callbacks (list)`
+
+**Description**:  
+
+Called right before passing the choice text into the save.
+
+**Use Case**:
+
+Useful for altering the text if it contains more than just our desired text.
+
+**Example Scenario**:
+
+Example from a game: `?some_obj.some_prop|{image=some_image}|"Some text"`, in which case we want only the `Some text` and the rest are just metadata for the choice button.
+
+**Code example**:
+```python
+def __callback(text, original_text, choice_object):
+  if text == "Don't store [[\'this\'] text":
+    return "I will store this text instead"
+  elif original_text == "Don't store [this] text":
+    return "I will store this text instead"
+  elif choice_object.value == "some_label":
+    return "I chose some_label"
+
+  # returning nothing/None means no change was made
+
+
+JK.api.callbacks.before_storing_choice_text_callbacks.append(__callback)
+```

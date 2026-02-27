@@ -12,6 +12,8 @@ init python in JK:
     import re
     import pygame_sdl2 as pygame
 
+    before_storing_choice_text_callbacks = []
+
     class AutosaverClass(x52NonPicklable):
         def __init__(self):
             self.suppress_autosave_confirm = False
@@ -236,11 +238,29 @@ init python in JK:
             self.create_pending_save_from_choice(choice)
 
         def create_pending_save_from_choice(self, choice):
-            # Processes the label as Ren'Py would to remove any possible substitutions via [...] e.g. [player_name]
-            textComponent = renpy.ui.text(choice.label)
-            choiceText = Utils.escape_renpy_reserved_characters(' '.join(textComponent.text))
+            textComponent = None
+            choice_text = None
+            try:
+                # Processes the label as Ren'Py would to remove any possible interpolations via [...] e.g. [player_name]
+                # This might fail when there are context specific variables which aren't available in this scope.
+                textComponent = renpy.ui.text(choice.label)
+                choice_text = Utils.escape_renpy_reserved_characters(' '.join(textComponent.text))
+            except:
+                try:
+                    escaped_text = Utils.escape_all_problematic_characters(' '.join(choice.label))
+                    # Processes the label as Ren'Py would to remove any possible interpolations via [...] e.g. [player_name]
+                    # This might fail when there are context specific variables which aren't available in this scope.
+                    textComponent = renpy.ui.text(escaped_text)
+                    choice_text = ' '.join(textComponent.text)
+                except:
+                    choice_text = Utils.escape_all_problematic_characters(' '.join(choice.label))
 
-            self.create_pending_save(choiceText)
+            original_choice_text = choice_text
+            for callback in before_storing_choice_text_callbacks:
+                choice_text = callback(choice_text, original_choice_text, choice) or choice_text
+
+            renpy.notify(choice_text)
+            self.create_pending_save(choice_text)
 
         # The JK_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
         #  However when a manual save is loaded it might not be a choice screen.
