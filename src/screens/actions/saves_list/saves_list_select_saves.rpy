@@ -33,6 +33,12 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
 
             if selected_length > 0:
                 hbox xpos 1.0 xanchor 1.0:
+                    # Move selection to another playthrough
+                    use JK_IconButton(icon="\ue675", action=JK.SavesListViewModel.StartMoveCopyAction(view_model, "MOVE"), tt="Move {} save(s) to another playthrough".format(selected_length), tt_side="left")
+
+                    # Copy selection to another playthrough
+                    use JK_IconButton(icon="\ue14d", action=JK.SavesListViewModel.StartMoveCopyAction(view_model, "COPY"), tt="Copy {} save(s) to another playthrough".format(selected_length), tt_side="left")
+
                     # Delete selection
                     use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.MassDeleteConfirmAction(view_model), tt="Delete {} save(s)".format(selected_length), tt_side="left")
             else:

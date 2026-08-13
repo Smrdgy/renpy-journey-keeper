@@ -1,7 +1,14 @@
-screen JK_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_playthrough):
+screen JK_MoveCopySavesSelectDestination(playthrough, mode, saves):
+    style_prefix 'JK'
+    modal True
+
     python:
         thumbnailSize = JK.scaled((150, 100))
-        playthroughs = [p for p in JK.Playthroughs.playthroughs if p.id != 2 and p != source_playthrough and p != destination_playthrough] # Get all playthroughs except memories, source/destination playthroughs
+        playthroughs = [p for p in JK.Playthroughs.playthroughs if p.id != 2 and p != playthrough] # Get all playthroughs except memories and the source playthrough
+
+    text ("Select the playthrough you want to " + ("move" if mode == "MOVE" else "copy") + " " + str(len(saves)) + " save(s) into.")
+
+    use JK_YSpacer()
 
     viewport:
         mousewheel True
@@ -9,17 +16,20 @@ screen JK_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_pl
         scrollbars "vertical"
         vscrollbar_unscrollable "hide"
         pagekeys True
-        ymaximum 0.85
+        ymaximum 0.75
 
         vbox:
             xfill True
             spacing 5
 
+            if not playthroughs:
+                text "No other playthroughs available." xalign 0.5
+
             $ i = 0
-            for playthrough in playthroughs:
+            for other_playthrough in playthroughs:
                 button style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button"):
                     xfill True
-                    action SetScreenVariable("destination_playthrough" if source_playthrough else "source_playthrough", playthrough)
+                    action JK.MoveCopySavesViewModel.SelectDestinationAndStartAction(playthrough, other_playthrough, saves, mode)
 
                     hbox:
                         frame:
@@ -27,8 +37,8 @@ screen JK_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_pl
                             xmaximum thumbnailSize[0]
                             ymaximum thumbnailSize[1]
 
-                            if playthrough.hasThumbnail():
-                                add playthrough.getThumbnail(thumbnailSize[0], thumbnailSize[1])
+                            if other_playthrough.hasThumbnail():
+                                add other_playthrough.getThumbnail(thumbnailSize[0], thumbnailSize[1])
                             else:
                                 frame:
                                     xysize thumbnailSize
@@ -43,7 +53,7 @@ screen JK_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_pl
 
                         use JK_XSpacer(2)
 
-                        text "[playthrough.name]" yalign 0.5
+                        text "[other_playthrough.name]" yalign 0.5
 
                 $ i += 1
 
@@ -55,6 +65,10 @@ screen JK_MoveCopySavesSelectOtherPlaythrough(source_playthrough, destination_pl
         style_prefix "JK_dialog_action_buttons"
 
         vbox:
+            # Back
+            hbox:
+                use JK_IconButton(icon="\ue5c4", text="Back", action=JK.SavesListViewModel.CancelMoveCopyAction())
+
             # Close
             hbox:
-                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_MoveCopySaves"))
+                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SavesList"))

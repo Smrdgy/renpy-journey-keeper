@@ -33,10 +33,6 @@ screen JK_PlaythroughActions(playthrough):
                 hbox:
                     use JK_IconButton(icon="\uf184", text="Show choice Timeline", action=[Show("JK_ChoicesTimeline", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="alt_K_t")
 
-                # Move/copy saves
-                hbox:
-                    use JK_IconButton(icon="\ueb7d", text="Move/copy saves", action=[Show("JK_MoveCopySaves", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="alt_K_m")
-                
                 # Close
                 hbox:
                     use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_PlaythroughActions"))

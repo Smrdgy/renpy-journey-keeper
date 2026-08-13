@@ -280,3 +280,51 @@ init python in JK:
                 self.view_model.success = False
 
                 renpy.restart_interaction()
+
+        class StartMoveCopyAction(renpy.ui.Action):
+            def __init__(self, view_model, mode):
+                self.view_model = view_model
+                self.mode = mode
+
+            def __call__(self):
+                cs = renpy.current_screen()
+                if not cs:
+                    return
+
+                cs.scope["move_copy_mode"] = self.mode
+                cs.scope["move_copy_saves"] = [] + self.view_model.selection
+
+                renpy.restart_interaction()
+
+        class CancelMoveCopyAction(renpy.ui.Action):
+            def __call__(self):
+                cs = renpy.current_screen()
+                if not cs:
+                    return
+
+                cs.scope["move_copy_mode"] = None
+                cs.scope["move_copy_saves"] = []
+                cs.scope["move_copy_destination_playthrough"] = None
+                cs.scope["move_copy_view_model"] = None
+
+                renpy.restart_interaction()
+
+        class FinishMoveCopyAction(renpy.ui.Action):
+            def __init__(self, view_model):
+                self.view_model = view_model
+
+            def __call__(self):
+                cs = renpy.current_screen()
+                if not cs:
+                    return
+
+                cs.scope["move_copy_mode"] = None
+                cs.scope["move_copy_saves"] = []
+                cs.scope["move_copy_destination_playthrough"] = None
+                cs.scope["move_copy_view_model"] = None
+                cs.scope["last_selected_save"] = None
+
+                self.view_model.selection = []
+                self.view_model.load_saves()
+
+                renpy.restart_interaction()

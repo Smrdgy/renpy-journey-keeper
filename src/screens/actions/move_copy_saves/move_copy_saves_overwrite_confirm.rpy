@@ -1,4 +1,4 @@
-screen JK_MoveCopySavesOverwriteConfirm(save, view_model):
+screen JK_MoveCopySavesOverwriteConfirm(save, source_location, destination_location, view_model):
     python:
         class SkipAction(renpy.ui.Action):
             def __init__(self, view_model, apply_to_all):
@@ -35,8 +35,8 @@ screen JK_MoveCopySavesOverwriteConfirm(save, view_model):
     default thumbnail_width = renpy.config.thumbnail_width or 200 if hasattr(renpy.config, "thumbnail_width") and renpy.config.thumbnail_width < renpy.config.screen_width / 2.5 else 200
     default thumbnail_height = renpy.config.thumbnail_height or 200 if hasattr(renpy.config, "thumbnail_height") else 200
 
-    default source_screenshot = view_model.source_instance.location.screenshot_including_inactive(save)
-    default target_screenshot = view_model.destination_instance.location.screenshot_including_inactive(save)
+    default source_screenshot = source_location.screenshot(save) if source_location else view_model.source_instance.location.screenshot_including_inactive(save)
+    default target_screenshot = destination_location.screenshot(save) if destination_location else view_model.destination_instance.location.screenshot_including_inactive(save)
 
     python:
         skipAction = [Hide("JK_MoveCopySavesOverwriteConfirm"), SkipAction(view_model=view_model, apply_to_all=apply_to_all)]
@@ -46,7 +46,7 @@ screen JK_MoveCopySavesOverwriteConfirm(save, view_model):
     key 'K_RETURN' action cancelAction
     key 'K_KP_ENTER' action overwriteAction
 
-    use JK_Dialog(title="Saves conflict!", message="Save " + save + " already exist in the target directory.\nPlease, select which action to perform.", close_action=cancelAction):
+    use JK_Dialog(title="Saves conflict!", message="Save " + save + " already exist in the target directory" + (" \"" + destination_location.directory + "\"" if destination_location else "") + ".\nPlease, select which action to perform.", close_action=cancelAction):
         vbox:
             xfill True
 

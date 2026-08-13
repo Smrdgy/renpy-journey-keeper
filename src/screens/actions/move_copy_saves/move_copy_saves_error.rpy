@@ -1,15 +1,6 @@
-screen JK_MoveCopySavesError(view_model):
+screen JK_MoveCopySavesError(view_model, saves_list_view_model):
     style_prefix 'JK'
     modal True
-
-    python:
-        class ClearErrorAction(renpy.ui.Action):
-            def __init__(self, view_model):
-                self.view_model = view_model
-            
-            def __call__(self):
-                self.view_model.error = None
-                renpy.restart_interaction()
 
     vbox:
         xfill True
@@ -39,8 +30,8 @@ screen JK_MoveCopySavesError(view_model):
         vbox:
             # OK
             hbox:
-                use JK_IconButton(icon="", text="OK", action=ClearErrorAction(view_model))
+                use JK_IconButton(icon="", text="OK", action=JK.SavesListViewModel.FinishMoveCopyAction(saves_list_view_model))
 
             # Close
             hbox:
-                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_MoveCopySaves"))
+                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SavesList"))

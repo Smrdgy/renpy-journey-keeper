@@ -1,14 +1,16 @@
-screen JK_MoveCopySavesProcessing(view_model):
+screen JK_MoveCopySavesProcessing(view_model, saves_list_view_model):
     python:
         processed = view_model.processed
         to_process = len(view_model.saves_to_process)
 
         class StopAction(renpy.ui.Action):
-            def __init__(self, view_model):
+            def __init__(self, view_model, saves_list_view_model):
                 self.view_model = view_model
+                self.saves_list_view_model = saves_list_view_model
 
             def __call__(self):
                 self.view_model.process_stop()
+                JK.SavesListViewModel.FinishMoveCopyAction(self.saves_list_view_model)()
 
     vbox:
         xfill True
@@ -36,8 +38,8 @@ screen JK_MoveCopySavesProcessing(view_model):
 
         vbox:
             hbox:
-                use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(view_model), color=JK.Colors.danger)
+                use JK_IconButton(icon="\ue99a", text="Stop", action=StopAction(view_model, saves_list_view_model), color=JK.Colors.danger)
 
             # Close
             hbox:
-                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_MoveCopySaves"))
+                use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SavesList"))

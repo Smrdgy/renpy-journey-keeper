@@ -1,4 +1,4 @@
-screen JK_MoveCopySavesSuccess():
+screen JK_MoveCopySavesSuccess(saves_list_view_model):
     style_prefix 'JK'
     modal True
 
@@ -20,4 +20,4 @@ screen JK_MoveCopySavesSuccess():
         vbox:
             # Close
             hbox:
-                use JK_IconButton(icon="", text="OK", action=Hide("JK_MoveCopySaves"))
+                use JK_IconButton(icon="", text="OK", action=JK.SavesListViewModel.FinishMoveCopyAction(saves_list_view_model))

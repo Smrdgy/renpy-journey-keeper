@@ -2,6 +2,7 @@ init python in JK:
     _constant = True
     import threading
     import time
+    import os
 
     class MoveCopySavesViewModel(x52NonPicklable):
         def __init__(self, source_playthrough, destination_playthrough):
@@ -49,6 +50,8 @@ init python in JK:
             self.destination_saves = SaveSystem.list_all_saves_for_playthrough(self.destination_playthrough)
 
         def process_saves(self, saves, mode="COPY"):
+            # saves is a list of (save, location) tuples; location is None for a per-save selection
+            # (operate across every active location) or a specific source FileLocation for a per-directory one.
             self.mode = mode
             self.stage = "COPY"
             self.overwrite_all = False
@@ -62,6 +65,18 @@ init python in JK:
 
             # Start processing saves with a background thread
             self.process_next_save()
+
+        def get_matching_destination_location(self, source_location):
+            if source_location is None:
+                return None
+
+            source_base = os.path.dirname(source_location.directory)
+
+            for destination_location in self.destination_instance.location.locations:
+                if os.path.dirname(destination_location.directory) == source_base:
+                    return destination_location
+
+            return None
 
         def process_next_save(self, force=False):
             force = self.overwrite_all or force
@@ -82,29 +97,41 @@ init python in JK:
 
                 return
 
-            save = self.saves_to_process[self.processed]
+            save, location = self.saves_to_process[self.processed]
+            destination_location = self.get_matching_destination_location(location)
+
+            if location is not None and destination_location is None:
+                self.error = "Couldn't find a save location in the destination playthrough matching \"" + location.directory + "\"."
+                renpy.restart_interaction()
+                self.process_stop()
+                return
 
             # Check for conflicts and show confirmation screen if needed
-            if self.destination_instance.location.has_save(save, check_inactive=True) and not force:
+            has_conflict = destination_location.mtime(save) is not None if destination_location else self.destination_instance.location.has_save(save, check_inactive=True)
+
+            if has_conflict and not force:
                 if self.skip_all:
-                    self.skipped.append(save)
+                    self.skipped.append((save, location))
                     self.process_continue()
                     return
 
-                renpy.show_screen("JK_MoveCopySavesOverwriteConfirm", save=save, view_model=self)
+                renpy.show_screen("JK_MoveCopySavesOverwriteConfirm", save=save, source_location=location, destination_location=destination_location, view_model=self)
                 time.sleep(0.1)
                 renpy.restart_interaction()
                 return
 
             # Create a thread to copy the save to avoid blocking the main thread
-            self.save_thread = threading.Thread(target=self.copy_save_and_continue, args=(save,))
+            self.save_thread = threading.Thread(target=self.copy_save_and_continue, args=(save, location, destination_location))
             self.save_thread.daemon = True
             self.save_thread.start()
 
-        def copy_save_and_continue(self, save):
+        def copy_save_and_continue(self, save, location, destination_location):
             try:
                 # Perform the save copy
-                self.source_instance.location.copy_save_into_other_multilocation(save, self.destination_instance.location, scan=False)
+                if location is not None:
+                    location.copy_into_other_directory(save, save, destination_location.directory, scan=False)
+                else:
+                    self.source_instance.location.copy_save_into_other_multilocation(save, self.destination_instance.location, scan=False)
 
                 self.process_continue()
             except Exception as e:
@@ -176,13 +203,17 @@ init python in JK:
             time.sleep(0.05)
 
             save = None
+            location = None
             try:
-                for save in self.saves_to_process:
+                for save, location in self.saves_to_process:
                     if not self.processing:
                         return
 
-                    if not save in self.skipped:
-                        self.source_instance.location.unlink_save(save, scan=False)
+                    if (save, location) not in self.skipped:
+                        if location is not None:
+                            location.unlink_save(save, scan=False)
+                        else:
+                            self.source_instance.location.unlink_save(save, scan=False)
 
                     self.processed += 1
 
@@ -203,11 +234,22 @@ init python in JK:
             SaveSystem.multilocation.scan()
             renpy.restart_interaction()
 
-        class StartProcessAction(renpy.ui.Action):
-            def __init__(self, view_model, saves, mode="COPY"):
-                self.view_model = view_model
+        class SelectDestinationAndStartAction(renpy.ui.Action):
+            def __init__(self, source_playthrough, destination_playthrough, saves, mode):
+                self.source_playthrough = source_playthrough
+                self.destination_playthrough = destination_playthrough
                 self.saves = saves
                 self.mode = mode
 
             def __call__(self):
-                self.view_model.process_saves(self.saves, mode=self.mode)
+                cs = renpy.current_screen()
+                if not cs:
+                    return
+
+                view_model = MoveCopySavesViewModel(self.source_playthrough, self.destination_playthrough)
+
+                cs.scope["move_copy_destination_playthrough"] = self.destination_playthrough
+                cs.scope["move_copy_view_model"] = view_model
+
+                if not view_model.error:
+                    view_model.process_saves(self.saves, mode=self.mode)
