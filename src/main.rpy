@@ -16,6 +16,9 @@ init python in JK:
     Pagination = PaginationClass()
     Memories = MemoriesClass()
 
+init 999999999999 python in JK: # Delayed by a huge number to ensure that this is not overridden by a game
+    _constant = True
+
     renpy.config.search_prefixes.append("JK/src/assets/") # Provides discoverability for assets that are used in JK
 
 init 9999 python in JK:
