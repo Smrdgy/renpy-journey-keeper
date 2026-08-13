@@ -259,7 +259,6 @@ init python in JK:
             for callback in before_storing_choice_text_callbacks:
                 choice_text = callback(choice_text, original_choice_text, choice) or choice_text
 
-            renpy.notify(choice_text)
             self.create_pending_save(choice_text)
 
         # The JK_ActiveSlot always equals the slot that was loaded because the saves are made right before selecting a choice for easy re-choicing.
