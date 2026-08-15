@@ -4,7 +4,7 @@ screen JK_SavesListProcessing(view_model):
 
     python:
         processed = view_model.processed
-        to_process = len(view_model.selection)
+        to_process = len(view_model.selection.items)
 
         class StopAction(renpy.ui.Action):
             def __init__(self, view_model):

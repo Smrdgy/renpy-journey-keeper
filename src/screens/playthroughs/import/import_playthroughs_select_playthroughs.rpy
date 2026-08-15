@@ -1,5 +1,5 @@
-screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthrough, show_thumbnails, import_playthroughs_vlist):
-    key "ctrl_K_a" action JK.ImportPlaythroughsViewModel.SelectAllAction(view_model)
+screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, show_thumbnails, import_playthroughs_vlist):
+    key "ctrl_K_a" action JK.SelectionState.SelectAllAction(view_model.selection, view_model.playthroughs)
 
     python:
         # Fixed row pitch so windowing math is exact - rows used to auto-size
@@ -15,7 +15,7 @@ screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthr
             xfill True
 
             hbox:
-                use JK_Checkbox(checked=None if len(view_model.selected_playthroughs) > 0 and len(view_model.selected_playthroughs) < len(view_model.playthroughs) else len(view_model.playthroughs) == len(view_model.selected_playthroughs), action=JK.ImportPlaythroughsViewModel.ToggleAllAction(view_model))
+                use JK_Checkbox(checked=None if len(view_model.selection.items) > 0 and len(view_model.selection.items) < len(view_model.playthroughs) else len(view_model.playthroughs) == len(view_model.selection.items), action=JK.SelectionState.ToggleAllAction(view_model.selection, view_model.playthroughs))
 
             hbox:
                 xalign 1.0
@@ -44,8 +44,8 @@ screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthr
                     button:
                         ysize row_pitch
                         style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button")
-                        selected playthrough in view_model.selected_playthroughs
-                        action JK.ImportPlaythroughsViewModel.SelectionAction(view_model, playthrough, last_selected_playthrough)
+                        selected playthrough in view_model.selection.items
+                        action JK.ImportPlaythroughsViewModel.SelectionAction(view_model, playthrough)
 
                         xsize 1.0
 
@@ -54,7 +54,7 @@ screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthr
                             vbox:
                                 yalign 0.5
 
-                                use JK_Checkbox(checked=playthrough in view_model.selected_playthroughs, action=ToggleSetMembership(view_model.selected_playthroughs, playthrough))
+                                use JK_Checkbox(checked=playthrough in view_model.selection.items, action=ToggleSetMembership(view_model.selection.items, playthrough))
 
                             # Thumbnail
                             if show_thumbnails:
@@ -88,7 +88,7 @@ screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthr
             vbox xalign 1.0:
                 # Import playthroughs
                 hbox:
-                    use JK_IconButton(icon="", text="Import playthrough(s)", action=Function(view_model.import_selected_playthroughs), key="alt_K_i", disabled=len(view_model.selected_playthroughs) == 0)
+                    use JK_IconButton(icon="", text="Import playthrough(s)", action=Function(view_model.import_selected_playthroughs), key="alt_K_i", disabled=len(view_model.selection.items) == 0)
 
                 # Back
                 hbox:

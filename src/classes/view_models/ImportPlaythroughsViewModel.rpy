@@ -13,7 +13,7 @@ init python in JK:
             self.selected_game = None
 
             self.playthroughs = []
-            self.selected_playthroughs = []
+            self.selection = SelectionState()
 
             self.success = False
             self.conflicts = []
@@ -74,7 +74,7 @@ init python in JK:
             self.success = False
 
             conflicts = []
-            for p in self.selected_playthroughs:
+            for p in self.selection.items:
                 conflicting = self.__find_conflicting_playthrough(p)
                 if conflicting:
                     conflicts.append((conflicting, p))
@@ -158,69 +158,19 @@ init python in JK:
                 renpy.restart_interaction()
 
         class SelectionAction(renpy.ui.Action):
-            def __init__(self, view_model, playthrough, last_selected_playthrough):
+            def __init__(self, view_model, playthrough):
                 self.view_model = view_model
                 self.playthrough = playthrough
-                self.last_selected_playthrough = last_selected_playthrough
 
             def __call__(self):
-                if pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                    start_index = self.view_model.playthroughs.index(self.last_selected_playthrough) if self.last_selected_playthrough in self.view_model.playthroughs else -1
-                    end_index = self.view_model.playthroughs.index(self.playthrough) if self.playthrough in self.view_model.playthroughs else -1
-
-                    if start_index > -1 and end_index > -1:
-                        new_playthroughs = []
-                        for playthrough in self.view_model.playthroughs[min(start_index, end_index):max(start_index, end_index) + 1]:
-                            if playthrough in new_playthroughs:
-                                new_playthroughs.remove(playthrough)
-                            else:
-                                new_playthroughs.append(playthrough)
-
-                        self.view_model.selected_playthroughs = new_playthroughs
-                        renpy.restart_interaction()
-                        return
-                elif pygame.key.get_mods() & pygame.KMOD_LCTRL:
-                    if self.playthrough in self.view_model.selected_playthroughs:
-                        self.view_model.selected_playthroughs.remove(self.playthrough)
-                    else:
-                        self.view_model.selected_playthroughs.append(self.playthrough)
-                else:
-                    self.view_model.selected_playthroughs = [self.playthrough]
-                
-                cs = renpy.current_screen()
-                if not cs:
-                    return
-
-                cs.scope["last_selected_playthrough"] = self.playthrough
-
-                renpy.restart_interaction()
-
-        class ToggleAllAction(renpy.ui.Action):
-            def __init__(self, view_model):
-                self.view_model = view_model
-
-            def __call__(self):
-                if len(self.view_model.selected_playthroughs) < len(self.view_model.playthroughs):
-                    self.view_model.selected_playthroughs = [] + self.view_model.playthroughs
-                else:
-                    self.view_model.selected_playthroughs = []
-
-                renpy.restart_interaction()
-
-        class SelectAllAction(renpy.ui.Action):
-            def __init__(self, view_model):
-                self.view_model = view_model
-
-            def __call__(self):
-                self.view_model.selected_playthroughs = [] + self.view_model.playthroughs
-                renpy.restart_interaction()
+                self.view_model.selection.click(self.playthrough, self.view_model.playthroughs)
 
         class BackAction(renpy.ui.Action):
             def __init__(self, view_model):
                 self.view_model = view_model
 
             def __call__(self):
-                self.view_model.selected_playthroughs = []
+                self.view_model.selection.select_none()
                 self.view_model.selected_game = None
 
                 renpy.restart_interaction()

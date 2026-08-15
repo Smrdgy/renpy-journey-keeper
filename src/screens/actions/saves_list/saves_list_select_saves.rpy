@@ -1,10 +1,10 @@
-screen JK_SavesListSelectSaves(playthrough, view_model, last_selected_save, selection_mode, show_thumbnails, saves_vlist):
+screen JK_SavesListSelectSaves(playthrough, view_model, selection_mode, show_thumbnails, saves_vlist):
     style_prefix 'JK'
     modal True
 
     python:
         saves_length = view_model.saves_length
-        selected_length = len(view_model.selection)
+        selected_length = len(view_model.selection.items)
         row_height = 80 if show_thumbnails else 50
         col_size = 1.0 / len(view_model.locations) - 0.01
 
@@ -127,10 +127,10 @@ screen JK_SavesListSelectSaves(playthrough, view_model, last_selected_save, sele
                                 button:
                                     ysize JK.scaled(row_height)
                                     xsize 1.0
-                                    style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button") selected id in view_model.selection
+                                    style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button") selected id in view_model.selection.items
 
                                     key_events True
-                                    action JK.SavesListViewModel.SelectionAction(view_model, id, saves, last_selected_save)
+                                    action JK.SavesListViewModel.SelectionAction(view_model, id, saves)
 
                                     frame style "JK_default":
                                         xsize 1.0
@@ -141,7 +141,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, last_selected_save, sele
                                             hbox xysize JK.scaled((42, 42)) yalign 0.5:
                                                 if (directory_index == 0 if selection_mode == "PER_SAVE" else True):
                                                     hbox yalign 0.5:
-                                                        use JK_Checkbox(checked=id in view_model.selection, text="", action=ToggleSetMembership(view_model.selection, id))
+                                                        use JK_Checkbox(checked=id in view_model.selection.items, text="", action=ToggleSetMembership(view_model.selection.items, id))
 
                                             hbox:
                                                 yalign 0.5

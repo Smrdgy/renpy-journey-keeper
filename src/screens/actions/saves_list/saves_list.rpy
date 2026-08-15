@@ -4,7 +4,6 @@ screen JK_SavesList(playthrough):
     modal True
 
     default view_model = JK.SavesListViewModel(playthrough)
-    default last_selected_save = None
     default selection_mode = "PER_SAVE" # "PER_SAVE"|"PER_DIRECTORY"
     default show_thumbnails = False
     default saves_vlist = JK.VirtualListState()
@@ -40,7 +39,7 @@ screen JK_SavesList(playthrough):
             elif view_model.success:
                 use JK_SavesListSuccess(view_model)
             elif view_model.screen == "SELECTION":
-                use JK_SavesListSelectSaves(playthrough, view_model, last_selected_save, selection_mode, show_thumbnails, saves_vlist)
+                use JK_SavesListSelectSaves(playthrough, view_model, selection_mode, show_thumbnails, saves_vlist)
             elif view_model.screen == "PENDING":
                 use JK_SavesListProcessing(view_model)
         else:

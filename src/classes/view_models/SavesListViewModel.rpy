@@ -13,7 +13,7 @@ init python in JK:
             self.saves_length = 0
             self.saves_multilocation = None
 
-            self.selection = []
+            self.selection = SelectionState()
 
             self.processing = False
             self.processed = 0
@@ -129,47 +129,17 @@ init python in JK:
             SaveSystem.multilocation.scan()
 
         class SelectionAction(renpy.ui.Action):
-            def __init__(self, view_model, id, all_saves, last_selected_save):
+            def __init__(self, view_model, id, all_saves):
                 self.view_model = view_model
                 self.id = id
                 self.all_saves = all_saves
-                self.last_selected_save = last_selected_save
 
             def __call__(self):
-                matching_directory = self.last_selected_save and self.last_selected_save[1] == self.id[1]
+                selection = self.view_model.selection
+                same_directory = selection.anchor is not None and selection.anchor[1] == self.id[1]
+                ordered_ids = [(save, self.id[1]) for save in self.all_saves]
 
-                if matching_directory and pygame.key.get_mods() & pygame.KMOD_SHIFT:
-                    directory = self.id[1]
-                    start_index = self.all_saves.index(self.last_selected_save[0]) if self.last_selected_save[0] in self.all_saves else -1
-                    end_index = self.all_saves.index(self.id[0]) if self.id[0] in self.all_saves else -1
-
-                    if start_index > -1 and end_index > -1:
-                        new_saves = []
-                        for save in self.all_saves[min(start_index, end_index):max(start_index, end_index) + 1]:
-                            if save in new_saves:
-                                new_saves.remove((save, directory))
-                            else:
-                                new_saves.append((save, directory))
-
-                        self.view_model.selection = new_saves
-                        renpy.restart_interaction()
-                        return
-                elif pygame.key.get_mods() & pygame.KMOD_LCTRL:
-                    if self.id in self.view_model.selection:
-                        self.view_model.selection.remove(self.id)
-                    else:
-                        self.view_model.selection.append(self.id)
-                else:
-                    self.view_model.selection = [self.id]
-                
-                cs = renpy.current_screen()
-                if not cs:
-                    return
-
-                cs.scope["last_selected_save"] = self.id
-
-                renpy.restart_interaction()
-                
+                selection.click(self.id, ordered_ids, range_eligible=same_directory)
 
         class SetSelectionModeAction(renpy.ui.Action):
             def __init__(self, view_model, mode):
@@ -181,9 +151,8 @@ init python in JK:
                 if not cs:
                     return
 
-                self.view_model.selection = []
+                self.view_model.selection.reset()
 
-                cs.scope["last_selected_save"] = None
                 cs.scope["selection_mode"] = self.mode
 
                 renpy.restart_interaction()
@@ -194,18 +163,18 @@ init python in JK:
                 self.selection_mode = selection_mode
 
             def __call__(self):
-                self.view_model.selection = []
+                ids = []
 
                 if self.selection_mode == "PER_SAVE":
                     for save in self.view_model.locations[0][1]:
-                        self.view_model.selection.append((save, None))
+                        ids.append((save, None))
                 else:
                     for location, saves in self.view_model.locations:
                         for save in saves:
-                            self.view_model.selection.append((save, location))
+                            ids.append((save, location))
 
-                renpy.restart_interaction()
-                
+                self.view_model.selection.select_all(ids)
+
 
         class MassDeleteConfirmAction(renpy.ui.Action):
             def __init__(self, view_model):
@@ -213,7 +182,7 @@ init python in JK:
 
             def __call__(self):
                 showConfirm(
-                    title="Delete " + str(len(self.view_model.selection)) + " save(s)",
+                    title="Delete " + str(len(self.view_model.selection.items)) + " save(s)",
                     message="Do you really wish to delete these saves?\nThis action {u}{color=[JK.Colors.error]}is irreversible{/c}{/u}.",
                     yes=SavesListViewModel.MassDeleteAction(self.view_model),
                     yes_icon="\ue92b",
@@ -225,7 +194,7 @@ init python in JK:
                 self.view_model = view_model
 
             def __call__(self):
-                self.view_model.saves_to_process = [] + self.view_model.selection
+                self.view_model.saves_to_process = [] + self.view_model.selection.items
                 self.view_model.return_on_success = False
                 self.view_model.process_delete_start()
 
@@ -273,7 +242,7 @@ init python in JK:
                     return
 
                 cs.scope["move_copy_mode"] = self.mode
-                cs.scope["move_copy_saves"] = [] + self.view_model.selection
+                cs.scope["move_copy_saves"] = [] + self.view_model.selection.items
 
                 renpy.restart_interaction()
 
@@ -303,9 +272,8 @@ init python in JK:
                 cs.scope["move_copy_saves"] = []
                 cs.scope["move_copy_destination_playthrough"] = None
                 cs.scope["move_copy_view_model"] = None
-                cs.scope["last_selected_save"] = None
 
-                self.view_model.selection = []
+                self.view_model.selection.reset()
                 self.view_model.load_saves()
 
                 renpy.restart_interaction()

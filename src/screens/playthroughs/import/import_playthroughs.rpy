@@ -4,7 +4,6 @@ screen JK_ImportPlaythroughs():
     modal True
 
     default view_model = JK.ImportPlaythroughsViewModel()
-    default last_selected_playthrough = None
     default show_thumbnails = False
     default search = ""
     default import_games_vlist = JK.VirtualListState()
@@ -95,7 +94,7 @@ screen JK_ImportPlaythroughs():
                         use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_ImportPlaythroughs"))
 
         elif view_model.selected_game:
-            use JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthrough, show_thumbnails, import_playthroughs_vlist)
+            use JK_ImportPlaythroughsSelectPlaythroughs(view_model, show_thumbnails, import_playthroughs_vlist)
 
         else:
             use JK_ImportPlaythroughsSelectGame(view_model, search, import_games_vlist)
