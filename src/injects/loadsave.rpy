@@ -5,10 +5,15 @@ init 9999 python in JK:
         Autosaver.active_slot_pending = slotname
         Autosaver.prevent_confirm_on_large_page_jump = True
         Autosaver.suppress_autosave_confirm = False
+
+        # Captured now, before the rollback restores JK_ActiveSlot to whatever was
+        # pickled inside the slot being loaded - after_load_callback needs the
+        # genuine pre-load slot to detect "did loading actually move us elsewhere."
+        Autosaver.slot_before_load = renpy.store.JK_ActiveSlot
     
     def __before_save(slotname):
-        #Ignore temporary save
-        if AutosaverClass.PendingSaveClass.temp_save_slotname in slotname:
+        #Ignore temporary saves used to stage autosave/quicksave writes
+        if AutosaverClass.PendingSaveClass.temp_save_slotname in slotname or Playthroughs.QuickSaveAction.temp_save_slotname in slotname:
             return
 
         #Ignore quick and auto saves

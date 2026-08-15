@@ -11,6 +11,7 @@ init python in JK:
     class PlaythroughsClass(x52NonPicklable):
         _playthroughs = []
         _activePlaythrough = None
+        pending_quick_save = None
 
         def __init__(self):
             # For some reason the __init__ is called twice in Ren'Py 7.0.0.196.
@@ -408,38 +409,75 @@ init python in JK:
                 renpy.invoke_in_thread(Playthroughs.toggle_autosave_on_choices_for_active)
 
         class QuickSaveAction(renpy.ui.Action):
-            temp_save_slotname = "JK-temp"
+            temp_save_slotname = "JK-temp-quicksave"
 
             def __init__(self, force=False, move_one=False):
                 self.force = force
                 self.move_one = move_one
 
             def __call__(self):
+                # force/move_one calls are retries following up on an already-pending
+                # quicksave (from the JK_QuickSaveOverwriteConfirm screen) - only debounce
+                # fresh, first-time triggers against an already in-flight save.
+                is_retry = self.force or self.move_one
+                pending_quick_save = Playthroughs.pending_quick_save
+
+                if not is_retry and pending_quick_save is not None and not pending_quick_save.is_done:
+                    return
+
                 if self.move_one:
                     Autosaver.set_next_slot()
 
                 page, _, slotString = Autosaver.get_current_slot()
                 slotString = Utils.format_slotname(slotString)
 
-                if not self.move_one and not self.force:
-                    renpy.take_screenshot()
+                # A retry reuses the screenshot pixels from the original attempt (the
+                # confirm dialog is on screen now, so a fresh grab would capture that
+                # instead of the game), but still freezes/pickles current state fresh.
+                raw_screenshot = AsyncSave._UNSET
+                if is_retry and pending_quick_save is not None:
+                    raw_screenshot = pending_quick_save.raw_screenshot
 
-                renpy.save(self.temp_save_slotname)
+                pending = AsyncSave.begin(
+                    location=SaveSystem.multilocation,
+                    slotname=self.temp_save_slotname,
+                    raw_screenshot=raw_screenshot,
+                )
+                Playthroughs.pending_quick_save = pending
 
-                if not self.force and SaveSystem.multilocation.newest(slotString):
-                    renpy.show_screen("JK_QuickSaveOverwriteConfirm")
-                    return
+                force = self.force
 
-                renpy.rename_save(self.temp_save_slotname, slotString)
+                def finish():
+                    finished = pending.wait(AsyncSave.DEFAULT_WAIT_TIMEOUT)
 
-                if Settings.offsetSlotAfterQuickSave:
-                    Autosaver.set_next_slot()
+                    if not finished or pending.error:
+                        print("[JK] Quicksave: pending write to '{}' did not complete successfully ({}).".format(
+                            QuickSaveAction.temp_save_slotname, pending.error))
+                        renpy.notify("Quicksave failed. Check log.txt for more info.")
 
-                if Settings.pageFollowsQuickSave:
-                    renpy.store.persistent._file_page = str(page)
+                        if Playthroughs.pending_quick_save is pending:
+                            Playthroughs.pending_quick_save = None
+                        return
 
-                if Settings.quickSaveNotificationEnabled:
-                    renpy.notify("Quicksave created at {}".format(slotString))
+                    if not force and SaveSystem.multilocation.newest(slotString):
+                        renpy.show_screen("JK_QuickSaveOverwriteConfirm")
+                        return
+
+                    renpy.rename_save(QuickSaveAction.temp_save_slotname, slotString)
+
+                    if Playthroughs.pending_quick_save is pending:
+                        Playthroughs.pending_quick_save = None
+
+                    if Settings.offsetSlotAfterQuickSave:
+                        Autosaver.set_next_slot()
+
+                    if Settings.pageFollowsQuickSave:
+                        renpy.store.persistent._file_page = str(page)
+
+                    if Settings.quickSaveNotificationEnabled:
+                        renpy.notify("Quicksave created at {}".format(slotString))
+
+                renpy.invoke_in_thread(finish)
 
         class TrySequentializeSaves(renpy.ui.Action):
             def __init__(self, playthrough):

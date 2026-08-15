@@ -19,6 +19,7 @@ init python in JK:
             self.suppress_autosave_confirm = False
             self.pending_save = None
             self.prev_active_slot = "N/A"
+            self.slot_before_load = "N/A"
             self.confirm_dialog_opened = False
             self.after_load_save_position_pending = False
             self.active_slot_pending = None
@@ -328,15 +329,16 @@ init python in JK:
                 renpy.notify("Active slot reverted back to {}".format(new_slot))
 
         class PendingSaveClass(x52NonPicklable):
-            temp_save_slotname = "JK-temp"
+            temp_save_slotname = "JK-temp-autosave"
 
             def __init__(self, choice):
                 self.choice = choice
+                self.async_handle = None
 
                 # Never, EVER call any saving functions from here!!!!!!!!!!!!!!!!!!!!!!!!!
                 # I, an idiot, have made this mistake twice,
                 # leading to an hour of debugging why, in the ever-loving f***, Autosaver.pending_save is None.
-                # (The instance is in the process of being constructed, including calling functions that were trying to access this instance, 
+                # (The instance is in the process of being constructed, including calling functions that were trying to access this instance,
                 # and the assignment happens afterward...)
 
             def early_save(self):
@@ -344,10 +346,30 @@ init python in JK:
                 if Playthroughs.active_playthrough.useChoiceLabelAsSaveName:
                     extra_info = self.choice
 
-                renpy.take_screenshot()
-                renpy.save(self.temp_save_slotname, extra_info)
+                # Capturing the screenshot pixels and freezing/pickling the game state must
+                # happen synchronously, right now, to reflect the exact moment of this choice.
+                # The slow parts (PNG encode, zip compression, writing to every active save
+                # location) don't depend on further game state, so AsyncSave defers those to
+                # a background thread instead of blocking the interaction.
+                self.async_handle = AsyncSave.begin(
+                    location=SaveSystem.multilocation,
+                    slotname=self.temp_save_slotname,
+                    extra_info=extra_info,
+                )
 
             def save(self):
+                if self.async_handle is not None:
+                    finished = self.async_handle.wait(AsyncSave.DEFAULT_WAIT_TIMEOUT)
+
+                    if not finished or self.async_handle.error:
+                        print("[JK] Autosave: pending write to '{}' did not complete successfully ({}).".format(
+                            self.temp_save_slotname, self.async_handle.error))
+                        renpy.notify("Autosave failed. Check log.txt for more info.")
+
+                        Autosaver.pending_save = None
+                        Autosaver.loaded_manual_save_without_choices = False
+                        return
+
                 slotname = Utils.format_slotname(renpy.store.JK_ActiveSlot)
 
                 renpy.rename_save(self.temp_save_slotname, slotname)
