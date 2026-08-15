@@ -306,6 +306,8 @@ init python in JK:
         class ConfirmDialogCloseAction(renpy.ui.Action):
             def __call__(self):
                 Autosaver.confirm_dialog_opened = False
+                Autosaver.pending_save = None
+                Autosaver.loaded_manual_save_without_choices = False
 
         class MoveOneSlotOverAction(renpy.ui.Action):
             def __call__(self):
