@@ -5,6 +5,7 @@ screen JK_ChoicesTimeline(playthrough):
 
     default show_thumbnails = False
     default search = ""
+    default choices_vlist = JK.VirtualListState()
 
     default view_model = JK.ChoicesTimelineViewModel(playthrough)
 
@@ -14,4 +15,4 @@ screen JK_ChoicesTimeline(playthrough):
         elif view_model.error:
             use JK_ChoicesTimelineError(view_model)
         else:
-            use JK_ChoicesTimelineList(view_model, show_thumbnails, search)
+            use JK_ChoicesTimelineList(view_model, show_thumbnails, search, choices_vlist)

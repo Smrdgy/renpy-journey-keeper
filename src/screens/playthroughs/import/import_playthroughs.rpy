@@ -7,6 +7,8 @@ screen JK_ImportPlaythroughs():
     default last_selected_playthrough = None
     default show_thumbnails = False
     default search = ""
+    default import_games_vlist = JK.VirtualListState()
+    default import_playthroughs_vlist = JK.VirtualListState()
 
     $ game_name = view_model.selected_game[0] if view_model.selected_game else None
     use JK_Dialog(title="Import playthrough(s)", message="Select playthroughs you want to import from {}.".format(game_name) if view_model.selected_game else "Select a game you want to import from.", close_action=Hide("JK_ImportPlaythroughs")):
@@ -93,8 +95,8 @@ screen JK_ImportPlaythroughs():
                         use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_ImportPlaythroughs"))
 
         elif view_model.selected_game:
-            use JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthrough, show_thumbnails)
+            use JK_ImportPlaythroughsSelectPlaythroughs(view_model, last_selected_playthrough, show_thumbnails, import_playthroughs_vlist)
 
         else:
-            use JK_ImportPlaythroughsSelectGame(view_model, search)
+            use JK_ImportPlaythroughsSelectGame(view_model, search, import_games_vlist)
             

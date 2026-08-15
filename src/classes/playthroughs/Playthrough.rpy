@@ -125,20 +125,24 @@ init python in JK:
             if(self.thumbnail == None):
                 return ImagePlaceholder(width or defWidth, height or defHeight)
 
-            import io
+            def build():
+                try:
+                    # Decode the base64 string to bytes
+                    decoded_bytes = base64.b64decode(self.thumbnail)
+                    # Create a BytesIO object from the decoded bytes
+                    sio = renpy.io.BytesIO(decoded_bytes)
+                    # Load the image using Ren'Py's load_image function
+                    rv = renpy.display.pgrender.load_image(sio, "image.png")
 
-            try:
-                # Decode the base64 string to bytes
-                decoded_bytes = base64.b64decode(self.thumbnail)
-                # Create a BytesIO object from the decoded bytes
-                sio = io.BytesIO(decoded_bytes)
-                # Load the image using Ren'Py's load_image function
-                rv = renpy.display.pgrender.load_image(sio, "image.png")
+                    # Return the Image object with specified dimensions
+                    return Image(rv, width=width or maxWidth or defWidth, height=height or maxHeight or defHeight, fitAfterResize=maxWidth or maxHeight)
+                except Exception:
+                    return ImagePlaceholder(width or defWidth, height or defHeight)
 
-                # Return the Image object with specified dimensions
-                return Image(rv, width=width or maxWidth or defWidth, height=height or maxHeight or defHeight, fitAfterResize=maxWidth or maxHeight)
-            except Exception:
-                return ImagePlaceholder(width or defWidth, height or defHeight)
+            # Decoding + scaling is otherwise redone on every screen restart,
+            # since a fresh displayable is built from the stored bytes every
+            # call - cache by the id + requested size so it only happens once.
+            return ThumbnailCache.get_or_build((self.id, width, height, maxWidth, maxHeight), build)
 
         def hasThumbnail(self):
             return self.thumbnail != None
@@ -149,10 +153,14 @@ init python in JK:
             # Encode it to a base64 string, the important word here is "string" because Python 3 would return b'' from base64.b64encode()...
             self.thumbnail = base64.b64encode(screenshot).decode('utf-8')
 
+            ThumbnailCache.invalidate_prefix((self.id,))
+
             return self
 
         def removeThumbnail(self):
             self.thumbnail = None
+
+            ThumbnailCache.invalidate_prefix((self.id,))
 
         def sequentializeSaves(self):
             temp_suffix = "-temp"

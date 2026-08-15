@@ -318,17 +318,18 @@ init -9999 python in JK:
             return int(new_width), int(new_height)
 
         @staticmethod
+        def normalize_search_text(text):
+            # Normalize strings to remove accents
+            if isinstance(text, str):
+                text = text.decode('utf-8') if sys.version_info[0] < 3 else text
+            return unicodedata.normalize('NFD', text).encode('ascii', 'ignore').decode('utf-8').lower()
+
+        @staticmethod
         def filter_timeline(timeline, search):
             if search is None or search == "":
                 return timeline
 
-            # Normalize strings to remove accents
-            def normalize(text):
-                if isinstance(text, str):
-                    text = text.decode('utf-8') if sys.version_info[0] < 3 else text
-                return unicodedata.normalize('NFD', text).encode('ascii', 'ignore').decode('utf-8')
-
-            normalized_search = normalize(search).lower()
+            normalized_search = Utils.normalize_search_text(search)
 
             filtered = []
             for entry in timeline:
@@ -337,7 +338,14 @@ init -9999 python in JK:
                 text = entry[1]
                 if text is None:
                     continue  # Skip entries with None in index 1
-                if normalized_search in normalize(text).lower():
+
+                # Entries built by ChoicesTimelineViewModel carry a
+                # precomputed normalized form at index 3, so this doesn't
+                # have to re-normalize unicode text for every entry on every
+                # keystroke - fall back to normalizing on the fly for any
+                # entry that doesn't have it.
+                normalized_text = entry[3] if len(entry) > 3 and entry[3] is not None else Utils.normalize_search_text(text)
+                if normalized_search in normalized_text:
                     filtered.append(entry)
 
             return filtered

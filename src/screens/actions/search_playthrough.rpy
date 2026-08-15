@@ -6,7 +6,7 @@ screen JK_SearchPlaythrough(search_all=False):
     default search = ""
     default view_model = JK.SearchPlaythroughViewModel(search_playthroughs=search_all)
     default search_input = JK.TextInput("search", auto_focus=True)
-    default focused_button = None
+    default search_vlist = JK.VirtualListState()
 
     if JK.TextInput.is_active("search"):
         key 'K_ESCAPE' action JK.TextInput.SetActiveAction(None)
@@ -82,18 +82,25 @@ screen JK_SearchPlaythrough(search_all=False):
             else:
                 text "No results"
 
+            python:
+                row_pitch = JK.scaled(40)
+                viewport_size = search_vlist.estimate_viewport_size(renpy.config.screen_height)
+                window_start, window_end, top_spacer, bottom_spacer = search_vlist.compute(len(view_model.results), row_pitch, viewport_size)
+                windowed_results = view_model.results[window_start:window_end]
+
             viewport:
                 mousewheel True
                 draggable True
                 scrollbars "vertical"
                 vscrollbar_unscrollable "hide"
                 pagekeys True
-                ymaximum 0.85
+                yadjustment search_vlist.adjustment
 
                 vbox:
-                    for result in view_model.results:
+                    null height top_spacer
+
+                    for result in windowed_results:
                         python:
-                            hovered = result == focused_button
                             i = 0
 
                             result_type = result[0]
@@ -101,8 +108,8 @@ screen JK_SearchPlaythrough(search_all=False):
                             playthrough = result[2]
 
                         button:
+                            ysize row_pitch
                             action [result_to_action(result), hide_action]
-                            hovered SetScreenVariable("focused_button", result)
                             style ("JK_row_button" if i % 2 == 0 else "JK_row_odd_button")
                             selected False
 
@@ -125,21 +132,22 @@ screen JK_SearchPlaythrough(search_all=False):
                                     if result_type in ("PLAYTHROUGH_DESCRIPTION"):
                                         text "{size=-5}(" + playthrough.name + "){/size}" yalign 0.5 color JK.Colors.text_light
 
-                                if hovered:
-                                    hbox:
-                                        xalign 1.0
+                                hbox:
+                                    xalign 1.0
 
-                                        if result_type in ("SAVE_NAME", "SAVE_CHOICE"):
-                                            $ page, _ = JK.Utils.split_slotname(result[3])
-                                        elif result_type in ("FILE_PAGE_NAME"):
-                                            $ page = result[3]
+                                    if result_type in ("SAVE_NAME", "SAVE_CHOICE"):
+                                        $ page, _ = JK.Utils.split_slotname(result[3])
+                                    elif result_type in ("FILE_PAGE_NAME"):
+                                        $ page = result[3]
 
-                                        if result_type in ("FILE_PAGE_NAME", "SAVE_NAME", "SAVE_CHOICE"):
-                                            use JK_IconButton(icon="\ue8a0", tt="Show page", action=[JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(page), hide_action])
+                                    if result_type in ("FILE_PAGE_NAME", "SAVE_NAME", "SAVE_CHOICE"):
+                                        use JK_IconButton(icon="\ue8a0", tt="Show page", action=[JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(page), hide_action])
                 
-                                        if result_type in ("SAVE_NAME", "SAVE_CHOICE"):
-                                            $ page, slot = JK.Utils.split_slotname(result[3])
-                                            use JK_IconButton(icon="\ue1c4", tt="Load save", action=[JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(page), FileLoad(slot, confirm=True, page=page), hide_action])
+                                    if result_type in ("SAVE_NAME", "SAVE_CHOICE"):
+                                        $ page, slot = JK.Utils.split_slotname(result[3])
+                                        use JK_IconButton(icon="\ue1c4", tt="Load save", action=[JK.Playthroughs.ActivatePlaythroughAction(playthrough), FilePage(page), FileLoad(slot, confirm=True, page=page), hide_action])
+
+                    null height bottom_spacer
 
         # Dialog footer
         hbox:

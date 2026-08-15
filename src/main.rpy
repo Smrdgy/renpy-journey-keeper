@@ -15,6 +15,7 @@ init python in JK:
     Autosaver = AutosaverClass()
     Pagination = PaginationClass()
     Memories = MemoriesClass()
+    ThumbnailCache = ThumbnailCacheClass()
 
 init 999999999999 python in JK: # Delayed by a huge number to ensure that this is not overridden by a game
     _constant = True

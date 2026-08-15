@@ -45,8 +45,10 @@ init python in JK:
 
             for slot in self.slots:
                 json = instance.location.json(slot)
+                choice_text = json.get("_JK_choice", None)
+                normalized_text = Utils.normalize_search_text(choice_text) if choice_text is not None else None
 
-                self.timeline.append((i, json.get("_JK_choice", None), slot))
+                self.timeline.append((i, choice_text, slot, normalized_text))
 
                 self.loaded += 1
                 renpy.restart_interaction()

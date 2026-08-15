@@ -4,6 +4,7 @@ screen JK_PlaythroughsPicker():
     modal True
 
     default reorder_source = None
+    default playthroughs_vlist = JK.VirtualListState()
 
     $ playthroughs = JK.Playthroughs.get_filtered_playthroughs()
 
@@ -18,8 +19,8 @@ screen JK_PlaythroughsPicker():
                 spacing 10
                 xalign 0.5
 
-                use JK_IconButton(icon="\ue5c3", text="Grid", action=JK.Settings.SetAction("playthroughsViewMode", "grid"), toggled=JK.Settings.playthroughsViewMode == "grid", toggled_color=JK.Colors.selected)
-                use JK_IconButton(icon="\ue8e9", text="Rows", action=JK.Settings.SetAction("playthroughsViewMode", "rows"), toggled=JK.Settings.playthroughsViewMode == "rows", toggled_color=JK.Colors.selected)
+                use JK_IconButton(icon="\ue5c3", text="Grid", action=[JK.Settings.SetAction("playthroughsViewMode", "grid"), Function(playthroughs_vlist.reset)], toggled=JK.Settings.playthroughsViewMode == "grid", toggled_color=JK.Colors.selected)
+                use JK_IconButton(icon="\ue8e9", text="Rows", action=[JK.Settings.SetAction("playthroughsViewMode", "rows"), Function(playthroughs_vlist.reset)], toggled=JK.Settings.playthroughsViewMode == "rows", toggled_color=JK.Colors.selected)
 
         use JK_YSpacer(2)
 
@@ -30,11 +31,12 @@ screen JK_PlaythroughsPicker():
             vscrollbar_unscrollable "hide"
             pagekeys True
             ymaximum 0.9
+            yadjustment playthroughs_vlist.adjustment
 
             if JK.Settings.playthroughsViewMode == "grid":
-                use JK_PlaythroughsGridPicker(playthroughs, reorder_source)
+                use JK_PlaythroughsGridPicker(playthroughs, reorder_source, playthroughs_vlist)
             elif JK.Settings.playthroughsViewMode == "rows":
-                use JK_PlaythroughsTablePicker(playthroughs, reorder_source)            
+                use JK_PlaythroughsTablePicker(playthroughs, reorder_source, playthroughs_vlist)
 
         # Dialog footer
         hbox:

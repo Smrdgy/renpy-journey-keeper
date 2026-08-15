@@ -1,4 +1,4 @@
-screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_selected_save, selection_mode, show_thumbnails):
+screen JK_SavesListSelectSaves(playthrough, view_model, last_selected_save, selection_mode, show_thumbnails, saves_vlist):
     style_prefix 'JK'
     modal True
 
@@ -7,6 +7,31 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
         selected_length = len(view_model.selection)
         row_height = 80 if show_thumbnails else 50
         col_size = 1.0 / len(view_model.locations) - 0.01
+
+        # A JK_Title file-page banner is interleaved before the first save of
+        # each file page, so rows aren't uniform height - build a per-save
+        # pixel height list for the virtual list's windowing math. The exact
+        # banner height is an estimate (font line height isn't known without
+        # rendering); it only needs to be close, since the list's overscan
+        # margin absorbs small errors.
+        title_height = JK.scaled(40)
+        scaled_row_height = JK.scaled(row_height)
+
+        row_sizes = []
+        for save in view_model.all_saves:
+            _, slot = JK.Utils.split_slotname_fast(save)
+            size = scaled_row_height
+            if slot == 1:
+                size += title_height
+            row_sizes.append(size)
+
+        # Matches the single JK_YSpacer() placed at the top of the scrollable
+        # content below, so scroll-position math accounts for it.
+        list_header_size = JK.scaled(40)
+
+        viewport_size = saves_vlist.estimate_viewport_size(renpy.config.screen_height)
+        window_start, window_end, top_spacer, bottom_spacer = saves_vlist.compute_variable(row_sizes, viewport_size, list_header_size)
+        windowed_saves = view_model.all_saves[window_start:window_end]
 
     key "ctrl_K_a" action JK.SavesListViewModel.SelectAllAction(view_model, selection_mode)
 
@@ -25,32 +50,23 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                         text "[selected_length] item(s) selected"
 
                 if selected_length == 0:
-                    use JK_IconButton(icon="\ue5d5", action=Function(view_model.load_saves, _update_screens=True), tt="Rescan saves")
+                    use JK_IconButton(icon="", action=Function(view_model.load_saves, _update_screens=True), tt="Rescan saves")
 
             hbox xalign 0.5 yalign 0.5:
-                use JK_IconButton(icon="\ue8fe", text="Per save selection", action=JK.SavesListViewModel.SetSelectionModeAction(view_model, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggled_color=JK.Colors.selected)
-                use JK_IconButton(icon="\ue949", text="Per directory selection", action=JK.SavesListViewModel.SetSelectionModeAction(view_model, "PER_DIRECTORY"), toggled=selection_mode == "PER_DIRECTORY", toggled_color=JK.Colors.selected)
+                use JK_IconButton(icon="", text="Per save selection", action=JK.SavesListViewModel.SetSelectionModeAction(view_model, "PER_SAVE"), toggled=selection_mode == "PER_SAVE", toggled_color=JK.Colors.selected)
+                use JK_IconButton(icon="", text="Per directory selection", action=JK.SavesListViewModel.SetSelectionModeAction(view_model, "PER_DIRECTORY"), toggled=selection_mode == "PER_DIRECTORY", toggled_color=JK.Colors.selected)
 
             if selected_length > 0:
                 hbox xpos 1.0 xanchor 1.0:
                     # Move selection to another playthrough
-                    use JK_IconButton(icon="\ue675", action=JK.SavesListViewModel.StartMoveCopyAction(view_model, "MOVE"), tt="Move {} save(s) to another playthrough".format(selected_length), tt_side="left")
+                    use JK_IconButton(icon="", action=JK.SavesListViewModel.StartMoveCopyAction(view_model, "MOVE"), tt="Move {} save(s) to another playthrough".format(selected_length), tt_side="left")
 
                     # Copy selection to another playthrough
-                    use JK_IconButton(icon="\ue14d", action=JK.SavesListViewModel.StartMoveCopyAction(view_model, "COPY"), tt="Copy {} save(s) to another playthrough".format(selected_length), tt_side="left")
+                    use JK_IconButton(icon="", action=JK.SavesListViewModel.StartMoveCopyAction(view_model, "COPY"), tt="Copy {} save(s) to another playthrough".format(selected_length), tt_side="left")
 
                     # Delete selection
-                    use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.MassDeleteConfirmAction(view_model), tt="Delete {} save(s)".format(selected_length), tt_side="left")
-            else:
-                hbox xalign 1.0:
-                    text "Saves per page:" yalign 0.5
+                    use JK_IconButton(icon="", action=JK.SavesListViewModel.MassDeleteConfirmAction(view_model), tt="Delete {} save(s)".format(selected_length), tt_side="left")
 
-                    use JK_IconButton(text="10", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=10), toggled=view_model.saves_per_page == 10, toggled_color=JK.Colors.selected)
-                    use JK_IconButton(text="20", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=20), toggled=view_model.saves_per_page == 20, toggled_color=JK.Colors.selected)
-                    use JK_IconButton(text="50", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=50), toggled=view_model.saves_per_page == 50, toggled_color=JK.Colors.selected)
-                    use JK_IconButton(text="100", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=100), toggled=view_model.saves_per_page == 100, toggled_color=JK.Colors.selected)
-                    use JK_IconButton(text="All", action=Function(view_model.set_saves_per_page, _update_screens=True, amount=None), toggled=view_model.saves_per_page == None, toggled_color=JK.Colors.selected)
-   
     hbox xalign 1.0:
         xfill True
 
@@ -60,6 +76,20 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
 
             use JK_XSpacer(2)
 
+    # Per-location column headers, kept outside the viewport (fixed, doesn't
+    # scroll with the list) so scroll-position math only has to account for
+    # the list content itself.
+    grid len(view_model.locations) 1:
+        spacing (1 if selection_mode == "PER_SAVE" else 5)
+
+        for location, saves in view_model.locations:
+            hbox:
+                xsize col_size
+
+                text location.directory size JK.scaled(10) yalign 0.5
+
+                use JK_IconButton(icon="", action=JK.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
+
     viewport:
         mousewheel True
         draggable True
@@ -67,9 +97,12 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
         vscrollbar_unscrollable "hide"
         pagekeys True
         ymaximum 0.85
+        yadjustment saves_vlist.adjustment
 
         vbox:
             use JK_YSpacer()
+
+            null height top_spacer
 
             grid len(view_model.locations) 1:
                 spacing (1 if selection_mode == "PER_SAVE" else 5)
@@ -79,13 +112,8 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                     vbox:
                         xsize col_size
 
-                        hbox:
-                            text location.directory size JK.scaled(10) yalign 0.5
-
-                            use JK_IconButton(icon="\ue2c8", action=JK.OpenDirectoryAction(path=location.directory), size=15, tt="Open directory")
-
-                        $ i = 0
-                        for save in view_model.pages[view_model.current_page]:
+                        $ i = window_start
+                        for save in windowed_saves:
                             python:
                                 page, slot = JK.Utils.split_slotname(save)
                                 id = (save, None) if selection_mode == "PER_SAVE" else (save, location)
@@ -104,9 +132,6 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                                     key_events True
                                     action JK.SavesListViewModel.SelectionAction(view_model, id, saves, last_selected_save)
 
-                                    if hovered_button != id:
-                                        hovered SetScreenVariable('hovered_button', id)
-
                                     frame style "JK_default":
                                         xsize 1.0
 
@@ -114,7 +139,7 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                                             xfill True
 
                                             hbox xysize JK.scaled((42, 42)) yalign 0.5:
-                                                if hovered_button == id and (directory_index == 0 if selection_mode == "PER_SAVE" else True):
+                                                if (directory_index == 0 if selection_mode == "PER_SAVE" else True):
                                                     hbox yalign 0.5:
                                                         use JK_Checkbox(checked=id in view_model.selection, text="", action=ToggleSetMembership(view_model.selection, id))
 
@@ -138,15 +163,14 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                                                     xalign 1.0
                                                     yalign 0.5
 
-                                                    if hovered_button == id:
-                                                        # Edit
-                                                        use JK_IconButton(icon="\ue9a2", action=Show("JK_EditSave", slotname=save, location=location), tt="Edit name & choice text")
+                                                    # Edit
+                                                    use JK_IconButton(icon="", action=Show("JK_EditSave", slotname=save, location=location), tt="Edit name & choice text")
 
-                                                        # Load
-                                                        use JK_IconButton(icon="\ue1c4", action=FileLoad(slot, confirm=True, page=page), tt="Load save")
+                                                    # Load
+                                                    use JK_IconButton(icon="", action=FileLoad(slot, confirm=True, page=page), tt="Load save")
 
-                                                        # Delete
-                                                        use JK_IconButton(icon="\ue872", action=JK.SavesListViewModel.DeleteSingleConfirmAction(view_model, (save, location)), tt="Delete save")
+                                                    # Delete
+                                                    use JK_IconButton(icon="", action=JK.SavesListViewModel.DeleteSingleConfirmAction(view_model, (save, location)), tt="Delete save")
                             else:
                                 hbox ysize JK.scaled(row_height):
                                     hbox xysize JK.scaled((42, 42))
@@ -154,56 +178,13 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                                     text "N/A" yalign 0.5 color JK.Colors.disabled
 
                         $ directory_index += 1
-    
+
+            null height bottom_spacer
+
     # Dialog footer
     vbox:
         xfill True
         yfill True
-
-        if view_model.saves_per_page:
-            hbox xalign 0.5 yalign 0.5:
-                hbox yalign 0.5:
-                    $ prev_jump_page = max(view_model.current_page - 10, 0)
-                    use JK_IconButton(icon="\ueac3", action=SetField(view_model, "current_page", prev_jump_page), tt=str(prev_jump_page + 1), disabled=view_model.current_page < 1)
-                    use JK_IconButton(icon="\ue5cb", action=SetField(view_model, "current_page", view_model.current_page - 1), disabled=view_model.current_page < 1)
-
-                hbox yalign 0.5:
-                    python:
-                        def paginate(selected_page, total_pages):
-                            visible_pages=10
-                            offset = selected_page // (visible_pages - 1)
-
-                            start_page = max(0, offset * (visible_pages - 1))
-                            end_page = min(start_page + visible_pages - 1, total_pages)
-
-                            return list(range(start_page, end_page))
-
-                        def paginate_seamlessly(selected_page, total_pages):
-                            visible_pages = 9
-                            half_visible = visible_pages // 2
-
-                            # Adjust start and end to ensure exactly `visible_pages` items if possible
-                            start_page = max(0, selected_page - half_visible)
-                            end_page = start_page + visible_pages - 1
-
-                            # If end_page exceeds total_pages, shift the range back
-                            if end_page >= total_pages:
-                                end_page = total_pages - 1
-                                start_page = max(0, end_page - visible_pages + 1)
-
-                            return list(range(start_page, end_page + 1))
-
-                    for page in (paginate_seamlessly(view_model.current_page, len(view_model.pages)) if JK.Settings.seamlessPagination else paginate(view_model.current_page, len(view_model.pages))):
-                        button:
-                            style_prefix ("JK_PaginationButton_active" if page == view_model.current_page else "JK_PaginationButton")
-                            text str(page + 1) yalign 0.5
-                            action SetField(view_model, "current_page", page)
-
-                hbox yalign 0.5:
-                    use JK_IconButton(icon="\ue5cc", action=SetField(view_model, "current_page", view_model.current_page + 1), disabled=view_model.current_page == len(view_model.pages) - 1)
-
-                    $ next_jump_page = min(view_model.current_page + (10 if view_model.current_page > 0 else 9), len(view_model.pages) - 1)
-                    use JK_IconButton(icon="\ueac9", action=SetField(view_model, "current_page", next_jump_page), tt=str(next_jump_page + 1), disabled=view_model.current_page == len(view_model.pages) - 1)
 
         hbox:
             xfill True
@@ -221,8 +202,8 @@ screen JK_SavesListSelectSaves(playthrough, view_model, hovered_button, last_sel
                 vbox xalign 1.0:
                     # Delete all saves
                     hbox:
-                        use JK_IconButton(icon="\ueb34", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="alt_K_d")
+                        use JK_IconButton(icon="", text="Delete all saves", action=[JK.Playthroughs.ConfirmDeleteAllSavesAction(playthrough), Hide("JK_SavesList")], color=JK.Colors.danger, key="alt_K_d")
 
                     # Close
                     hbox:
-                        use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_SavesList"))
+                        use JK_IconButton(icon="", text="Close", action=Hide("JK_SavesList"))
