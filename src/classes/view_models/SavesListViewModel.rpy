@@ -23,6 +23,7 @@ init python in JK:
             self.return_on_success = False
 
             self.delete_thread = None  # To track the delete thread
+            self._last_progress_notify = 0.0
 
             self.load_saves()
 
@@ -56,6 +57,7 @@ init python in JK:
         def process_delete_start(self):
             self.processing = True
             self.processed = 0
+            self._last_progress_notify = 0.0
 
             self.process_next_save()
 
@@ -95,15 +97,21 @@ init python in JK:
                 self.process_stop()
 
         def process_continue(self):
-            # Update progress and refresh the UI
+            # Update progress
             self.processed += 1
-            renpy.restart_interaction()
+            self._notify_progress()
 
-            # Give time for the UI to update
-            time.sleep(0.05)
-
-            # Continue with the next save
+            # Continue with the next save, without waiting on the UI
             self.process_next_save()
+
+        def _notify_progress(self, force=False):
+            # Refresh the UI at most a few times a second instead of after every
+            # single save, so the actual deletion work isn't throttled down to
+            # the notification rate.
+            now = time.time()
+            if force or now - self._last_progress_notify >= 0.05:
+                self._last_progress_notify = now
+                renpy.restart_interaction()
 
         def process_done(self):
             self.success = True

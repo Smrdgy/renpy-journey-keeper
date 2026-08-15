@@ -17,12 +17,14 @@ init python in JK:
             self.slots = []
 
             self.load_thread = None  # To track the loading thread
+            self._last_progress_notify = 0.0
 
             self.load_timeline()
 
         def load_timeline(self):
             self.loading = True
             self.loaded = 0
+            self._last_progress_notify = 0.0
 
             instance = SaveSystem.get_playthrough_save_instance(self.playthrough.id)
             instance.location.scan()
@@ -39,9 +41,7 @@ init python in JK:
 
         def process_loading_start(self, instance):
             i = 0
-            renpy.restart_interaction()
-
-            time.sleep(0.1)
+            self._notify_progress(force=True)
 
             for slot in self.slots:
                 json = instance.location.json(slot)
@@ -51,14 +51,21 @@ init python in JK:
                 self.timeline.append((i, choice_text, slot, normalized_text))
 
                 self.loaded += 1
-                renpy.restart_interaction()
+                self._notify_progress()
 
                 i += 1
 
-                time.sleep(0.005)
-
             self.loading = False
             renpy.restart_interaction()
+
+        def _notify_progress(self, force=False):
+            # Refresh the UI at most a few times a second instead of after every
+            # single slot, so the actual loading work isn't throttled down to
+            # the notification rate.
+            now = time.time()
+            if force or now - self._last_progress_notify >= 0.05:
+                self._last_progress_notify = now
+                renpy.restart_interaction()
 
         class ExportTimelineToFileAction(renpy.ui.Action):
             def __init__(self, view_model):

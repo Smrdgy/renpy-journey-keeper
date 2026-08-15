@@ -30,6 +30,7 @@ init python in JK:
             self.save_thread = None  # To track the active copy thread
             self.cleanup_thread = None  # To track the cleanup thread
             self.skip_conflicts_thread = None  # To handle skip conflicts in background
+            self._last_progress_notify = 0.0
 
             self.source_instance = SaveSystem.get_or_create_playthrough_save_instance(self.source_playthrough)
             if not self.source_instance:
@@ -60,6 +61,7 @@ init python in JK:
             self.processed = 0
             self.saves_to_process = saves
             self.skipped = []
+            self._last_progress_notify = 0.0
 
             renpy.restart_interaction()
 
@@ -141,15 +143,21 @@ init python in JK:
                 self.process_stop()
 
         def process_continue(self):
-            # Update progress and refresh the UI
+            # Update progress
             self.processed += 1
-            renpy.restart_interaction()
+            self._notify_progress()
 
-            # Give time for the UI to update
-            time.sleep(0.05)
-
-            # Continue with the next save
+            # Continue with the next save, without waiting on the UI
             self.process_next_save()
+
+        def _notify_progress(self, force=False):
+            # Refresh the UI at most a few times a second instead of after every
+            # single save, so the actual copy/cleanup work isn't throttled down
+            # to the notification rate.
+            now = time.time()
+            if force or now - self._last_progress_notify >= 0.05:
+                self._last_progress_notify = now
+                renpy.restart_interaction()
 
         def process_skip_current_save(self, apply_to_all=False):
             self.skip_all = apply_to_all
@@ -198,9 +206,9 @@ init python in JK:
         def process_cleanup(self):
             self.stage = "CLEANUP"
             self.processed = 0
+            self._last_progress_notify = 0.0
 
-            renpy.restart_interaction()
-            time.sleep(0.05)
+            self._notify_progress(force=True)
 
             save = None
             location = None
@@ -217,9 +225,7 @@ init python in JK:
 
                     self.processed += 1
 
-                    # Allow UI updates during cleanup
-                    time.sleep(0.05)
-                    renpy.restart_interaction()
+                    self._notify_progress()
 
                 self.process_done()
             except Exception as e:
