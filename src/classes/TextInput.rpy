@@ -162,6 +162,7 @@ init python in JK:
             self.st = None
             self.changed = None
             self.placeholder = placeholder
+            self.dragging = False
             
             if self.controller.value:
                 self.changed = self.controller.value.set_text
@@ -224,13 +225,16 @@ init python in JK:
         def event(self, ev, x, y, st):
             self.st = st
 
-            # Test for enable/disable on click
+            # Test for enable/disable/positioning on click, and click-drag selection.
             try:
-                self.__event_click(ev, x, y, st)
+                click_result = self.__event_click(ev, x, y, st)
             except Exception as e:
                 print(e)
                 raise renpy.display.core.IgnoreEvent()
-            
+
+            if click_result is not None:
+                raise renpy.display.core.IgnoreEvent()
+
             if not self.controller.editable:
                 return None
 
@@ -607,18 +611,17 @@ init python in JK:
         # =================
 
         def __event_click(self, ev, x, y, st):
-            # "button_select" also fires for keyboard Enter/KP_Enter and gamepad confirm (see
-            # renpy/common/00keymap.rpy), none of which carry a meaningful (x, y) - x/y is just
-            # whatever the mouse last happened to be at. Restrict to real mouse clicks so e.g.
-            # pressing Enter to insert a newline doesn't get treated as a click that relocates
-            # the caret to wherever the mouse happens to be hovering first.
-            is_mouse_click = ev.type in (pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN)
+            # Tracked via raw pygame event types rather than renpy.map_event(ev, "button_select"):
+            # that abstraction only covers the mouse-up moment (it also fires for keyboard
+            # Enter/KP_Enter and gamepad confirm, see renpy/common/00keymap.rpy, none of which
+            # carry a meaningful (x, y)), and has no equivalent for press/drag. Click-and-drag
+            # selection needs all three phases, so this talks to the mouse directly and only
+            # honors the primary (left) button.
+            width, height = self.width_height
+            inside = (x >= 0 and x <= width and y >= 0 and y <= height)
 
-            if is_mouse_click and renpy.map_event(ev, "button_select"):
-                width, height = self.width_height
-
-                # Ensure clicked inside
-                if x >= 0 and x <= width and y >= 0 and y <= height:
+            if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
+                if inside:
                     was_editable = self.controller.editable
 
                     if not was_editable:
@@ -626,15 +629,60 @@ init python in JK:
 
                     new_caret_pos = self.__get_click_caret_pos(x, y, was_editable)
 
-                    self.controller.selection_start = None
+                    shift_held = pygame.key.get_mods() & (pygame.KMOD_LSHIFT | pygame.KMOD_RSHIFT)
+
+                    if shift_held:
+                        # Extend the existing selection instead of starting a new one - anchor
+                        # at the current caret if there wasn't already an active selection, so
+                        # repeated shift-clicks keep extending/shrinking from the same anchor
+                        # rather than from wherever the previous shift-click landed.
+                        if self.controller.selection_start is None:
+                            self.controller.selection_start = self.controller.caret_pos
+                    else:
+                        # A fresh anchor: no selection yet, just a caret placement - it only
+                        # becomes a visible selection if the drag below actually moves it.
+                        self.controller.selection_start = new_caret_pos
+
                     self.controller.caret_pos = new_caret_pos
+                    self.dragging = True
 
                     self.update_text(self.content)
                     renpy.display.render.redraw(self, 0)
 
                     return renpy.display.core.IgnoreEvent()
                 elif self.controller.editable:
+                    # Not extending the drag-outside-the-field allowance (below) to this: a
+                    # press that starts outside the field was never a click on it to begin with.
                     self.controller.disable()
+
+            elif ev.type == pygame.MOUSEMOTION and self.dragging and self.controller.editable:
+                # Deliberately not bounds-checked: dragging past the field's edge should keep
+                # extending the selection to the nearest character, like any text editor, not
+                # stop dead at the border.
+                new_caret_pos = self.__get_click_caret_pos(x, y, True)
+
+                if new_caret_pos != self.controller.caret_pos:
+                    self.controller.caret_pos = new_caret_pos
+                    self.update_text(self.content)
+                    renpy.display.render.redraw(self, 0)
+
+                return renpy.display.core.IgnoreEvent()
+
+            elif ev.type == pygame.MOUSEBUTTONUP and ev.button == 1 and self.dragging:
+                self.dragging = False
+
+                new_caret_pos = self.__get_click_caret_pos(x, y, True)
+                self.controller.caret_pos = new_caret_pos
+
+                # No movement between press and release: behave like a plain click, not a
+                # zero-width selection.
+                if self.controller.selection_start == new_caret_pos:
+                    self.controller.selection_start = None
+
+                self.update_text(self.content)
+                renpy.display.render.redraw(self, 0)
+
+                return renpy.display.core.IgnoreEvent()
 
             return None
 
