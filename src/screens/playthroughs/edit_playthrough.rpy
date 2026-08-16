@@ -52,7 +52,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
         else:
             title = "New playthrough"
 
-    key 'ctrl_K_DELETE' action Show("JK_RemovePlaythroughConfirm", playthrough=playthrough)
+    key 'alt_K_DELETE' action Show("JK_RemovePlaythroughConfirm", playthrough=playthrough)
 
     if not is_save_disabled:
         key "ctrl_K_s" action submitAction

@@ -231,6 +231,7 @@ init python in JK:
                 renpy.map_event(ev, "input_jump_word_left"),
                 renpy.map_event(ev, "input_jump_word_right"),
                 renpy.map_event(ev, "input_delete_word"),
+                renpy.map_event(ev, "input_delete_word_forward"),
                 renpy.map_event(ev, "input_delete_full"),
             ])
 
@@ -394,6 +395,27 @@ init python in JK:
                             space_pos = end
                     content = self.content[0:space_pos] + self.content[self.controller.caret_pos:l]
                     self.controller.caret_pos = space_pos
+                    self.update_text(content)
+
+                renpy.display.render.redraw(self, 0)
+                raise renpy.display.core.IgnoreEvent()
+
+            elif renpy.map_event(ev, "input_delete_word_forward"):
+                if self.controller.selection_start != None:
+                    self.update_text(self.__try_delete_selected_content())
+
+                elif self.controller.caret_pos < l:
+                    pos = self.controller.caret_pos
+
+                    # Same word-boundary logic as input_jump_word_right: skip any whitespace
+                    # the caret is on, then skip the word, landing right before the next
+                    # run of whitespace (or the end). Everything up to there gets deleted.
+                    while pos < l and self.content[pos].isspace():
+                        pos += 1
+                    while pos < l and not self.content[pos].isspace():
+                        pos += 1
+
+                    content = self.content[0:self.controller.caret_pos] + self.content[pos:l]
                     self.update_text(content)
 
                 renpy.display.render.redraw(self, 0)
@@ -733,7 +755,8 @@ init python in JK:
         'input_paste': [ 'shift_K_INSERT', 'ctrl_noshift_K_v', 'meta_noshift_K_v' ] if not hasattr(renpy.config.keymap, 'input_paste') else renpy.config.keymap.input_paste,
         'input_jump_word_left': [ 'ctrl_K_LEFT', 'repeat_ctrl_K_LEFT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_left') else renpy.config.keymap.input_jump_word_left,
         'input_jump_word_right': [ 'ctrl_K_RIGHT', 'repeat_ctrl_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_right') else renpy.config.keymap.input_jump_word_right,
-        'input_delete_word': [ 'repeat_ctrl_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_word') else renpy.config.keymap.input_delete_word,
+        'input_delete_word': [ 'ctrl_K_BACKSPACE', 'repeat_ctrl_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_word') else renpy.config.keymap.input_delete_word,
+        'input_delete_word_forward': [ 'ctrl_K_DELETE', 'repeat_ctrl_K_DELETE' ] if not hasattr(renpy.config.keymap, 'input_delete_word_forward') else renpy.config.keymap.input_delete_word_forward,
         'input_delete_full': [ 'repeat_meta_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_full') else renpy.config.keymap.input_delete_full,
         'input_content_start': [ 'shift_K_HOME' ],
         'input_content_end': [ 'shift_K_END' ],
