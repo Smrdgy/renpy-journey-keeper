@@ -302,12 +302,16 @@ init python in JK:
                 self.__try_set_selection_start()
 
                 if self.controller.caret_pos < l:
-                    space_pos = l
-                    for item in re.finditer(r"\s+", self.content[self.controller.caret_pos + 1:]):
-                        start, end = item.span()
-                        space_pos = end
-                        break
-                    self.controller.caret_pos = min(space_pos + self.controller.caret_pos + 1, l)
+                    pos = self.controller.caret_pos
+
+                    # Skip any whitespace the caret is currently sitting on, then skip the
+                    # word itself, landing right before the next run of whitespace (or the end).
+                    while pos < l and self.content[pos].isspace():
+                        pos += 1
+                    while pos < l and not self.content[pos].isspace():
+                        pos += 1
+
+                    self.controller.caret_pos = pos
                     self.update_text(self.content)
 
                 renpy.display.render.redraw(self, 0)
@@ -444,11 +448,11 @@ init python in JK:
             elif renpy.map_event(ev, "input_copy"):
                 if self.controller.selection_start != None:
                     start, end = self.controller.get_selection_start_end()
-                    text = self.content[0:start] + self.content[end:l]
+                    text = self.content[start:end]
                 else:
-                    text = self.content.encode("utf-8")
+                    text = self.content
 
-                pygame.scrap.put(pygame.scrap.SCRAP_TEXT, text)
+                pygame.scrap.put(pygame.scrap.SCRAP_TEXT, text.encode("utf-8"))
                 raise renpy.display.core.IgnoreEvent()
 
             elif renpy.map_event(ev, "input_paste"):
@@ -589,7 +593,7 @@ init python in JK:
 
         def __get_caret_info(self):
             # Split the content into lines, preserving the line endings
-            lines = self.content.splitlines(1)
+            lines = self.content.splitlines(1) or [""]
 
             # Calculate the caret's current line and column
             char_count = 0
@@ -609,10 +613,10 @@ init python in JK:
 
         def __try_set_selection_start(self):
             if self.controller.selection_start is None:
-                if (pygame.key.get_mods() & pygame.K_LSHIFT or pygame.key.get_mods() & pygame.K_RSHIFT):
+                if (pygame.key.get_mods() & pygame.KMOD_LSHIFT or pygame.key.get_mods() & pygame.KMOD_RSHIFT):
                     self.controller.selection_start = 0 + self.controller.caret_pos
             else:
-                if not (pygame.key.get_mods() & pygame.K_LSHIFT or pygame.key.get_mods() & pygame.K_RSHIFT):
+                if not (pygame.key.get_mods() & pygame.KMOD_LSHIFT or pygame.key.get_mods() & pygame.KMOD_RSHIFT):
                     self.controller.selection_start = None
 
         def __try_delete_selected_content(self):
@@ -670,8 +674,6 @@ init python in JK:
                 if editable:
                     l = len(content)
 
-                    content = content.replace("{", "{{")
-
                     selection_start = self.controller.selection_start
                     caret_pos = self.controller.caret_pos
 
@@ -684,9 +686,10 @@ init python in JK:
                     selection_start_tag = "{color=#ff0}{u}"
                     selection_end_tag = "{/color}{/u}"
 
-                    content_before_selection = content[0:start]
-                    selected_content = selection_start_tag + content[start:end] + selection_end_tag if selection_start != caret_pos else content[start:end]
-                    content_after_selection = content[end:l]
+                    content_before_selection = content[0:start].replace("{", "{{")
+                    selected_text = content[start:end].replace("{", "{{")
+                    selected_content = selection_start_tag + selected_text + selection_end_tag if selection_start != caret_pos else selected_text
+                    content_after_selection = content[end:l].replace("{", "{{")
 
                     self.set_text([self.prefix, content_before_selection, edit_text, selected_content, caret, content_after_selection, self.suffix])
                 else:
