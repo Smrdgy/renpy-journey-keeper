@@ -76,8 +76,15 @@ init python in JK:
             return self.displayable_reference
 
         def enable(self):
+            # Only reset the caret to the end on a genuine activation (e.g. auto_focus, a
+            # wrapping button's generic "focus this field" action, keyboard navigation). If
+            # the field is already editable - e.g. TextInputDisplayable's own click handler
+            # already enabled it and positioned the caret precisely under the click - leave
+            # caret_pos alone so a redundant enable() call can't stomp that position.
+            if not self.editable:
+                self.caret_pos = len(self.get_value() or "")
+
             self.editable = True
-            self.caret_pos = len(self.get_value() or "")
 
             TextInput.set_active(self.id)
 
@@ -600,18 +607,140 @@ init python in JK:
         # =================
 
         def __event_click(self, ev, x, y, st):
-            if renpy.map_event(ev, "button_select"):
+            # "button_select" also fires for keyboard Enter/KP_Enter and gamepad confirm (see
+            # renpy/common/00keymap.rpy), none of which carry a meaningful (x, y) - x/y is just
+            # whatever the mouse last happened to be at. Restrict to real mouse clicks so e.g.
+            # pressing Enter to insert a newline doesn't get treated as a click that relocates
+            # the caret to wherever the mouse happens to be hovering first.
+            is_mouse_click = ev.type in (pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN)
+
+            if is_mouse_click and renpy.map_event(ev, "button_select"):
                 width, height = self.width_height
 
                 # Ensure clicked inside
                 if x >= 0 and x <= width and y >= 0 and y <= height:
-                    if not self.controller.editable:
+                    was_editable = self.controller.editable
+
+                    if not was_editable:
                         self.controller.enable()
-                        return renpy.display.core.IgnoreEvent()
+
+                    new_caret_pos = self.__get_click_caret_pos(x, y, was_editable)
+
+                    self.controller.selection_start = None
+                    self.controller.caret_pos = new_caret_pos
+
+                    self.update_text(self.content)
+                    renpy.display.render.redraw(self, 0)
+
+                    return renpy.display.core.IgnoreEvent()
                 elif self.controller.editable:
                     self.controller.disable()
 
             return None
+
+        def __get_click_caret_pos(self, x, y, editable_layout):
+            """
+            Given a click at (x, y) - in the same coordinate space TextInputDisplayable.event()
+            receives, i.e. relative to this displayable's own top-left corner - returns the
+            content index whose character boundary is closest to the click.
+
+            `editable_layout` must reflect whether the *currently cached* layout (the one
+            produced by the most recent render, which is what we're about to hit-test against)
+            was built in editable mode (content split into before/edit/selection/caret/after,
+            see set_content()) or disabled mode (just the plain, escaped content). Passing the
+            wrong one will misalign every index past the first character.
+            """
+
+            content = self.content
+            l = len(content)
+
+            if not content:
+                return 0
+
+            layout = self.get_layout()
+
+            if layout is None or not layout.lines:
+                return self.controller.caret_pos
+
+            if editable_layout:
+                edit = renpy.display.interface.text_editing
+                edit_len = len(edit.text) if edit else 0
+
+                selection_start = self.controller.selection_start
+                caret_pos = self.controller.caret_pos
+
+                if selection_start is None:
+                    selection_start = caret_pos
+
+                start = min(selection_start, caret_pos)
+                end = max(selection_start, caret_pos)
+
+                # Mirrors the part order set_content() concatenates for set_text():
+                # prefix, before-selection, IME edit text, selection, caret glyph, after-selection, suffix.
+                # (prefix/suffix are always "" on this class, so they're omitted here.)
+                segments = [
+                    (start, lambda o: o),
+                    (edit_len, lambda o: caret_pos),
+                    (end - start, lambda o: start + o),
+                    (1, lambda o: end),
+                    (l - end, lambda o: end + o),
+                ]
+            else:
+                segments = [ (l, lambda o: o) ]
+
+            # The click event's (x, y) are virtual pixels; glyph geometry is laid out in the
+            # layout's internal (possibly oversampled) space. This is the inverse of the
+            # conversion Text.render() uses for hyperlink focus areas (renpy/text/text.py).
+            gx = x * layout.oversample - layout.xoffset
+            gy = y * layout.oversample - layout.yoffset
+
+            lines = layout.lines
+
+            target_line = None
+            for line in lines:
+                if gy < line.y + line.height:
+                    target_line = line
+                    break
+
+            if target_line is None:
+                target_line = lines[-1]
+
+            # A genuinely empty paragraph (e.g. two newlines back to back) still renders as a
+            # Line, but Ren'Py gives it a single U+200B zero-width-space placeholder glyph so
+            # it has a renderable line height - that placeholder doesn't correspond to any
+            # real content character and must not be counted as one.
+            EMPTY_LINE_PLACEHOLDER = 0x200B
+
+            # flat_index tracks glyphs (each real, rendered character), but a line that ends
+            # a paragraph (line.eop) is followed by a newline character in the source text
+            # that itself produced no glyph - word-wrapped lines within the same paragraph
+            # have no such character between them. newline_count makes up the difference so
+            # flat_index ends up counting raw content characters, matching the segments above.
+            flat_index = 0
+            newline_count = 0
+            for line in lines:
+                if line is target_line:
+                    break
+                flat_index += sum(1 for g in line.glyphs if g.character != EMPTY_LINE_PLACEHOLDER)
+                if line.eop:
+                    newline_count += 1
+
+            for glyph in target_line.glyphs:
+                if glyph.character == EMPTY_LINE_PLACEHOLDER:
+                    continue
+                midpoint = glyph.x + glyph.advance / 2.0
+                if gx < midpoint:
+                    break
+                flat_index += 1
+
+            flat_index += newline_count
+
+            for count, mapper in segments:
+                if flat_index < count:
+                    return mapper(flat_index)
+                flat_index -= count
+
+            return l
 
         def __get_caret_info(self):
             # Split the content into lines, preserving the line endings
