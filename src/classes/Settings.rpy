@@ -68,7 +68,7 @@ init -1 python in JK:
             self.playthroughTemplate = data.get("playthroughTemplate", None)
             self.preventAutosavingWhileNotInGame = data.get("preventAutosavingWhileNotInGame", True)
             self.seamlessPagination = data.get("seamlessPagination", False)
-            self.autosaveOnQuestion = data.get("autosaveOnQuestion", True)
+            self.autosaveOnQuestion = data.get("autosaveOnQuestion", False)
             self.sidepanelHorizontal = data.get("sidepanelHorizontal", False)
             self.searchPlaythroughKey = data.get("searchPlaythroughKey", "ctrl_K_f")
             self.searchPlaythroughsKey = data.get("searchPlaythroughsKey", "ctrl_shift_K_f")

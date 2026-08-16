@@ -88,15 +88,35 @@ init python in JK:
 
                 self.pending_save.save()
 
-        # This feature simply doesn't work. There is a lot of false positives because once there is a python block, a choice is considered not a question anymore.
-        #  At the same time, if there is a menu with bunch of text that falls through or has jumpt at the end and other choices is clearly a proper choice, then this choice is fasly considered a question.
-        #  So for now, I'm shelving the featre until I can find a proper solution. Or just leave it here to rot.
+        def __describe_node(self, node):#Debug
+            if node is None:
+                return "None"
+            try:
+                return "{} @ {}:{}".format(type(node).__name__, node.filename, node.linenumber)
+            except Exception:
+                return repr(node)
+
+        # Static, bounded-depth prediction of whether a choice leads back to the same menu.
+        #  Python blocks are treated as transparent pass-throughs (mirroring Ren'Py's own Python.scry(),
+        #  which does the same) instead of aborting detection, since a single `$` line used to make every
+        #  choice past it look save-worthy.
+        #  `If` is evaluated exactly like the real interpreter evaluates it (renpy.python.py_eval per entry,
+        #  first true condition wins, falls through to the merge point if none match - see ast.py's own
+        #  If.execute()). This is needed because menus are often gated directly behind a condition
+        #  (e.g. `if char_available: menu: ...`), so skipping over an `If` blindly would jump clean past
+        #  the very menu we're trying to detect a loop back to.
+        #  `Call` is treated the same way: since a callee that doesn't escape via jump always returns to the
+        #  statement right after the call, jumping straight to that return site (instead of recursing into the
+        #  callee) gets the same result almost all of the time for a fraction of the cost.
         def __is_question(self, choice=None, node=None):
+            debug = Settings.debugEnabled#Debug
             try:
                 i = 0
                 resolved_nodes = []
 
                 if choice:
+                    if debug:#Debug
+                        print(choice.location)#Debug
                     menu_node = renpy.game.script.lookup(choice.location)
                     choice_item = menu_node.items[choice.value]
                     if len(choice_item) > 2 and choice_item[2]:
@@ -105,34 +125,77 @@ init python in JK:
                         node = None
 
                     resolved_nodes = [menu_node]
-                
+
+                    if debug:#Debug
+                        print("[JK] is_question: menu={} choice_index={} start={}".format(#Debug
+                            self.__describe_node(menu_node), choice.value, self.__describe_node(node)))#Debug
+                elif debug:#Debug
+                    print("[JK] is_question: start={} (no choice, called from a raw node)".format(self.__describe_node(node)))#Debug
+
                 prediction_depth = 0
                 while node and prediction_depth < 2:
+                    if debug:#Debug
+                        print("[JK] is_question step={} depth={} node={}".format(i, prediction_depth, self.__describe_node(node)))#Debug
+
                     if node in resolved_nodes:
+                        if debug:#Debug
+                            renpy.notify("Already resolved")#Debug
+                            print("[JK] is_question: node already visited in this walk -> True (question)")#Debug
                         return True
 
                     resolved_nodes.append(node)
-                    
-                    # "python" usually indicates that something will happen with variables,
-                    # so even if the choice might be a question it is a question with a potential reward, thus save-worthy.
+
                     if isinstance(node, renpy.ast.Python) and hasattr(node, 'code') and hasattr(node.code, 'source'):
-                        if not node.code.source.startswith('renpy.pause(') and not node.code.source.startswith('ui.'):
-                            if hasattr(node, "expression") and node.expression is not None:
-                                if bool(node.expression) == node.expression or renpy.python.py_eval(node.expression):
-                                    return False
-                            else:
+                        is_inert = node.code.source.startswith('renpy.pause(') or node.code.source.startswith('ui.')
+
+                        if debug:#Debug
+                            print("[JK] is_question: python inert={} source={!r}".format(is_inert, node.code.source))#Debug
+
+                        # Kept in case a game/engine fork ever puts an `expression` on a Python node - harmless as-is since it's hasattr-gated.
+                        if not is_inert and hasattr(node, "expression") and node.expression is not None:
+                            if bool(node.expression) == node.expression or renpy.python.py_eval(node.expression):
+                                if debug:#Debug
+                                    renpy.notify("Expression evaluated to False")#Debug
+                                    print("[JK] is_question: python node has a truthy `expression` -> False (save-worthy)")#Debug
                                 return False
 
+                        node = node.next
+
                     elif isinstance(node, renpy.ast.If):
+                        matched = False
+
                         for condition, block in node.entries:
-                            if renpy.python.py_eval(condition):
+                            condition_result = renpy.python.py_eval(condition)
+
+                            if debug:#Debug
+                                print("[JK] is_question: if condition {!r} -> {}".format(condition, condition_result))#Debug
+
+                            if condition_result:
                                 node = block[0]
+                                matched = True
                                 break
+
+                        if not matched:
+                            if debug:#Debug
+                                print("[JK] is_question: if - no condition matched, falling to merge point {}".format(self.__describe_node(node.next)))#Debug
+                            node = node.next
+
+                    elif isinstance(node, renpy.ast.Call):
+                        if debug:#Debug
+                            print("[JK] is_question: call expression={} label={!r} -> resuming at return site {}".format(#Debug
+                                node.expression, node.label, self.__describe_node(node.next)))#Debug
+
+                        node = node.next
 
                     elif isinstance(node, renpy.ast.Jump):
                             prediction_depth += 1
 
                             prediction = node.predict()
+
+                            if debug:#Debug
+                                print("[JK] is_question: jump expression={} target={!r} -> resolved={}".format(#Debug
+                                    node.expression, node.target, self.__describe_node(prediction[0]) if prediction else "unresolved (dynamic target)"))#Debug
+
                             if len(prediction) > 0:
                                 node = prediction[0]
                             else:
@@ -150,6 +213,9 @@ init python in JK:
                 if Settings.debugEnabled:
                     renpy.notify(str(e))
 
+            if debug:#Debug
+                renpy.notify("End")#Debug
+                print("[JK] is_question: walk ended without revisiting the menu -> False (save-worthy)")#Debug
             return False
 
         def _assert_can_autosave(self):
