@@ -50,6 +50,12 @@ init python in JK:
     class TextInput(x52NonPicklable):
         active_text_input_screen_variable_name = "__activeTextInput__"
 
+        # Undo history tuning: how many checkpoints to retain, and how close together (in
+        # shown-time seconds) same-kind edits need to be to coalesce into one checkpoint
+        # instead of each getting their own (so e.g. typing a whole word undoes in one step).
+        max_undo_history = 100
+        undo_group_window = 0.6
+
         def __init__(self, identifier, variableName=None, value=None, auto_focus=False, disabled=False, multiline=False, allowed_characters=None, excluded_characters=None, max_length=None, placeholder=None):
             self.id = identifier
             self.variableName = variableName or identifier
@@ -78,12 +84,57 @@ init python in JK:
             self.last_click_time = None
             self.last_click_pos = None
 
+            # Undo/redo history, for the same reason as the click tracking above: this
+            # controller persists across TextInputDisplayable rebuilds, so history has to
+            # live here to survive them. Each stack holds (content, caret_pos,
+            # selection_start) snapshots of the state *before* the edit that pushed them.
+            self.undo_stack = []
+            self.redo_stack = []
+            self.undo_group_key = None
+            self.undo_group_time = None
+
             if auto_focus:
                 self.enable()
 
         def displayable(self, placeholder=None, **properties):
             self.displayable_reference = TextInputDisplayable(controller=self, placeholder=placeholder, **properties)
             return self.displayable_reference
+
+        def record_undo_checkpoint(self, old_content, new_content, old_caret_pos, old_selection_start, now):
+            """
+            Called with the state from just before a text change that's about to be applied.
+            Pushes it onto the undo stack, unless it's judged a continuation of the same kind
+            of edit as the last one (e.g. typing a burst of characters) and close enough in
+            time to it - in which case the existing checkpoint (already "before this whole
+            burst") is left alone rather than piling up one entry per keystroke.
+            """
+
+            delta = len(new_content) - len(old_content)
+
+            if delta == 1:
+                group_key = "insert"
+            elif delta == -1:
+                group_key = "delete"
+            else:
+                # Anything that changes more than one character at once (paste, cut, a
+                # word/line delete, ...) is inherently already a single, deliberate action -
+                # always its own checkpoint, never coalesced with what comes before or after.
+                group_key = None
+
+            if (group_key is not None and self.undo_stack and self.undo_group_key == group_key
+                    and self.undo_group_time is not None and now is not None
+                    and (now - self.undo_group_time) <= self.undo_group_window):
+                self.undo_group_time = now
+                return
+
+            self.undo_stack.append((old_content, old_caret_pos, old_selection_start))
+            self.redo_stack = []
+
+            if len(self.undo_stack) > self.max_undo_history:
+                del self.undo_stack[0]
+
+            self.undo_group_key = group_key
+            self.undo_group_time = now
 
         def enable(self):
             # Only reset the caret to the end on a genuine activation (e.g. auto_focus, a
@@ -176,6 +227,8 @@ init python in JK:
             self.st = None
             self.changed = None
             self.placeholder = placeholder
+            self.pre_edit_caret_pos = controller.caret_pos
+            self.pre_edit_selection_start = controller.selection_start
 
             if self.controller.value:
                 self.changed = self.controller.value.set_text
@@ -250,6 +303,13 @@ init python in JK:
 
             if not self.controller.editable:
                 return None
+
+            # Every branch below mutates caret_pos/selection_start *before* calling
+            # update_text() - so by the time update_text() runs, reading them back off the
+            # controller would already give the post-edit position, not the pre-edit one an
+            # undo checkpoint needs. Captured once here, before any of them get a chance to.
+            self.pre_edit_caret_pos = self.controller.caret_pos
+            self.pre_edit_selection_start = self.controller.selection_start
 
             edit_controls = any([
                 renpy.map_event(ev, "input_jump_word_left"),
@@ -513,6 +573,18 @@ init python in JK:
 
                 pygame.scrap.put(pygame.scrap.SCRAP_TEXT, text.encode("utf-8"))
                 self.update_text(content)
+
+                renpy.display.render.redraw(self, 0)
+                raise renpy.display.core.IgnoreEvent()
+
+            elif renpy.map_event(ev, "input_undo"):
+                self.__perform_undo()
+
+                renpy.display.render.redraw(self, 0)
+                raise renpy.display.core.IgnoreEvent()
+
+            elif renpy.map_event(ev, "input_redo"):
+                self.__perform_redo()
 
                 renpy.display.render.redraw(self, 0)
                 raise renpy.display.core.IgnoreEvent()
@@ -934,10 +1006,45 @@ init python in JK:
 
                 return self.content[0:start] + self.content[end:len(self.content)]
 
-        def update_text(self, new_content, check_size=False):
+        def __perform_undo(self):
+            if not self.controller.undo_stack:
+                return
+
+            current = (self.content, self.controller.caret_pos, self.controller.selection_start)
+            content, caret_pos, selection_start = self.controller.undo_stack.pop()
+            self.controller.redo_stack.append(current)
+
+            # A fresh undo/redo action is never a continuation of whatever typing/deleting
+            # burst was in progress before it.
+            self.controller.undo_group_key = None
+            self.controller.undo_group_time = None
+
+            self.controller.caret_pos = caret_pos
+            self.controller.selection_start = selection_start
+            self.update_text(content, record_undo=False)
+
+        def __perform_redo(self):
+            if not self.controller.redo_stack:
+                return
+
+            current = (self.content, self.controller.caret_pos, self.controller.selection_start)
+            content, caret_pos, selection_start = self.controller.redo_stack.pop()
+            self.controller.undo_stack.append(current)
+
+            self.controller.undo_group_key = None
+            self.controller.undo_group_time = None
+
+            self.controller.caret_pos = caret_pos
+            self.controller.selection_start = selection_start
+            self.update_text(content, record_undo=False)
+
+        def update_text(self, new_content, check_size=False, record_undo=True):
             editable = self.controller.editable
             edit = renpy.display.interface.text_editing
             old_content = self.content
+
+            if record_undo and new_content != old_content:
+                self.controller.record_undo_checkpoint(old_content, new_content, self.pre_edit_caret_pos, self.pre_edit_selection_start, self.st)
 
             if new_content != self.content or editable != self.controller.editable or edit:
                 renpy.display.render.redraw(self, 0)
@@ -1018,7 +1125,9 @@ init python in JK:
                         #The new value was most likely rejected, restore the previous position
                         self.controller.caret_pos = self.controller.old_caret_pos
 
-                    self.update_text(new_value, check_size)
+                    # This is the same edit correcting itself against the bound Value, not a
+                    # new one - already recorded (or intentionally not) above.
+                    self.update_text(new_value, check_size, record_undo=False)
 
                 if self.controller.variableName:
                     renpy.store.SetScreenVariable(self.controller.variableName, new_content)()
@@ -1037,6 +1146,8 @@ init python in JK:
         'input_end': [ 'K_END', 'meta_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_end') else renpy.config.keymap.input_end,
         'input_copy': [ 'ctrl_noshift_K_INSERT', 'ctrl_noshift_K_c', 'meta_noshift_K_c' ] if not hasattr(renpy.config.keymap, 'input_copy') else renpy.config.keymap.input_copy,
         'input_cut': [ 'ctrl_noshift_K_x', 'meta_noshift_K_x' ] if not hasattr(renpy.config.keymap, 'input_cut') else renpy.config.keymap.input_cut,
+        'input_undo': [ 'ctrl_noshift_K_z', 'meta_noshift_K_z' ] if not hasattr(renpy.config.keymap, 'input_undo') else renpy.config.keymap.input_undo,
+        'input_redo': [ 'ctrl_shift_K_z', 'ctrl_noshift_K_y', 'meta_shift_K_z' ] if not hasattr(renpy.config.keymap, 'input_redo') else renpy.config.keymap.input_redo,
         'input_paste': [ 'shift_K_INSERT', 'ctrl_noshift_K_v', 'meta_noshift_K_v' ] if not hasattr(renpy.config.keymap, 'input_paste') else renpy.config.keymap.input_paste,
         'input_jump_word_left': [ 'ctrl_K_LEFT', 'repeat_ctrl_K_LEFT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_left') else renpy.config.keymap.input_jump_word_left,
         'input_jump_word_right': [ 'ctrl_K_RIGHT', 'repeat_ctrl_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_right') else renpy.config.keymap.input_jump_word_right,
