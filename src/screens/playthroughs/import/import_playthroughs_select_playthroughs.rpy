@@ -1,4 +1,4 @@
-screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, show_thumbnails, import_playthroughs_vlist):
+screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, show_thumbnails, import_playthroughs_vlist, copySaves):
     key "ctrl_K_a" action JK.SelectionState.SelectAllAction(view_model.selection, view_model.playthroughs)
 
     python:
@@ -86,9 +86,13 @@ screen JK_ImportPlaythroughsSelectPlaythroughs(view_model, show_thumbnails, impo
             style_prefix "JK_dialog_action_buttons"
 
             vbox xalign 1.0:
+                hbox:
+                    use JK_Checkbox(checked=copySaves, text="Copy save files as well", action=SetScreenVariable("copySaves", not copySaves))
+                    use JK_Helper("If enabled, save files for the selected playthrough(s) will also be copied from the other game.\nThis happens in the background and may take a moment if there are many saves.")
+
                 # Import playthroughs
                 hbox:
-                    use JK_IconButton(icon="", text="Import playthrough(s)", action=Function(view_model.import_selected_playthroughs), key="alt_K_i", disabled=len(view_model.selection.items) == 0)
+                    use JK_IconButton(icon="", text="Import playthrough(s)", action=Function(view_model.import_selected_playthroughs, copySaves), key="alt_K_i", disabled=len(view_model.selection.items) == 0)
 
                 # Back
                 hbox:

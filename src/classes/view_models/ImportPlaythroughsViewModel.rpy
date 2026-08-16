@@ -18,6 +18,10 @@ init python in JK:
             self.success = False
             self.conflicts = []
 
+            self.copySaves = False
+            self.playthroughs_to_copy_saves = []
+            self.saves_view_model = None
+
             renpy.invoke_in_thread(self.find_all_games)
             
         def find_all_games(self):
@@ -70,8 +74,11 @@ init python in JK:
             self.loading = False
             renpy.restart_interaction()
 
-        def import_selected_playthroughs(self):
+        def import_selected_playthroughs(self, copySaves=False):
             self.success = False
+            self.copySaves = copySaves
+            self.playthroughs_to_copy_saves = []
+            self.saves_view_model = None
 
             conflicts = []
             for p in self.selection.items:
@@ -80,13 +87,17 @@ init python in JK:
                     conflicts.append((conflicting, p))
                 else:
                     Playthroughs.add(p, activate=False, save=False, restart_interaction=False)
-            
+
+                    if copySaves:
+                        self.playthroughs_to_copy_saves.append((p.directory, p))
+
             Playthroughs.save()
 
             self.conflicts = conflicts
 
             if len(conflicts) == 0:
                 self.success = True
+                self._start_saves_copy_if_needed()
 
             renpy.restart_interaction()
 
@@ -97,8 +108,19 @@ init python in JK:
 
             return None
 
+        def _start_saves_copy_if_needed(self):
+            if not self.copySaves or not self.playthroughs_to_copy_saves:
+                return
+
+            self.saves_view_model = ImportPlaythroughsSavesViewModel(self.selected_game[0], self.playthroughs_to_copy_saves)
+            renpy.invoke_in_thread(self.saves_view_model.process_start)
+
         def conflict_overwrite(self):
             current, new = self.conflicts.pop(0)
+
+            if self.copySaves:
+                self.playthroughs_to_copy_saves.append((new.directory, current))
+
             current.edit_from_playthrough(new)
 
             Playthroughs.save()
@@ -107,6 +129,7 @@ init python in JK:
 
         def conflict_keep_both(self):
             old, new = self.conflicts.pop(0)
+            source_directory = new.directory
             new = new.copy()
             new.regenerate_unique_data()
 
@@ -131,6 +154,9 @@ init python in JK:
 
             Playthroughs.add(new, activate=False, save=True, restart_interaction=True)
 
+            if self.copySaves:
+                self.playthroughs_to_copy_saves.append((source_directory, new))
+
             self.conflicts_resolution_continue()
 
         def conflict_skip(self):
@@ -141,6 +167,7 @@ init python in JK:
         def conflicts_resolution_continue(self):
             if len(self.conflicts) == 0:
                 self.success = True
+                self._start_saves_copy_if_needed()
 
             renpy.restart_interaction()
 

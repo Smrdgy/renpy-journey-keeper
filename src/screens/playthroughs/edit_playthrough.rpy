@@ -1,4 +1,4 @@
-screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, duplicating=False):
+screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, duplicating=False, source_playthrough=None):
     layer "JK_Overlay"
     style_prefix 'JK'
     modal True
@@ -13,6 +13,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
     default useChoiceLabelAsSaveName = playthrough.useChoiceLabelAsSaveName
     default enabledSaveLocations = playthrough.enabledSaveLocations or False
     default moveSaveDirectory = True
+    default copySaves = True
     #MODIFY HERE
 
     default name_input = JK.TextInput("name", auto_focus=True)
@@ -25,7 +26,7 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
             ]
         elif duplicating:
             submitAction = [
-                JK.Playthroughs.DuplicatePlaythroughAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory)#MODIFY HERE
+                JK.Playthroughs.DuplicatePlaythroughAction(playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory, source_playthrough, copySaves)#MODIFY HERE
             ]
         else:
             submitAction = [
@@ -233,6 +234,11 @@ screen JK_EditPlaythrough(playthrough, isEdit=False, editing_template=False, dup
                     # Remove
                     hbox:
                         use JK_IconButton(icon="\ue92b", text="Remove", action=Show("JK_RemovePlaythroughConfirm", playthrough=playthrough), color=JK.Colors.danger, key="alt_K_r")
+
+                if duplicating:
+                    hbox:
+                        use JK_Checkbox(checked=copySaves, text="Copy save files as well", action=ToggleScreenVariable('copySaves', True, False))
+                        use JK_Helper("If enabled, all save files from \"" + playthrough.name + "\" will be copied into the new playthrough.\nThis happens in the background and may take a moment if there are many saves.")
 
                 # Save
                 hbox:

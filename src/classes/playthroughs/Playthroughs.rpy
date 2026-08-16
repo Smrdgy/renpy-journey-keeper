@@ -518,7 +518,7 @@ init python in JK:
                 )
 
         class DuplicatePlaythroughAction(renpy.ui.Action):
-            def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory):#MODIFY HERE
+            def __init__(self, playthrough, name, description, storeChoices, autosaveOnChoices, useChoiceLabelAsSaveName, enabledSaveLocations, moveSaveDirectory, source_playthrough, copySaves):#MODIFY HERE
                 self.playthrough = playthrough
                 self.name = name
                 self.description = description
@@ -527,26 +527,23 @@ init python in JK:
                 self.useChoiceLabelAsSaveName = useChoiceLabelAsSaveName
                 self.enabledSaveLocations = enabledSaveLocations
                 self.moveSaveDirectory = moveSaveDirectory
+                self.source_playthrough = source_playthrough
+                self.copySaves = copySaves
                 #MODIFY HERE
 
             def __call__(self):
-                original_playthrough = Playthroughs.active_playthrough
                 new_playthrough = self.playthrough
                 new_playthrough.edit(name=self.name, description=self.description, storeChoices=self.storeChoices, autosaveOnChoices=self.autosaveOnChoices, useChoiceLabelAsSaveName=self.useChoiceLabelAsSaveName, enabledSaveLocations=self.enabledSaveLocations)#MODIFY HERE
 
                 Playthroughs.add(new_playthrough)
 
-                original_instance = SaveSystem.get_playthrough_save_instance(original_playthrough.id)
-                if not original_instance:
-                    raise Exception("Can't find old save instance")
+                if self.copySaves:
+                    view_model = MoveCopySavesViewModel(self.source_playthrough, new_playthrough)
 
-                new_instance = SaveSystem.get_playthrough_save_instance(new_playthrough.id)
-                if not new_instance:
-                    raise Exception("Can't find new save instance")
+                    renpy.show_screen("JK_DuplicatePlaythroughSavesProgress", view_model=view_model)
 
-                original_instance.location.scan()
-                if not original_instance.location.copy_all_saves_into_other_multilocation(new_instance.location):
-                        raise Exception("Playthrough created but failed to transfer saves. Check the logs for more information.")
+                    if not view_model.error:
+                        view_model.process_saves([(save, None) for save in view_model.source_saves], mode="COPY")
 
                 renpy.restart_interaction()
         
