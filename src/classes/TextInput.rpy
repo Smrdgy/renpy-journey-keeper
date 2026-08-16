@@ -501,6 +501,22 @@ init python in JK:
                 pygame.scrap.put(pygame.scrap.SCRAP_TEXT, text.encode("utf-8"))
                 raise renpy.display.core.IgnoreEvent()
 
+            elif renpy.map_event(ev, "input_cut"):
+                if self.controller.selection_start != None:
+                    start, end = self.controller.get_selection_start_end()
+                    text = self.content[start:end]
+                    content = self.__try_delete_selected_content()
+                else:
+                    text = self.content
+                    content = ""
+                    self.controller.caret_pos = 0
+
+                pygame.scrap.put(pygame.scrap.SCRAP_TEXT, text.encode("utf-8"))
+                self.update_text(content)
+
+                renpy.display.render.redraw(self, 0)
+                raise renpy.display.core.IgnoreEvent()
+
             elif renpy.map_event(ev, "input_paste"):
                 text = pygame.scrap.get(pygame.scrap.SCRAP_TEXT)
                 text = text.decode("utf-8")
@@ -1020,14 +1036,21 @@ init python in JK:
         'input_home': [ 'K_HOME', 'meta_K_LEFT' ] if not hasattr(renpy.config.keymap, 'input_home') else renpy.config.keymap.input_home,
         'input_end': [ 'K_END', 'meta_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_end') else renpy.config.keymap.input_end,
         'input_copy': [ 'ctrl_noshift_K_INSERT', 'ctrl_noshift_K_c', 'meta_noshift_K_c' ] if not hasattr(renpy.config.keymap, 'input_copy') else renpy.config.keymap.input_copy,
+        'input_cut': [ 'ctrl_noshift_K_x', 'meta_noshift_K_x' ] if not hasattr(renpy.config.keymap, 'input_cut') else renpy.config.keymap.input_cut,
         'input_paste': [ 'shift_K_INSERT', 'ctrl_noshift_K_v', 'meta_noshift_K_v' ] if not hasattr(renpy.config.keymap, 'input_paste') else renpy.config.keymap.input_paste,
         'input_jump_word_left': [ 'ctrl_K_LEFT', 'repeat_ctrl_K_LEFT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_left') else renpy.config.keymap.input_jump_word_left,
         'input_jump_word_right': [ 'ctrl_K_RIGHT', 'repeat_ctrl_K_RIGHT' ] if not hasattr(renpy.config.keymap, 'input_jump_word_right') else renpy.config.keymap.input_jump_word_right,
         'input_delete_word': [ 'ctrl_K_BACKSPACE', 'repeat_ctrl_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_word') else renpy.config.keymap.input_delete_word,
         'input_delete_word_forward': [ 'ctrl_K_DELETE', 'repeat_ctrl_K_DELETE' ] if not hasattr(renpy.config.keymap, 'input_delete_word_forward') else renpy.config.keymap.input_delete_word_forward,
         'input_delete_full': [ 'repeat_meta_K_BACKSPACE' ] if not hasattr(renpy.config.keymap, 'input_delete_full') else renpy.config.keymap.input_delete_full,
-        'input_content_start': [ 'shift_K_HOME' ],
-        'input_content_end': [ 'shift_K_END' ],
+        # Deliberately not "ctrl_shift_K_HOME"/"ctrl_shift_K_END" as well: like
+        # input_jump_word_left/right above, leaving shift unconstrained here means this
+        # matches both Ctrl+Home (jump, no selection) and Ctrl+Shift+Home (select to content
+        # start) - the handler's own __try_set_selection_start() call already tells them
+        # apart. Plain Shift+Home/End (select to the current line's start/end) falls through
+        # to input_home/input_end below instead, matching every other OS's convention.
+        'input_content_start': [ 'ctrl_K_HOME' ] if not hasattr(renpy.config.keymap, 'input_content_start') else renpy.config.keymap.input_content_start,
+        'input_content_end': [ 'ctrl_K_END' ] if not hasattr(renpy.config.keymap, 'input_content_end') else renpy.config.keymap.input_content_end,
         'input_select_all': [ 'ctrl_K_a' ],
         # 'input_next_input': ['noshift_K_TAB'], #TODO: Finish prev/next input via TAB
         # 'input_prev_input': ['shift_K_TAB']
