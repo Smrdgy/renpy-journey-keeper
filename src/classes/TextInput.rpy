@@ -68,6 +68,16 @@ init python in JK:
             self.max_length = max_length
             self.placeholder = placeholder
 
+            # Click/drag/multi-click tracking. Lives here rather than on TextInputDisplayable
+            # because that displayable can be freely recreated (e.g. on a screen rebuild
+            # triggered by something else entirely - sidepanel/overlay run per-frame checks
+            # that can cause this mid-interaction) while this controller persists, same as
+            # caret_pos/selection_start/editable above.
+            self.dragging = False
+            self.click_count = 0
+            self.last_click_time = None
+            self.last_click_pos = None
+
             if auto_focus:
                 self.enable()
 
@@ -151,6 +161,10 @@ init python in JK:
     class TextInputDisplayable(renpy.text.text.Text):
         focusable = True
 
+        # Max gap (in shown-time seconds) between consecutive clicks at the same position
+        # for them to count toward a double/triple click, matching typical OS defaults.
+        multi_click_interval = 0.4
+
         def __init__(self, controller, placeholder=None, style="textinput", **properties):
             super(TextInputDisplayable, self).__init__("", style=style, **properties)
 
@@ -162,8 +176,7 @@ init python in JK:
             self.st = None
             self.changed = None
             self.placeholder = placeholder
-            self.dragging = False
-            
+
             if self.controller.value:
                 self.changed = self.controller.value.set_text
 
@@ -629,22 +642,46 @@ init python in JK:
 
                     new_caret_pos = self.__get_click_caret_pos(x, y, was_editable)
 
-                    shift_held = pygame.key.get_mods() & (pygame.KMOD_LSHIFT | pygame.KMOD_RSHIFT)
-
-                    if shift_held:
-                        # Extend the existing selection instead of starting a new one - anchor
-                        # at the current caret if there wasn't already an active selection, so
-                        # repeated shift-clicks keep extending/shrinking from the same anchor
-                        # rather than from wherever the previous shift-click landed.
-                        if self.controller.selection_start is None:
-                            self.controller.selection_start = self.controller.caret_pos
+                    # Consecutive clicks in the same spot, close enough together, build
+                    # toward a double (select word) or triple (select line) click - same
+                    # convention as any desktop text field.
+                    if self.controller.last_click_pos == new_caret_pos and self.controller.last_click_time is not None and (st - self.controller.last_click_time) <= self.multi_click_interval:
+                        self.controller.click_count += 1
                     else:
-                        # A fresh anchor: no selection yet, just a caret placement - it only
-                        # becomes a visible selection if the drag below actually moves it.
-                        self.controller.selection_start = new_caret_pos
+                        self.controller.click_count = 1
 
-                    self.controller.caret_pos = new_caret_pos
-                    self.dragging = True
+                    self.controller.last_click_time = st
+                    self.controller.last_click_pos = new_caret_pos
+
+                    if self.controller.click_count >= 2:
+                        if self.controller.click_count == 2:
+                            start, end = self.__get_word_bounds(new_caret_pos)
+                        else:
+                            start, end = self.__get_line_bounds(new_caret_pos)
+
+                        self.controller.selection_start = start
+                        self.controller.caret_pos = end
+
+                        # Not dragging: the word/line selection stands as-is even if the
+                        # button is still down and the mouse drifts before release.
+                        self.controller.dragging = False
+                    else:
+                        shift_held = pygame.key.get_mods() & (pygame.KMOD_LSHIFT | pygame.KMOD_RSHIFT)
+
+                        if shift_held:
+                            # Extend the existing selection instead of starting a new one -
+                            # anchor at the current caret if there wasn't already an active
+                            # selection, so repeated shift-clicks keep extending/shrinking
+                            # from the same anchor rather than from the last shift-click.
+                            if self.controller.selection_start is None:
+                                self.controller.selection_start = self.controller.caret_pos
+                        else:
+                            # A fresh anchor: no selection yet, just a caret placement - it
+                            # only becomes a visible selection if a drag moves it.
+                            self.controller.selection_start = new_caret_pos
+
+                        self.controller.caret_pos = new_caret_pos
+                        self.controller.dragging = True
 
                     self.update_text(self.content)
                     renpy.display.render.redraw(self, 0)
@@ -655,7 +692,7 @@ init python in JK:
                     # press that starts outside the field was never a click on it to begin with.
                     self.controller.disable()
 
-            elif ev.type == pygame.MOUSEMOTION and self.dragging and self.controller.editable:
+            elif ev.type == pygame.MOUSEMOTION and self.controller.dragging and self.controller.editable:
                 # Deliberately not bounds-checked: dragging past the field's edge should keep
                 # extending the selection to the nearest character, like any text editor, not
                 # stop dead at the border.
@@ -668,8 +705,8 @@ init python in JK:
 
                 return renpy.display.core.IgnoreEvent()
 
-            elif ev.type == pygame.MOUSEBUTTONUP and ev.button == 1 and self.dragging:
-                self.dragging = False
+            elif ev.type == pygame.MOUSEBUTTONUP and ev.button == 1 and self.controller.dragging:
+                self.controller.dragging = False
 
                 new_caret_pos = self.__get_click_caret_pos(x, y, True)
                 self.controller.caret_pos = new_caret_pos
@@ -809,6 +846,60 @@ init python in JK:
                 char_count += len(line)
 
             return lines, current_line_idx, current_column
+
+        def __get_word_bounds(self, pos):
+            """
+            Returns the (start, end) content indices of the word at content index `pos`
+            (double-click-to-select-word). Prefers the character right after the boundary,
+            falling back to the one right before it (e.g. when `pos` is at the very end of
+            the content) - so clicking right at either edge of a word still selects it. If
+            neither neighboring character is part of a word, selects the run of whitespace
+            `pos` is on/in instead of reaching for a neighboring word.
+            """
+
+            content = self.content
+            l = len(content)
+
+            if l == 0:
+                return 0, 0
+
+            if pos < l and not content[pos].isspace():
+                anchor = pos
+            elif pos > 0 and not content[pos - 1].isspace():
+                anchor = pos - 1
+            else:
+                start = pos
+                while start > 0 and content[start - 1].isspace():
+                    start -= 1
+                end = pos
+                while end < l and content[end].isspace():
+                    end += 1
+                return start, end
+
+            start = anchor
+            while start > 0 and not content[start - 1].isspace():
+                start -= 1
+
+            end = anchor + 1
+            while end < l and not content[end].isspace():
+                end += 1
+
+            return start, end
+
+        def __get_line_bounds(self, pos):
+            """
+            Returns the (start, end) content indices of the logical line (Home/End's notion
+            of a line, not a word-wrapped visual row) containing content index `pos`
+            (triple-click-to-select-line).
+            """
+
+            self.controller.caret_pos = pos
+            lines, current_line_idx, current_column = self.__get_caret_info()
+
+            start = pos - current_column
+            end = start + len(lines[current_line_idx]) - (0 if current_line_idx == len(lines) - 1 else 1)
+
+            return start, end
 
         def __try_set_selection_start(self):
             if self.controller.selection_start is None:
