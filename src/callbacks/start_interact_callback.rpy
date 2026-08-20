@@ -19,6 +19,12 @@ init 9999 python in JK:
         if(not renpy.get_screen('JK_Overlay')):
             renpy.show_screen('JK_Overlay')
 
+        # Some games clear layers on their own way into the save/load screen (a "game menu"
+        # context) through paths JK doesn't control - re-show defensively, same as the two
+        # screens above, instead of relying on JK_Autocomplete never getting cleared.
+        if Autocomplete.active and not renpy.get_screen('JK_AutocompleteBar'):
+            renpy.show_screen('JK_AutocompleteBar')
+
         if renpy.store.persistent.JK_SizeAdjustmentRollbackValue != None and renpy.get_screen("JK_ConfirmSizeAdjustment") is None:
             renpy.show_screen('JK_ConfirmSizeAdjustment')
 

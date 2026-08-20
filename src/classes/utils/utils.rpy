@@ -324,6 +324,36 @@ init -9999 python in JK:
                 text = text.decode('utf-8') if sys.version_info[0] < 3 else text
             return unicodedata.normalize('NFD', text).encode('ascii', 'ignore').decode('utf-8').lower()
 
+        # Shared by Autosaver (deriving the text to store) and Autocomplete (deriving the
+        # live menu text to compare against a stored one) so both sides of that round trip
+        # always agree on what a given choice label turns into.
+        @staticmethod
+        def derive_choice_text(label):
+            try:
+                # Processes the label as Ren'Py would to remove any possible interpolations via [...] e.g. [player_name]
+                # This might fail when there are context specific variables which aren't available in this scope.
+                textComponent = renpy.ui.text(label)
+                return Utils.escape_renpy_reserved_characters(' '.join(textComponent.text))
+            except:
+                try:
+                    escaped_text = Utils.escape_all_problematic_characters(' '.join(label))
+                    # Processes the label as Ren'Py would to remove any possible interpolations via [...] e.g. [player_name]
+                    # This might fail when there are context specific variables which aren't available in this scope.
+                    textComponent = renpy.ui.text(escaped_text)
+                    return ' '.join(textComponent.text)
+                except:
+                    return Utils.escape_all_problematic_characters(' '.join(label))
+
+        # Strips everything but letters/digits before comparing choice text, so escaping
+        # differences (the [[ / {{ / %% doubling save-storage applies, punctuation, accents,
+        # etc.) never cause an otherwise-identical choice to fail to match.
+        @staticmethod
+        def normalize_choice_text(text):
+            if not text:
+                return ""
+
+            return re.sub(r'[^A-Za-z0-9]', '', text).lower()
+
         @staticmethod
         def filter_timeline(timeline, search):
             if search is None or search == "":

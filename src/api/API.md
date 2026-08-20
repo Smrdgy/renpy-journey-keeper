@@ -710,3 +710,38 @@ def __callback(text, original_text, choice_object):
 
 JK.api.callbacks.before_storing_choice_text_callbacks.append(__callback)
 ```
+
+---
+
+### `autocomplete_get_current_choices_callbacks (list)`
+
+**Description**:
+
+Called while a menu is being displayed and Autocomplete (the "Autocomplete using this playthrough" feature)
+couldn't find the choices through Ren'Py's default `"choice"` screen. Each callback takes no arguments and
+should return a list of `(label_text, action)` tuples for the choices currently on screen, or `None`/`[]` if
+it doesn't apply to the current screen. The first callback to return a non-empty list wins.
+
+**Use Case**:
+
+Useful for games that render their choices through a custom screen (not the default `"choice"` screen, or
+via plain buttons with a `Jump` action - see `src/injects/ui.rpy`'s `Button.__init__` wrap for how JK already
+detects that case for autosaving), so Autocomplete can still find and select them.
+
+**Example Scenario**:
+
+A game shows its choices through a custom `game_choice` screen instead of the default `"choice"` screen.
+
+**Code example**:
+```python
+def __get_choices():
+  screen = renpy.get_screen("game_choice")
+
+  if screen is None:
+    return None
+
+  return [(item.caption, item.action) for item in screen.scope.get("items", [])]
+
+
+JK.api.callbacks.autocomplete_get_current_choices_callbacks.append(__get_choices)
+```

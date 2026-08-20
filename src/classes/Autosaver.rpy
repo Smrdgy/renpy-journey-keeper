@@ -235,6 +235,18 @@ init python in JK:
             if Memories.memoryInProgress or renpy.store._in_replay:
                 raise Exception("Autosaver is disabled while viewing a memory or a replay.")
 
+            # Prevent for as long as the Autocomplete banner is present, paused or not - not
+            # just while it's actively replaying. It already runs the real ChoiceReturn/Jump
+            # action for each choice it replays (see AutocompleteClass.__try_resolve_menu),
+            # so this would fire redundantly for those regardless. And while paused, whatever
+            # the player clicks to resolve the interruption manually isn't part of the
+            # recorded sequence being replayed - autosaving it would mix an unplanned choice
+            # into that playthrough's history rather than leaving it for the player's own
+            # manual/quick save to capture, same as it would be disabled entirely if this
+            # were a genuine memory/replay.
+            if Autocomplete.active:
+                raise Exception("Autosaver is disabled while Autocomplete is active.")
+
             # Prevent when singleton choice is detected and not allowed
             if not Settings.autosaveOnSingletonChoice and not Utils.is_displaying_multiple_choices():
                 raise Exception("Autosaver is disabled when displaying a single choice.")
@@ -305,22 +317,7 @@ init python in JK:
             self.create_pending_save_from_choice(choice)
 
         def create_pending_save_from_choice(self, choice):
-            textComponent = None
-            choice_text = None
-            try:
-                # Processes the label as Ren'Py would to remove any possible interpolations via [...] e.g. [player_name]
-                # This might fail when there are context specific variables which aren't available in this scope.
-                textComponent = renpy.ui.text(choice.label)
-                choice_text = Utils.escape_renpy_reserved_characters(' '.join(textComponent.text))
-            except:
-                try:
-                    escaped_text = Utils.escape_all_problematic_characters(' '.join(choice.label))
-                    # Processes the label as Ren'Py would to remove any possible interpolations via [...] e.g. [player_name]
-                    # This might fail when there are context specific variables which aren't available in this scope.
-                    textComponent = renpy.ui.text(escaped_text)
-                    choice_text = ' '.join(textComponent.text)
-                except:
-                    choice_text = Utils.escape_all_problematic_characters(' '.join(choice.label))
+            choice_text = Utils.derive_choice_text(choice.label)
 
             original_choice_text = choice_text
             for callback in before_storing_choice_text_callbacks:

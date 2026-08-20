@@ -9,3 +9,7 @@ init 1 python in JK.api.callbacks:
 
     # Called right before passing the name into the pending autosave
     before_storing_choice_text_callbacks = JK.before_storing_choice_text_callbacks
+
+    # Called while a menu is displayed and Autocomplete can't find it via the default "choice"
+    # screen, so a game with a custom choice screen can supply the current options itself
+    autocomplete_get_current_choices_callbacks = JK.autocomplete_get_current_choices_callbacks

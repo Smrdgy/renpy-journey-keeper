@@ -33,6 +33,16 @@ screen JK_PlaythroughActions(playthrough):
                 hbox:
                     use JK_IconButton(icon="\uf184", text="Show choice Timeline", action=[Show("JK_ChoicesTimeline", playthrough=playthrough), Hide("JK_PlaythroughActions")], key="alt_K_t")
 
+                # Autocomplete using this playthrough's recorded choices
+                hbox:
+                    use JK_IconButton(icon="\ue01f", text="Autocomplete using this playthrough", action=[JK.ShowConfirmAction(
+                        title="Autocomplete playthrough",
+                        message="This will fast-skip the current game, automatically selecting choices recorded in \"" + JK.Utils.escape_renpy_reserved_characters(playthrough.name) + "\".\n\nUnrecognized menus or content it can't skip through will pause it for you to resolve manually.",
+                        yes=JK.Autocomplete.StartAutocompleteAction(playthrough),
+                        yes_text="Start",
+                        no_text="Cancel",
+                    ), Hide("JK_PlaythroughActions")], key="alt_K_c")
+
                 # Close
                 hbox:
                     use JK_IconButton(icon="\ue5cd", text="Close", action=Hide("JK_PlaythroughActions"))
