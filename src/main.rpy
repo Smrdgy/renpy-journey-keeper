@@ -37,6 +37,13 @@ init 9999 python in JK:
         renpy.add_layer("JK_Overlay", above="JK_Sidepanel")
         renpy.config.context_clear_layers.append("JK_Overlay")
 
+    # Reserved for Ren'Py's own native prompts (quit/main menu/delete save/overwrite/etc,
+    # anything routed through layout.yesno_screen - see injects/yesno_screen.rpy) so they
+    # always render and receive input above every JK screen, no matter what JK is showing.
+    if not "JK_AboveAll" in renpy.config.layers:
+        renpy.add_layer("JK_AboveAll", above="JK_Overlay")
+        renpy.config.context_clear_layers.append("JK_AboveAll")
+
     # Deliberately not menu_clear and not in context_clear_layers: unlike JK_Overlay (tooltips,
     # confirms, pickers - fine to wipe when entering/leaving the game menu), the autocomplete bar
     # must survive visiting the save/load screen mid-run, since that's the game menu context.
