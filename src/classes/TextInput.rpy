@@ -594,7 +594,11 @@ init python in JK:
                 text = text.decode("utf-8")
                 raw_text = ""
                 for c in text:
-                    if ord(c) >= 32:
+                    # ord(c) >= 32 drops real control characters (including a lone \r from
+                    # \r\n line endings), but it was also silently dropping \n (10) itself -
+                    # keep it explicitly, but only for multiline fields, where a literal
+                    # newline in pasted text is meaningful rather than stray input.
+                    if ord(c) >= 32 or (c == "\n" and self.controller.multiline):
                         raw_text += c
             
             elif renpy.map_event(ev, "input_select_all"):
